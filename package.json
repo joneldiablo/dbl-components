@@ -1,0 +1,34 @@
+{
+  "name": "dbl-components",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "storybook": "start-storybook -p 6006 --no-dll",
+    "build-storybook": "build-storybook --no-dll -o docs",
+    "babel": "babel src/js -d lib/js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.12.3",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/preset-react": "^7.12.5",
+    "@babel/preset-typescript": "^7.12.1",
+    "@storybook/addon-actions": "^6.0.28",
+    "@storybook/addon-essentials": "^6.0.28",
+    "@storybook/addon-links": "^6.0.28",
+    "@storybook/preset-scss": "^1.0.3",
+    "@storybook/react": "^6.0.28",
+    "babel-loader": "^8.1.0",
+    "node-sass": "^5.0.0",
+    "react-is": "^17.0.1",
+    "sass-loader": "^10.0.5"
+  },
+  "dependencies": {
+    "react-icomoon": "^2.1.5"
+  }
+}
