@@ -1,6 +1,6 @@
 import React from "react";
 
-export default class IconsSvg extends React.Component {
+export default class Svg extends React.Component {
 
   static defaultProps = {
     inline: true,

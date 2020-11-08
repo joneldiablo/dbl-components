@@ -1,6 +1,6 @@
 import React from "react";
 import Icons from "../src/js/images/icons";
-import IconsSvg from "../src/js/images/icons-svg";
+import Svg from "../src/js/images/svg";
 import { iconList } from "react-icomoon";
 const iconSet = require("./assets/font-awesome/selection.json");
 import svgFile from "./assets/images/fb-messenger-icon_1.svg"
@@ -19,9 +19,9 @@ export const FontAwesomeIcons = () => <div>
 </div>;
 
 export const AnIconSvg = () => (<span>
-  Remember to add viewBox to the icon <IconsSvg href={`${svgFile}#XMLID_1_`} viewBox="131 -131 512 512" /></span>);
+  Remember to add viewBox to the icon <Svg href={`${svgFile}#XMLID_1_`} viewBox="131 -131 512 512" /></span>);
 
 export const IconsNotInlie = () => (<span>
-  <IconsSvg href={`${svgFile}#XMLID_1_`} viewBox="131 -131 512 512" inline={false} width="80" />
+  <Svg href={`${svgFile}#XMLID_1_`} viewBox="131 -131 512 512" inline={false} width="80" />
   <Icons icon="home" iconSet={iconSet} inline={false} width="80" />
 </span>);
