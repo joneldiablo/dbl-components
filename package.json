@@ -1,6 +1,6 @@
 {
   "name": "dbl-components",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "My own components",
   "main": "lib/js/main.js",
   "scripts": {
@@ -13,8 +13,7 @@
     "css": "yarn clearcss && node-sass src/scss/style.scss lib/css/style.css && yarn postcss",
     "postcss": "postcss lib/css/style.css --use autoprefixer -d lib/css --no-map",
     "scss": "rm -rf lib/scss && cp -r src/scss lib/scss",
-    "build": "yarn css && yarn babel && yarn scss && yarn build-storybook",
-    "push": "git push origin master && npm publish"
+    "build": "yarn css && yarn babel && yarn scss && yarn build-storybook"
   },
   "keywords": [],
   "author": "",
