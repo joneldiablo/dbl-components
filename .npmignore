@@ -1,5 +1,6 @@
-src
-node_modules
-stories
-.storybook
 .babelrc
+.storybook
+docs
+node_modules
+src
+stories

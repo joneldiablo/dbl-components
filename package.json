@@ -13,7 +13,7 @@
     "css": "yarn clearcss && node-sass src/scss/style.scss lib/css/style.css && yarn postcss",
     "postcss": "postcss lib/css/style.css --use autoprefixer -d lib/css --no-map",
     "scss": "rm -rf lib/scss && cp -r src/scss lib/scss",
-    "build": "yarn css && yarn babel && yarn scss"
+    "build": "yarn css && yarn babel && yarn scss && yarn build-storybook"
   },
   "keywords": [],
   "author": "",
