@@ -1,18 +1,25 @@
 {
   "name": "dbl-components",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "My own components",
+  "main": "lib",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "storybook": "start-storybook -p 6006 --no-dll",
     "build-storybook": "build-storybook --no-dll -o docs",
-    "babel": "babel src/js -d lib/js"
+    "clearjs": "rm -rf lib/js && mkdir -p lib/js",
+    "babel": "yarn clearjs && babel src/js -d lib/js --minified --source-maps",
+    "clearcss": "rm -rf lib/css && mkdir -p lib/css",
+    "css": "yarn clearcss && node-sass src/scss/style.scss lib/css/style.css && yarn postcss",
+    "postcss": "postcss lib/css/style.css --use autoprefixer -d lib/css --no-map",
+    "scss": "rm -rf lib/scss && cp -r src/scss lib/scss",
+    "build": "yarn css && yarn babel && yarn scss"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babel/cli": "^7.12.1",
     "@babel/core": "^7.12.3",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@babel/preset-env": "^7.12.1",
@@ -23,8 +30,11 @@
     "@storybook/addon-links": "^6.0.28",
     "@storybook/preset-scss": "^1.0.3",
     "@storybook/react": "^6.0.28",
+    "autoprefixer": "^10.0.1",
     "babel-loader": "^8.1.0",
     "node-sass": "^5.0.0",
+    "postcss": "^8.1.6",
+    "postcss-cli": "^8.2.0",
     "react-is": "^17.0.1",
     "sass-loader": "^10.0.5"
   },
