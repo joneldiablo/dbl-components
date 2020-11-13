@@ -1,10 +1,11 @@
 import React from "react";
 import IcoMoon, { iconList } from "react-icomoon";
 
+let is;
+
 export default class Icons extends React.Component {
 
   static defaultProps = {
-    iconSet: null,
     inline: true,
     className: '',
     icon: null,
@@ -12,7 +13,7 @@ export default class Icons extends React.Component {
   }
 
   searchIcon(icon) {
-    let list = iconList(this.props.iconSet);
+    let list = iconList(is);
     let final = list.find(iconName =>
       iconName.split(/[, ]+/).find(i => i === icon)
     );
@@ -25,6 +26,10 @@ export default class Icons extends React.Component {
     let className = [, this.constructor.name];
     if (inline) className.push('icon-inline');
     props.className += className.join(' ');
-    return (<IcoMoon {...props} icon={icon} />);
+    return (<IcoMoon {...props} icon={icon} iconSet={is} />);
   }
+}
+
+export const iconSet = (isIn) => {
+  is = isIn;
 }

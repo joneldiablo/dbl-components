@@ -7,17 +7,26 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "storybook": "start-storybook -p 6006 --no-dll",
     "build-storybook": "build-storybook --no-dll -o docs",
-    "clearjs": "rm -rf lib/js && mkdir -p lib/js",
-    "babel": "yarn clearjs && babel src/js -d lib/js --minified --source-maps",
-    "clearcss": "rm -rf lib/css && mkdir -p lib/css",
-    "css": "yarn clearcss && node-sass src/scss/style.scss lib/css/style.css && yarn postcss",
+    "babel": "babel src/js -d lib/js --minified --source-maps",
+    "clear:js": "rm -rf lib/js/* && mkdir -p lib/js",
+    "clear:css": "rm -rf lib/css/* && mkdir -p lib/css",
+    "clear:scss": "rm -rf lib/scss/* && mkdir -p lib/scss",
+    "clear": "yarn clear:js && yarn clear:css && yarn clear:scss",
+    "css": "node-sass --importer node_modules/node-sass-import src/scss/style.scss lib/css/style.css && yarn postcss",
     "postcss": "postcss lib/css/style.css --use autoprefixer -d lib/css --no-map",
-    "scss": "rm -rf lib/scss && cp -r src/scss lib/scss",
-    "build": "yarn css && yarn babel && yarn scss && yarn build-storybook"
+    "scss": "cp -r src/scss lib",
+    "build": "yarn clear && yarn css && yarn scss && yarn babel && yarn build-storybook"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "peerDependencies": {
+    "bootstrap": "^5.0.0-alpha2",
+    "popper.js": "^1.16.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-router-dom": "^5.2.0"
+  },
   "devDependencies": {
     "@babel/cli": "^7.12.1",
     "@babel/core": "^7.12.3",
@@ -33,12 +42,17 @@
     "autoprefixer": "^10.0.1",
     "babel-loader": "^8.1.0",
     "node-sass": "^5.0.0",
+    "node-sass-import": "^2.0.1",
     "postcss": "^8.1.6",
     "postcss-cli": "^8.2.0",
     "react-is": "^17.0.1",
     "sass-loader": "^10.0.5"
   },
   "dependencies": {
-    "react-icomoon": "^2.1.5"
+    "css-element-queries": "^1.2.3",
+    "jexcel": "^4.4.1",
+    "pluralize-es": "^1.0.0",
+    "react-icomoon": "^2.1.5",
+    "url-join": "^4.0.1"
   }
 }
