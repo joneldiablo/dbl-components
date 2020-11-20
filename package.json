@@ -50,6 +50,7 @@
   },
   "dependencies": {
     "css-element-queries": "^1.2.3",
+    "flat": "^5.0.2",
     "jexcel": "^4.4.1",
     "pluralize-es": "^1.0.0",
     "react-icomoon": "^2.1.5",
