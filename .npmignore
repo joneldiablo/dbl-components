@@ -5,3 +5,4 @@ node_modules
 src
 stories
 build.sh
+update-version.js
