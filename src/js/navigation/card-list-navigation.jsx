@@ -57,4 +57,5 @@ export default class NavListCards extends React.Component {
   render() {
     return this.state.type === 'list' ? this.asList : this.asCards;
   }
+  
 }
