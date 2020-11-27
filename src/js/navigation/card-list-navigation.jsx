@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { assets } from "../functions";
-import Icons from "../icons";
+import Icons from "../media/icons";
 
 export default class NavListCards extends React.Component {
   static defaultProps = {
