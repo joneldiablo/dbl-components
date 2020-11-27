@@ -1,12 +1,12 @@
 import React from "react";
 import Field from "../fields/field";
 
-const formats = {
+const formatComponents = {
 
 }
 
-export const setFormats = (_formats) => {
-  Object.assign(formats, _formats);
+export const setFormatComponents = (_components) => {
+  Object.assign(formatComponents, _components);
 }
 
 export default class GroupField extends React.Component {
@@ -16,30 +16,40 @@ export default class GroupField extends React.Component {
     name: null,
     fields: [],
     className: '',
-    style: {}
+    style: {},
+    classNameFields: 'mb-3 px-2',
+    format: null
   }
 
-  group(props) {
-    let { fields, label } = props;
+  Format = formatComponents[this.props.format];
+
+  label() {
+    let { label, classNameFields } = this.props;
+    return label && <>
+      <div className={classNameFields}><h1 className="h2">{label}</h1></div>
+      <div className="h-100 border-bottom"></div>
+    </>
+  }
+
+  content() {
+    let { fields, classNameFields } = this.props;
     return <>
-      {label && <>
-        <h1 className="h2 px-2">Editar {label}</h1>
-        <hr />
-      </>}
-      <div className="px-2">
-        {fields.map(field => <Field key={field.name} {...field} className="mb-3" />)}
-      </div>
+      {this.label()}
+      {fields.map((field, i) => {
+        let cnf = [field.className, classNameFields].filter(c => !!c);
+        field.className = cnf.join(' ');
+        return <Field key={i} {...field} />
+      })}
     </>
   }
 
   render() {
-    let { fields, label, className, style, format, name } = this.props;
-    let Group = formats[format];
-    let props = { fields, label, name };
-    let cn = [this.constructor.name, className].join(' ');
-    return <div className={cn} stye={style}>
-      {Group ? <Group {...props} /> :
-        this.group(props)
+    let { className, style, ...props } = this.props;
+    let cn = [this.constructor.name, className, 'group-' + props.name].join(' ');
+    return <div className={cn} style={style}>
+      {this.Format ?
+        <this.Format {...props} /> :
+        this.content()
       }
     </div>
   }

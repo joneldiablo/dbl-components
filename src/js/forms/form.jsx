@@ -3,6 +3,14 @@ import flatten from "flat";
 import schemaManager from "../functions/schema-manager"
 import Field from "./fields/field";
 
+const templateComponents = {
+
+}
+
+export const setTemplateComponents = (_components) => {
+  Object.assign(templateComponents, _components);
+}
+
 export default class Form extends React.Component {
 
   static defaultProps = {
@@ -19,12 +27,15 @@ export default class Form extends React.Component {
     onAfterSubmit: null,
     fields: null,
     className: '',
-    style: {}
+    style: {},
+    template: null
   }
+
+  Template = templateComponents[this.props.template];
 
   constructor(props) {
     super(props);
-    
+
     let fields = schemaManager.resolveRefs(this.props.fields);
     this.state = {
       fields,
@@ -99,10 +110,16 @@ export default class Form extends React.Component {
     return (<div className={cn} style={style}>
       {action ?
         <form action={action} method={method} onSubmit={this.onSubmit}>
-          {$fields}
-          <div className="px-2 mb-2">
-            <button className="btn btn-primary btn-block" type="submit">Enviar</button>
-          </div>
+          {this.Template ?
+            <this.Template>
+              {$fields}
+            </this.Template> :
+            <>
+              {$fields}
+              <div className="px-2 mb-2">
+                <button className="btn btn-primary btn-block" type="submit">Enviar</button>
+              </div>
+            </>}
         </form> :
         $fields
       }

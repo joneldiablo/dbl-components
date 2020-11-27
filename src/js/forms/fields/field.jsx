@@ -9,10 +9,8 @@ const fieldComponents = {
   'select': SelectField
 }
 
-export const setFieldComponents = (fc) => {
-  Object.keys(fc).forEach(i => {
-    fieldComponents[i] = fc[i];
-  });
+export const setFieldComponents = (_components) => {
+  Object.assign(fieldComponents, _components);
 }
 
 export default class Field extends React.Component {
@@ -29,14 +27,16 @@ export default class Field extends React.Component {
     errorMessage: null,//considerar un {} para tener multiples o string
     options: null, //{ label: string, value: any }[],
     fields: null,//if type===Group|FormGroup this fields are set
-    onChange: null
+    onChange: null,
+    className: null,
+    style: null
   }
 
   state = {
     value: this.props.value
   }
 
-  FieldComponent = fieldComponents[this.props.type];
+  Field = fieldComponents[this.props.type];
 
   onChange = (e) => {
     let validationClassName = !this.ref?.checkValidity() ? 'is-invalid' : '';
@@ -52,10 +52,10 @@ export default class Field extends React.Component {
   }
 
   // Renders
-  field(props) {
+  content() {
     let { type, disabled,
       required, pattern, name,
-      placeholder, label, errorMessage } = props;
+      placeholder, label, errorMessage } = this.props;
     let { value, validationClassName } = this.state;
     let inputProps = {
       disabled,
@@ -84,11 +84,11 @@ export default class Field extends React.Component {
 
   render() {
     let { className, style, ...props } = this.props;
-    let cn = [this.constructor.name, className].join(' ');
+    let cn = [this.constructor.name, className, 'field-' + props.name].join(' ');
     return <div className={cn} style={style}>
-      {this.FieldComponent ?
-        <this.FieldComponent {...props} /> :
-        this.field(props)
+      {this.Field ?
+        <this.Field {...props} /> :
+        this.content()
       }
     </div>
   }
