@@ -1,5 +1,4 @@
 import React from "react";
-import { HashRouter, Route } from "react-router-dom";
 import HeaderNavigation from "../src/js/navigation/header-navigation";
 import schemaManager from "../src/js/functions/schema-manager";
 import suppliersSchema from "./assets/schemas/suppliers.json";
@@ -32,10 +31,5 @@ export const header = () => {
     }],
     components: { logout: <span>Cerrar sesión</span> }
   };
-  return <HashRouter>
-    <HeaderNavigation {...props} />
-    <Route path="/">
-      an
-    </Route>
-  </HashRouter>
+  return <HeaderNavigation {...props} />
 }

@@ -1,10 +1,3 @@
-.translatex-middle {
-  transform: translateX(-50%) !important;
-}
-
-.translatey-middle {
-  transform: translateX(0) translateY(-50%) !important;
-}
 
 @include media-breakpoint-up(sm) {
   .left-sm-0 {

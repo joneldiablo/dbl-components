@@ -47,7 +47,7 @@ export default class HeaderNavigation extends React.Component {
           {content}
         </NavLink>}
       {item.menu?.length &&
-        <ul className="dropdown-menu" aria-labelledby={item.name}>
+        <ul className="dropdown-menu dropdown-menu-right" aria-labelledby={item.name}>
           {item.menu.map(e => this.menuItem({ dropdown: true, ...e }))}
         </ul>}
     </li>
@@ -58,7 +58,7 @@ export default class HeaderNavigation extends React.Component {
     let cn = [HeaderNavigation, 'shadow-sm sticky-top', className].join(' ');
     return <nav className={cn} style={style}>
       <div className="py-2 position-relative">
-        <div className="position-absolute left-50 left-sm-0 top-50 translate-middle translatey-sm-middle mx-3" >
+        <div className="position-absolute left-50 left-sm-0 top-50 translate-middle translatey-sm-middle mx-auto mx-sm-3" >
           {icon && <Icons icon={icon} inline={false} />}
           {svg && <Svg {...svg} />}
           {img && <img src={img} />}
