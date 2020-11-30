@@ -1,9 +1,10 @@
 {
   "name": "dbl-components",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "My own components",
   "main": "lib/js/main.js",
   "scripts": {
+    "start": "yarn storybook",
     "test": "echo \"Error: no test specified\" && exit 1",
     "storybook": "start-storybook -p 6006 --no-dll",
     "build-storybook": "build-storybook --no-dll -o docs",
