@@ -1,6 +1,6 @@
 {
   "name": "dbl-components",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "My own components",
   "main": "lib/js/main.js",
   "scripts": {
@@ -50,6 +50,8 @@
     "sass-loader": "^10.0.5"
   },
   "dependencies": {
+    "@material-ui/core": "^4.11.2",
+    "@material-ui/icons": "^4.11.2",
     "css-element-queries": "^1.2.3",
     "flat": "^5.0.2",
     "jexcel": "^4.4.1",

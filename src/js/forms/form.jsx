@@ -1,7 +1,7 @@
 import React from "react";
 import flatten from "flat";
 import schemaManager from "../functions/schema-manager"
-import Field from "./fields/field";
+import Fields from "./fields/fields";
 
 const templateComponents = {
 
@@ -104,8 +104,8 @@ export default class Form extends React.Component {
     let { fields } = this.state;
     let cn = [this.constructor.name, className].join(' ');
     let $fields = Array.isArray(fields) ?
-      fields.map(field => <Field key={field.name} {...field} />) :
-      <Field {...fields} onChange={this.onChange} />
+      fields.map(field => <Fields key={field.name} {...field} />) :
+      <Fields {...fields} onChange={this.onChange} />
 
     return (<div className={cn} style={style}>
       {action ?

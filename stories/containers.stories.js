@@ -3,11 +3,14 @@ import AspectRatioContainer from "../src/js/containers/aspect-ratio-container";
 import FullscreenContainer from "../src/js/containers/fullscreen-container";
 import AutoResponsiveContainer from "../src/js/containers/auto-responsive-container";
 import GridContainer from "../src/js/containers/grid-container";
-import '../src/scss/style.scss';
-import './assets/scss/containers.scss';
 
 export default {
-  title: 'Diablo components/Containers'
+  title: 'Diablo components/Containers',
+  /* decorators: [(Story) => {
+    require('../src/scss/style.scss');
+    require('./assets/scss/containers.scss');
+    return <Story />
+  }] */
 };
 
 export const Fullscreen = () => <FullscreenContainer >
