@@ -35,7 +35,7 @@ export default class Form extends React.Component {
 
   constructor(props) {
     super(props);
-
+    this.onChange = this.onChange.bind(this);
     let fields = schemaManager.resolveRefs(this.props.fields);
     this.state = {
       fields,
@@ -94,9 +94,10 @@ export default class Form extends React.Component {
     this.state.data[e.target.name] = e.target.value;
     this.setState({
       data: this.state.data
+    }, () => {
+      if (typeof this.props.onChange === 'function')
+        this.props.onChange(this.state.data);
     });
-    if (typeof this.props.onChange === 'function')
-      this.props.onChange(e, data);
   }
 
   render() {
@@ -104,7 +105,7 @@ export default class Form extends React.Component {
     let { fields } = this.state;
     let cn = [this.constructor.name, className].join(' ');
     let $fields = Array.isArray(fields) ?
-      fields.map(field => <Fields key={field.name} {...field} />) :
+      fields.map(field => <Fields key={field.name} {...field} onChange={this.onChange} />) :
       <Fields {...fields} onChange={this.onChange} />
 
     return (<div className={cn} style={style}>

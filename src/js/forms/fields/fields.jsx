@@ -1,4 +1,5 @@
 import React from "react";
+import Field from "./field";
 import GroupField from "../groups/group";
 import HiddenField from "./hidden-field";
 import SelectField from "./select-field";
@@ -13,7 +14,12 @@ export const setFieldComponents = (_components) => {
   Object.assign(fieldComponents, _components);
 }
 
-export default class Field extends React.Component {
+export default class Fields extends Field {
+
+  static defaultProps = {
+    ...Field.defaultProps,
+    className: 'mb-3'
+  }
 
   Field = fieldComponents[this.props.type];
 

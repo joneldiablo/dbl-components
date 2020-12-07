@@ -16,19 +16,6 @@ const Flag = ({ value, children: label, flag }) => {
   </div>
 }
 
-const setLanguage = (e) => {
-  let lang = e.target.value;
-  localStorage.setItem('lang', lang);
-  let event = new CustomEvent('translate', {
-    detail: lang
-  });
-  document.dispatchEvent(event);
-}
-
-document.addEventListener('translate', e => {
-  console.log(e.detail);
-});
-
 export default class SelectLanguage extends Select {
 
   static defaultProps = {
@@ -36,7 +23,6 @@ export default class SelectLanguage extends Select {
     variant: 'standard',
     value: null,
     ValueTemplate: Flag,
-    onChange: setLanguage,
     fullWidth: false,
     options: [
       { value: 'es_MX', label: 'Español' },
@@ -44,11 +30,40 @@ export default class SelectLanguage extends Select {
     ]
   }
 
+  imTheTrigger = false;
+
   constructor(props) {
     super(props);
     let lang = localStorage.getItem('lang');
     this.state.value = lang || props.value;
     if (!lang) localStorage.setItem('lang', props.value);
+    this.onChange = this.onChange.bind(this);
+  }
+
+  translate = (e) => {
+    if (!this.imTheTrigger) {
+      super.onChange({ target: { value: e.detail } });
+    }
+    this.imTheTrigger = false;
+  }
+
+  componentDidMount() {
+    document.addEventListener('translate', this.translate);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('translate', this.translate);
+  }
+
+  onChange(e) {
+    super.onChange(e);
+    let lang = e.target.value;
+    localStorage.setItem('lang', lang);
+    let event = new CustomEvent('translate', {
+      detail: lang
+    });
+    this.imTheTrigger = true;
+    document.dispatchEvent(event);
   }
 
   render() {

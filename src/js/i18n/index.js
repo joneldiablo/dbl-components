@@ -7,6 +7,11 @@ const dictionary = {
   'en_US': {}
 };
 
+const translate = (value, context, lang) => {
+  let dic = (context && dictionary[lang]['_' + context]) || dictionary[lang];
+  return (dic && dic[value]) || value;
+}
+
 class Text extends React.Component {
 
   static defaultProps = {
@@ -38,8 +43,7 @@ class Text extends React.Component {
 
   translate() {
     let { value, context } = this.props;
-    let dic = (context && dictionary[this.lang]['_' + context]) || dictionary[this.lang];
-    return (dic && dic[value]) || value;
+    return translate(value, context, this.lang);
   }
 
   toString() {
@@ -66,8 +70,15 @@ class Source extends Text {
 
 class I18n {
 
+  doReload = false;
+  lang = localStorage.getItem('lang');
+
   constructor() {
 
+  }
+
+  reload = () => {
+    location.reload();
   }
 
   text(t, context) {
@@ -82,8 +93,12 @@ class I18n {
     return (<Currency value={c} code={code} />);
   }
 
-  src(s, context) {
-    return (<Source value={s} context={context} />);
+  src = (s, context) => {
+    if (!this.doReload) {
+      this.doReload = true;
+      document.addEventListener('translate', this.reload);
+    }
+    return (translate(s, context, this.lang));
   }
 
 }
@@ -98,3 +113,4 @@ export const t = i18n.text;
 export const n = i18n.number;
 export const cur = i18n.currency;
 export const src = i18n.src;
+export const _ = i18n.src;

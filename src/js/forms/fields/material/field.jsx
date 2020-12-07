@@ -33,19 +33,26 @@ export default class Field extends React.Component {
     error: false
   }
 
-  onChange = (e) => {
+  constructor(props) {
+    super(props);
+    this.onChange = this.onChange.bind(this);
+  }
+
+  onChange(e) {
     let { validation, pattern, onChange, required, errorMessage } = this.props;
     let error = (required && !e.target.value);
-    if(typeof validation === 'function') error = validation(e.target.value);
-    else if(pattern) error = pattern.test(e.target.value);
-    
+    if (typeof validation === 'function') error = validation(e.target.value);
+    else if (pattern) error = pattern.test(e.target.value);
+
     this.setState({
       value: e.target.value,
       error,
       errorMessage: (error ? errorMessage : null)
     });
-    if (typeof onChange === 'function') 
+    if (typeof onChange === 'function') {
+      onChange = onChange.bind(this);
       onChange(e);
+    }
   }
 
   processType(type) {
@@ -53,12 +60,12 @@ export default class Field extends React.Component {
   }
 
   // Renders
-  nodeInfo(info){
+  nodeInfo(info) {
     return <InputAdornment position="start">
       <Info message={info} />
     </InputAdornment>
   }
-  
+
   render() {
     let { type, disabled, info,
       required, name, variant, fullWidth,
@@ -67,7 +74,7 @@ export default class Field extends React.Component {
     let inputProps = {
       label,
       name,
-      id:name,
+      id: name,
       type: this.processType(type),
       placeholder,
       required,
@@ -76,16 +83,16 @@ export default class Field extends React.Component {
       onChange: this.onChange,
       error,
       helperText: errorMessage,
-      InputProps: {startAdornment: this.nodeInfo(info)},
-      autoComplete:'off',
+      InputProps: { startAdornment: this.nodeInfo(info) },
+      autoComplete: 'off',
       variant,
       fullWidth,
       ref: r => this.ref = r
     }
     return (<>
-      <TextField {...inputProps}/>
-      <br/>
-      <br/>
+      <TextField {...inputProps} />
+      <br />
+      <br />
     </>);
   }
 
