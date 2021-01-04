@@ -1,18 +1,7 @@
 import React from "react";
+import Field from "./field";
 
-export default class SelectField extends React.Component {
-
-  static defaultProps = {
-    value: '',
-    disabled: false,
-    required: false,
-    name: null,
-    label: null,
-    placeholder: null,
-    errorMessage: null,//considerar un {} para tener multiples o string
-    options: [], //{ label: string, value: any, disabled:boolean }[],
-    onChange: null
-  }
+export default class SelectField extends Field {
 
   state = {
     value: this.props.value

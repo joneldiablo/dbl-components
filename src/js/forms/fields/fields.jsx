@@ -31,9 +31,6 @@ export default class Fields extends React.Component {
   Field = fieldComponents[this.props.type];
 
   // Renders
-  content() {
-    return super.render();
-  }
 
   render() {
     let { className, style, ...props } = this.props;
