@@ -1,9 +1,24 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Form from "../forms/form";
 import FlexContainer from "../containers/flex-container";
 import { Stage, Layer, Line } from "react-konva";
 
 export default class Trapezoid extends React.Component {
+
+  static propTypes = {
+    className: PropTypes.string,
+    style: PropTypes.object,
+    onChange: PropTypes.func,
+    sideB: PropTypes.number,
+    high: PropTypes.number,
+    sideA: PropTypes.number,
+  }
+
+  static defaultProps = {
+    className: '',
+    style: {}
+  }
 
   state = {
     width: 0,
@@ -20,19 +35,22 @@ export default class Trapezoid extends React.Component {
         name: 'sideB',
         placeholder: 'Base Menor',
         type: 'number',
-        min: 0
+        min: 0,
+        value: this.props.sideB
       },
       {
         name: 'high',
         placeholder: 'Altura',
         type: 'number',
-        min: 0
+        min: 0,
+        value: this.props.high
       },
       {
         name: 'sideA',
         placeholder: 'Base Mayor',
         type: 'number',
-        min: 0
+        min: 0,
+        value: this.props.sideA
       }
     ]
   }

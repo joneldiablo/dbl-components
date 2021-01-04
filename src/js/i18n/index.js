@@ -46,10 +46,6 @@ class Text extends React.Component {
     return translate(value, context, this.lang);
   }
 
-  toString() {
-    return this.state.value;
-  }
-
   render() {
     return this.state.value;
   }

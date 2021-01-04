@@ -1,5 +1,5 @@
 import React from "react";
-import Select from "../src/js/forms/fields/material/select-field";
+import Select from "../../src/js/forms/fields/material/select-field";
 
 export default {
   title: 'Diablo components/Fields',

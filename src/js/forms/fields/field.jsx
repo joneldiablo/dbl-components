@@ -1,29 +1,35 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 export default class Field extends React.Component {
 
+  static propTypes = {
+    value: PropTypes.any,
+    type: PropTypes.string,
+    disabled: PropTypes.bool,
+    required: PropTypes.bool,
+    pattern: PropTypes.string,
+    name: PropTypes.string,
+    label: PropTypes.string,
+    placeholder: PropTypes.string,
+    errorMessage: PropTypes.string,//considerar un {} para tener multiples o string
+    options: PropTypes.array, //{ label: string, value: any }[],
+    onChange: PropTypes.func
+  }
+
   static defaultProps = {
-    value: '',
-    type: 'text',
-    disabled: false,
-    required: false,
-    pattern: null,
-    name: null,
-    label: null,
-    placeholder: null,
-    errorMessage: null,//considerar un {} para tener multiples o string
-    options: null, //{ label: string, value: any }[],
-    fields: null,//if type===Group|FormGroup this fields are set
-    onChange: null
+    type: 'text'
   }
 
   state = {
-    value: this.props.value
+    value: this.props.value || ''
   }
 
   constructor(props) {
     super(props);
     this.onChange = this.onChange.bind(this);
+    if (typeof props.onChange === 'function')
+      props.onChange({ [props.name]: props.value });
   }
 
   onChange(e) {
@@ -34,8 +40,7 @@ export default class Field extends React.Component {
       validationClassName
     });
     if (typeof onChange === 'function') {
-      onChange = onChange.bind(this);
-      onChange(e);
+      onChange({ [e.target.name]: e.target.value });
     }
   }
 

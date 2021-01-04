@@ -1,0 +1,22 @@
+{
+  "components":{
+    "table":{},
+    "form":{}
+  },
+  "content":{
+    "home":{},
+    "parent-enterprise":{},
+    "groups":{},
+    "branches":{},
+    "dispositives":{},
+    "tags":{},
+    "licenses":{},
+    "permissions":{}
+  },
+  "routes":[
+    {
+      "ref":"$content.home",
+      "routes":[]
+    }
+  ]
+}

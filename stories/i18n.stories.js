@@ -53,6 +53,7 @@ export const selectLanguageMultiple = () => {
     <div>{t('texto corto')}</div>
     <div>{t('diferente texto')}</div>
     <div>{t('último texto')}</div>
+    <input class="btn btn-primary" placeholder={src('en el plaholder!!!!')}/>
   </div>
 };
 

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import flatten from "flat";
 import schemaManager from "../functions/schema-manager"
 import Fields from "./fields/fields";
@@ -12,6 +13,24 @@ export const setTemplateComponents = (_components) => {
 }
 
 export default class Form extends React.Component {
+
+  static propTypes = {
+    action: PropTypes.string,
+    method: PropTypes.string,
+    clearAfterDone: PropTypes.bool,
+    headers: PropTypes.object,
+    onBeforeSubmit: PropTypes.func,
+    onDone: PropTypes.func,
+    onError: PropTypes.func,
+    onAfterSubmit: PropTypes.func,
+    fields: PropTypes.oneOfType([
+      PropTypes.array,
+      PropTypes.object
+    ]),
+    className: PropTypes.string,
+    style: PropTypes.object,
+    template: PropTypes.object
+  }
 
   static defaultProps = {
     action: null,
@@ -56,8 +75,11 @@ export default class Form extends React.Component {
 
   onSubmit = async (e) => {
     e.preventDefault();
-    let { action, method, headers, onAfterSubmit, onDone, onError } = this.props;
+    let { action, method, headers, onAfterSubmit, onDone, onError, onSubmit } = this.props;
     let { loading, data } = this.state;
+    if (!action && typeof onSubmit === 'function') {
+      return onSubmit(data);
+    }
     if (loading) return;
     this.setState({ loading: true });
     method = method.toUpperCase();
@@ -68,7 +90,6 @@ export default class Form extends React.Component {
     if (method === 'get') {
       let flatData = flatten(data);
       let query = new URLSearchParams(flatData).toString();
-      console.log('query:', query);
       action += '?' + query;
     } else {
       let body = this.props.onBeforeSubmit(data);
@@ -90,8 +111,8 @@ export default class Form extends React.Component {
     if (typeof onAfterSubmit === 'function') onAfterSubmit(payload);
   }
 
-  onChange(e) {
-    this.state.data[e.target.name] = e.target.value;
+  onChange(data) {
+    Object.assign(this.state.data, data);
     this.setState({
       data: this.state.data
     }, () => {
@@ -101,7 +122,7 @@ export default class Form extends React.Component {
   }
 
   render() {
-    let { action, method, className, style } = this.props;
+    let { action, method, className, style, children } = this.props;
     let { fields } = this.state;
     let cn = [this.constructor.name, className].join(' ');
     let $fields = Array.isArray(fields) ?
@@ -109,21 +130,14 @@ export default class Form extends React.Component {
       <Fields {...fields} onChange={this.onChange} />
 
     return (<div className={cn} style={style}>
-      {action ?
-        <form action={action} method={method} onSubmit={this.onSubmit}>
-          {this.Template ?
-            <this.Template>
-              {$fields}
-            </this.Template> :
-            <>
-              {$fields}
-              <div className="px-2 mb-2">
-                <button className="btn btn-primary btn-block" type="submit">Enviar</button>
-              </div>
-            </>}
-        </form> :
-        $fields
-      }
+      <form action={action} method={method} onSubmit={this.onSubmit}>
+        {this.Template ?
+          <this.Template>
+            {$fields}
+          </this.Template> :
+          $fields}
+        {children}
+      </form>
     </div>);
   }
 }

@@ -18,13 +18,22 @@ export default class SelectField extends React.Component {
     value: this.props.value
   }
 
+  constructor(props) {
+    super(props);
+    if (typeof props.onChange === 'function')
+      props.onChange({ target: { name: props.name, value: props.value || this.props.options[0].value } });
+  }
+
   onChange = (e) => {
     let validationClassName = !this.ref?.checkValidity() ? 'is-invalid' : '';
+    let value= e.target.value;
+    if (value === 'true') value = true;
+    if (value === 'false') value = false;
     this.setState({
-      value: e.target.value,
+      value,
       validationClassName
     });
-    if (typeof this.props.onChange === 'function') this.props.onChange(e);
+    if (typeof this.props.onChange === 'function') this.props.onChange({[e.target.name]:value});
   }
 
   // Renders

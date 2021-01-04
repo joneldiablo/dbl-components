@@ -6,24 +6,24 @@ import Info from "./info";
 export default class Field extends React.Component {
 
   static defaultProps = {
-    value: '',
+    //value: '',
     type: 'text',
-    disabled: false,
-    required: false,
-    pattern: null,
-    name: null,
-    label: null,
-    placeholder: null,
-    errorMessage: null,//considerar un {} para tener multiples o string
-    options: null, //{ label: string, value: any }[],
-    fields: null,//if type===Group|FormGroup this fields are set
-    onChange: null,
-    className: null,
-    style: null,
-    info: '',
+    //disabled: false,
+    //required: false,
+    //pattern: null,
+    //name: null,
+    //label: null,
+    //placeholder: null,
+    //errorMessage: null,//considerar un {} para tener multiples o string
+    //options: null, //{ label: string, value: any }[],
+    //fields: null,//if type===Group|FormGroup this fields are set
+    //onChange: null,
+    //className: null,
+    //style: null,
+    //info: '',
     style: { fontSize: 12 },
     variant: 'outlined',
-    validation: null,
+    //validation: null,
     fullWidth: true
   }
 

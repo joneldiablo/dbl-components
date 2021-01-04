@@ -3,6 +3,7 @@ import Field from "./field";
 import GroupField from "../groups/group";
 import HiddenField from "./hidden-field";
 import SelectField from "./select-field";
+import PropTypes from 'prop-types';
 
 const fieldComponents = {
   'group': GroupField,
@@ -14,11 +15,17 @@ export const setFieldComponents = (_components) => {
   Object.assign(fieldComponents, _components);
 }
 
-export default class Fields extends Field {
+export default class Fields extends React.Component {
+
+  static propTypes = {
+    ...Field.propTypes,
+    className: PropTypes.string,
+    style: PropTypes.object
+  }
 
   static defaultProps = {
-    ...Field.defaultProps,
-    className: 'mb-3'
+    className: 'mb-3',
+    style: {}
   }
 
   Field = fieldComponents[this.props.type];
@@ -34,7 +41,7 @@ export default class Fields extends Field {
     return <div className={cn} style={style}>
       {this.Field ?
         <this.Field {...props} /> :
-        this.content()
+        <Field {...props} />
       }
     </div>
   }
