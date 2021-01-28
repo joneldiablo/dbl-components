@@ -68,21 +68,26 @@ export default class Field extends React.Component {
       min, max,
       ref: r => this.ref = r
     }
-    return <>
-      {placeholder && !label ?
-        <div className="form-floating">
-          <input {...inputProps} />
-          <label htmlFor={name}>{placeholder}</label>
-        </div> :
-        <><label className="form-label" htmlFor={name}>
+    return placeholder && !label ?
+      <div className="form-floating">
+        <input {...inputProps} />
+        <label htmlFor={name}>
+          {placeholder}
+          {required && <small title="Este campo es indispensable" className="text-muted">*</small>}
+        </label>
+        <small className="invalid-feedback">
+          {errorMessage}
+        </small>
+      </div> :
+      <>
+        <label className="form-label" htmlFor={name}>
           {label}
           {required && <small title="Este campo es indispensable" className="text-muted">*</small>}
         </label>
-          <input {...inputProps} />
-        </>}
-      <small className="invalid-feedback">
-        {errorMessage}
-      </small>
-    </>
+        <input {...inputProps} />
+        <small className="invalid-feedback">
+          {errorMessage}
+        </small>
+      </>
   }
 }

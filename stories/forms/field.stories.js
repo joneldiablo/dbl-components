@@ -1,7 +1,7 @@
 import Field from "../../src/js/forms/fields/field";
 
 export default {
-  title: 'Forms/Field',
+  title: 'Forms/Fields',
   component: Field,
   argTypes: {
     type: 'text',
