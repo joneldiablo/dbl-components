@@ -19,6 +19,9 @@ const Template = (args) => (<HashRouter>
         <li><Link to="/sub-routes">ruta con sub rutas</Link></li>
         <li><Link to="/sub-routes/inside-1">inside 1</Link></li>
         <li><Link to="/sub-routes/inside-2">inside 2</Link></li>
+        <li><Link to="/sub-routes-sin-default">ruta con sub rutas SIN DEFAULT</Link></li>
+        <li><Link to="/sub-routes-sin-default/inside-1">inside 1</Link></li>
+        <li><Link to="/sub-routes-sin-default/inside-2">inside 2</Link></li>
       </ul>
     </div>
     <div>
@@ -60,6 +63,36 @@ BasicDemo.args = {
     },
     {
       path: "/sub-routes",
+      view: {
+        name: "Demo /sub-routes",
+        content: "path: alguna ruta"
+      },
+      routes: [
+        {
+          path: "/",
+          view: {
+            name: "Default",
+            content: "Hijo default"
+          }
+        },
+        {
+          path: "inside-1",
+          view: {
+            name: "Demo /inside-1",
+            content: "contenido dentro 1"
+          }
+        },
+        {
+          path: "inside-2",
+          view: {
+            name: "Demo /inside-2",
+            content: "contenido dentro 2"
+          }
+        }
+      ]
+    },
+    {
+      path: "/sub-routes-sin-default",
       view: {
         name: "Demo /sub-routes",
         content: "path: alguna ruta"
