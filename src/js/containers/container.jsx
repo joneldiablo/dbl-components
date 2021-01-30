@@ -1,20 +1,20 @@
 import React from "react";
-import { randomS4 } from "../functions";
 
 export default class Container extends React.Component {
 
   static defaultProps = {
-    className: '',
-    style: {}
+    classes: '',
+    style: {},
+    fluid: true
   }
 
-  id = this.constructor.name + '-' + randomS4();
-
   render() {
-    let { className, style } = this.props;
-    let cn = [this.constructor.name, className].join(' ');
-    return <div id={this.id} className={cn} style={style}>
-      {this.props.children}
+    let { classes, style, name, children, fluid } = this.props;
+    let cn = [this.constructor.name, name + '-container', classes].join(' ');
+    return <div className={cn} style={style}>
+      <div className={fluid ? 'container-fluid' : 'container'}>
+        {children}
+      </div>
     </div>
   }
 }

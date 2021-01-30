@@ -1,6 +1,6 @@
 import React from 'react';
 import { HashRouter, Link } from "react-router-dom";
-import { RouterSchema } from '../../src/js/react-router-schema';
+import { RouterSchema } from '../../src/js/react-router-schema/react-router-schema';
 //import * as ButtonStories from './Button.stories';
 
 export default {
@@ -8,7 +8,7 @@ export default {
   component: RouterSchema
 }
 const Template = (args) => (<HashRouter>
-  <div style={{display:'flex'}}>
+  <div style={{ display: 'flex' }}>
     <div>
       <ul>
         <li><Link to="/">inicio</Link></li>
@@ -35,85 +35,160 @@ BasicDemo.args = {
   routes: [
     {
       path: "/",
-      view: {
-        name: "Demo /",
-        content: "Hola root, inicio"
-      }
+      view: "Debug",
+      name: "home",
+      content: "Hola root, inicio"
     },
     {
       path: "/mundo",
-      view: {
-        name: "Demo /mundo",
-        content: "Hola mundo, path único"
-      }
+      view: "Debug",
+      name: "mundo",
+      content: "Hola mundo, path único"
     },
     {
       path: "/mundo/inside",
-      view: {
-        name: "Demo /mundo/inside",
-        content: "inside the world"
-      }
+      view: "Debug",
+      name: "mundo-inside",
+      content: "inside the world"
     },
     {
       path: ["/otra", "/ruta"],
-      view: {
-        name: "Demo /otra /ruta",
-        content: "path: alguna ruta"
-      }
+      view: "Debug",
+      name: "otra-ruta",
+      content: "dos rutas, misma vista"
     },
     {
       path: "/sub-routes",
-      view: {
-        name: "Demo /sub-routes",
-        content: "path: alguna ruta"
-      },
+      view: "Debug",
+      name: "sub-routes",
+      content: "ruta con sub rutas más default",
       routes: [
         {
           path: "/",
-          view: {
-            name: "Default",
-            content: "Hijo default"
-          }
+          view: "Debug",
+          name: "Default",
+          content: "Hijo default"
         },
         {
           path: "inside-1",
-          view: {
-            name: "Demo /inside-1",
-            content: "contenido dentro 1"
-          }
+          view: "Debug",
+          name: "inside-1",
+          content: "contenido dentro 1"
         },
         {
           path: "inside-2",
-          view: {
-            name: "Demo /inside-2",
-            content: "contenido dentro 2"
-          }
+          view: "Debug",
+          name: "inside-2",
+          content: "contenido dentro 2"
         }
       ]
     },
     {
       path: "/sub-routes-sin-default",
-      view: {
-        name: "Demo /sub-routes",
-        content: "path: alguna ruta"
-      },
+      view: "Debug",
+      name: "sub-routes-sin-default",
+      content: "path: alguna ruta",
       routes: [
         {
           path: "inside-1",
-          view: {
-            name: "Demo /inside-1",
-            content: "contenido dentro 1"
-          }
+          view: "Debug",
+          name: "inside-1",
+          content: "contenido dentro 1"
         },
         {
           path: "inside-2",
-          view: {
-            name: "Demo /inside-2",
-            content: "contenido dentro 2"
-          }
+          view: "Debug",
+          name: "inside-2",
+          content: "contenido dentro 2"
         }
       ]
     }
-  ],
-  views: []
+  ]
+};
+
+export const DefaultViewDemo = (args) => (<div><RouterSchema {...args} /></div>)
+DefaultViewDemo.args = {
+  routes: [
+    {
+      path: "/",
+      view: "Default",
+      name: "home",
+      content: "<span class=\"text-success\">Hola root</span>, <b>inicio</b>"
+    }
+  ]
+};
+
+export const DefaultViewSectionsDemo = DefaultViewDemo.bind({});
+DefaultViewSectionsDemo.args = {
+  routes: [
+    {
+      path: "/",
+      view: "Default",
+      name: "home",
+      content: [
+        {
+          component: "Container",
+          name: "article",
+          content: "<span class=\"text-success\">Hola root</span>, <b>inicio</b>"
+        }
+      ]
+    }
+  ]
+};
+
+import logo from "../assets/images/logo.png";
+export const MangiBone = DefaultViewDemo.bind({});
+MangiBone.args = {
+  routes: [
+    {
+      path: "/",
+      view: "Default",
+      name: "template",
+      childrenIn: "view-container",
+      content: [
+        {
+          component: "NavbarContainer",
+          name: "header",
+          content: [
+            {
+              component: "Logo",
+              name: "logo",
+              image: logo,
+              content: "Logo",
+              website:"MangiBone",
+              slogan: "Come rico, come saludable, come bien"
+            },
+            {
+              component: "NavMenu",
+              name: "nav-menu",
+              content: "<div class='text-right'>menu</div>",
+              menu: []
+            }
+          ]
+        },
+        {
+          component: "Container",
+          name: "view-container"
+        },
+        {
+          component: "Footer",
+          name: "footer"
+        }
+      ],
+      routes: [
+        {
+          path: "/",
+          view: "Default",
+          name: "home",
+          content: "contenido de la página en esta <b>string</b>"
+        },
+        {
+          path: "/products",
+          view: "Default",
+          name: "home",
+          content: "vamonos a los productos perro!!!"
+        }
+      ]
+    }
+  ]
 };

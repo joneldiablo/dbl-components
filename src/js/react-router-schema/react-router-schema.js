@@ -9,16 +9,27 @@ import {
   Route,
   Switch
 } from "react-router-dom";
+import { hash } from "../functions";
+import DefaultView from "../views/view";
+import DebugView from "../views/debug-view";
+
+const VIEWS = {
+  Debug: DebugView,
+  Default: DefaultView
+};
+
+export const addViews = (viewsExtra) => {
+  Object.assign(VIEWS, viewsExtra);
+}
 
 const routePropTypes = {
   path: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string)
   ]).isRequired,
-  view: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    content: PropTypes.any.isRequired
-  }).isRequired,
+  name: PropTypes.string.isRequired,
+  view: PropTypes.string.isRequired,
+  content: PropTypes.any.isRequired,
   exact: PropTypes.bool,
   strict: PropTypes.bool,
   location: PropTypes.object,
@@ -27,27 +38,12 @@ const routePropTypes = {
 routePropTypes.routes = PropTypes.arrayOf(PropTypes.shape(routePropTypes));
 
 const schemaPropTypes = {
-  views: PropTypes.arrayOf(PropTypes.elementType),
   routes: PropTypes.arrayOf(PropTypes.shape(routePropTypes))
 }
 
 const schemaDefaultProps = {
   routes: [],
   views: []
-}
-
-const NotFoundView = ({ children, ...props }) => {
-  return (<div style={{ display: 'flex', border: '1px solid', padding: 5, margin: 2 }}>
-    <div>
-      <p>View "{props.name}" not found.</p>
-      <pre>
-        {JSON.stringify(props, null, 2)}
-      </pre>
-    </div>
-    <div>
-      {children}
-    </div>
-  </div>);
 }
 
 export default class SchemaController extends React.Component {
@@ -66,10 +62,11 @@ export default class SchemaController extends React.Component {
 
   buildRoutes() {
     // crear un clone de lo que se recibe
-    const routesSchema = JSON.parse(JSON.stringify(this.props.routes));
+    const schemaStr = JSON.stringify(this.props.routes);
+    const routesSchema = JSON.parse(schemaStr);
+    // obtener un identificador de la cadena
+    this.schemaHash = hash(schemaStr);
     // se crean las rutas de forma única.
-    // no se permite crearlas en cada render
-    // no se cargan en vista por tanto no es necesario hacerlo en didmount
     this.setState({
       routeNodes: routesSchema.map(this.views)
     });
@@ -80,7 +77,8 @@ export default class SchemaController extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    let isEq = JSON.stringify(prevProps.routes) !== JSON.stringify(this.props.routes);
+    // comprobar si ha cambiado el schema
+    let isEq = this.schemaHash !== hash(JSON.stringify(this.props.routes));
     if (isEq) {
       this.buildRoutes();
     }
@@ -92,7 +90,7 @@ export default class SchemaController extends React.Component {
    * permite que el schema tenga un arreglo de paths
    **/
   views = (route, i) => {
-    let View = this.props.views[route.view.name] || (NotFoundView);
+    let View = VIEWS[route.view] || (DefaultView);
     let subroutes = [];
     if (Array.isArray(route.routes)) {
       subroutes = route.routes.map((subRoute, i) => {
@@ -114,17 +112,11 @@ export default class SchemaController extends React.Component {
       location: route.location,
       sensitive: route.sensitive
     };
-    const viewProps = {
-      ...route.view,
-      histoy: this.props.history,
-      match: this.props.match,
-      location: this.props.location
-    };
-    return (<Route key={i} {...routeProps} >
-      <View {...viewProps}>
+    const renderView = (props) => (
+      <View {...route} {...props}>
         <Switch>{subroutes}</Switch>
-      </View>
-    </Route>);
+      </View>);
+    return (<Route key={i+'-'+route.name} {...routeProps} render={renderView} />);
   }
 
   render() {
