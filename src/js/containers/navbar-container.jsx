@@ -1,22 +1,27 @@
 import React from "react";
+import Container from "./container";
 
-export default class NavbarContainer extends React.Component {
+export default class NavbarContainer extends Container {
 
   static defaultProps = {
+    ...Container.defaultProps,
     classes: 'navbar-light bg-light shadow-sm',
-    style: {},
     fluid: true
   }
 
+  content() {
+    const { children } = this.props;
+    const c = children.map((item, i) =>
+      <div key={i} className={['col', item.col?.classes].join(' ')}>{item}</div>);
+    return super.content(c);
+  }
+
   render() {
-    let { classes, style, name, children, fluid } = this.props;
-    let cn = [this.constructor.name, name + '-container', classes, 'navbar'].join(' ');
-    return <nav className={cn} style={style}>
-      <div className={fluid ? 'container-fluid' : 'container'}>
-        {children.map((item, i) =>
-          <div key={i} className={['col', item.col?.classes].join(' ')}>{item}</div>)
-        }
-      </div>
+    let { classes, style } = this.props;
+    let cn = [this.constructor.name, this.name(), this.localClasses, classes, 'navbar'].join(' ');
+    const s = Object.assign({}, this.localStyles, style);
+    return <nav className={cn} style={s}>
+      {this.content()}
     </nav>
   }
 }

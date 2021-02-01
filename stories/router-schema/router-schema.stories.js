@@ -35,49 +35,49 @@ BasicDemo.args = {
   routes: [
     {
       path: "/",
-      view: "Debug",
+      view: "debug",
       name: "home",
       content: "Hola root, inicio"
     },
     {
       path: "/mundo",
-      view: "Debug",
+      view: "debug",
       name: "mundo",
       content: "Hola mundo, path único"
     },
     {
       path: "/mundo/inside",
-      view: "Debug",
+      view: "debug",
       name: "mundo-inside",
       content: "inside the world"
     },
     {
       path: ["/otra", "/ruta"],
-      view: "Debug",
+      view: "debug",
       name: "otra-ruta",
       content: "dos rutas, misma vista"
     },
     {
       path: "/sub-routes",
-      view: "Debug",
+      view: "debug",
       name: "sub-routes",
       content: "ruta con sub rutas más default",
       routes: [
         {
           path: "/",
-          view: "Debug",
+          view: "debug",
           name: "Default",
           content: "Hijo default"
         },
         {
           path: "inside-1",
-          view: "Debug",
+          view: "debug",
           name: "inside-1",
           content: "contenido dentro 1"
         },
         {
           path: "inside-2",
-          view: "Debug",
+          view: "debug",
           name: "inside-2",
           content: "contenido dentro 2"
         }
@@ -85,19 +85,19 @@ BasicDemo.args = {
     },
     {
       path: "/sub-routes-sin-default",
-      view: "Debug",
+      view: "debug",
       name: "sub-routes-sin-default",
       content: "path: alguna ruta",
       routes: [
         {
           path: "inside-1",
-          view: "Debug",
+          view: "debug",
           name: "inside-1",
           content: "contenido dentro 1"
         },
         {
           path: "inside-2",
-          view: "Debug",
+          view: "debug",
           name: "inside-2",
           content: "contenido dentro 2"
         }
@@ -111,7 +111,7 @@ DefaultViewDemo.args = {
   routes: [
     {
       path: "/",
-      view: "Default",
+      view: "default",
       name: "home",
       content: "<span class=\"text-success\">Hola root</span>, <b>inicio</b>"
     }
@@ -123,7 +123,7 @@ DefaultViewSectionsDemo.args = {
   routes: [
     {
       path: "/",
-      view: "Default",
+      view: "default",
       name: "home",
       content: [
         {
@@ -142,7 +142,7 @@ MangiBone.args = {
   routes: [
     {
       path: "/",
-      view: "Default",
+      view: "default",
       name: "template",
       childrenIn: "view-container",
       content: [
@@ -151,11 +151,11 @@ MangiBone.args = {
           name: "header",
           content: [
             {
-              component: "Logo",
-              name: "logo",
-              image: logo,
+              component: "BrandComponent",
+              name: "brand",
               content: "Logo",
-              website:"MangiBone",
+              logo,
+              brand: "MangiBone",
               slogan: "Come rico, come saludable, come bien"
             },
             {
@@ -178,13 +178,157 @@ MangiBone.args = {
       routes: [
         {
           path: "/",
-          view: "Default",
+          view: "default",
           name: "home",
           content: "contenido de la página en esta <b>string</b>"
         },
         {
           path: "/products",
-          view: "Default",
+          view: "default",
+          name: "home",
+          content: "vamonos a los productos perro!!!"
+        }
+      ]
+    }
+  ]
+};
+
+export const MangiBoneTest = DefaultViewDemo.bind({});
+MangiBoneTest.args = {
+  routes: [
+    {
+      path: "/",
+      view: "test",
+      name: "template",
+      childrenIn: "views",
+      style: {
+        height: 'calc(100vh - 3px)'
+      },
+      content: [
+        {
+          component: "NavbarContainer",
+          name: "header-bar",
+          content: [
+            {
+              component: "BrandComponent",
+              name: "brand",
+              content: "Logo",
+              logo,
+              brand: "MangiBone",
+              slogan: "Come rico, come saludable, come bien"
+            },
+            {
+              component: "NavMenu",
+              name: "nav-menu",
+              content: "<div class='text-right'>menu</div>",
+              menu: []
+            }
+          ]
+        },
+        {
+          component: "NavbarContainer",
+          name: "search-bar",
+          content: "search here",
+          classes: 'bg-dark shadow-sm text-white text-right'
+        },
+        {
+          component: "Container",
+          name: "views",
+          fullWidth: true
+        },
+        {
+          component: "Footer",
+          name: "footer",
+          content: 'footer'
+        }
+      ],
+      routes: [
+        {
+          path: "/",
+          view: "test",
+          name: "home",
+          content: [
+            {
+              name: "hero-video",
+              component: "Hero",
+              content: "hero here",
+              style: {
+                height: 300
+              }
+            },
+            {
+              component: 'Container',
+              name: 'home-content',
+              fluid: false,
+              content: [
+                {
+                  name: "about-us",
+                  component: "GridContainer",
+                  gutter: 'g-0',
+                  content: [
+                    {
+                      component: "Container",
+                      name: "about-us-description",
+                      content: "sobre nosotros",
+                      fullWidth: true
+                    }, {
+                      component: "ImageContainer",
+                      name: "about-us-image",
+                      content: "imagen sobre nosotros"
+                    }
+                  ]
+                },
+                {
+                  component: "Container",
+                  name: "the-team",
+                  fullWidth: true,
+                  content: [
+                    {
+                      component: "Title",
+                      name: "titulo-team",
+                      content: "El equipo"
+                    },
+                    {
+                      name: "grid-team",
+                      component: "GridContainer",
+                      gutter: 'g-4',
+                      content: [
+                        {
+                          component: 'CardContainer',
+                          name: 'angel',
+                          content: 'Ángel'
+                        },
+                        {
+                          component: 'CardContainer',
+                          name: 'chimuelo',
+                          content: 'El Chimuelo'
+                        },
+                        {
+                          component: 'CardContainer',
+                          name: 'davicho',
+                          content: 'Davicho'
+                        }
+                      ]
+                    },
+                  ]
+                },
+                {
+                  name: "services",
+                  component: "Grid",
+                  content: "services here"
+                },
+                {
+                  name: "contact",
+                  component: "Container",
+                  content: "contact and map here"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          path: "/products",
+          view: "test",
           name: "home",
           content: "vamonos a los productos perro!!!"
         }

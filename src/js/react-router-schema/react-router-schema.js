@@ -11,11 +11,13 @@ import {
 } from "react-router-dom";
 import { hash } from "../functions";
 import DefaultView from "../views/view";
+import TestView from "../views/test-view";
 import DebugView from "../views/debug-view";
 
 const VIEWS = {
-  Debug: DebugView,
-  Default: DefaultView
+  debug: DebugView,
+  default: DefaultView,
+  test: TestView
 };
 
 export const addViews = (viewsExtra) => {

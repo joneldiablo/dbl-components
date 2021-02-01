@@ -3,14 +3,18 @@ import PropTypes from "prop-types";
 import { hash } from "../functions";
 import NavbarContainer from "../containers/navbar-container";
 import Container from "../containers/container";
-import TestComponent from "../debug-component";
+import GridContainer from "../containers/grid-container";
+import Debug from "../debug-component";
+import Component from "../component";
 
-const DefaultComponent = Container;
+const DefaultComponent = Component;
 
 const COMPONENTS = {
-  TestComponent,
+  Debug,
+  Container,
   NavbarContainer,
-  Container
+  GridContainer,
+  Component
 }
 
 export const addComponents = (newComponents) => {
@@ -36,6 +40,14 @@ export default class View extends React.Component {
 
   state = {
     content: []
+  }
+
+  localClasses = '';
+  localStyles = {};
+
+  constructor(props) {
+    super(props);
+    this.sections = this.sections.bind(this);
   }
 
   buildContent() {
@@ -65,7 +77,10 @@ export default class View extends React.Component {
     }
   }
 
-  sections = (section, i) => {
+  sections(section, i) {
+    if (typeof section === 'string') {
+      return (<section key={i + '-' + section.name} dangerouslySetInnerHTML={{ __html: section }} />);
+    }
     const { location, match, history, childrenIn, children } = this.props;
     let Component = COMPONENTS[section.component] || (DefaultComponent);
     let subcontent = Array.isArray(section.content) ?
@@ -91,8 +106,9 @@ export default class View extends React.Component {
   render() {
     const { classes, style, name, childrenIn, children } = this.props;
     const { content } = this.state;
-    const cn = [this.constructor.name, name + '-view', classes];
-    return (<div id={name} className={cn.join(' ')} style={style}>
+    const cn = [this.constructor.name, name + '-view', classes, this.localClasses];
+    const s = Object.assign({}, this.localStyles, style);
+    return (<div id={name} className={cn.join(' ')} style={s}>
       {content}
       {!childrenIn && children}
     </div>);

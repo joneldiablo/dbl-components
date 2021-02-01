@@ -5,3 +5,29 @@
 @import "./navigation/side-navigation";
 @import "./navigation/cards-navigation";
 @import "./tables/jexcel-table";
+
+/* html, body {
+  height: 100%;
+} */
+
+// text-view
+// TODO: mover a un archivo aparte
+.test-view-wrapper {
+  border: 1px solid red;
+  padding: 1;
+  overflow: auto;
+  height: calc(100% - 2px);
+  width: calc(100% - 2px);
+  left: 1px;
+  top: 1px;
+  & > .TestView {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.test-section-wrapper {
+  border: 1px solid blue;
+  padding: 1px;
+  margin: 1px;
+}
