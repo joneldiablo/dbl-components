@@ -195,10 +195,11 @@ MangiBone.args = {
 
 export const MangiBoneTest = DefaultViewDemo.bind({});
 MangiBoneTest.args = {
+  test: true,
   routes: [
     {
       path: "/",
-      view: "test",
+      view: "view",
       name: "template",
       childrenIn: "views",
       style: {
@@ -245,90 +246,158 @@ MangiBoneTest.args = {
       routes: [
         {
           path: "/",
-          view: "test",
+          view: "view",
           name: "home",
           content: [
             {
               name: "hero-video",
               component: "Hero",
               content: "hero here",
+              classes: "bg-primary",
               style: {
                 height: 300
               }
             },
             {
-              component: 'Container',
-              name: 'home-content',
+              name: "about-us",
+              component: "GridContainer",
+              fullWidth: false,
               fluid: false,
+              row: 'g-0',
               content: [
                 {
-                  name: "about-us",
+                  component: "Container",
+                  name: "about-us-description",
+                  content: "sobre nosotros",
+                  fullWidth: true
+                }, {
+                  component: "ImageContainer",
+                  name: "about-us-image",
+                  content: "imagen sobre nosotros"
+                }
+              ]
+            },
+            {
+              component: "Container",
+              name: "the-team",
+              fullWidth: false,
+              fluid: false,
+              classes: "bg-light",
+              content: [
+                {
+                  component: "Title",
+                  name: "titulo-team",
+                  content: "El equipo"
+                },
+                {
+                  name: "grid-team",
                   component: "GridContainer",
-                  gutter: 'g-0',
+                  row: 'g-4',
                   content: [
                     {
-                      component: "Container",
-                      name: "about-us-description",
-                      content: "sobre nosotros",
-                      fullWidth: true
-                    }, {
-                      component: "ImageContainer",
-                      name: "about-us-image",
-                      content: "imagen sobre nosotros"
+                      component: 'CardContainer',
+                      name: 'angel',
+                      content: 'Ángel'
+                    },
+                    {
+                      component: 'CardContainer',
+                      name: 'chimuelo',
+                      content: 'El Chimuelo'
+                    },
+                    {
+                      component: 'CardContainer',
+                      name: 'davicho',
+                      content: 'Davicho'
                     }
                   ]
                 },
+              ]
+            },
+            {
+              name: "services",
+              component: "GridSwitchContainer",
+              row: "g-0 row-cols-2 grid-striped",
+              fullWidth: false,
+              fluid: false,
+              content: [
                 {
                   component: "Container",
-                  name: "the-team",
                   fullWidth: true,
-                  content: [
-                    {
-                      component: "Title",
-                      name: "titulo-team",
-                      content: "El equipo"
-                    },
-                    {
-                      name: "grid-team",
-                      component: "GridContainer",
-                      gutter: 'g-4',
-                      content: [
-                        {
-                          component: 'CardContainer',
-                          name: 'angel',
-                          content: 'Ángel'
-                        },
-                        {
-                          component: 'CardContainer',
-                          name: 'chimuelo',
-                          content: 'El Chimuelo'
-                        },
-                        {
-                          component: 'CardContainer',
-                          name: 'davicho',
-                          content: 'Davicho'
-                        }
-                      ]
-                    },
-                  ]
+                  content: "servicio 1"
                 },
                 {
-                  name: "services",
-                  component: "Grid",
-                  content: "services here"
-                },
-                {
-                  name: "contact",
                   component: "Container",
-                  content: "contact and map here"
+                  fullWidth: true,
+                  content: "imgen servicio 1",
+                  classes: "bg-dark text-white"
+                },
+                {
+                  component: "Container",
+                  fullWidth: true,
+                  content: "servicio 2"
+                },
+                {
+                  component: "Container",
+                  fullWidth: true,
+                  content: "imagen servicio 2",
+                  classes: "bg-dark text-white"
                 }
               ]
+            },
+            {
+              name: "contact-wrap",
+              component: "Container",
+              fullWidth: true,
+              classes: "bg-dark text-white",
+              content: [{
+                component: "Container",
+                name: "contact-wrap",
+                fluid: false,
+                content: [
+                  {
+                    component: "Container",
+                    name: "contact-title",
+                    content: "Contáctanos",
+                    fullWidth: true
+                  },
+                  {
+                    component: "GridContainer",
+                    name: "contact-grid",
+                    colClasses: "h-auto",
+                    row: "g-0",
+                    content: [
+                      {
+                        component: "Container",
+                        name: "info",
+                        fullWidth: true,
+                        content: [
+                          {
+                            component: "Container",
+                            name: "working-hours",
+                            content: "Horario de atención"
+                          },
+                          {
+                            component: "Container",
+                            name: "contact-data",
+                            content: "Aquí nos encuentras"
+                          }
+                        ]
+                      },
+                      {
+                        component: "Container",
+                        name: "map",
+                        content: "mapa de google maps"
+                      }
+                    ]
+                  },
+                ]
+              }]
             }
           ]
         },
         {
           path: "/products",
-          view: "test",
+          view: "view",
           name: "home",
           content: "vamonos a los productos perro!!!"
         }

@@ -6,14 +6,13 @@ export default class Container extends Component {
   static defaultProps = {
     ...Component.defaultProps,
     fluid: true,
-    fullWidth: false,
-    gutter: ''
+    fullWidth: false
   }
 
   content(children = this.props.children) {
-    const { fluid, fullWidth, gutter } = this.props;
+    const { fluid, fullWidth } = this.props;
     const containerType = (!fullWidth ? (fluid ? 'container-fluid' : 'container') : 'container-fullwidth');
-    const cn = [containerType, gutter];
+    const cn = [containerType];
     return <div className={cn.join(' ')}>
       {children}
     </div>

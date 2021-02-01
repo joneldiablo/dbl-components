@@ -20,10 +20,8 @@
   width: calc(100% - 2px);
   left: 1px;
   top: 1px;
-  & > .TestView {
-    display: flex;
-    flex-direction: column;
-  }
+  display: flex;
+  flex-direction: column;
 }
 
 .test-section-wrapper {
@@ -31,3 +29,4 @@
   padding: 1px;
   margin: 1px;
 }
+//----------

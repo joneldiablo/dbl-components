@@ -11,13 +11,11 @@ import {
 } from "react-router-dom";
 import { hash } from "../functions";
 import DefaultView from "../views/view";
-import TestView from "../views/test-view";
 import DebugView from "../views/debug-view";
 
 const VIEWS = {
   debug: DebugView,
-  default: DefaultView,
-  test: TestView
+  default: DefaultView
 };
 
 export const addViews = (viewsExtra) => {
@@ -40,6 +38,7 @@ const routePropTypes = {
 routePropTypes.routes = PropTypes.arrayOf(PropTypes.shape(routePropTypes));
 
 const schemaPropTypes = {
+  test: PropTypes.bool,
   routes: PropTypes.arrayOf(PropTypes.shape(routePropTypes))
 }
 
@@ -115,7 +114,7 @@ export default class SchemaController extends React.Component {
       sensitive: route.sensitive
     };
     const renderView = (props) => (
-      <View {...route} {...props}>
+      <View {...route} {...props} test={this.props.test}>
         <Switch>{subroutes}</Switch>
       </View>);
     return (<Route key={i+'-'+route.name} {...routeProps} render={renderView} />);
