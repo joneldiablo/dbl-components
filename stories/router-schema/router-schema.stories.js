@@ -219,10 +219,20 @@ MangiBoneTest.args = {
               slogan: "Come rico, come saludable, come bien"
             },
             {
-              component: "NavMenu",
+              component: "Navigation",
               name: "nav-menu",
-              content: "<div class='text-right'>menu</div>",
-              menu: []
+              classes: "justify-content-end nav-pills",
+              menu: [
+                {
+                  path: "/",
+                  exact: true,
+                  label: "Inicio"
+                },
+                {
+                  path: "/products",
+                  label: "productos"
+                }
+              ]
             }
           ]
         },

@@ -6,6 +6,7 @@ import Container from "../containers/container";
 import GridContainer from "../containers/grid-container";
 import GridSwitchContainer from "../containers/grid-switch-container";
 import Debug from "../debug-component";
+import Navigation from "../navigation/navigation";
 import Component from "../component";
 
 const DefaultComponent = Component;
@@ -16,6 +17,7 @@ const COMPONENTS = {
   NavbarContainer,
   GridContainer,
   GridSwitchContainer,
+  Navigation,
   Component
 }
 

@@ -9,6 +9,8 @@ export default class NavbarContainer extends Container {
     fluid: true
   }
 
+  localClasses = 'navbar';
+
   content() {
     const { children } = this.props;
     const c = children.map((item, i) =>
@@ -16,12 +18,4 @@ export default class NavbarContainer extends Container {
     return super.content(c);
   }
 
-  render() {
-    let { classes, style } = this.props;
-    let cn = [this.constructor.name, this.name(), this.localClasses, classes, 'navbar'].join(' ');
-    const s = Object.assign({}, this.localStyles, style);
-    return <nav className={cn} style={s}>
-      {this.content()}
-    </nav>
-  }
 }
