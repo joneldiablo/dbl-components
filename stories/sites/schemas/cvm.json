@@ -75,7 +75,13 @@
                     {
                       "component": "GridContainer",
                       "name": "slide-welcome",
-                      "content":["espacio para el video", "espacio para un texto de presentacion"]
+                      "content": [
+                        {
+                          "component": "YoutubeVideoComponent",
+                          "name": "welcome-video"
+                        },
+                        "espacio para un texto de presentacion"
+                      ]
                     }
                   ]
                 }

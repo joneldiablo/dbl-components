@@ -9,6 +9,7 @@ import GridSwitchContainer from "../containers/grid-switch-container";
 import Debug from "../debug-component";
 import Navigation from "../navigation/navigation";
 import BrandNavigation from "../navigation/brand-navigation";
+import YoutubeVideoComponent from "../media/youtube-video";
 import Component from "../component";
 
 const DefaultComponent = Component;
@@ -22,7 +23,8 @@ const COMPONENTS = {
   HeroContainer,
   Navigation,
   BrandNavigation,
-  Component
+  Component,
+  YoutubeVideoComponent
 }
 
 export const addComponents = (newComponents) => {
