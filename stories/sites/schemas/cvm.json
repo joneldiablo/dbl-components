@@ -75,12 +75,18 @@
                     {
                       "component": "GridContainer",
                       "name": "slide-welcome",
+                      "row": "g-5",
+                      "classes": "text-white",
                       "content": [
                         {
                           "component": "YoutubeVideoComponent",
-                          "name": "welcome-video"
+                          "name": "welcome-video",
+                          "classes": "shadow-lg",
+                          "style":{
+                            "marginTop": "30vh"
+                          }
                         },
-                        "espacio para un texto de presentacion"
+                        "<div class='text-right text-shadow'><h1>Centro veterinario <br /> Moctezuma</h1><p>Cirugía y oftamología</p></div>"
                       ]
                     }
                   ]
