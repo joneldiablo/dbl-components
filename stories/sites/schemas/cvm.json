@@ -1,0 +1,233 @@
+{
+  "test": false,
+  "routes": [
+    {
+      "path": "/",
+      "view": "view",
+      "name": "template",
+      "childrenIn": "views",
+      "style": {
+        "height": "calc(100vh - 3px)"
+      },
+      "content": [
+        {
+          "component": "NavbarContainer",
+          "name": "header-bar",
+          "content": [
+            {
+              "component": "BrandNavigation",
+              "name": "brand",
+              "logoSrc": "https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/logo-short.png",
+              "logoWidth": 80,
+              "logoStyle": {
+                "verticalAlign": "sub"
+              },
+              "brandName": "Centro veterinario Moctezuma",
+              "slogan": "Sí nos preocupamos"
+            },
+            {
+              "component": "Navigation",
+              "name": "nav-menu",
+              "classes": "justify-content-end nav-pills",
+              "menu": [
+                {
+                  "path": "/",
+                  "exact": true,
+                  "label": "Inicio"
+                },
+                {
+                  "path": "/services",
+                  "label": "Servicios"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "component": "Container",
+          "name": "views",
+          "fullWidth": true
+        },
+        {
+          "component": "Footer",
+          "name": "footer",
+          "content": "footer"
+        }
+      ],
+      "routes": [
+        {
+          "path": "/",
+          "view": "view",
+          "name": "home",
+          "content": [
+            {
+              "name": "hero-video",
+              "component": "HeroContainer",
+              "classes": "bg-primary",
+              "content": [
+                {
+                  "component": "Container",
+                  "name": "default-slide",
+                  "image": "https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/pexels-tima-miroshnichenko-6130994-scaled.jpg",
+                  "imageAttachment": "fixed",
+                  "fluid": false,
+                  "content": [
+                    {
+                      "component": "GridContainer",
+                      "name": "slide-welcome",
+                      "content":["espacio para el video", "espacio para un texto de presentacion"]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "about-us",
+              "component": "GridContainer",
+              "fullWidth": false,
+              "fluid": false,
+              "row": "g-0",
+              "content": [
+                {
+                  "component": "Container",
+                  "name": "about-us-description",
+                  "content": "sobre nosotros",
+                  "fullWidth": true
+                },
+                {
+                  "component": "ImageContainer",
+                  "name": "about-us-image",
+                  "content": "imagen sobre nosotros"
+                }
+              ]
+            },
+            {
+              "component": "Container",
+              "name": "the-team",
+              "fullWidth": false,
+              "fluid": false,
+              "classes": "bg-light",
+              "content": [
+                {
+                  "component": "Title",
+                  "name": "titulo-team",
+                  "content": "El equipo"
+                },
+                {
+                  "name": "grid-team",
+                  "component": "GridContainer",
+                  "row": "g-4",
+                  "content": [
+                    {
+                      "component": "CardContainer",
+                      "name": "angel",
+                      "content": "Ángel"
+                    },
+                    {
+                      "component": "CardContainer",
+                      "name": "chimuelo",
+                      "content": "El Chimuelo"
+                    },
+                    {
+                      "component": "CardContainer",
+                      "name": "davicho",
+                      "content": "Davicho"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "services",
+              "component": "GridSwitchContainer",
+              "row": "g-0 row-cols-2 grid-striped",
+              "fullWidth": false,
+              "fluid": false,
+              "content": [
+                {
+                  "component": "Container",
+                  "fullWidth": true,
+                  "content": "servicio 1"
+                },
+                {
+                  "component": "Container",
+                  "fullWidth": true,
+                  "content": "imgen servicio 1",
+                  "classes": "bg-dark text-white"
+                },
+                {
+                  "component": "Container",
+                  "fullWidth": true,
+                  "content": "servicio 2"
+                },
+                {
+                  "component": "Container",
+                  "fullWidth": true,
+                  "content": "imagen servicio 2",
+                  "classes": "bg-dark text-white"
+                }
+              ]
+            },
+            {
+              "name": "contact-wrap",
+              "component": "Container",
+              "fullWidth": true,
+              "classes": "bg-dark text-white",
+              "content": [
+                {
+                  "component": "Container",
+                  "name": "contact-wrap",
+                  "fluid": false,
+                  "content": [
+                    {
+                      "component": "Container",
+                      "name": "contact-title",
+                      "content": "Contáctanos",
+                      "fullWidth": true
+                    },
+                    {
+                      "component": "GridContainer",
+                      "name": "contact-grid",
+                      "colClasses": "h-auto",
+                      "row": "g-0",
+                      "content": [
+                        {
+                          "component": "Container",
+                          "name": "info",
+                          "fullWidth": true,
+                          "content": [
+                            {
+                              "component": "Container",
+                              "name": "working-hours",
+                              "content": "Horario de atención"
+                            },
+                            {
+                              "component": "Container",
+                              "name": "contact-data",
+                              "content": "Aquí nos encuentras"
+                            }
+                          ]
+                        },
+                        {
+                          "component": "Container",
+                          "name": "map",
+                          "content": "mapa de google maps"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "path": "/services",
+          "view": "view",
+          "name": "services",
+          "content": "Servicios"
+        }
+      ]
+    }
+  ]
+}

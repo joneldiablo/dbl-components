@@ -195,7 +195,7 @@ MangiBone.args = {
 
 export const MangiBoneTest = DefaultViewDemo.bind({});
 MangiBoneTest.args = {
-  test: true,
+  test: false,
   routes: [
     {
       path: "/",
@@ -211,11 +211,11 @@ MangiBoneTest.args = {
           name: "header-bar",
           content: [
             {
-              component: "BrandComponent",
+              component: "BrandNavigation",
               name: "brand",
-              content: "Logo",
-              logo,
-              brand: "MangiBone",
+              logoSrc: logo,
+              logoStyle: { verticalAlign: 'sub' },
+              brandName: "MangiBone",
               slogan: "Come rico, come saludable, come bien"
             },
             {
@@ -236,12 +236,12 @@ MangiBoneTest.args = {
             }
           ]
         },
-        {
-          component: "NavbarContainer",
-          name: "search-bar",
-          content: "search here",
-          classes: 'bg-dark shadow-sm text-white text-right'
-        },
+        /*         {
+                  component: "NavbarContainer",
+                  name: "search-bar",
+                  content: "search here",
+                  classes: 'bg-dark shadow-sm text-white text-right'
+                }, */
         {
           component: "Container",
           name: "views",

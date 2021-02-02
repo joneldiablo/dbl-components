@@ -4,9 +4,11 @@ import { hash } from "../functions";
 import NavbarContainer from "../containers/navbar-container";
 import Container from "../containers/container";
 import GridContainer from "../containers/grid-container";
+import HeroContainer from "../containers/hero-container";
 import GridSwitchContainer from "../containers/grid-switch-container";
 import Debug from "../debug-component";
 import Navigation from "../navigation/navigation";
+import BrandNavigation from "../navigation/brand-navigation";
 import Component from "../component";
 
 const DefaultComponent = Component;
@@ -17,7 +19,9 @@ const COMPONENTS = {
   NavbarContainer,
   GridContainer,
   GridSwitchContainer,
+  HeroContainer,
   Navigation,
+  BrandNavigation,
   Component
 }
 
@@ -90,10 +94,11 @@ export default class View extends React.Component {
     let subcontent = Array.isArray(section.content) ?
       section.content.map(this.sections) :
       [!!section.content && <div key="0-str-content" dangerouslySetInnerHTML={{ __html: section.content }} />];
-    const cnTest = this.props.test ? ['test-section-wrapper'] : [];
+    const cnSection = [section.name + '-section'];
+    if (this.props.test) cnSection.push('test-section-wrapper');
     if (childrenIn && childrenIn === section.name) {
       subcontent.push(children);
-      if (this.props.test) cnTest.push('h-100 overflow-auto');
+      if (this.props.test) cnSection.push('h-100 overflow-auto');
     }
     let componentProps = {
       ...section,
@@ -101,7 +106,7 @@ export default class View extends React.Component {
       match,
       history
     }
-    return (<section key={i + '-' + section.name} className={cnTest.join(' ')}>
+    return (<section key={i + '-' + section.name} className={cnSection.join(' ')}>
       <Component {...componentProps}>
         {subcontent}
       </Component>
@@ -112,7 +117,7 @@ export default class View extends React.Component {
     const { classes, style, name, childrenIn, children, test } = this.props;
     const { content } = this.state;
     const cn = [this.constructor.name, name + '-view', classes, this.localClasses];
-    if(test) cn.push('test-view-wrapper');
+    if (test) cn.push('test-view-wrapper');
     const s = Object.assign({}, this.localStyles, style);
     return (<div id={name} className={cn.join(' ')} style={s}>
       {content}

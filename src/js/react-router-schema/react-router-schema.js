@@ -121,9 +121,10 @@ export default class SchemaController extends React.Component {
   }
 
   render() {
-    let { history } = this.props;
+    let { history, style } = this.props;
     let { routeNodes } = this.state;
     return (<Router history={history}>
+      {style && <link rel="stylesheet" type="text/css" href={style}/>}
       <Switch>
         {routeNodes}
       </Switch>

@@ -8,20 +8,23 @@ export default class Navigation extends Component {
 
   // TODO: agregar submenu dropdown 
   //       y submenu collapsable
-  content() {
-    return this.props.menu.map(item => {
-      const cnLink = ['nav-link', item.classes];
-      const propsLink = {
-        to: item.path,
-        className: cnLink.join(' '),
-        activeClassName: 'active',
-        strict: item.strict,
-        exact: item.exact
-      }
-      return (<NavLink {...propsLink}>
-        {item.label}
-      </NavLink>);
-    });
+  content(children = this.props.children) {
+    return (<>
+      {this.props.menu.map((item, i) => {
+        const cnLink = ['nav-link', item.classes];
+        const propsLink = {
+          to: item.path,
+          className: cnLink.join(' '),
+          activeClassName: 'active',
+          strict: item.strict,
+          exact: item.exact
+        }
+        return (<NavLink {...propsLink} key={i + '-' + item.path}>
+          {item.label}
+        </NavLink>);
+      })}
+      {children}
+    </>);
   }
 
   // TODO: buscar la forma de no repetir este frgamento de código

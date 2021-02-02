@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createRef } from "react";
 
 export default class Component extends React.Component {
 
@@ -9,6 +9,11 @@ export default class Component extends React.Component {
 
   localClasses = '';
   localStyles = {};
+
+  constructor(props) {
+    super(props);
+    this.ref = createRef();
+  }
 
   name() {
     const { name } = this.props;
@@ -23,7 +28,7 @@ export default class Component extends React.Component {
     let { classes, style } = this.props;
     let cn = [this.constructor.name, this.name(), this.localClasses, classes].join(' ');
     const s = Object.assign({}, this.localStyles, style);
-    return <div className={cn} style={s}>
+    return <div className={cn} style={s} ref={this.ref}>
       {this.content()}
     </div>
   }
