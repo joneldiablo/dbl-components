@@ -82,7 +82,7 @@
                           "component": "YoutubeVideoComponent",
                           "name": "welcome-video",
                           "classes": "shadow-lg",
-                          "style":{
+                          "style": {
                             "marginTop": "30vh"
                           }
                         },
@@ -98,19 +98,17 @@
               "component": "GridContainer",
               "fullWidth": false,
               "fluid": false,
-              "row": "g-0",
+              "row": "g-0 align-items-center",
+              "classes": "py-5",
               "content": [
                 {
                   "component": "Container",
                   "name": "about-us-description",
-                  "content": "sobre nosotros",
+                  "classes": "border-left",
+                  "content": "<br /><h2 class='text-primary text-center'>Lorem ipsum dolor sit amet</h2><br /><p style='font-size: 1.3em' class='px-4 text-center text-dark' >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ac ipsum dignissim, bibendum nibh laoreet, gravida ante. Sed facilisis dictum imperdiet. Vestibulum accumsan tincidunt tortor. Sed ultrices eros quam, sit amet vulputate ligula sodales ut. Mauris congue turpis libero, vel mollis ligula feugiat sed. Integer id scelerisque mi. Sed in purus in ex aliquam porttitor ut in neque.</p>",
                   "fullWidth": true
                 },
-                {
-                  "component": "ImageContainer",
-                  "name": "about-us-image",
-                  "content": "imagen sobre nosotros"
-                }
+                "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/perrito-con-bata-1200-e1612386484158.jpg' class='img-fluid d-block m-auto' />"
               ]
             },
             {

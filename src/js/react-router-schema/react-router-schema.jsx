@@ -39,6 +39,7 @@ routePropTypes.routes = PropTypes.arrayOf(PropTypes.shape(routePropTypes));
 
 const schemaPropTypes = {
   test: PropTypes.bool,
+  theme: PropTypes.string,
   routes: PropTypes.arrayOf(PropTypes.shape(routePropTypes))
 }
 
@@ -117,14 +118,14 @@ export default class SchemaController extends React.Component {
       <View {...route} {...props} test={this.props.test}>
         <Switch>{subroutes}</Switch>
       </View>);
-    return (<Route key={i+'-'+route.name} {...routeProps} render={renderView} />);
+    return (<Route key={i + '-' + route.name} {...routeProps} render={renderView} />);
   }
 
   render() {
-    let { history, style } = this.props;
+    let { history, theme } = this.props;
     let { routeNodes } = this.state;
     return (<Router history={history}>
-      {style && <link rel="stylesheet" type="text/css" href={style}/>}
+      {theme && <link rel="stylesheet" type="text/css" href={theme} />}
       <Switch>
         {routeNodes}
       </Switch>
