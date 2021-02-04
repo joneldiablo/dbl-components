@@ -6,6 +6,7 @@ import Container from "../containers/container";
 import GridContainer from "../containers/grid-container";
 import HeroContainer from "../containers/hero-container";
 import GridSwitchContainer from "../containers/grid-switch-container";
+import CardContainer from "../containers/card-container";
 import Debug from "../debug-component";
 import Navigation from "../navigation/navigation";
 import BrandNavigation from "../navigation/brand-navigation";
@@ -21,6 +22,7 @@ const COMPONENTS = {
   GridContainer,
   GridSwitchContainer,
   HeroContainer,
+  CardContainer,
   Navigation,
   BrandNavigation,
   Component,

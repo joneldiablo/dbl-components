@@ -22,8 +22,8 @@
               "logoStyle": {
                 "verticalAlign": "sub"
               },
-              "brandName": "Centro veterinario Moctezuma",
-              "slogan": "Sí nos preocupamos"
+              "brandName": "Centro Veterinario Moctezuma",
+              "slogan": "Sus patitas en nuestras manos."
             },
             {
               "component": "Navigation",
@@ -104,8 +104,8 @@
                 {
                   "component": "Container",
                   "name": "about-us-description",
-                  "classes": "border-left",
-                  "content": "<br /><h2 class='text-primary text-center'>Lorem ipsum dolor sit amet</h2><br /><p style='font-size: 1.3em' class='px-4 text-center text-dark' >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ac ipsum dignissim, bibendum nibh laoreet, gravida ante. Sed facilisis dictum imperdiet. Vestibulum accumsan tincidunt tortor. Sed ultrices eros quam, sit amet vulputate ligula sodales ut. Mauris congue turpis libero, vel mollis ligula feugiat sed. Integer id scelerisque mi. Sed in purus in ex aliquam porttitor ut in neque.</p>",
+                  "classes": "px-5 border-left text-center",
+                  "content": "<h2 class='text-primary'>Lo que nos motiva</h2><br /><p style='font-size: 1.3em'>El bienestar y el bien hacer ante todo, porque ellos también se lo merecen, porque no son solo mascotas, son compañeros de vida, son como familia y somos responsables de ellos.<br /><br />Podemos darles mejor calidad de vida, podemos cuidarlos, podemos cambiar el paradigma, puedes confiar en nosotros poniendo sus patitas en nuestras manos.</p>",
                   "fullWidth": true
                 },
                 "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/perrito-con-bata-1200-e1612386484158.jpg' class='img-fluid d-block m-auto' />"
@@ -116,32 +116,44 @@
               "name": "the-team",
               "fullWidth": false,
               "fluid": false,
-              "classes": "bg-light",
+              "classes": "py-5 bg-light",
               "content": [
-                {
-                  "component": "Title",
-                  "name": "titulo-team",
-                  "content": "El equipo"
-                },
+                "<h2 class='text-center text-primary mb-5'>Nuestro equipo</h2>",
                 {
                   "name": "grid-team",
                   "component": "GridContainer",
-                  "row": "g-4",
+                  "row": "gx-5",
+                  "classes": "text-center",
                   "content": [
                     {
                       "component": "CardContainer",
                       "name": "angel",
-                      "content": "Ángel"
+                      "classes": "shadow-sm border-0",
+                      "content": [
+                        "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/ay-perritos-face.jpeg' class='img-fluid d-block m-auto rounded-circle w-50 mb-4' />",
+                        "<h3 class='h5'>Luis Ángel Rodríguez Rdz.</h3>",
+                        "<p class='mx-5'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p>"
+                      ]
                     },
                     {
                       "component": "CardContainer",
                       "name": "chimuelo",
-                      "content": "El Chimuelo"
+                      "classes": "shadow-sm border-0",
+                      "content": [
+                        "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/gonzalo-cara.jpg' class='img-fluid d-block m-auto rounded-circle w-50 mb-4' />",
+                        "<h3 class='h5'>Gonzalo</h3>",
+                        "<p class='mx-5'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p>"
+                      ]
                     },
                     {
                       "component": "CardContainer",
                       "name": "davicho",
-                      "content": "Davicho"
+                      "classes": "shadow-sm border-0",
+                      "content": [
+                        "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/davicho-cara.jpg' class='img-fluid d-block m-auto rounded-circle w-50 mb-4' />",
+                        "<h3 class='h5'>David Argüelles Andrade</h3>",
+                        "<p class='mx-5'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p>"
+                      ]
                     }
                   ]
                 }

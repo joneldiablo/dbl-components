@@ -1,4 +1,7 @@
 $primary: #6fa4c5;
-$dark: #081a2d;
+$black: #081a2d;
+//$light: #f1f2f5;
+$dark: #0b1f35;
+$body-color: $black;
 @import "bootstrap/scss/bootstrap";
 @import "../../../src/scss/style";
