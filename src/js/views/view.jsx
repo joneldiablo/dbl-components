@@ -1,10 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
+import parseReact, { domToReact } from "html-react-parser";
+import { NavLink } from "react-router-dom";
 import { hash } from "../functions";
 import NavbarContainer from "../containers/navbar-container";
 import Container from "../containers/container";
 import GridContainer from "../containers/grid-container";
 import HeroContainer from "../containers/hero-container";
+import AspectRatioContainer from "../containers/aspect-ratio-container";
 import GridSwitchContainer from "../containers/grid-switch-container";
 import CardContainer from "../containers/card-container";
 import Debug from "../debug-component";
@@ -23,6 +26,7 @@ const COMPONENTS = {
   GridSwitchContainer,
   HeroContainer,
   CardContainer,
+  AspectRatioContainer,
   Navigation,
   BrandNavigation,
   Component,
@@ -62,6 +66,17 @@ export default class View extends React.Component {
     this.sections = this.sections.bind(this);
   }
 
+  parseOpts = {
+    replace: domNode => {
+      if (domNode.name === 'navlink') {
+        console.log(domNode);
+        return <NavLink to={domNode.attribs.to}>
+          {domToReact(domNode.children, this.parseOpts)}
+        </NavLink>;
+      }
+    }
+  }
+
   buildContent() {
     // crear un clone de lo que se recibe
     const schemaContentStr = JSON.stringify(this.props.content);
@@ -70,8 +85,7 @@ export default class View extends React.Component {
     this.contentHash = hash(schemaContentStr);
     // se crean las rutas de forma única.
     const content = Array.isArray(contentSchema) ?
-      contentSchema.map(this.sections) :
-      <div key="content" dangerouslySetInnerHTML={{ __html: contentSchema }} />;
+      contentSchema.map(this.sections) : parseReact(contentSchema, this.parseOpts);
     this.setState({
       content
     });
@@ -91,18 +105,20 @@ export default class View extends React.Component {
 
   sections(section, i) {
     if (typeof section === 'string') {
-      return (<section key={i + '-' + section.name} dangerouslySetInnerHTML={{ __html: section }} />);
+      return (<section key={i + '-' + section.name} className="h-auto">
+        {parseReact(section, this.parseOpts)}
+      </section>);
     }
     const { location, match, history, childrenIn, children } = this.props;
     let Component = COMPONENTS[section.component] || (DefaultComponent);
     let subcontent = Array.isArray(section.content) ?
       section.content.map(this.sections) :
-      [!!section.content && <div key="0-str-content" dangerouslySetInnerHTML={{ __html: section.content }} />];
-    const cnSection = [section.name + '-section'];
+      [!!section.content && parseReact(section.content, this.parseOpts)];
+    const cnSection = [section.name + '-section', 'h-auto'];
     if (this.props.test) cnSection.push('test-section-wrapper');
     if (childrenIn && childrenIn === section.name) {
       subcontent.push(children);
-      if (this.props.test) cnSection.push('h-100 overflow-auto');
+      if (this.props.test) cnSection.push('overflow-auto');
     }
     let componentProps = {
       ...section,

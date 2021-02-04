@@ -81,9 +81,10 @@
                         {
                           "component": "YoutubeVideoComponent",
                           "name": "welcome-video",
+                          "videoId": "XoITnQ6GP38",
                           "classes": "shadow-lg",
                           "style": {
-                            "marginTop": "30vh"
+                            "marginTop": "25vh"
                           }
                         },
                         "<div class='text-right text-shadow'><h1>Centro veterinario <br /> Moctezuma</h1><p>Cirugía y oftamología</p></div>"
@@ -141,7 +142,7 @@
                       "classes": "shadow-sm border-0",
                       "content": [
                         "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/gonzalo-cara.jpg' class='img-fluid d-block m-auto rounded-circle w-50 mb-4' />",
-                        "<h3 class='h5'>Gonzalo</h3>",
+                        "<h3 class='h5'>Happy</h3>",
                         "<p class='mx-5'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p>"
                       ]
                     },
@@ -162,39 +163,53 @@
             {
               "name": "services",
               "component": "GridSwitchContainer",
-              "row": "g-0 row-cols-2 grid-striped",
+              "classes": "py-5",
+              "row": "g-0 align-items-center",
               "fullWidth": false,
               "fluid": false,
               "content": [
                 {
                   "component": "Container",
                   "fullWidth": true,
-                  "content": "servicio 1"
+                  "content": "<div class='text-right mx-5'><h2 class='mb-4 text-primary'>Cirugía</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p></div>"
                 },
                 {
                   "component": "Container",
                   "fullWidth": true,
-                  "content": "imgen servicio 1",
+                  "content": "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/cirugia.jpg' class='img-fluid d-block m-auto' />",
                   "classes": "bg-dark text-white"
                 },
                 {
                   "component": "Container",
                   "fullWidth": true,
-                  "content": "servicio 2"
+                  "content": "<div class='text-left mx-5'><h2 class='mb-4 text-primary'>Oftalmología</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p></div>"
                 },
                 {
                   "component": "Container",
                   "fullWidth": true,
-                  "content": "imagen servicio 2",
+                  "content": "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/oftalmo-e1612464712821.jpg' class='img-fluid d-block m-auto' />",
                   "classes": "bg-dark text-white"
-                }
+                },
+                {
+                  "component": "Container",
+                  "fullWidth": true,
+                  "content": "<div class='text-right mx-5'><h2 class='mb-4 text-primary'>Consulta general</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p></div>"
+                },
+                {
+                  "component": "Container",
+                  "fullWidth": true,
+                  "content": "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/vacunas-cubrevocas-scaled-e1612465762221.jpg' class='img-fluid d-block m-auto' />",
+                  "classes": "bg-dark text-white"
+                },
+                "<p class='mt-4 text-right text-decoration-underline'><NavLink to='/services'>Ver todos los servicios</NavLink></p>",
+                ""
               ]
             },
             {
               "name": "contact-wrap",
               "component": "Container",
               "fullWidth": true,
-              "classes": "bg-dark text-white",
+              "classes": "bg-dark text-white py-5",
               "content": [
                 {
                   "component": "Container",
@@ -204,7 +219,7 @@
                     {
                       "component": "Container",
                       "name": "contact-title",
-                      "content": "Contáctanos",
+                      "content": "<div class='text-center'><h2>Contáctanos</h2><br /><br /></div>",
                       "fullWidth": true
                     },
                     {
@@ -231,9 +246,10 @@
                           ]
                         },
                         {
-                          "component": "Container",
+                          "component": "AspectRatioContainer",
+                          "ratio": 0.66666,
                           "name": "map",
-                          "content": "mapa de google maps"
+                          "content": "<iframe src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1886.8747524441778!2d-99.23363090995998!3d18.94247867896981!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xae956de2e457f256!2sCentro%20veterinario%20moctezuma!5e0!3m2!1ses-419!2smx!4v1612469232117!5m2!1ses-419!2smx' width='100%' height='100%' frameborder='0' style='border:0;' allowfullscreen='' aria-hidden='false' tabindex='0'></iframe>"
                         }
                       ]
                     }

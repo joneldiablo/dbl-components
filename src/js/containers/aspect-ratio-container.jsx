@@ -1,18 +1,20 @@
 import * as React from 'react';
+import Container from "./container";
 
-export default class AspectRatioContainer extends React.Component {
+export default class AspectRatioContainer extends Container {
 
   static defaultProps = {
+    ...Container.defaultProps,
+    containerClasses: '',
+    containerStyle: {},
     ratio: '100%',
-    overflow: 'hidden',
-    className: '',
-    style: {}
+    overflow: 'hidden'
   }
 
-  render() {
-    let { ratio, overflow, children, className, style } = this.props;
-    ratio = typeof ratio === 'number' ? (ratio * 100) + '%' : ratio;
-    let cn = [this.constructor.name, className].join(' ');
+  content(children = this.props.children) {
+    let { ratio, overflow, containerClasses, containerStyle } = this.props;
+    let paddingBottom = typeof ratio === 'number' ? (ratio * 100) + '%' : ratio;
+    let cn = [this.constructor.name + '-in', containerClasses];
     let st = {
       overflow,
       position: 'absolute',
@@ -22,8 +24,8 @@ export default class AspectRatioContainer extends React.Component {
       height: '100%'
     };
     return <div style={{ position: 'relative' }} >
-      <div className={this.constructor.name + '-space'} style={{ paddingBottom: ratio }}></div>
-      <div className={cn} style={Object.assign(st, style)}>
+      <div className={this.constructor.name + '-space'} style={{ paddingBottom }} />
+      <div className={cn.join(' ')} style={Object.assign(st, containerStyle)}>
         {children}
       </div>
     </div>

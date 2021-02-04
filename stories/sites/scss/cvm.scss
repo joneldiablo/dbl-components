@@ -5,3 +5,7 @@ $dark: #0b1f35;
 $body-color: $black;
 @import "bootstrap/scss/bootstrap";
 @import "../../../src/scss/style";
+
+.cursor-pointer {
+  cursor: pointer;
+}

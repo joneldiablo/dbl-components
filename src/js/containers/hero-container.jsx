@@ -13,11 +13,11 @@ export default class HeroContainer extends Container {
   }
 
   onSlideChange = () => {
-    console.log('has chyange!!!')
+    //console.log('has chyange!!!')
   }
 
   onSwiper = (swipe) => {
-    console.log(swipe)
+    //console.log(swipe)
   }
 
   content(children = this.props.children) {

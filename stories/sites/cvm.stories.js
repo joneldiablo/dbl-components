@@ -9,6 +9,8 @@ export default {
 
 const Template = (args => <HashRouterSchema {...args} />);
 
+const schema = require('./schemas/cvm.json');
+const theme = require('./scss/cvm.scss');
 export const cvm = Template.bind({});
-cvm.args = require('./schemas/cvm.json');
-cvm.args.theme = require('./scss/cvm.scss');
+cvm.args = schema;
+cvm.args.theme = theme;

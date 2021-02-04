@@ -60,6 +60,7 @@ export default class SchemaController extends React.Component {
 
   constructor(props) {
     super(props);
+    console.log(props.theme);
   }
 
   buildRoutes() {
