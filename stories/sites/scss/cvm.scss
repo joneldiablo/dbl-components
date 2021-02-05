@@ -1,8 +1,13 @@
+$white: #fbfbfe;
 $primary: #6fa4c5;
+$secondary: #6fc5bb;
 $black: #081a2d;
-//$light: #f1f2f5;
-$dark: #0b1f35;
+$light: #f1f1fa;
+$dark: #1b508a;
 $body-color: $black;
+$component-active-bg: $secondary;
+$nav-link-color: $secondary;
+
 @import "bootstrap/scss/bootstrap";
 @import "../../../src/scss/style";
 

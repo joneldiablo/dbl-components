@@ -8,7 +8,8 @@ export default class AspectRatioContainer extends Container {
     containerClasses: '',
     containerStyle: {},
     ratio: '100%',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    fullWidth: true
   }
 
   content(children = this.props.children) {

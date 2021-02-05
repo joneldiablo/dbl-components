@@ -13,7 +13,7 @@
         {
           "component": "Container",
           "name": "header-bar",
-          "classes": "navbar navbar-light bg-light",
+          "classes": "navbar navbar-light bg-white",
           "content": [
             {
               "component": "BrandNavigation",
@@ -37,8 +37,12 @@
                   "label": "Inicio"
                 },
                 {
-                  "path": "/services",
+                  "path": "/servicios",
                   "label": "Servicios"
+                },
+                {
+                  "path": "/citas",
+                  "label": "Citas"
                 }
               ]
             }
@@ -50,9 +54,22 @@
           "fullWidth": true
         },
         {
-          "component": "Footer",
+          "component": "Container",
           "name": "footer",
-          "content": "footer"
+          "fullWidth": true,
+          "classes": "bg-dark text-light py-4",
+          "style": {
+            "boxShadow": "rgba(241, 241, 250, .8) 0px -5px 30px 0px"
+          },
+          "content": [
+            {
+              "component": "Container",
+              "name": "footer-grid",
+              "fullWidth": false,
+              "fluid": false,
+              "content": "<NavLink to='/'><img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/patita.png' width='128'/></NavLink>"
+            }
+          ]
         }
       ],
       "routes": [
@@ -175,7 +192,7 @@
               "fullWidth": false,
               "fluid": false,
               "content": [
-                "<h2 class='text-center text-primary mb-5'><NavLink to='/services' class='text-decoration-none'>Servicios</NavLink></h2>",
+                "<h2 class='text-center text-primary mb-5'><NavLink to='/servicios' class='text-decoration-none'>Servicios</NavLink></h2>",
                 {
                   "name": "services-grid",
                   "component": "GridSwitchContainer",
@@ -217,31 +234,32 @@
                     }
                   ]
                 },
-                "<p class='mt-4 text-right'><NavLink to='/services'>Ver todos los servicios</NavLink></p>"
+                "<p class='mt-4 text-right'><NavLink to='/servicios'>Ver todos los servicios</NavLink></p>"
               ]
             },
             {
               "name": "contact-wrap",
               "component": "Container",
               "fullWidth": true,
-              "classes": "bg-dark text-white py-5",
+              "classes": "bg-secondary py-5",
+              "style": {
+                "backgroundImage": "url(https://centroveterinariomoctezuma.com/wp-content/uploads/owncloud/cvm-entrada-dark.jpeg)",
+                "backgroundSize": "cover",
+                "backgroundPosition": "-198px center",
+                "backgroundBlendMode": "overlay"
+              },
               "content": [
                 {
                   "component": "Container",
                   "name": "contact-wrap",
                   "fluid": false,
                   "content": [
-                    {
-                      "component": "Container",
-                      "name": "contact-title",
-                      "content": "<div class='text-center'><h2>Contáctanos</h2><br /><br /></div>",
-                      "fullWidth": true
-                    },
+                    "<div class='text-center text-white'><h2>Contáctanos</h2><br /><br /></div>",
                     {
                       "component": "GridContainer",
                       "name": "contact-grid",
                       "colClasses": "h-auto",
-                      "row": "gx-4",
+                      "row": "gx-4 align-items-center",
                       "content": [
                         {
                           "component": "Container",
@@ -249,14 +267,21 @@
                           "fullWidth": true,
                           "content": [
                             {
-                              "component": "Container",
+                              "component": "CardContainer",
                               "name": "working-hours",
-                              "content": "Horario de atención"
+                              "classes": "mb-2",
+                              "style": {
+                                "backgroundColor": "#f8f9faaa"
+                              },
+                              "content": "<h3 class='text-dark mb-3'>Horario de atención</h3><p>Lunes a viernes de 9:00am a 7:00pm<br />Sábado de 9:00am a 2:00pm<br/>Emergencias las 24hrs del día vía telefónica.</p>"
                             },
                             {
-                              "component": "Container",
+                              "component": "CardContainer",
                               "name": "contact-data",
-                              "content": "Aquí nos encuentras"
+                              "style": {
+                                "backgroundColor": "#f8f9faaa"
+                              },
+                              "content": "<h3 class='text-dark mb-3'>Aquí nos encuentras</h3><p>Estrada Cajigal 217, zona 1, El Empleado, 62250 Cuernavaca, Mor.<br />Teléfonos: <a href='tel:7772469454' class='link-dark'>777 246 9454</a>,<br />Email: <a href='mailto:centroveterinariomoctezuma@gmail.com'  class='link-dark'>centroveterinariomoctezuma@gmail.com</a></p>"
                             }
                           ]
                         },
@@ -275,10 +300,16 @@
           ]
         },
         {
-          "path": "/services",
+          "path": "/servicios",
           "view": "view",
           "name": "services",
           "content": "Servicios"
+        },
+        {
+          "path": "/citas",
+          "view": "view",
+          "name": "dates",
+          "content": "Citas"
         }
       ]
     }
