@@ -10,6 +10,12 @@ export default class Container extends Component {
     fullWidth: false
   }
 
+  updateSize() {
+    const { fluid, fullWidth } = this.props;
+    const containerType = (!fullWidth ? (fluid ? 'container-fluid' : 'container') : '');
+    this.setState({ localClasses: [containerType, this.state.containerClasses].join(' ') });
+  }
+
   onResize = () => {
     clearTimeout(this.onResizeTimeout);
     this.onResizeTimeout = setTimeout(() => {
@@ -25,6 +31,13 @@ export default class Container extends Component {
   componentDidMount() {
     if (this.ref)
       this.resizeSensor = new ResizeSensor(this.ref.current, this.onResize);
+    this.updateSize();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.fluid != this.props.fluid || prevProps.fullWidth != this.props.fullWidth) {
+      this.updateSize();
+    }
   }
 
   componentWillUnmount() {
@@ -32,12 +45,4 @@ export default class Container extends Component {
       clearTimeout(this.onResizeTimeout);
   }
 
-  content(children = this.props.children) {
-    const { fluid, fullWidth } = this.props;
-    const containerType = (!fullWidth ? (fluid ? 'container-fluid' : 'container') : 'container-fullwidth');
-    const cn = [containerType];
-    return <div className={cn.join(' ')}>
-      {children}
-    </div>
-  }
 }

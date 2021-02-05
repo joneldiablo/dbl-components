@@ -11,8 +11,9 @@
       },
       "content": [
         {
-          "component": "NavbarContainer",
+          "component": "Container",
           "name": "header-bar",
+          "classes": "navbar navbar-light bg-light",
           "content": [
             {
               "component": "BrandNavigation",
@@ -115,45 +116,52 @@
             {
               "component": "Container",
               "name": "the-team",
-              "fullWidth": false,
-              "fluid": false,
               "classes": "py-5 bg-light",
               "content": [
-                "<h2 class='text-center text-primary mb-5'>Nuestro equipo</h2>",
                 {
-                  "name": "grid-team",
-                  "component": "GridContainer",
-                  "row": "gx-5",
-                  "classes": "text-center",
+                  "component": "Container",
+                  "name": "the-team",
+                  "fullWidth": false,
+                  "fluid": false,
+                  "classes": "py-5 bg-light",
                   "content": [
+                    "<h2 class='text-center text-primary mb-5'>Nuestro equipo</h2>",
                     {
-                      "component": "CardContainer",
-                      "name": "angel",
-                      "classes": "shadow-sm border-0",
+                      "name": "grid-team",
+                      "component": "GridContainer",
+                      "row": "gx-5",
+                      "classes": "text-center",
                       "content": [
-                        "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/ay-perritos-face.jpeg' class='img-fluid d-block m-auto rounded-circle w-50 mb-4' />",
-                        "<h3 class='h5'>Luis Ángel Rodríguez Rdz.</h3>",
-                        "<p class='mx-5'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p>"
-                      ]
-                    },
-                    {
-                      "component": "CardContainer",
-                      "name": "chimuelo",
-                      "classes": "shadow-sm border-0",
-                      "content": [
-                        "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/gonzalo-cara.jpg' class='img-fluid d-block m-auto rounded-circle w-50 mb-4' />",
-                        "<h3 class='h5'>Happy</h3>",
-                        "<p class='mx-5'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p>"
-                      ]
-                    },
-                    {
-                      "component": "CardContainer",
-                      "name": "davicho",
-                      "classes": "shadow-sm border-0",
-                      "content": [
-                        "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/davicho-cara.jpg' class='img-fluid d-block m-auto rounded-circle w-50 mb-4' />",
-                        "<h3 class='h5'>David Argüelles Andrade</h3>",
-                        "<p class='mx-5'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p>"
+                        {
+                          "component": "CardContainer",
+                          "name": "angel",
+                          "classes": "shadow-sm border-0",
+                          "content": [
+                            "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/ay-perritos-face.jpeg' class='img-fluid d-block m-auto rounded-circle w-50 mb-4' />",
+                            "<h3 class='h5'>Luis Ángel Rodríguez Rdz.</h3>",
+                            "<p class='mx-4'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p>"
+                          ]
+                        },
+                        {
+                          "component": "CardContainer",
+                          "name": "chimuelo",
+                          "classes": "shadow-sm border-0",
+                          "content": [
+                            "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/gonzalo-cara.jpg' class='img-fluid d-block m-auto rounded-circle w-50 mb-4' />",
+                            "<h3 class='h5'>Happy</h3>",
+                            "<p class='mx-4'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p>"
+                          ]
+                        },
+                        {
+                          "component": "CardContainer",
+                          "name": "davicho",
+                          "classes": "shadow-sm border-0",
+                          "content": [
+                            "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/davicho-cara.jpg' class='img-fluid d-block m-auto rounded-circle w-50 mb-4' />",
+                            "<h3 class='h5'>David Argüelles Andrade</h3>",
+                            "<p class='mx-4'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p>"
+                          ]
+                        }
                       ]
                     }
                   ]
@@ -161,48 +169,55 @@
               ]
             },
             {
+              "component": "Container",
               "name": "services",
-              "component": "GridSwitchContainer",
               "classes": "py-5",
-              "row": "g-0 align-items-center",
               "fullWidth": false,
               "fluid": false,
               "content": [
+                "<h2 class='text-center text-primary mb-5'><NavLink to='/services' class='text-decoration-none'>Servicios</NavLink></h2>",
                 {
-                  "component": "Container",
+                  "name": "services-grid",
+                  "component": "GridSwitchContainer",
+                  "row": "gx-2 align-items-center mb-2",
                   "fullWidth": true,
-                  "content": "<div class='text-right mx-5'><h2 class='mb-4 text-primary'>Cirugía</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p></div>"
+                  "content": [
+                    {
+                      "component": "Container",
+                      "fullWidth": true,
+                      "content": "<div class='text-right mx-5'><h3 class='mb-4 text-dark'>Cirugía</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p></div>"
+                    },
+                    {
+                      "component": "Container",
+                      "fullWidth": true,
+                      "content": "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/cirugia.jpg' class='img-fluid d-block m-auto' />",
+                      "classes": "bg-dark text-white"
+                    },
+                    {
+                      "component": "Container",
+                      "fullWidth": true,
+                      "content": "<div class='text-left mx-5'><h3 class='mb-4 text-dark'>Oftalmología</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p></div>"
+                    },
+                    {
+                      "component": "Container",
+                      "fullWidth": true,
+                      "content": "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/oftalmo-e1612464712821.jpg' class='img-fluid d-block m-auto' />",
+                      "classes": "bg-dark text-white"
+                    },
+                    {
+                      "component": "Container",
+                      "fullWidth": true,
+                      "content": "<div class='text-right mx-5'><h3 class='mb-4 text-dark'>Consulta general</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p></div>"
+                    },
+                    {
+                      "component": "Container",
+                      "fullWidth": true,
+                      "content": "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/vacunas-cubrevocas-scaled-e1612465762221.jpg' class='img-fluid d-block m-auto' />",
+                      "classes": "bg-dark text-white"
+                    }
+                  ]
                 },
-                {
-                  "component": "Container",
-                  "fullWidth": true,
-                  "content": "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/cirugia.jpg' class='img-fluid d-block m-auto' />",
-                  "classes": "bg-dark text-white"
-                },
-                {
-                  "component": "Container",
-                  "fullWidth": true,
-                  "content": "<div class='text-left mx-5'><h2 class='mb-4 text-primary'>Oftalmología</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p></div>"
-                },
-                {
-                  "component": "Container",
-                  "fullWidth": true,
-                  "content": "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/oftalmo-e1612464712821.jpg' class='img-fluid d-block m-auto' />",
-                  "classes": "bg-dark text-white"
-                },
-                {
-                  "component": "Container",
-                  "fullWidth": true,
-                  "content": "<div class='text-right mx-5'><h2 class='mb-4 text-primary'>Consulta general</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p></div>"
-                },
-                {
-                  "component": "Container",
-                  "fullWidth": true,
-                  "content": "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/vacunas-cubrevocas-scaled-e1612465762221.jpg' class='img-fluid d-block m-auto' />",
-                  "classes": "bg-dark text-white"
-                },
-                "<p class='mt-4 text-right text-decoration-underline'><NavLink to='/services'>Ver todos los servicios</NavLink></p>",
-                ""
+                "<p class='mt-4 text-right'><NavLink to='/services'>Ver todos los servicios</NavLink></p>"
               ]
             },
             {
@@ -226,7 +241,7 @@
                       "component": "GridContainer",
                       "name": "contact-grid",
                       "colClasses": "h-auto",
-                      "row": "g-0",
+                      "row": "gx-4",
                       "content": [
                         {
                           "component": "Container",

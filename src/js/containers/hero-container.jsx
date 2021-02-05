@@ -6,7 +6,7 @@ export default class HeroContainer extends Container {
 
   static defaultProps = {
     ...Container.defaultProps,
-    fullWidth: false,
+    fullWidth: true,
     fluid: false,
     spaceBetween: 0,
     slidesPerView: 1
@@ -38,7 +38,10 @@ export default class HeroContainer extends Container {
     return (<Swiper {...propsSwiper}>
       {children.map((slide, i) =>
         <SwiperSlide key={i} virtualIndex={i}
-          style={{ backgroundImage: `url("${slideConf[i].image}")`, backgroundAttachment: slideConf[i].imageAttachment }} >
+          style={{
+            backgroundImage: `url("${slideConf[i].image}")`,
+            backgroundAttachment: slideConf[i].imageAttachment
+          }} >
           {slide}
         </SwiperSlide>
       )}

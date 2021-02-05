@@ -12,8 +12,6 @@ export default class GridContainer extends Container {
 
   constructor(props) {
     super(props);
-    // cambiamos el "container" para agrupar.
-    this.WrapRow = (({ children }) => super.content(children)).bind(this);
   }
 
   grid(children = this.props.children, classes = []) {
@@ -37,8 +35,8 @@ export default class GridContainer extends Container {
     </div>);
   }
 
-  content(children = this.props.children) {
-    return (<this.WrapRow>{this.grid(children)}</this.WrapRow>);
+  content(children = this.props.children){
+    return this.grid(children);
   }
 
 }

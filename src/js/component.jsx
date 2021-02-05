@@ -7,8 +7,10 @@ export default class Component extends React.Component {
     style: {}
   }
 
-  localClasses = '';
-  localStyles = {};
+  state = {
+    localClasses: '',
+    localStyles: {}
+  }
 
   constructor(props) {
     super(props);
@@ -26,8 +28,9 @@ export default class Component extends React.Component {
 
   render() {
     let { classes, style } = this.props;
-    let cn = [this.constructor.name, this.name(), this.localClasses, classes].join(' ');
-    const s = Object.assign({}, this.localStyles, style);
+    let { localClasses, localStyles } = this.state;
+    let cn = [this.constructor.name, this.name(), localClasses, classes].join(' ');
+    const s = Object.assign({}, localStyles, style);
     return <div className={cn} style={s} ref={this.ref}>
       {this.content()}
     </div>

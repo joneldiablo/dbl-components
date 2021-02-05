@@ -8,15 +8,14 @@ export default class GridSwitchContainer extends GridContainer {
   }
 
   content(children = this.props.children) {
+    let original = [...children];
     let arrChildren = [];
-    while (children.length) {
-      arrChildren.push(children.splice(0, 2));
+    while (original.length) {
+      arrChildren.push(original.splice(0, 2));
     }
-    return (<this.WrapRow>
-      {arrChildren.map((pair, i) => <React.Fragment key={i}>
-        {this.grid(pair, (i % 2) && ['', 'order-sm-first'])}
-      </React.Fragment>)}
-    </this.WrapRow>);
+    return (arrChildren.map((pair, i) => <React.Fragment key={i}>
+      {this.grid(pair, (i % 2) && ['', 'order-sm-first'])}
+    </React.Fragment>));
   }
 
 }

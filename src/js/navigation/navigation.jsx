@@ -4,7 +4,10 @@ import Component from "../component";
 
 export default class Navigation extends Component {
 
-  localClasses = 'nav';
+  constructor(props) {
+    super(props);
+    this.state.localClasses = 'nav';
+  }
 
   // TODO: agregar submenu dropdown 
   //       y submenu collapsable
@@ -31,9 +34,10 @@ export default class Navigation extends Component {
   //       permitir cambiar la etiqueta contenedora
   render() {
     let { classes, style } = this.props;
-    let cn = [this.constructor.name, this.name(), this.localClasses, classes].join(' ');
-    const s = Object.assign({}, this.localStyles, style);
-    return <nav className={cn} style={s}>
+    let { localClasses, localStyles } = this.state;
+    let cn = [this.constructor.name, this.name(), localClasses, classes].join(' ');
+    const s = Object.assign({}, localStyles, style);
+    return <nav className={cn} style={s} ref={this.ref}>
       {this.content()}
     </nav>
   }

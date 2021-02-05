@@ -1,9 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import parseReact, { domToReact } from "html-react-parser";
+import parseReact, { domToReact, attributesToProps } from "html-react-parser";
 import { NavLink } from "react-router-dom";
 import { hash } from "../functions";
-import NavbarContainer from "../containers/navbar-container";
 import Container from "../containers/container";
 import GridContainer from "../containers/grid-container";
 import HeroContainer from "../containers/hero-container";
@@ -21,7 +20,6 @@ const DefaultComponent = Component;
 const COMPONENTS = {
   Debug,
   Container,
-  NavbarContainer,
   GridContainer,
   GridSwitchContainer,
   HeroContainer,
@@ -69,8 +67,7 @@ export default class View extends React.Component {
   parseOpts = {
     replace: domNode => {
       if (domNode.name === 'navlink') {
-        console.log(domNode);
-        return <NavLink to={domNode.attribs.to}>
+        return <NavLink {...attributesToProps(domNode.attribs)}>
           {domToReact(domNode.children, this.parseOpts)}
         </NavLink>;
       }

@@ -7,7 +7,10 @@ export default class CardContainer extends Container {
     ...Container.defaultProps,
   }
 
-  localClasses = 'card';
+  constructor(props) {
+    super(props);
+    this.state.containerClasses = 'card';
+  }
 
   content(children = this.props.children) {
     const { content } = this.props;
@@ -17,7 +20,7 @@ export default class CardContainer extends Container {
     children.forEach((child, i) => {
       if (content[i].header) {
         header.push(child);
-      } else if(content[i].footer){
+      } else if (content[i].footer) {
         footer.push(child);
       } else {
         body.push(child);
