@@ -18,7 +18,7 @@ export default class GridContainer extends Container {
     const { colClasses, row } = this.props;
     return (<div className={'row ' + row}>
       {Array.isArray(children) && children.map((child, i) => {
-        let colcn = ['col', i % 2 ? 'even' : 'odd', 'col-num-' + i];
+        let colcn = ['col-md', i % 2 ? 'even' : 'odd', 'col-num-' + i];
         // unir clases generales, si es un string se une  todas las columnas
         // si es un arreglo se une en su debido lugar y se repite la ultima clase 
         // si no coincide el número de columnas y clases

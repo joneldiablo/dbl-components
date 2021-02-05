@@ -13,7 +13,10 @@
         {
           "component": "Container",
           "name": "header-bar",
-          "classes": "navbar navbar-light bg-white",
+          "classes": "navbar navbar-light bg-white shadow",
+          "style": {
+            "zIndex": 2
+          },
           "content": [
             {
               "component": "BrandNavigation",
@@ -57,7 +60,7 @@
           "component": "Container",
           "name": "footer",
           "fullWidth": true,
-          "classes": "bg-dark text-light py-4",
+          "classes": "bg-dark text-light py-2",
           "style": {
             "boxShadow": "rgba(241, 241, 250, .8) 0px -5px 30px 0px"
           },
@@ -146,7 +149,7 @@
                     {
                       "name": "grid-team",
                       "component": "GridContainer",
-                      "row": "gx-5",
+                      "row": "gx-5 gy-2",
                       "classes": "text-center",
                       "content": [
                         {
@@ -196,13 +199,24 @@
                 {
                   "name": "services-grid",
                   "component": "GridSwitchContainer",
-                  "row": "gx-2 align-items-center mb-2",
+                  "row": "gx-4 align-items-center mb-3",
                   "fullWidth": true,
                   "content": [
                     {
                       "component": "Container",
                       "fullWidth": true,
-                      "content": "<div class='text-right mx-5'><h3 class='mb-4 text-dark'>Cirugía</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p></div>"
+                      "content": "<div class='text-left'><h3 class='h4 mb-4 text-secondary'>Consulta general</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p></div>"
+                    },
+                    {
+                      "component": "Container",
+                      "fullWidth": true,
+                      "content": "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/vacunas-cubrevocas-scaled-e1612465762221.jpg' class='img-fluid d-block m-auto' />",
+                      "classes": "bg-dark text-white"
+                    },
+                    {
+                      "component": "Container",
+                      "fullWidth": true,
+                      "content": "<div class='text-right'><h3 class='h4 mb-4 text-secondary'>Cirugía</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p></div>"
                     },
                     {
                       "component": "Container",
@@ -213,23 +227,12 @@
                     {
                       "component": "Container",
                       "fullWidth": true,
-                      "content": "<div class='text-left mx-5'><h3 class='mb-4 text-dark'>Oftalmología</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p></div>"
+                      "content": "<div class='text-left'><h3 class='h4 mb-4 text-secondary'>Oftalmología</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p></div>"
                     },
                     {
                       "component": "Container",
                       "fullWidth": true,
                       "content": "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/oftalmo-e1612464712821.jpg' class='img-fluid d-block m-auto' />",
-                      "classes": "bg-dark text-white"
-                    },
-                    {
-                      "component": "Container",
-                      "fullWidth": true,
-                      "content": "<div class='text-right mx-5'><h3 class='mb-4 text-dark'>Consulta general</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p></div>"
-                    },
-                    {
-                      "component": "Container",
-                      "fullWidth": true,
-                      "content": "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/vacunas-cubrevocas-scaled-e1612465762221.jpg' class='img-fluid d-block m-auto' />",
                       "classes": "bg-dark text-white"
                     }
                   ]
@@ -259,7 +262,7 @@
                       "component": "GridContainer",
                       "name": "contact-grid",
                       "colClasses": "h-auto",
-                      "row": "gx-4 align-items-center",
+                      "row": "gx-4 gy-2 align-items-center",
                       "content": [
                         {
                           "component": "Container",
@@ -273,7 +276,7 @@
                               "style": {
                                 "backgroundColor": "#f8f9faaa"
                               },
-                              "content": "<h3 class='text-dark mb-3'>Horario de atención</h3><p>Lunes a viernes de 9:00am a 7:00pm<br />Sábado de 9:00am a 2:00pm<br/>Emergencias las 24hrs del día vía telefónica.</p>"
+                              "content": "<h3 class='h4 text-dark mb-3'>Horario de atención</h3><p>Lunes a viernes de 9:00am a 7:00pm<br />Sábado de 9:00am a 2:00pm<br/>Emergencias las 24hrs del día vía telefónica.</p>"
                             },
                             {
                               "component": "CardContainer",
@@ -281,7 +284,7 @@
                               "style": {
                                 "backgroundColor": "#f8f9faaa"
                               },
-                              "content": "<h3 class='text-dark mb-3'>Aquí nos encuentras</h3><p>Estrada Cajigal 217, zona 1, El Empleado, 62250 Cuernavaca, Mor.<br />Teléfonos: <a href='tel:7772469454' class='link-dark'>777 246 9454</a>,<br />Email: <a href='mailto:centroveterinariomoctezuma@gmail.com'  class='link-dark'>centroveterinariomoctezuma@gmail.com</a></p>"
+                              "content": "<h3 class='h4 text-dark mb-3'>Aquí nos encuentras</h3><p>Estrada Cajigal 217, zona 1, El Empleado, 62250 Cuernavaca, Mor.<br />Teléfonos: <a href='tel:7772469454' class='link-dark'>777 246 9454</a>,<br />Email: <a href='mailto:centroveterinariomoctezuma@gmail.com'  class='link-dark'>centroveterinariomoctezuma@gmail.com</a></p>"
                             }
                           ]
                         },

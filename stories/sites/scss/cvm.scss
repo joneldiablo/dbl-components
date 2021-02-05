@@ -1,9 +1,9 @@
 $white: #fbfbfe;
 $primary: #6fa4c5;
-$secondary: #6fc5bb;
-$black: #081a2d;
+$secondary: #70b6ba;
+$black: #162027;
 $light: #f1f1fa;
-$dark: #1b508a;
+$dark: #031632;
 $body-color: $black;
 $component-active-bg: $secondary;
 $nav-link-color: $secondary;
@@ -13,4 +13,10 @@ $nav-link-color: $secondary;
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+@include media-breakpoint-up(sm) {
+  .services-grid-GridSwitchContainer .row ~ .row {
+    margin-top: -25px;
+  }
 }
