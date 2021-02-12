@@ -1,6 +1,6 @@
 {
   "name": "dbl-components",
-  "version": "1.0.36",
+  "version": "1.0.37",
   "description": "My own components",
   "main": "lib/js/main.js",
   "scripts": {

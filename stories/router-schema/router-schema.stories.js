@@ -144,7 +144,7 @@ MangiBone.args = {
       path: "/",
       view: "default",
       name: "template",
-      childrenIn: "view-container",
+      routesIn: "view-container",
       content: [
         {
           component: "NavbarContainer",
@@ -201,7 +201,7 @@ MangiBoneTest.args = {
       path: "/",
       view: "view",
       name: "template",
-      childrenIn: "views",
+      routesIn: "views",
       style: {
         height: 'calc(100vh - 3px)'
       },

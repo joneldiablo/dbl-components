@@ -95,12 +95,25 @@ export default class SchemaController extends React.Component {
     let View = VIEWS[route.view] || (DefaultView);
     let subroutes = [];
     if (Array.isArray(route.routes)) {
-      subroutes = route.routes.map((subRoute, i) => {
+      const mapRoutes = (subRoute, i) => {
         // crear un clone para no tocar el original
         subRoute = JSON.parse(JSON.stringify(subRoute));
-        subRoute.path = urlJoin(route.path, subRoute.path);
+        // si las rutas son un arreglo
+        if (Array.isArray(route.path) && Array.isArray(subRoute.path)) {
+          subRoute.path = subRoute.path
+            .reduce((paths, path) => {
+              paths.push(route.path.map(parentPath => urlJoin(parentPath, path)))
+            }, []);
+        } else if (Array.isArray(subRoute.path)) {
+          subRoute.path = subRoute.path.map(path => urlJoin(route.path, path));
+        } else if (Array.isArray(route.path)) {
+          subRoute.path = route.path.map(path => urlJoin(path, subRoute.path));
+        } else {
+          subRoute.path = urlJoin(route.path, subRoute.path);
+        }
         return this.views(subRoute, i);
-      });
+      }
+      subroutes = route.routes.map(mapRoutes);
     }
     // si exacto no está definido entonces true
     let exact = (typeof route.exact === 'undefined' || route.exact);

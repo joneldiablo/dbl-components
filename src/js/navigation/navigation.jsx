@@ -9,23 +9,28 @@ export default class Navigation extends Component {
     this.state.localClasses = 'nav';
   }
 
+  link = (item, i) => {
+    const cnLink = ['nav-link', this.props.linkClasses, item.classes];
+    const propsLink = {
+      to: item.path,
+      className: cnLink.join(' '),
+      activeClassName: 'active',
+      strict: item.strict,
+      exact: item.exact
+    }
+    return (<React.Fragment key={i + '-' + item.path}>
+      <NavLink {...propsLink} >
+        {item.label}
+      </NavLink>
+      {item.menu?.length && item.menu.map(this.link)}
+    </React.Fragment>);
+  }
+
   // TODO: agregar submenu dropdown 
   //       y submenu collapsable
   content(children = this.props.children) {
     return (<>
-      {this.props.menu.map((item, i) => {
-        const cnLink = ['nav-link', item.classes];
-        const propsLink = {
-          to: item.path,
-          className: cnLink.join(' '),
-          activeClassName: 'active',
-          strict: item.strict,
-          exact: item.exact
-        }
-        return (<NavLink {...propsLink} key={i + '-' + item.path}>
-          {item.label}
-        </NavLink>);
-      })}
+      {this.props.menu.map(this.link)}
       {children}
     </>);
   }

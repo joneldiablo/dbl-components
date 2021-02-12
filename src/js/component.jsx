@@ -27,12 +27,13 @@ export default class Component extends React.Component {
   }
 
   render() {
-    let { classes, style } = this.props;
-    let { localClasses, localStyles } = this.state;
-    let cn = [this.constructor.name, this.name(), localClasses, classes].join(' ');
+    const { classes, style, name } = this.props;
+    const { localClasses, localStyles } = this.state;
+    const content = this.content();
+    const cn = [this.constructor.name, this.name(), localClasses, classes];
     const s = Object.assign({}, localStyles, style);
-    return <div className={cn} style={s} ref={this.ref}>
-      {this.content()}
+    return <div id={name} className={cn.join(' ')} style={s} ref={this.ref}>
+      {content}
     </div>
   }
 }

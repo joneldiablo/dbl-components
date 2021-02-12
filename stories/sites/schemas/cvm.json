@@ -5,7 +5,7 @@
       "path": "/",
       "view": "view",
       "name": "template",
-      "childrenIn": "views",
+      "routesIn": "views",
       "style": {
         "height": "calc(100vh - 3px)"
       },
