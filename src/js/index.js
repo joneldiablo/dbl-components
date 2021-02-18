@@ -10,7 +10,7 @@ import AspectRatioContainer from "./containers/aspect-ratio-container";
 import GridSwitchContainer from "./containers/grid-switch-container";
 import CardContainer from "./containers/card-container";
 import Debug from "./debug-component";
-import Navigation from "./navigation/navigation";
+import Navigation, { ToggleTextNavigation } from "./navigation/navigation";
 import BrandNavigation from "./navigation/brand-navigation";
 import YoutubeVideoComponent from "./media/youtube-video";
 import Component from "./component";
@@ -29,6 +29,7 @@ const COMPONENTS = {
   Navigation,
   BrandNavigation,
   YoutubeVideoComponent,
+  ToggleTextNavigation,
   Table,
   EndpointTable
 }
