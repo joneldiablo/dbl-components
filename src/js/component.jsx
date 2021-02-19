@@ -1,6 +1,12 @@
 import React, { createRef } from "react";
+import PropTypes from "prop-types";
 
 export default class Component extends React.Component {
+
+  static propTypes = {
+    classes: PropTypes.string,
+    style: PropTypes.object,
+  }
 
   static defaultProps = {
     classes: '',

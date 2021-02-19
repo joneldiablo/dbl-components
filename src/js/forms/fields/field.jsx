@@ -1,93 +1,162 @@
-import React from "react";
+import React, { createRef } from "react";
 import PropTypes from "prop-types";
+import Component from "../../component";
 
-export default class Field extends React.Component {
+export default class Field extends Component {
 
   static propTypes = {
+    ...Component.propTypes,
+    name: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
     value: PropTypes.any,
-    type: PropTypes.string,
+    default: PropTypes.any,
     disabled: PropTypes.bool,
     required: PropTypes.bool,
     pattern: PropTypes.string,
-    name: PropTypes.string,
     label: PropTypes.string,
     placeholder: PropTypes.string,
     errorMessage: PropTypes.string,//considerar un {} para tener multiples o string
     options: PropTypes.array, //{ label: string, value: any }[],
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    //onInvalid: PropTypes.func
   }
 
   static defaultProps = {
-    type: 'text'
+    ...Component.defaultProps,
+    type: 'text',
+    default: ''
   }
 
   state = {
-    value: this.props.value || ''
+    value: this.props.value || this.props.default,
+    error: false
   }
 
   constructor(props) {
     super(props);
     this.onChange = this.onChange.bind(this);
-    if (typeof props.onChange === 'function')
-      props.onChange({ [props.name]: props.value });
+    this.onInvalid = this.onInvalid.bind(this);
+    this.input = createRef();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // TODO: fix this s....
+    if (typeof prevProps.value === 'undefined' && typeof this.props.value !== 'undefined') {
+      if (!Array.isArray(this.props.value)) {
+        if (this.props.value !== this.state.value) {
+          this.setState({ value: this.props.value });
+        }
+      }
+    }
+  }
+
+  returnData(value = this.state.value) {
+    let { onChange, name } = this.props;
+    let { error } = this.state;
+    if (typeof onChange === 'function' && !error) {
+      clearTimeout(this.timeout);
+      this.timeout = setTimeout(() => {
+        onChange({ [name]: value });
+      }, 300);
+    }
+  }
+
+  isInvalid(value) {
+    let { isInvalid, pattern, required } = this.props;
+    let inputValid = true;
+    if (typeof this.input.checkValidity === 'function') {
+      inputValid = this.input.checkValidity();
+    }
+    let valueInvalid = !value;
+    if (typeof value === 'boolean' || typeof value === 'number') {
+      valueInvalid = false;
+    }
+    let error = (!inputValid || (required && valueInvalid));
+    if (!error && typeof isInvalid === 'function')
+      error = isInvalid(value);
+    else if (pattern) error = !(new RegExp(pattern, "i")).test(value);
+    return error;
+  }
+
+  onInvalid(e) {
+    this.setState({
+      error: true
+    });
   }
 
   onChange(e) {
-    let { onChange } = this.props;
-    let validationClassName = !this.ref?.checkValidity() ? 'is-invalid' : '';
+    let { value } = e.target;
     this.setState({
-      value: e.target.value,
-      validationClassName
-    });
-    if (typeof onChange === 'function') {
-      onChange({ [e.target.name]: e.target.value });
-    }
+      value,
+      error: this.isInvalid(value)
+    }, () => this.returnData());
   }
 
   processType(type) {
     return type;
   }
 
-  // Renders
-  render() {
-    let { type, disabled,
-      required, pattern, name,
-      placeholder, label, errorMessage, min, max } = this.props;
-    let { value, validationClassName } = this.state;
-    let inputProps = {
+  get inputProps() {
+    const { type, disabled,
+      required, name,
+      placeholder,
+      min, max, pattern, autocomplete } = this.props;
+    const { value, error } = this.state;
+    const cn = ['form-control', error ? 'is-invalid' : ''];
+    return {
       disabled,
       id: name,
       name,
       pattern,
       placeholder,
       required,
+      autoComplete: autocomplete ? 'off' : null,
       type: this.processType(type),
       value,
       onChange: this.onChange,
-      className: ['form-control', validationClassName].join(' '),
+      onInvalid: this.onInvalid,
+      className: cn.join(' '),
       min, max,
-      ref: r => this.ref = r
+      ref: r => this.input = r
     }
-    return placeholder && !label ?
-      <div className="form-floating">
-        <input {...inputProps} />
-        <label htmlFor={name}>
-          {placeholder}
-          {required && <small title="Este campo es indispensable" className="text-muted">*</small>}
-        </label>
-        <small className="invalid-feedback">
-          {errorMessage}
-        </small>
-      </div> :
-      <>
-        <label className="form-label" htmlFor={name}>
-          {label}
-          {required && <small title="Este campo es indispensable" className="text-muted">*</small>}
-        </label>
-        <input {...inputProps} />
-        <small className="invalid-feedback">
-          {errorMessage}
-        </small>
-      </>
   }
-}
+
+  get nodeLabel() {
+    const { label, placeholder, required, name } = this.props
+    return <label className="form-label" htmlFor={name}>
+      {label ? label : placeholder}
+      {required && <small title="Este campo es indispensable" className="text-muted">*</small>}
+    </label>
+  }
+
+  outline() {
+    const { errorMessage } = this.props;
+    return <div className="form-floating">
+      <input {...this.inputProps} />
+      {this.nodeLabel}
+      <small className="invalid-feedback">
+        {errorMessage}
+      </small>
+    </div>
+  }
+
+  labeled() {
+    const { errorMessage } = this.props;
+    return <div>
+      {this.nodeLabel}
+      <input {...this.inputProps} />
+      <small className="invalid-feedback">
+        {errorMessage}
+      </small>
+    </div>
+  }
+
+  content(children = this.props.children) {
+    let { placeholder, label } = this.props;
+    return <>
+      {placeholder && !label ?
+        this.outline() : this.labeled()}
+      {children}
+    </>;
+  }
+};
