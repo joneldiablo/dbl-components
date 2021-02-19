@@ -1,65 +1,56 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import flatten from "flat";
 import schemaManager from "../functions/schema-manager"
-import Fields from "./fields/fields";
+import DefaultField from "./fields/field";
+import RadioField from "./fields/radio-field";
+import Hidden from "./fields/hidden-field";
+import Select from "./fields/select-field";
 
-const templateComponents = {
 
+const fieldComponents = {
+  hidden: Hidden,
+  Select,
+  RadioField,
+  Field: DefaultField
 }
 
-export const setTemplateComponents = (_components) => {
-  Object.assign(templateComponents, _components);
+export const setFieldComponents = (_components) => {
+  Object.assign(fieldComponents, _components);
+}
+
+export const Fields = ({ classes, style, ...props }) => {
+  let Field = (fieldComponents[props.type] || DefaultField);
+  let cn = ['field', 'mb-3', props.name + '-field', classes];
+  return (<div className={cn.join(' ')} style={style}>
+    <Field {...props} />
+  </div>);
 }
 
 export default class Form extends React.Component {
 
   static propTypes = {
-    action: PropTypes.string,
-    method: PropTypes.string,
     clearAfterDone: PropTypes.bool,
     headers: PropTypes.object,
-    onBeforeSubmit: PropTypes.func,
-    onDone: PropTypes.func,
-    onError: PropTypes.func,
-    onAfterSubmit: PropTypes.func,
-    fields: PropTypes.oneOfType([
-      PropTypes.array,
-      PropTypes.object
-    ]),
-    className: PropTypes.string,
+    fields: PropTypes.array,
+    classes: PropTypes.string,
     style: PropTypes.object,
-    template: PropTypes.object
+    template: PropTypes.node,
+    onChange: PropTypes.func,
+    onSubmit: PropTypes.func,
+    onInvalid: PropTypes.func
   }
 
   static defaultProps = {
-    action: null,
-    method: 'get',
-    clearAfterDone: false,
-    headers: {
-      'Content-Type': 'application/json'
-      // 'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    onBeforeSubmit: (d => d),
-    onDone: null,
-    onError: null,
-    onAfterSubmit: null,
-    fields: null,
+    fields: [],
     className: '',
-    style: {},
-    template: null
+    style: {}
   }
-
-  Template = templateComponents[this.props.template];
 
   constructor(props) {
     super(props);
     this.onChange = this.onChange.bind(this);
-    let fields = schemaManager.resolveRefs(this.props.fields);
     this.state = {
-      fields,
-      data: {},
-      loading: false
+      data: {}
     };
   }
 
@@ -73,69 +64,46 @@ export default class Form extends React.Component {
     this.setState({ data: {} });
   }
 
-  onSubmit = async (e) => {
-    e.preventDefault();
-    let { action, method, headers, onAfterSubmit, onDone, onError, onSubmit } = this.props;
-    let { loading, data } = this.state;
-    if (!action && typeof onSubmit === 'function') {
-      return onSubmit(data);
-    }
-    if (loading) return;
-    this.setState({ loading: true });
-    method = method.toUpperCase();
-    let opts = {
-      method,
-      headers
-    }
-    if (method === 'get') {
-      let flatData = flatten(data);
-      let query = new URLSearchParams(flatData).toString();
-      action += '?' + query;
-    } else {
-      let body = this.props.onBeforeSubmit(data);
-      opts.body = JSON.stringify(body);
-    }
-    let payload = await fetch(action, opts)
-      .then(resp => {
-        // agregar poder indicar el tipo de respuesta que se espera
-        let payload = resp.json();
-        if (typeof onDone === 'function') onDone(payload);
-        return payload;
-      })
-      .catch(error => {
-        if (typeof onError === 'function') onError(error);
-        return error;
-      });
-    this.setState({ loading: false });
-    this.clear();
-    if (typeof onAfterSubmit === 'function') onAfterSubmit(payload);
+  onInvalid = (e) => {
+    const { onInvalid } = this.props;
+    const { data } = this.state;
+    if (typeof onInvalid === 'function')
+      onInvalid(data, e);
   }
 
-  onChange(data) {
-    Object.assign(this.state.data, data);
-    this.setState({
-      data: this.state.data
-    }, () => {
-      if (typeof this.props.onChange === 'function')
-        this.props.onChange(this.state.data);
-    });
+  onSubmit = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const { onSubmit } = this.props;
+    const { data } = this.state;
+    if (typeof onSubmit === 'function')
+      onSubmit(data, e);
+  }
+
+  onChange(fieldData) {
+    const { onChange } = this.props;
+    const { data } = this.state;
+    this.setState({ data: { ...data, ...fieldData } });
+    if (typeof onChange === 'function')
+      onChange(fieldData);
   }
 
   render() {
-    let { action, method, className, style, children } = this.props;
-    let { fields } = this.state;
+    let { className, style, children, Template, templateProps, fields: propsFields } = this.props;
+    let fields = schemaManager.resolveRefs(propsFields);
     let cn = [this.constructor.name, className].join(' ');
-    let $fields = Array.isArray(fields) ?
-      fields.map(field => <Fields key={field.name} {...field} onChange={this.onChange} />) :
-      <Fields {...fields} onChange={this.onChange} />
+    let formFields = (Array.isArray(fields) && fields.map((field, i) =>
+      <Fields key={'' + i + field.name} {...field} onChange={this.onChange} />
+    ));
 
     return (<div className={cn} style={style}>
-      <form action={action} method={method} onSubmit={this.onSubmit}>
-        {this.Template ?
-          <this.Template>
-            {$fields}
-          </this.Template> :
-          $fields}
+      <form onSubmit={this.onSubmit} onInvalid={this.onInvalid}>
+        {Template ?
+          <Template {...templateProps}>
+            {formFields}
+          </Template> :
+          formFields
+        }
         {children}
       </form>
     </div>);

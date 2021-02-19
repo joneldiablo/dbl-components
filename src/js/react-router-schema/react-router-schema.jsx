@@ -11,11 +11,13 @@ import {
 } from "react-router-dom";
 import { hash } from "../functions";
 import DefaultView from "../views/view";
+import TitleView from "../views/title-view";
 import DebugView from "../views/debug-view";
 
 const VIEWS = {
   debug: DebugView,
-  default: DefaultView
+  TitleView,
+  View: DefaultView
 };
 
 export const addViews = (viewsExtra) => {
@@ -28,7 +30,7 @@ const routePropTypes = {
     PropTypes.arrayOf(PropTypes.string)
   ]).isRequired,
   name: PropTypes.string.isRequired,
-  view: PropTypes.string.isRequired,
+  component: PropTypes.string,
   content: PropTypes.any.isRequired,
   exact: PropTypes.bool,
   strict: PropTypes.bool,
@@ -92,7 +94,7 @@ export default class SchemaController extends React.Component {
    * permite que el schema tenga un arreglo de paths
    **/
   views = (route, i) => {
-    let View = VIEWS[route.view] || (DefaultView);
+    let View = VIEWS[route.component] || (DefaultView);
     let subroutes = [];
     if (Array.isArray(route.routes)) {
       const mapRoutes = (subRoute, i) => {
@@ -127,10 +129,16 @@ export default class SchemaController extends React.Component {
       location: route.location,
       sensitive: route.sensitive
     };
-    const renderView = (props) => (
-      <View {...route} {...props} test={this.props.test}>
-        <Switch>{subroutes}</Switch>
-      </View>);
+    const renderView = (props) => {
+      const viewClassName = Array.from(document.body.classList)
+        .find(cl => cl.endsWith('-view'));
+      document.body.classList.remove(viewClassName);
+      document.body.classList.add(route.name + '-view');
+      return (
+        <View {...route} {...props} test={this.props.test}>
+          <Switch>{subroutes}</Switch>
+        </View>);
+    }
     return (<Route key={i + '-' + route.name} {...routeProps} render={renderView} />);
   }
 

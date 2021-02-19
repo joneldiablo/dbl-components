@@ -7,7 +7,7 @@ class SchemaManager {
   }
 
   get schema() {
-    return _schema;
+    return this._schema;
   }
 
   resolveRefs(item) {

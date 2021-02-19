@@ -93,7 +93,9 @@ export default class View extends Component {
     }
     let subcontent = Array.isArray(componentProps.content) ?
       componentProps.content.map(this.sections) :
-      [!!componentProps.content && parseReact(componentProps.content, this.parseOpts)];
+      [!!componentProps.content && <React.Fragment key="content">
+        {parseReact(componentProps.content, this.parseOpts)}
+      </React.Fragment>];
     const cnSection = [componentProps.name + '-section'];
     if (this.props.test) cnSection.push('test-section-wrapper');
     if (routesIn && routesIn === componentProps.name) {
