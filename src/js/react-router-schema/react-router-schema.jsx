@@ -7,6 +7,7 @@ import {
   withRouter,
   Router,
   Route,
+  Redirect,
   Switch
 } from "react-router-dom";
 import { hash } from "../functions";
@@ -36,13 +37,15 @@ const routePropTypes = {
   strict: PropTypes.bool,
   location: PropTypes.object,
   sensitive: PropTypes.bool,
+  redirect: PropTypes.string
 };
 routePropTypes.routes = PropTypes.arrayOf(PropTypes.shape(routePropTypes));
 
 const schemaPropTypes = {
   test: PropTypes.bool,
   theme: PropTypes.string,
-  routes: PropTypes.arrayOf(PropTypes.shape(routePropTypes))
+  routes: PropTypes.arrayOf(PropTypes.shape(routePropTypes)),
+  isAuth: PropTypes.func
 }
 
 const schemaDefaultProps = {
@@ -129,17 +132,25 @@ export default class SchemaController extends React.Component {
       location: route.location,
       sensitive: route.sensitive
     };
-    const renderView = (props) => {
+    const RedirViewManager = (props) => {
+      let redirTo = typeof this.props.redirect === 'function' &&
+        this.props.redirect(props.location);
+      if (redirTo)
+        return <Redirect
+          to={{
+            pathname: redirTo,
+            state: { from: props.location }
+          }}
+        />
       const viewClassName = Array.from(document.body.classList)
         .find(cl => cl.endsWith('-view'));
       document.body.classList.remove(viewClassName);
       document.body.classList.add(route.name + '-view');
-      return (
-        <View {...route} {...props} test={this.props.test}>
-          <Switch>{subroutes}</Switch>
-        </View>);
+      return (<View {...route} {...props} test={this.props.test}>
+        <Switch>{subroutes}</Switch>
+      </View>);
     }
-    return (<Route key={i + '-' + route.name} {...routeProps} render={renderView} />);
+    return (<Route key={i + '-' + route.name} {...routeProps} render={RedirViewManager} />);
   }
 
   render() {

@@ -38,11 +38,12 @@ export default class RadioField extends Field {
 
   nodeOption = (item, i) => {
     const { inline, name } = this.props;
+    const { value } = this.state;
     const cn = ['form-check'];
     if (inline) cn.push('form-check-inline');
     const id = name + '-' + item.value;
     return <div key={i + '-' + item.value} className={cn.join(' ')}>
-      <input {...this.inputProps} id={id} value={item.value} />
+      <input {...this.inputProps} id={id} value={item.value} checked={value === item.value} />
       <label className="form-check-label" htmlFor={id}>{item.label}</label>
     </div>
   }
