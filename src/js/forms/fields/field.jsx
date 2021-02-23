@@ -129,10 +129,14 @@ export default class Field extends Component {
     </label>
   }
 
+  get inputNode() {
+    return (<input {...this.inputProps} />);
+  }
+
   outline() {
     const { errorMessage } = this.props;
     return <div className="form-floating">
-      <input {...this.inputProps} />
+      {this.inputNode}
       {this.nodeLabel}
       <small className="invalid-feedback">
         {errorMessage}
@@ -144,7 +148,7 @@ export default class Field extends Component {
     const { errorMessage } = this.props;
     return <div>
       {this.nodeLabel}
-      <input {...this.inputProps} />
+      {this.inputNode}
       <small className="invalid-feedback">
         {errorMessage}
       </small>

@@ -9,10 +9,10 @@ export default {
   parameters: { actions: { argTypesRegex: '^on.*' } },
 };
 
-const Template = (args) => <form onSubmit={e => e.preventDefault()}>
+const Template = (args) => <form onSubmit={action('onSubmit')}>
   <ul>{Object.keys(args).map(arg => <li key={arg}>{arg}</li>)}</ul>
   <RadioField {...args} onChange={action('onChange')} />
-  <button className="btn btn-primary" type="submit">Probar</button>
+  <button className="btn btn-primary" type="submit">Probar error</button>
 </form>;
 
 export const radioStringValue = Template.bind({});
