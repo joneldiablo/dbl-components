@@ -99,11 +99,13 @@ export default class AutocompleteField extends Field {
   }
 
   get inputNode() {
-    const { options, more, showDropdown } = this.state;
+    const { options, more, showDropdown, loading: l } = this.state;
+    const { loading } = this.props;
     const cn = ['dropdown-menu', showDropdown];
     let width = this.input.offsetWidth;
     return <>
       {showDropdown && <div onClick={this.hide} style={this.closeStyle}></div>}
+      {l && loading}
       {super.inputNode}
       <ul className={cn.join(' ')} ref={this.menuDropdown} style={{ minWidth: width }}>
         {options.map(this.mapOptions)}
