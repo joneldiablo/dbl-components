@@ -1,24 +1,20 @@
 import React from "react";
+import Field from "./field";
 
-export default class HiddenField extends React.Component {
+export default class HiddenField extends Field {
 
   static defaultProps = {
     name: null,
     value: null
   }
 
+  get type() {
+    return 'hidden';
+  }
+
   // Renders
   render() {
-    let {
-      name, value
-    } = this.props;
-    let inputProps = {
-      id: name,
-      name,
-      type: 'hidden',
-      value
-    }
-    return <input {...inputProps} />
+    return this.inputNode;
   }
 
 }

@@ -55,8 +55,8 @@ export default class Field extends React.Component {
     }
   }
 
-  processType(type) {
-    return type;
+  get type() {
+    return this.props.type;
   }
 
   // Renders
@@ -67,7 +67,7 @@ export default class Field extends React.Component {
   }
 
   render() {
-    let { type, disabled, info,
+    let { disabled, info,
       required, name, variant, fullWidth,
       placeholder, label } = this.props;
     let { value, error, errorMessage } = this.state;
@@ -75,7 +75,7 @@ export default class Field extends React.Component {
       label,
       name,
       id: name,
-      type: this.processType(type),
+      type: this.type,
       placeholder,
       required,
       disabled,

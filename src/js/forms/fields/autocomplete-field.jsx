@@ -90,6 +90,10 @@ export default class AutocompleteField extends Field {
     </li>
   }
 
+  get type() {
+    return 'text';
+  }
+
   get inputProps() {
     const props = super.inputProps;
     props.onFocus = this.show;

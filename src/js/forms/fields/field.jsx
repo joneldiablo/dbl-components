@@ -48,6 +48,10 @@ export default class Field extends Component {
         }
       }
     }
+    // TODO: asegurarse que esto funcione, podría mandarse el mismo arreglo con diferentes opciones
+    if (prevProps.options != this.props.options) {
+      this.setState({ options: this.props.options });
+    }
   }
 
   returnData(value = this.state.value) {
@@ -92,8 +96,8 @@ export default class Field extends Component {
     }, () => this.returnData());
   }
 
-  processType(type) {
-    return type;
+  get type() {
+    return this.props.type;
   }
 
   get inputProps() {
@@ -111,7 +115,7 @@ export default class Field extends Component {
       placeholder,
       required,
       autoComplete: autocomplete ? 'off' : null,
-      type: this.processType(type),
+      type: this.type,
       value,
       onChange: this.onChange,
       onInvalid: this.onInvalid,
@@ -121,7 +125,7 @@ export default class Field extends Component {
     }
   }
 
-  get nodeLabel() {
+  get labelNode() {
     const { label, placeholder, required, name } = this.props
     return <label className="form-label" htmlFor={name}>
       {label ? label : placeholder}
@@ -137,7 +141,7 @@ export default class Field extends Component {
     const { errorMessage } = this.props;
     return <div className="form-floating">
       {this.inputNode}
-      {this.nodeLabel}
+      {this.labelNode}
       <small className="invalid-feedback">
         {errorMessage}
       </small>
@@ -147,7 +151,7 @@ export default class Field extends Component {
   labeled() {
     const { errorMessage } = this.props;
     return <div style={{ position: 'relative' }}>
-      {this.nodeLabel}
+      {this.labelNode}
       {this.inputNode}
       <small className="invalid-feedback">
         {errorMessage}

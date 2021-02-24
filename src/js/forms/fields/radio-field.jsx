@@ -26,6 +26,10 @@ export default class RadioField extends Field {
     }, () => this.returnData());
   }
 
+  get type() {
+    return 'radio';
+  }
+
   get inputProps() {
     const props = super.inputProps;
     delete props.ref;
