@@ -146,7 +146,7 @@ export default class Field extends Component {
 
   labeled() {
     const { errorMessage } = this.props;
-    return <div>
+    return <div style={{ position: 'relative' }}>
       {this.nodeLabel}
       {this.inputNode}
       <small className="invalid-feedback">

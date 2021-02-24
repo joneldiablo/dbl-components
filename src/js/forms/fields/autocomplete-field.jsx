@@ -64,7 +64,6 @@ export default class AutocompleteField extends Field {
   }
 
   show = () => {
-    this.onFilter();
     this.setState({
       showDropdown: 'show'
     });
@@ -102,15 +101,14 @@ export default class AutocompleteField extends Field {
     const { options, more, showDropdown, loading: l } = this.state;
     const { loading } = this.props;
     const cn = ['dropdown-menu', showDropdown];
-    let width = this.input.offsetWidth;
     return <>
       {showDropdown && <div onClick={this.hide} style={this.closeStyle}></div>}
-      {l && loading}
       {super.inputNode}
-      <ul className={cn.join(' ')} ref={this.menuDropdown} style={{ minWidth: width }}>
+      {l && loading}
+      <ul className={cn.join(' ')} ref={this.menuDropdown} style={{ width: '100%', overflow: 'hidden' }}>
         {options.map(this.mapOptions)}
         {!!(more?.length) && <li >
-          <span className="dropdown-item" >...</span>
+          <span className="dropdown-item text-wrap" >...</span>
         </li>}
       </ul>
     </>
