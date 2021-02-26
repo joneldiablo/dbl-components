@@ -5,6 +5,7 @@ export default class DropFileField extends Field {
   constructor(props) {
     super(props);
     this.state.localClasses = 'card';
+    this.state.files = [];
   }
 
   onChange(e) {
@@ -22,6 +23,7 @@ export default class DropFileField extends Field {
     let filesArr = Array.from(files);
     this.setState({
       value: filesArr.map(f => f.name).join(', '),
+      files: filesArr,
       error,
       localClasses: Array.from(lc).join(' ')
     }, () => this.returnData(filesArr));
@@ -78,8 +80,8 @@ export default class DropFileField extends Field {
     const { errorMessage, label } = this.props;
     const { value } = this.state;
     return <div className="card-body">
-      {children}
       {(!value && label) && this.labelNode}
+      {children}
       {this.inputNode}
       <small className="invalid-feedback">
         {errorMessage}

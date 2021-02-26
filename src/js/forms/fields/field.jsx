@@ -6,6 +6,7 @@ export default class Field extends Component {
 
   static propTypes = {
     ...Component.propTypes,
+    labelClasses: PropTypes.string,
     name: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     value: PropTypes.any,
@@ -126,10 +127,11 @@ export default class Field extends Component {
   }
 
   get labelNode() {
-    const { label, placeholder, required, name } = this.props
-    return <label className="form-label" htmlFor={name}>
+    const { label, placeholder, required, name, labelClasses } = this.props;
+    const cn = ['form-label', labelClasses];
+    return <label className={cn.join(' ')} htmlFor={name}>
       {label ? label : placeholder}
-      {required && <small title="Este campo es indispensable" className="text-muted">*</small>}
+      {required && <b title="Este campo es indispensable" className="text-inherit"> *</b>}
     </label>
   }
 

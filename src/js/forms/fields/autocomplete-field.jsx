@@ -81,7 +81,7 @@ export default class AutocompleteField extends Field {
     this.setState({
       value: opt.label,
       error: this.isInvalid(opt.label)
-    }, this.onFilter);
+    });
   }
 
   mapOptions = (opt, i) => {
