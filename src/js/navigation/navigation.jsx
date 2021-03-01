@@ -13,6 +13,11 @@ export class ToggleTextNavigation extends Component {
 
 export default class Navigation extends Component {
 
+  static defaultProps = {
+    ...Component.defaultProps,
+    menu: []
+  }
+
   constructor(props) {
     super(props);
     this.state.localClasses = 'nav';
