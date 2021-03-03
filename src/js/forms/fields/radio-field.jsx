@@ -16,12 +16,21 @@ export default class RadioField extends Field {
   }
 
   onChange(e) {
-    let { checked, value } = e.target;
-    if (!checked) return;
-    if (value === 'true') value = true;
-    if (value === 'false') value = false;
+    const { value, dataset } = e.target;
+    let setValue;
+    switch (dataset.type) {
+      case 'number':
+        setValue = parseFloat(value);
+        break;
+      case 'boolean':
+        setValue = value === 'true';
+        break;
+      default:
+        setValue = value;
+        break;
+    }
     this.setState({
-      value,
+      value: setValue,
       error: this.isInvalid(value)
     }, () => this.returnData());
   }
@@ -46,10 +55,21 @@ export default class RadioField extends Field {
     const cn = ['form-check'];
     if (inline) cn.push('form-check-inline');
     const id = name + '-' + item.value;
-    return <div key={i + '-' + item.value} className={cn.join(' ')}>
-      <input {...this.inputProps} id={id} value={item.value} checked={value === item.value} />
+    const checked = ['boolean', 'number'].includes(typeof value) ?
+      item.value === value :
+      value.includes(item.value);
+    const inputProps = {
+      ...this.inputProps,
+      id,
+      value: item.value,
+      checked: checked,
+      disabled: item.disabled,
+      'data-type': typeof item.value
+    }
+    return <div key={i + '-' + item.value} className={cn.join(' ')} >
+      <input {...inputProps} />
       <label className="form-check-label" htmlFor={id}>{item.label}</label>
-    </div>
+    </div >
   }
 
   content() {

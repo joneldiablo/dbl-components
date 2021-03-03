@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import schemaManager from "../functions/schema-manager"
 import DefaultField from "./fields/field";
 import RadioField from "./fields/radio-field";
+import CheckboxField from "./fields/checkbox-field";
 import Hidden from "./fields/hidden-field";
 import Select from "./fields/select-field";
 
@@ -11,6 +12,9 @@ const fieldComponents = {
   hidden: Hidden,
   Select,
   RadioField,
+  CheckboxField,
+  radio: RadioField,
+  checkbox: CheckboxField,
   Field: DefaultField
 }
 
