@@ -1,46 +1,20 @@
 import React, { createRef } from "react";
 import PropTypes from 'prop-types';
-import schemaManager from "../functions/schema-manager"
-import DefaultField from "./fields/field";
-import RadioField from "./fields/radio-field";
-import NewPasswordField from "./fields/new-password-field";
-import CheckboxField from "./fields/checkbox-field";
-import Hidden from "./fields/hidden-field";
-import Select from "./fields/select-field";
+import Component from "../component";
+import fieldComponents from "./fields";
 
 
-const fieldComponents = {
-  hidden: Hidden,
-  Select,
-  RadioField,
-  CheckboxField,
-  radio: RadioField,
-  checkbox: CheckboxField,
-  NewPasswordField,
-  Field: DefaultField
-}
-
-export const setFieldComponents = (_components) => {
-  Object.assign(fieldComponents, _components);
-}
-
-export const Fields = ({ classes, style, ...props }) => {
-  let Field = (fieldComponents[props.type] || DefaultField);
-  let cn = ['field', 'mb-3', props.name + '-field', classes];
-  return (<div className={cn.join(' ')} style={style}>
-    <Field {...props} />
-  </div>);
-}
-
-export default class Form extends React.Component {
+export default class Form extends Component {
 
   static propTypes = {
+    ...Component.propTypes,
     clearAfterDone: PropTypes.bool,
-    headers: PropTypes.object,
     fields: PropTypes.array,
-    classes: PropTypes.string,
-    style: PropTypes.object,
-    template: PropTypes.node,
+    fieldClasses: PropTypes.string,
+    title: PropTypes.string,
+    titleClasses: PropTypes.string,
+    Template: PropTypes.node,
+    templateProps: PropTypes.object,
     onChange: PropTypes.func,
     onSubmit: PropTypes.func,
     onValid: PropTypes.func,
@@ -48,9 +22,9 @@ export default class Form extends React.Component {
   }
 
   static defaultProps = {
+    ...Component.defaultProps,
     fields: [],
-    className: '',
-    style: {}
+    fieldClasses: 'mb-3'
   }
 
   constructor(props) {
@@ -69,6 +43,7 @@ export default class Form extends React.Component {
   }
 
   defaults() {
+    // TODO: cargar valores default
     this.setState({ data: {} });
   }
 
@@ -79,6 +54,9 @@ export default class Form extends React.Component {
       onInvalid(data);
   }
 
+  onInvalidField = (data) => { console.log('onInvalidField event', data) }
+  onValidField = (data) => { console.log('onValidField event', data) }
+
   onSubmit = async (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -88,36 +66,45 @@ export default class Form extends React.Component {
       onSubmit(data, e);
   }
 
-  onChange(fieldData) {
+  onChange(fieldData, e) {
     const { onChange, onValid } = this.props;
     const { data } = this.state;
     Object.assign(data, fieldData);
     this.setState({ data });
     if (typeof onValid === 'function' && this.form.current?.checkValidity()) {
-      onValid(data);
+      onValid(data, this.form.current);
     }
     if (typeof onChange === 'function')
-      onChange(data);
+      onChange(data, e.target);
   }
 
-  render() {
-    let { className, style, children, Template, templateProps, fields: propsFields } = this.props;
-    let fields = schemaManager.resolveRefs(propsFields);
-    let cn = [this.constructor.name, className].join(' ');
-    let formFields = (Array.isArray(fields) && fields.map((field, i) =>
-      <Fields key={'' + i + field.name} {...field} onChange={this.onChange} />
-    ));
+  mapFields = (field, i) => {
+    const { fieldClasses } = this.props;
+    const DefaultField = field.type.toLowerCase().includes('group') ?
+      fieldComponents.Group :
+      fieldComponents.Field
+    const Field = (fieldComponents[field.type] || DefaultField);
+    const cn = [field.classes, fieldClasses];
+    const fieldProps = {
+      key: i + '-' + field.name,
+      ...field,
+      classes: cn.join(' '),
+      onChange: this.onChange,
+      onInvalid: this.onInvalidField,
+      onValid: this.onValidField
+    }
+    return <Field {...fieldProps} />
+  }
 
-    return (<div className={cn} style={style}>
-      <form onSubmit={this.onSubmit} onInvalid={this.onInvalid} ref={this.form}>
-        {Template ?
-          <Template {...templateProps}>
-            {formFields}
-          </Template> :
-          formFields
-        }
-        {children}
-      </form>
-    </div>);
+  content(children = this.props.children) {
+    const { Template, templateProps, fields } = this.props;
+    return (<form onSubmit={this.onSubmit} onInvalid={this.onInvalid} ref={this.form} >
+      {Template ?
+        <Template {...templateProps} >
+          {fields.map(this.mapFields)}
+        </Template> :
+        fields.map(this.mapFields)}
+      {children}
+    </form >);
   }
 }

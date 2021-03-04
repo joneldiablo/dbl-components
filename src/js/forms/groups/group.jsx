@@ -1,56 +1,50 @@
 import React from "react";
-import Field from "../fields/field";
+import PropTypes from "prop-types";
+import fieldComponents from "../fields";
+import Component from "../../component";
 
-const formatComponents = {
 
-}
+export default class Group extends Component {
 
-export const setFormatComponents = (_components) => {
-  Object.assign(formatComponents, _components);
-}
-
-export default class GroupField extends React.Component {
+  static propTypes = {
+    ...Component.propTypes,
+    fieldClasses: PropTypes.string,
+    labelClasses: PropTypes.string
+  }
 
   static defaultProps = {
-    label: null,
-    name: null,
-    fields: [],
-    className: '',
-    style: {},
-    classNameFields: 'mb-3 px-2',
-    format: null
+    ...Component.defaultProps,
+    fieldClasses: 'mb-3',
+    fields: []
   }
 
-  Format = formatComponents[this.props.format];
-
-  label() {
-    let { label, classNameFields } = this.props;
-    return label && <>
-      <div className={classNameFields}><h1 className="h2">{label}</h1></div>
-      <div className="h-100 border-bottom"></div>
-    </>
+  fieldProps(field) {
+    const { fieldClasses, onChange, onValid, onInvalid } = this.props;
+    const cn = [field.classes, fieldClasses];
+    return {
+      ...field,
+      classes: cn.join(' '),
+      onChange,
+      onInvalid,
+      onValid
+    };
   }
 
-  content() {
-    let { fields, classNameFields } = this.props;
+  mapFields = (field, i) => {
+    const DefaultField = field.type.toLowerCase().includes('group') ?
+      fieldComponents.Group :
+      fieldComponents.Field
+    const Field = (fieldComponents[field.type] || DefaultField);
+    return <Field key={i + '-' + field.name} {...this.fieldProps(field)} />
+  }
+
+  content(children = this.props.children) {
+    const { label, fields, labelClasses } = this.props;
     return <>
-      {this.label()}
-      {fields.map((field, i) => {
-        let cnf = [field.className, classNameFields].filter(c => !!c);
-        field.className = cnf.join(' ');
-        return <Field key={i} {...field} />
-      })}
+      {label && <label className={labelClasses}>{label}</label>}
+      {fields.map(this.mapFields)}
+      {children}
     </>
   }
 
-  render() {
-    let { className, style, ...props } = this.props;
-    let cn = [this.constructor.name, className, 'group-' + props.name].join(' ');
-    return <div className={cn} style={style}>
-      {this.Format ?
-        <this.Format {...props} /> :
-        this.content()
-      }
-    </div>
-  }
 }
