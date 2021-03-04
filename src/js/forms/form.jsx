@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import schemaManager from "../functions/schema-manager"
 import DefaultField from "./fields/field";
 import RadioField from "./fields/radio-field";
+import NewPasswordField from "./fields/new-password-field";
 import CheckboxField from "./fields/checkbox-field";
 import Hidden from "./fields/hidden-field";
 import Select from "./fields/select-field";
@@ -15,6 +16,7 @@ const fieldComponents = {
   CheckboxField,
   radio: RadioField,
   checkbox: CheckboxField,
+  NewPasswordField,
   Field: DefaultField
 }
 
@@ -91,7 +93,7 @@ export default class Form extends React.Component {
     const { data } = this.state;
     Object.assign(data, fieldData);
     this.setState({ data });
-    if (typeof onValid === 'function' && this.form.current.checkValidity()) {
+    if (typeof onValid === 'function' && this.form.current?.checkValidity()) {
       onValid(data);
     }
     if (typeof onChange === 'function')
