@@ -58,6 +58,7 @@ export default class RadioField extends Field {
     const checked = ['boolean', 'number'].includes(typeof value) ?
       item.value === value :
       value.includes(item.value);
+    if (item.hidden && !checked) cn.push('visually-hidden-focusable');
     const inputProps = {
       ...this.inputProps,
       id,

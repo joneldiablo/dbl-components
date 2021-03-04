@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createRef } from "react";
 import PropTypes from 'prop-types';
 import schemaManager from "../functions/schema-manager"
 import DefaultField from "./fields/field";
@@ -41,6 +41,7 @@ export default class Form extends React.Component {
     template: PropTypes.node,
     onChange: PropTypes.func,
     onSubmit: PropTypes.func,
+    onValid: PropTypes.func,
     onInvalid: PropTypes.func
   }
 
@@ -52,6 +53,7 @@ export default class Form extends React.Component {
 
   constructor(props) {
     super(props);
+    this.form = createRef();
     this.onChange = this.onChange.bind(this);
     this.state = {
       data: {}
@@ -72,7 +74,7 @@ export default class Form extends React.Component {
     const { onInvalid } = this.props;
     const { data } = this.state;
     if (typeof onInvalid === 'function')
-      onInvalid(data, e);
+      onInvalid(data);
   }
 
   onSubmit = async (e) => {
@@ -85,11 +87,15 @@ export default class Form extends React.Component {
   }
 
   onChange(fieldData) {
-    const { onChange } = this.props;
+    const { onChange, onValid } = this.props;
     const { data } = this.state;
-    this.setState({ data: { ...data, ...fieldData } });
+    Object.assign(data, fieldData);
+    this.setState({ data });
+    if (typeof onValid === 'function' && this.form.current.checkValidity()) {
+      onValid(data);
+    }
     if (typeof onChange === 'function')
-      onChange(fieldData);
+      onChange(data);
   }
 
   render() {
@@ -101,7 +107,7 @@ export default class Form extends React.Component {
     ));
 
     return (<div className={cn} style={style}>
-      <form onSubmit={this.onSubmit} onInvalid={this.onInvalid}>
+      <form onSubmit={this.onSubmit} onInvalid={this.onInvalid} ref={this.form}>
         {Template ?
           <Template {...templateProps}>
             {formFields}
