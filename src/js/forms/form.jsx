@@ -80,7 +80,7 @@ export default class Form extends Component {
 
   mapFields = (field, i) => {
     const { fieldClasses } = this.props;
-    const DefaultField = field.type.toLowerCase().includes('group') ?
+    const DefaultField = field.type?.toLowerCase().includes('group') ?
       fieldComponents.Group :
       fieldComponents.Field
     const Field = (fieldComponents[field.type] || DefaultField);
