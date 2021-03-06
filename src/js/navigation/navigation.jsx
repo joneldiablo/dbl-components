@@ -15,7 +15,8 @@ export default class Navigation extends Component {
 
   static defaultProps = {
     ...Component.defaultProps,
-    menu: []
+    menu: [],
+    caretIcons: ['angle-up', 'angle-down']
   }
 
   constructor(props) {

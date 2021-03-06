@@ -108,7 +108,7 @@
                             "marginTop": "25vh"
                           }
                         },
-                        "<div class='text-right text-shadow'><h1>Centro veterinario <br /> Moctezuma</h1><p>Cirugía y oftamología</p></div>"
+                        "<div class='text-end text-shadow'><h1>Centro veterinario <br /> Moctezuma</h1><p>Cirugía y oftamología</p></div>"
                       ]
                     }
                   ]
@@ -158,18 +158,8 @@
                           "classes": "shadow-sm border-0",
                           "content": [
                             "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/ay-perritos-face.jpeg' class='img-fluid d-block m-auto rounded-circle w-50 mb-4' />",
-                            "<h3 class='h5'>Luis Ángel Rodríguez Rdz.</h3>",
-                            "<p class='mx-4'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p>"
-                          ]
-                        },
-                        {
-                          "component": "CardContainer",
-                          "name": "chimuelo",
-                          "classes": "shadow-sm border-0",
-                          "content": [
-                            "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/gonzalo-cara.jpg' class='img-fluid d-block m-auto rounded-circle w-50 mb-4' />",
-                            "<h3 class='h5'>Happy</h3>",
-                            "<p class='mx-4'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p>"
+                            "<h3 class='h5'>MVZ Luis Ángel Rodríguez Rdz.</h3>",
+                            "<p class='mx-4'>Minucioso, alegre, entregado. El MVZ Ángel Rodríguez cuida de todos sus pacientes, los trata con mucho cuidado, les mima y los saca adelante con la mayor diligencia. Especializado en cirugía de pequeñas especies, es capaz de sacar adelante los casos más complicados.</p>"
                           ]
                         },
                         {
@@ -178,8 +168,8 @@
                           "classes": "shadow-sm border-0",
                           "content": [
                             "<img src='https://centroveterinariomoctezuma.com/wp-content/uploads/2021/02/davicho-cara.jpg' class='img-fluid d-block m-auto rounded-circle w-50 mb-4' />",
-                            "<h3 class='h5'>David Argüelles Andrade</h3>",
-                            "<p class='mx-4'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p>"
+                            "<h3 class='h5'>MVZ David Argüelles Andrade</h3>",
+                            "<p class='mx-4'>Sereno, observador, leal. El MVZ David Argüelles cuida de la vista de tus mascotas, está especializado en Oftalmología veterinaria y siempre está actualizandose. Desde roedores hasta grandes equinos, él cuida los ojitos de todas las especies.</p>"
                           ]
                         }
                       ]
@@ -205,7 +195,7 @@
                     {
                       "component": "Container",
                       "fullWidth": true,
-                      "content": "<div class='text-left'><h3 class='h4 mb-4 text-secondary'>Consulta general</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p></div>"
+                      "content": "<div class='text-start'><h3 class='h4 mb-4 text-secondary'>Consulta general</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p></div>"
                     },
                     {
                       "component": "Container",
@@ -216,7 +206,7 @@
                     {
                       "component": "Container",
                       "fullWidth": true,
-                      "content": "<div class='text-right'><h3 class='h4 mb-4 text-secondary'>Cirugía</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p></div>"
+                      "content": "<div class='text-end'><h3 class='h4 mb-4 text-secondary'>Cirugía</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p></div>"
                     },
                     {
                       "component": "Container",
@@ -227,7 +217,7 @@
                     {
                       "component": "Container",
                       "fullWidth": true,
-                      "content": "<div class='text-left'><h3 class='h4 mb-4 text-secondary'>Oftalmología</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p></div>"
+                      "content": "<div class='text-start'><h3 class='h4 mb-4 text-secondary'>Oftalmología</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dictum ante sed magna convallis mollis. Maecenas sit amet luctus ex, non blandit libero. Maecenas fermentum dapibus pharetra.</p></div>"
                     },
                     {
                       "component": "Container",
@@ -237,7 +227,7 @@
                     }
                   ]
                 },
-                "<p class='mt-4 text-right'><NavLink to='/servicios'>Ver todos los servicios</NavLink></p>"
+                "<p class='mt-4 text-end'><NavLink to='/servicios'>Ver todos los servicios</NavLink></p>"
               ]
             },
             {
@@ -276,7 +266,7 @@
                               "style": {
                                 "backgroundColor": "#f8f9faaa"
                               },
-                              "content": "<h3 class='h4 text-dark mb-3'>Horario de atención</h3><p>Lunes a viernes de 9:00am a 7:00pm<br />Sábado de 9:00am a 2:00pm<br/>Emergencias las 24hrs del día vía telefónica.</p>"
+                              "content": "<h3 class='h4 text-dark mb-3'>Horario de atención</h3><p>Lunes a viernes de 9:00am a 7:00pm<br />Sábado de 9:00am a 2:00pm<br/>Emergencias las 24hrs al <a href='tel:7771818540' class='link-dark'>777 181 8540</a>.</p>"
                             },
                             {
                               "component": "CardContainer",
@@ -284,7 +274,7 @@
                               "style": {
                                 "backgroundColor": "#f8f9faaa"
                               },
-                              "content": "<h3 class='h4 text-dark mb-3'>Aquí nos encuentras</h3><p>Estrada Cajigal 217, zona 1, El Empleado, 62250 Cuernavaca, Mor.<br />Teléfonos: <a href='tel:7772469454' class='link-dark'>777 246 9454</a>,<br />Email: <a href='mailto:centroveterinariomoctezuma@gmail.com'  class='link-dark'>centroveterinariomoctezuma@gmail.com</a></p>"
+                              "content": "<h3 class='h4 text-dark mb-3'>Aquí nos encuentras</h3><p>Estrada Cajigal 217, zona 1, El Empleado, 62250 Cuernavaca, Mor.<br />Teléfonos: <a href='tel:7772469454' class='link-dark'>777 246 9454</a>, <a href='tel:7771818540' class='link-dark'>777 181 8540</a><br />Email: <a href='mailto:centroveterinariomoctezuma@gmail.com'  class='link-dark'>centroveterinariomoctezuma@gmail.com</a></p>"
                             }
                           ]
                         },
@@ -306,13 +296,17 @@
           "path": "/servicios",
           "view": "view",
           "name": "services",
-          "content": "Servicios"
+          "content": [
+            "<div class='text-primary display-3 text-center p-5'>En construcción</div>"
+          ]
         },
         {
           "path": "/citas",
           "view": "view",
           "name": "dates",
-          "content": "Citas"
+          "content": [
+            "<div class='text-primary display-3 text-center p-5'>En construcción</div>"
+          ]
         }
       ]
     }
