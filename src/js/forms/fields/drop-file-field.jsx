@@ -17,6 +17,7 @@ export default class DropFileField extends Field {
     const lc = new Set(localClasses.split(' '));
     lc.delete('active');
     lc.delete('filled');
+    lc.delete('border-danger');
     const error = this.isInvalid(value);
     const className = error ? 'border-danger' : 'filled';
     lc.add(className);
@@ -30,9 +31,14 @@ export default class DropFileField extends Field {
   }
 
   onInvalid(e) {
+    const { localClasses } = this.state;
+    const lc = new Set(localClasses.split(' '));
+    lc.delete('active');
+    lc.delete('filled');
+    lc.add('border-danger');
     this.setState({
       error: true,
-      localClasses: 'card border-danger'
+      localClasses: Array.from(lc).join(' ')
     });
   }
 

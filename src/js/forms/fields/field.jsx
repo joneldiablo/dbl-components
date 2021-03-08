@@ -1,6 +1,7 @@
 import React, { createRef } from "react";
 import PropTypes from "prop-types";
 import Component from "../../component";
+import { hash } from "../../functions";
 
 export default class Field extends Component {
 
@@ -38,6 +39,7 @@ export default class Field extends Component {
     this.onChange = this.onChange.bind(this);
     this.onInvalid = this.onInvalid.bind(this);
     this.input = createRef();
+    if (props.options) this.hashOpts = hash(JSON.stringify(props.options));
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -49,9 +51,12 @@ export default class Field extends Component {
         }
       }
     }
-    // TODO: asegurarse que esto funcione, podría mandarse el mismo arreglo con diferentes opciones
-    if (prevProps.options != this.props.options) {
-      this.setState({ options: this.props.options });
+    if (this.props.options) {
+      const hashOpts = hash(JSON.stringify(this.props.options));
+      if (this.hashOpts != hashOpts) {
+        this.hashOpts = hashOpts;
+        this.setState({ options: this.props.options });
+      }
     }
   }
 
@@ -102,10 +107,10 @@ export default class Field extends Component {
   }
 
   get inputProps() {
-    const { type, disabled,
+    const { disabled,
       required, name,
-      placeholder,
-      min, max, pattern, autocomplete } = this.props;
+      placeholder, step, noValidate,
+      min, max, pattern, autoComplete } = this.props;
     const { value, error } = this.state;
     const cn = ['form-control', error ? 'is-invalid' : ''];
     return {
@@ -115,13 +120,13 @@ export default class Field extends Component {
       pattern,
       placeholder,
       required,
-      autoComplete: autocomplete ? 'off' : null,
+      autoComplete,
       type: this.type,
       value,
       onChange: this.onChange,
       onInvalid: this.onInvalid,
       className: cn.join(' '),
-      min, max,
+      min, max, step, noValidate,
       ref: r => this.input = r
     }
   }

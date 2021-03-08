@@ -66,7 +66,7 @@ export default class Form extends Component {
       onSubmit(data, e);
   }
 
-  onChange(fieldData, e) {
+  onChange(fieldData) {
     const { onChange, onValid } = this.props;
     const { data } = this.state;
     Object.assign(data, fieldData);
@@ -75,7 +75,7 @@ export default class Form extends Component {
       onValid(data, this.form.current);
     }
     if (typeof onChange === 'function')
-      onChange(data, e.target);
+      onChange(data);
   }
 
   mapFields = (field, i) => {

@@ -11,7 +11,7 @@ export default class GridGroup extends Group {
       fieldComponents.Field
     const Field = (fieldComponents[field.type] || DefaultField);
     const cnc = ['col', colClasses, field.colClasses];
-    return (<div className={cnc.join(' ')}>
+    return (<div key={i} className={cnc.join(' ')}>
       <Field key={i + '-' + field.name} {...this.fieldProps(field)} />
     </div>);
   }

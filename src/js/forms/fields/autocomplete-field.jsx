@@ -22,6 +22,8 @@ export default class AutocompleteField extends Field {
     super(props);
     this.menuDropdown = createRef();
     this.state.options = props.options || [];
+    this.state.options = (props.options || []).slice(0, props.maxLength);
+    this.state.more = (props.options || []).slice(props.maxLength);
     this.state.showDropdown = '';
   }
 
@@ -35,8 +37,8 @@ export default class AutocompleteField extends Field {
   }
 
   onFilter(value = this.state.value) {
-    let { onFilter, maxLength } = this.props;
-    let { error } = this.state;
+    const { onFilter, maxLength } = this.props;
+    const { error } = this.state;
     if (!error) {
       if (typeof onFilter === 'function') {
         clearTimeout(this.timeoutFilter);
@@ -53,7 +55,7 @@ export default class AutocompleteField extends Field {
         const { options } = this.props;
         const allOpts = options.filter(opt =>
           opt.label.toLowerCase()
-            .includes(value.toLowerCase()))
+            .includes(value.toLowerCase()));
         this.setState({
           options: allOpts.slice(0, maxLength),
           more: allOpts.slice(maxLength)
