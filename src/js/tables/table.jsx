@@ -1,45 +1,127 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
 import Component from "../component";
+import Icons from "../media/icons";
+
+class HeaderColumn extends React.Component {
+
+  state = {};
+
+  sort(dir) {
+    const { onSort, col } = this.props;
+    const { sortDir } = this.state;
+    let newDir = dir;
+    if (sortDir === newDir) newDir = null;
+    this.setState({ sortDir: newDir });
+    if (typeof onSort === 'function') onSort(newDir ? { [col.name]: newDir } : null);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (!this.props.sort && this.state.sortDir) this.setState({ sortDir: null });
+  }
+
+  render() {
+    const { col, classes, icons, orderable } = this.props;
+    const { sortDir } = this.state;
+    const showOrder = typeof col.orderable !== 'undefined' ? col.orderable : orderable;
+    const style = {
+      width: col.width
+    }
+    const cn = ['header position-relative', col.type, col.name + '-header', col.classes, classes];
+    if (showOrder) cn.push('pe-3 me-2');
+    return <th className="align-middle">
+      <div className={cn.join(' ')} style={style}>
+        <span>{col.label}</span>
+        {showOrder &&
+          <small className="text-muted d-flex flex-column position-absolute top-50 start-100 translate-middle" style={{ fontSize: 10 }}>
+            <Icons icon={icons.caretUp}
+              className={'cursor-pointer ' + (sortDir === 'ASC' ? 'text-body' : '')}
+              onClick={(e) => this.sort('ASC', e)} />
+            <Icons icon={icons.caretDown}
+              className={'cursor-pointer ' + (sortDir === 'DESC' ? 'text-body' : '')}
+              onClick={(e) => this.sort('DESC', e)} />
+          </small>}
+      </div>
+    </th>
+  }
+}
 
 export default class Table extends Component {
 
-  column(col, data, classes, i) {
-    const colStyle = {
-      width: col.width,
-      overflow: 'hidden'
+  static defaultProps = {
+    ...Component.defaultProps,
+    data: [],
+    icons: {
+      caretUp: 'caret-up',
+      caretDown: 'caret-down',
     }
-    return <div className={[col.width ? 'col-auto' : 'col', classes].join(' ')} key={i + '-' + col.name} style={colStyle}>
-      {data}
-    </div>
   }
 
-  content() {
-    const { columns } = this.props;
-    const { data } = this.state;
-    console.log(data);
-    return <div style={{ overflowX: 'auto' }}>
-      <div className="table-wrapper">
-        <div className="table-header container-fluid">
-          <div className="table-header-row row">
-            {columns?.length && columns.map((col, i) =>
-              this.column(col, col.label, 'table-header-column', i))}
-          </div>
-        </div>
-        <div className="table-body container-fluid">
-          {data && data.map(row =>
-            <div className="table-body-row row" key={row.id}>
-              {columns?.length && columns.map((col, i) => {
-                const colData = (col.name === 'id' ?
-                  <NavLink to={this.props.path + '/' + row[col.name]}>
-                    {row[col.name]}
-                  </NavLink> :
-                  row[col.name]);
-                return this.column(col, colData, 'table-body-column', i);
-              })}
-            </div>)}
-        </div>
-      </div>
+  constructor(props) {
+    super(props);
+    // TODO: si cambian las columnas desde props, no se actualizaran
+    this.state.columns = Array.isArray(props.columns) ? props.columns :
+      Object.keys(props.columns).map(colName => ({ name: colName, ...props.columns[colName] }));
+  }
+
+  // Events
+  onSort = (orderBy) => {
+    const { onChange } = this.props;
+    this.setState({ orderBy: orderBy && Object.keys(orderBy).pop() });
+    if (typeof onChange === 'function') onChange({ orderBy });
+  }
+  //------
+
+  mapHeaderColumns = (col, i) => {
+    const { colClasses, icons, orderable } = this.props;
+    const { orderBy } = this.state;
+    const props = {
+      col,
+      orderable,
+      classes: colClasses,
+      icons,
+      onSort: this.onSort,
+      sort: orderBy === col.name
+    };
+    return <HeaderColumn key={i + '-' + col.name} {...props} />
+  }
+
+  mapRowColumns = (row, col, i) => {
+    const { colClasses } = this.props;
+    const colName = col.name;
+    const style = {
+      ...col.style
+    }
+    const cn = ['cell', col.type, col.name + '-cell', col.classes, colClasses];
+    const cell = (<div className={cn.join(' ')} style={style}>{row[colName]}</div>);
+    return (colName === 'id' ?
+      <th key={i + '-' + colName} scope="row">{cell}</th> :
+      <td key={i + '-' + colName} >{cell}</td>
+    );
+  }
+
+  mapRows = (row, i) => {
+    const { columns } = this.state;
+    return <tr key={i + '-' + row.id} >
+      {columns.map((col, j) => this.mapRowColumns(row, col, j))}
+    </tr>
+  }
+
+  content(children = this.props.children) {
+    const { data, header } = this.props;
+    const { columns } = this.state;
+    return <div className="table-responsive">
+      {header}
+      <table className="table table-striped table-hover">
+        <thead>
+          <tr>
+            {columns.map(this.mapHeaderColumns)}
+          </tr>
+        </thead>
+        <tbody>
+          {data.map(this.mapRows)}
+        </tbody>
+      </table>
+      {children}
     </div>
   }
 }

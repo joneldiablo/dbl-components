@@ -14,6 +14,7 @@ import Navigation, { ToggleTextNavigation } from "./navigation/navigation";
 import BrandNavigation from "./navigation/brand-navigation";
 import YoutubeVideoComponent from "./media/youtube-video";
 import Component from "./component";
+import Form from "./forms/form";
 import Table from "./tables/table";
 import EndpointTable from "./tables/endpoint-table";
 
@@ -31,7 +32,8 @@ const COMPONENTS = {
   YoutubeVideoComponent,
   ToggleTextNavigation,
   Table,
-  EndpointTable
+  EndpointTable,
+  Form
 }
 
 export default COMPONENTS;
