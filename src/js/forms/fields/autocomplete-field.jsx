@@ -79,16 +79,21 @@ export default class AutocompleteField extends Field {
 
   onSelectOption(opt) {
     this.hide();
-    this.returnData(opt);
+    this.returnData(opt.value);
     this.setState({
-      value: opt.label,
+      value: opt.value !== null ? opt.label : '',
       error: this.isInvalid(opt.label)
     });
   }
 
   mapOptions = (opt, i) => {
     return <li key={opt.value}>
-      <span className="dropdown-item" onClick={() => this.onSelectOption(opt)}>{opt.label}</span>
+      <span className="dropdown-item"
+        onClick={() => this.onSelectOption(opt)}
+      >
+        {opt.label}
+      </span>
+      {opt.divider && <hr className="m-0"/>}
     </li>
   }
 
