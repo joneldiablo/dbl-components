@@ -6,13 +6,18 @@ export default class GridGroup extends Group {
 
   mapFields = (field, i) => {
     const { colClasses } = this.props;
-    const DefaultField = field.type.toLowerCase().includes('group') ?
-      fieldComponents.Group :
-      fieldComponents.Field
-    const Field = (fieldComponents[field.type] || DefaultField);
+    let fieldNode;
+    if (React.isValidElement(field)) fieldNode = field;
+    else {
+      const DefaultField = field.type.toLowerCase().includes('group') ?
+        fieldComponents.Group :
+        fieldComponents.Field
+      const Field = (fieldComponents[field.type] || DefaultField);
+      fieldNode = (<Field key={i + '-' + field.name} {...this.fieldProps(field)} />);
+    }
     const cnc = ['col', colClasses, field.colClasses];
     return (<div key={i} className={cnc.join(' ')}>
-      <Field key={i + '-' + field.name} {...this.fieldProps(field)} />
+      {fieldNode}
     </div>);
   }
 

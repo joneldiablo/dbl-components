@@ -51,9 +51,16 @@ export default class View extends Component {
     // crear un clone de lo que se recibe
     const schemaContentStr = JSON.stringify(this.props.content);
     const contentSchema = JSON.parse(schemaContentStr);
-    // se crean las rutas de forma única.
-    const content = Array.isArray(contentSchema) ?
-      contentSchema.map(this.sections) : parseReact(contentSchema, this.parseOpts);
+    // se crea el contenido de forma única.
+    let content;
+    if (Array.isArray(contentSchema))
+      content = contentSchema.map(this.sections)
+    else if (typeof contentSchema === 'object')
+      content = Object.keys(contentSchema)
+        .map((name, i) => this.sections({ ...contentSchema[name], name }, i));
+    else
+      content = parseReact(contentSchema, this.parseOpts);
+
     this.setState({
       content,
       localClasses: this.props.test ? 'test-view-wrapper' : ''
@@ -91,9 +98,14 @@ export default class View extends Component {
       match,
       history
     }
-    let subcontent = Array.isArray(componentProps.content) ?
-      componentProps.content.map(this.sections) :
-      [!!componentProps.content && <React.Fragment key="content">
+    let subcontent;
+    if (Array.isArray(componentProps.content))
+      subcontent = componentProps.content.map(this.sections)
+    else if (typeof componentProps.content === 'object')
+      subcontent = Object.keys(componentProps.content)
+        .map((name, i) => this.sections({ ...componentProps.content[name], name }, i));
+    else
+      subcontent = [!!componentProps.content && <React.Fragment key="content">
         {parseReact(componentProps.content, this.parseOpts)}
       </React.Fragment>];
     const cnSection = [componentProps.name + '-section'];

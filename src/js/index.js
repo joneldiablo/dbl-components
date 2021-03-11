@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 import FooterContainer from "./containers/footer-container";
 import FullscreenContainer from "./containers/fullscreen-container";
 import Icons from "./media/icons";
@@ -33,7 +34,8 @@ const COMPONENTS = {
   ToggleTextNavigation,
   Table,
   EndpointTable,
-  Form
+  Form,
+  NavLink
 }
 
 export default COMPONENTS;

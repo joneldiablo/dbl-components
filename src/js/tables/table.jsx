@@ -107,12 +107,17 @@ export default class Table extends Component {
   }
 
   content(children = this.props.children) {
-    const { data, header } = this.props;
+    const { data } = this.props;
     const { columns } = this.state;
+    let header, footer;
+    if (Array.isArray(children))
+      [header, footer] = children;
     return <div className="table-responsive">
-      {header}
       <table className="table table-striped table-hover">
         <thead>
+          {header &&
+            <tr><td><div>{header}</div></td></tr>
+          }
           <tr>
             {columns.map(this.mapHeaderColumns)}
           </tr>
@@ -120,8 +125,10 @@ export default class Table extends Component {
         <tbody>
           {data.map(this.mapRows)}
         </tbody>
+        {footer &&
+          <tfooter><tr><td><div>{footer}</div></td></tr></tfooter>
+        }
       </table>
-      {children}
     </div>
   }
 }

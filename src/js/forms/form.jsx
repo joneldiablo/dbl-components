@@ -1,7 +1,8 @@
 import React, { createRef } from "react";
 import PropTypes from 'prop-types';
 import Component from "../component";
-import fieldComponents from "./fields";
+import fields from "./fields";
+import groups from "./groups";
 
 
 export default class Form extends Component {
@@ -13,7 +14,7 @@ export default class Form extends Component {
     fieldClasses: PropTypes.string,
     title: PropTypes.string,
     titleClasses: PropTypes.string,
-    Template: PropTypes.node,
+    template: PropTypes.string,
     templateProps: PropTypes.object,
     onChange: PropTypes.func,
     onSubmit: PropTypes.func,
@@ -24,7 +25,8 @@ export default class Form extends Component {
   static defaultProps = {
     ...Component.defaultProps,
     fields: [],
-    fieldClasses: 'mb-3'
+    fieldClasses: 'mb-3',
+    templateProps: {}
   }
 
   constructor(props) {
@@ -81,9 +83,9 @@ export default class Form extends Component {
   mapFields = (field, i) => {
     const { fieldClasses } = this.props;
     const DefaultField = field.type?.toLowerCase().includes('group') ?
-      fieldComponents.Group :
-      fieldComponents.Field
-    const Field = (fieldComponents[field.type] || DefaultField);
+      fields.Group :
+      fields.Field
+    const Field = (fields[field.type] || DefaultField);
     const cn = [field.classes, fieldClasses];
     const fieldProps = {
       key: i + '-' + field.name,
@@ -97,12 +99,12 @@ export default class Form extends Component {
   }
 
   content(children = this.props.children) {
-    const { Template, templateProps, fields } = this.props;
+    const { template, templateProps, fields } = this.props;
+    let Tpl;
+    if (template) Tpl = groups[template] || groups.Group;
     return (<form onSubmit={this.onSubmit} onInvalid={this.onInvalid} ref={this.form} >
-      {Template ?
-        <Template {...templateProps} >
-          {fields.map(this.mapFields)}
-        </Template> :
+      {Tpl ?
+        <Tpl {...templateProps} fields={fields.map(this.mapFields)} /> :
         fields.map(this.mapFields)}
       {children}
     </form >);

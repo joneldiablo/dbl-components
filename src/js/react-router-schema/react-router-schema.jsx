@@ -30,16 +30,19 @@ const routePropTypes = {
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string)
   ]).isRequired,
-  name: PropTypes.string.isRequired,
-  component: PropTypes.string,
   content: PropTypes.any.isRequired,
+  name: PropTypes.string,
+  component: PropTypes.string,
   exact: PropTypes.bool,
   strict: PropTypes.bool,
   location: PropTypes.object,
   sensitive: PropTypes.bool,
   redirect: PropTypes.string
 };
-routePropTypes.routes = PropTypes.arrayOf(PropTypes.shape(routePropTypes));
+routePropTypes.routes = PropTypes.oneOfType([
+  PropTypes.arrayOf(PropTypes.shape(routePropTypes)),
+  PropTypes.objectOf(PropTypes.shape(routePropTypes))
+]);
 
 const schemaPropTypes = {
   test: PropTypes.bool,
@@ -71,11 +74,15 @@ export default class SchemaController extends React.Component {
     // crear un clone de lo que se recibe
     const schemaStr = JSON.stringify(this.props.routes);
     const routesSchema = JSON.parse(schemaStr);
-    // obtener un identificador de la cadena
-    this.schemaHash = hash(schemaStr);
     // se crean las rutas de forma única.
+    let routes;
+    if (Array.isArray(routesSchema))
+      routes = routesSchema.map(this.views);
+    else if (typeof routesSchema === 'object')
+      routes = Object.keys(routesSchema)
+        .map((name, i) => this.views({ ...routesSchema[name], name }, i))
     this.setState({
-      routeNodes: routesSchema.map(this.views)
+      routeNodes: routes
     });
   }
 
@@ -85,9 +92,10 @@ export default class SchemaController extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     // comprobar si ha cambiado el schema
-    let isEq = this.schemaHash !== hash(JSON.stringify(this.props.routes));
-    if (isEq) {
+    let newHash = hash(JSON.stringify(this.props.routes));
+    if (this.routesHash !== newHash) {
       this.buildRoutes();
+      this.routesHash = newHash;
     }
   }
 
@@ -98,8 +106,14 @@ export default class SchemaController extends React.Component {
    **/
   views = (route, i) => {
     let View = VIEWS[route.component] || (DefaultView);
-    let subroutes = [];
-    if (Array.isArray(route.routes)) {
+    let subroutes = false;
+    if (Array.isArray(route.routes)) subroutes = [];
+    else if (typeof route.routes === 'object') {
+      subroutes = [];
+      route.routes = Object.keys(route.routes)
+        .map((name, i) => ({ ...route.routes[name], name }));
+    }
+    if (subroutes) {
       const mapRoutes = (subRoute, i) => {
         // crear un clone para no tocar el original
         subRoute = JSON.parse(JSON.stringify(subRoute));
