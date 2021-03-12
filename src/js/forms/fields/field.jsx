@@ -132,16 +132,24 @@ export default class Field extends Component {
   }
 
   get labelNode() {
-    const { label, placeholder, required, name, labelClasses } = this.props;
+    const { label, placeholder, required, name, labelClasses, inline } = this.props;
     const cn = ['form-label', labelClasses];
-    return <label className={cn.join(' ')} htmlFor={name}>
+    if (inline) cn.push('mb-0');
+    const labelNode = <label className={cn.join(' ')} htmlFor={name}>
       {label ? label : placeholder}
       {required && <b title="Este campo es indispensable" className="text-inherit"> *</b>}
     </label>
+    return (inline ? <div className="col-auto">
+      {labelNode}
+    </div> : labelNode);
   }
 
   get inputNode() {
-    return (<input {...this.inputProps} />);
+    const { inline } = this.props;
+    const inputNode = (<input {...this.inputProps} />);
+    return (inline ? <div className="col-auto">
+      {inputNode}
+    </div> : inputNode);
   }
 
   outline() {
@@ -156,8 +164,10 @@ export default class Field extends Component {
   }
 
   labeled() {
-    const { errorMessage } = this.props;
-    return <div style={{ position: 'relative' }}>
+    const { errorMessage, inline } = this.props;
+    const cn = [];
+    if (inline) cn.push('row align-items-center gx-2');
+    return <div style={{ position: 'relative' }} className={cn.join(' ')}>
       {this.labelNode}
       {this.inputNode}
       <small className="invalid-feedback">

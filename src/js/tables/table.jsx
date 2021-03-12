@@ -116,7 +116,11 @@ export default class Table extends Component {
       <table className="table table-striped table-hover">
         <thead>
           {header &&
-            <tr><td><div>{header}</div></td></tr>
+            <tr>
+              <td colSpan="1000">
+                <div>{header}</div>
+              </td>
+            </tr>
           }
           <tr>
             {columns.map(this.mapHeaderColumns)}
@@ -126,7 +130,13 @@ export default class Table extends Component {
           {data.map(this.mapRows)}
         </tbody>
         {footer &&
-          <tfooter><tr><td><div>{footer}</div></td></tr></tfooter>
+          <tfooter>
+            <tr>
+              <td colSpan="1000">
+                <div>{footer}</div>
+              </td>
+            </tr>
+          </tfooter>
         }
       </table>
     </div>
