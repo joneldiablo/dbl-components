@@ -18,6 +18,7 @@ const fieldComponents = {
   checkbox: CheckboxField,
   radio: RadioField,
   hidden: HiddenField,
+  select: SelectField,
   Group,
   GridGroup
 };

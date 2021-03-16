@@ -26,7 +26,8 @@ export default class Field extends Component {
   static defaultProps = {
     ...Component.defaultProps,
     type: 'text',
-    default: ''
+    default: '',
+    first: 'label'
   }
 
   state = {
@@ -108,11 +109,11 @@ export default class Field extends Component {
 
   get inputProps() {
     const { disabled,
-      required, name,
+      required, name, fieldClasses,
       placeholder, step, noValidate,
       min, max, pattern, autoComplete } = this.props;
     const { value, error } = this.state;
-    const cn = ['form-control', error ? 'is-invalid' : ''];
+    const cn = ['form-control', fieldClasses, error ? 'is-invalid' : ''];
     return {
       disabled,
       id: name,
@@ -164,12 +165,13 @@ export default class Field extends Component {
   }
 
   labeled() {
-    const { errorMessage, inline } = this.props;
+    const { errorMessage, inline, first } = this.props;
     const cn = [];
     if (inline) cn.push('row align-items-center gx-2');
     return <div style={{ position: 'relative' }} className={cn.join(' ')}>
-      {this.labelNode}
+      {first === 'label' && this.labelNode}
       {this.inputNode}
+      {first === 'field' && this.labelNode}
       <small className="invalid-feedback">
         {errorMessage}
       </small>
