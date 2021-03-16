@@ -17,6 +17,12 @@ export default class SelectField extends Field {
     this.state.value = props.value;
   }
 
+  get inputProps() {
+    const props = super.inputProps;
+    props.defaultValue = this.props.default;
+    return props;
+  }
+
   get inputNode() {
     const { inline, placeholder, options } = this.props;
     const inputNode = (<select {...this.inputProps} >

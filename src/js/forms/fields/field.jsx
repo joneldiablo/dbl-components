@@ -3,6 +3,12 @@ import PropTypes from "prop-types";
 import Component from "../../component";
 import { hash } from "../../functions";
 
+//TODO: cambiar a "descontrolado" (hahaha)
+// usar defaultValue en lugar de value en el input
+// implica cambiar todos los fields
+// modificar Form tambien para que el default se cargue al data
+// pero "value" no.
+
 export default class Field extends Component {
 
   static propTypes = {
@@ -135,7 +141,7 @@ export default class Field extends Component {
   get labelNode() {
     const { label, placeholder, required, name, labelClasses, inline } = this.props;
     const cn = ['form-label', labelClasses];
-    if (inline) cn.push('mb-0');
+    if (inline) cn.push('my-2');
     const labelNode = <label className={cn.join(' ')} htmlFor={name}>
       {label ? label : placeholder}
       {required && <b title="Este campo es indispensable" className="text-inherit"> *</b>}
@@ -150,40 +156,31 @@ export default class Field extends Component {
     const inputNode = (<input {...this.inputProps} />);
     return (inline ? <div className="col-auto">
       {inputNode}
+      {this.errorMessageNode}
     </div> : inputNode);
   }
 
-  outline() {
+  get errorMessageNode() {
     const { errorMessage } = this.props;
-    return <div className="form-floating">
-      {this.inputNode}
-      {this.labelNode}
-      <small className="invalid-feedback">
-        {errorMessage}
-      </small>
-    </div>
-  }
-
-  labeled() {
-    const { errorMessage, inline, first } = this.props;
-    const cn = [];
-    if (inline) cn.push('row align-items-center gx-2');
-    return <div style={{ position: 'relative' }} className={cn.join(' ')}>
-      {first === 'label' && this.labelNode}
-      {this.inputNode}
-      {first === 'field' && this.labelNode}
-      <small className="invalid-feedback">
-        {errorMessage}
-      </small>
-    </div>
+    const { error } = this.state;
+    return (error && errorMessage && <small className="text-danger">
+      {errorMessage}
+    </small>);
   }
 
   content(children = this.props.children) {
-    let { placeholder, label } = this.props;
-    return <>
-      {placeholder && !label ?
-        this.outline() : this.labeled()}
+    const { inline, first, placeholder, label } = this.props;
+    const cn = ['position-relative'];
+    if (inline) cn.push('row gx-2');
+    if (placeholder && !label) cn.push('form-floating');
+    return (<>
+      <div className={cn.join(' ')}>
+        {(first === 'label' && label) && this.labelNode}
+        {this.inputNode}
+        {(first !== 'label' || (placeholder && !label)) && this.labelNode}
+        {!inline && this.errorMessageNode}
+      </div>
       {children}
-    </>;
+    </>);
   }
 };

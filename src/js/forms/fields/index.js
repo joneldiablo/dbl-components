@@ -5,6 +5,7 @@ import CheckboxField from "./checkbox-field";
 import HiddenField from "./hidden-field";
 import SelectField from "./select-field";
 import AutocompleteField from "./autocomplete-field";
+import DateRangeField from "./date-range-field";
 import Group from "../groups/group";
 import GridGroup from "../groups/grid-group";
 
@@ -15,6 +16,7 @@ const fieldComponents = {
   CheckboxField,
   NewPasswordField,
   AutocompleteField,
+  DateRangeField,
   checkbox: CheckboxField,
   radio: RadioField,
   hidden: HiddenField,
