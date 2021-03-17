@@ -19,6 +19,8 @@ export default class Navigation extends Component {
     caretIcons: ['angle-up', 'angle-down']
   }
 
+  tag = 'nav';
+
   constructor(props) {
     super(props);
     this.state.localClasses = 'nav';
@@ -100,15 +102,4 @@ export default class Navigation extends Component {
     </>);
   }
 
-  // TODO: buscar la forma de no repetir este frgamento de código
-  //       permitir cambiar la etiqueta contenedora
-  render() {
-    let { classes, style } = this.props;
-    let { localClasses, localStyles } = this.state;
-    let cn = [this.constructor.name, this.name(), localClasses, classes].join(' ');
-    const s = Object.assign({}, localStyles, style);
-    return <nav className={cn} style={s} ref={this.ref}>
-      {this.content()}
-    </nav>
-  }
 }

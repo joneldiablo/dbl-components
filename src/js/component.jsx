@@ -5,14 +5,15 @@ export default class Component extends React.Component {
 
   static propTypes = {
     classes: PropTypes.string,
-    style: PropTypes.object,
+    style: PropTypes.object
   }
 
   static defaultProps = {
     classes: '',
-    style: {}
+    style: {},
   }
 
+  tag = 'div';
   state = {
     localClasses: '',
     localStyles: {}
@@ -38,8 +39,9 @@ export default class Component extends React.Component {
     const content = this.content();
     const cn = [this.constructor.name, this.name(), localClasses, classes];
     const s = Object.assign({}, localStyles, style);
-    return <div id={name} className={cn.join(' ')} style={s} ref={this.ref}>
+    const Tag = this.tag;
+    return <Tag id={name} className={cn.join(' ')} style={s} ref={this.ref}>
       {content}
-    </div>
+    </Tag>
   }
 }

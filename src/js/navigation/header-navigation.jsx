@@ -6,7 +6,7 @@ import Svg from "../media/svg";
 import AspectRatioContainer from "../containers/aspect-ratio-container";
 import components from "../functions/components-manager";
 
-export default class HeaderNavigation extends React.Component {
+export default class HeaderNavigation extends Navigation {
 
   dropdowns = [];
 
