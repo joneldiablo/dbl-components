@@ -16,7 +16,7 @@ export default class DateRangeField extends Field {
   constructor(props) {
     super(props);
     this.state.value = Array.isArray(props.value) ? props.value :
-      (Array.isArray(props.default) ? props.default : []);
+      (Array.isArray(props.default) ? props.default : ['', '']);
   }
 
   isInvalid(value) {

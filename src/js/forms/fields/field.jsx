@@ -141,12 +141,12 @@ export default class Field extends Component {
   get labelNode() {
     const { label, placeholder, required, name, labelClasses, inline } = this.props;
     const cn = ['form-label', labelClasses];
-    if (inline) cn.push('my-2');
+    if (inline) cn.push('my-auto');
     const labelNode = <label className={cn.join(' ')} htmlFor={name}>
       {label ? label : placeholder}
       {required && <b title="Este campo es indispensable" className="text-inherit"> *</b>}
     </label>
-    return (inline ? <div className="col-auto">
+    return (inline ? <div className="col-auto d-flex">
       {labelNode}
     </div> : labelNode);
   }

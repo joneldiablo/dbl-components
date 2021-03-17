@@ -95,7 +95,7 @@ export default class Form extends Component {
       onInvalid: this.onInvalidField,
       onValid: this.onValidField
     }
-    return <Field {...fieldProps} />
+    return (<Field {...fieldProps} />);
   }
 
   content(children = this.props.children) {
