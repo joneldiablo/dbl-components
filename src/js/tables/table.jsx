@@ -1,8 +1,24 @@
 import React from "react";
 import Component from "../component";
+import fields from "../forms/fields";
 import Icons from "../media/icons";
+import moment from "moment";
 
-class HeaderColumn extends React.Component {
+const FORMATS = {
+  date: (raw, { format: f = 'DD/MM/YYYY' } = {}) => moment(raw).format(f),
+  currency: (raw, { locale = 'en-US', currency = 'USD' } = {}) =>
+    (new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency
+    })).format(raw),
+  number: (raw, { locale = 'en-US' } = {}) => (new Number(raw)).toLocaleString(locale)
+}
+
+export const addFormatTemplates = (newTemplates = {}) => {
+  Object.assign(FORMATS, newTemplates);
+}
+
+export class HeaderColumn extends React.Component {
 
   state = {};
 
@@ -26,20 +42,34 @@ class HeaderColumn extends React.Component {
     const style = {
       minWidth: col.width
     }
-    const cn = ['header position-relative', col.type, col.name + '-header', col.classes, classes];
-    if (showOrder) cn.push('pe-3 me-2');
+    const cn = [
+      'header position-relative w-100',
+      col.type, col.name + '-header',
+      col.classes, classes
+    ];
     return <th className="align-middle">
-      <div className={cn.join(' ')} style={style}>
-        <span>{col.label}</span>
-        {showOrder &&
-          <small className="text-muted d-flex flex-column position-absolute top-50 start-100 translate-middle" style={{ fontSize: 10 }}>
+      <div className="d-flex align-items-center">
+        <div className={cn.join(' ')} style={style}>
+          <span>{col.label}</span>
+        </div>
+        <div className="d-flex">
+          {col.filter && <div className="ps-2 mt-1 dropstart">
+            <Icons icon={icons.search} className="cursor-pointer"
+              data-bs-toggle="dropdown" />
+            <div className="dropdown-menu dropdown-menu-end p-0">
+              {/*TODO: Cambiar ícono y color cuando haya un filtro*/}
+              {React.createElement(fields[col.filter.type] || fields.Field, col.filter)}
+            </div>
+          </div>}
+          {showOrder && <div className="ps-2 text-muted" style={{ fontSize: 10 }}>
             <Icons icon={icons.caretUp}
-              className={'cursor-pointer ' + (sortDir === 'ASC' ? 'text-body' : '')}
-              onClick={(e) => this.sort('ASC', e)} />
-            <Icons icon={icons.caretDown}
               className={'cursor-pointer ' + (sortDir === 'DESC' ? 'text-body' : '')}
               onClick={(e) => this.sort('DESC', e)} />
-          </small>}
+            <Icons icon={icons.caretDown}
+              className={'cursor-pointer ' + (sortDir === 'ASC' ? 'text-body' : '')}
+              onClick={(e) => this.sort('ASC', e)} />
+          </div>}
+        </div>
       </div>
     </th>
   }
@@ -53,6 +83,7 @@ export default class Table extends Component {
     icons: {
       caretUp: 'caret-up',
       caretDown: 'caret-down',
+      search: 'search'
     }
   }
 
@@ -78,25 +109,32 @@ export default class Table extends Component {
     return <HeaderColumn key={i + '-' + col.name} {...props} />
   }
 
-  mapRowColumns = (row, col, i) => {
+  mapRows = (row, i) => {
+    const { columns } = this.props;
+    return <tr key={i + '-' + row.id} >
+      {columns.map((col, j) => this.mapCells(row, col, j))}
+    </tr>
+  }
+
+  mapCells = (row, col, i) => {
     const { colClasses } = this.props;
     const colName = col.name;
     const style = {
       ...col.style
     }
     const cn = ['cell', col.type, col.name + '-cell', col.classes, colClasses];
-    const cell = (<div className={cn.join(' ')} style={style}>{row[colName]}</div>);
+    const cell = (<div className={cn.join(' ')} style={style} title={row[colName]}>
+      {this.format(col, row[colName])}
+    </div>);
     return (colName === 'id' ?
       <th key={i + '-' + colName} scope="row">{cell}</th> :
       <td key={i + '-' + colName} >{cell}</td>
     );
   }
 
-  mapRows = (row, i) => {
-    const { columns } = this.props;
-    return <tr key={i + '-' + row.id} >
-      {columns.map((col, j) => this.mapRowColumns(row, col, j))}
-    </tr>
+  format(col, data) {
+    const formater = FORMATS[col.format] || (raw => raw);
+    return formater(data, col.formatOpts);
   }
 
   content(children = this.props.children) {
