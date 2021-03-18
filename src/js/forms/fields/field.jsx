@@ -51,12 +51,15 @@ export default class Field extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     // TODO: fix this s....
-    if (typeof prevProps.value === 'undefined' && typeof this.props.value !== 'undefined') {
+    if (typeof this.props.value !== 'undefined') {
       if (!Array.isArray(this.props.value)) {
         if (this.props.value !== this.state.value) {
           this.setState({ value: this.props.value });
         }
       }
+    }
+    if (prevProps.default != this.props.default && !this.props.value) {
+      this.setState({ value: this.props.default });
     }
     if (this.props.options) {
       const hashOpts = hash(JSON.stringify(this.props.options));

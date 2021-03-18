@@ -18,6 +18,8 @@ import Component from "./component";
 import Form from "./forms/form";
 import Table from "./tables/table";
 import EndpointTable from "./tables/endpoint-table";
+import DropdownButtonContainer from "./containers/dropdown-button-container";
+import fields from "./forms/fields";
 
 const COMPONENTS = {
   Debug,
@@ -34,7 +36,9 @@ const COMPONENTS = {
   ToggleTextNavigation,
   Table,
   EndpointTable,
+  DropdownButtonContainer,
   Form,
+  ...fields,
   NavLink
 }
 

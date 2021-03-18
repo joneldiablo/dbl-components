@@ -1,3 +1,4 @@
+import React from "react";
 import PropTypes from "prop-types";
 import Field from "./field";
 
@@ -5,7 +6,7 @@ export default class PaginationField extends Field {
 
   static propTypes = {
     ...Field.propTypes,
-    total: PropTypes.string.isRequired
+    total: PropTypes.number.isRequired
   }
 
   static defaultProps = {
@@ -33,15 +34,14 @@ export default class PaginationField extends Field {
     props.className = 'page-link border-end-0 text-end pe-0';
     props.style = {
       ...props.style,
-      width: 50,
-      max: this.props.total,
-      min: 1
+      width: 58,
     }
+    props.max = this.props.total;
+    props.min = 1;
     return props;
   }
 
   isFirst() {
-    console.log(this.state.value, 1);
     return this.state.value == 1;
   }
 
@@ -72,17 +72,14 @@ export default class PaginationField extends Field {
     const { total } = this.props;
     if (value > total) {
       value = total;
-      this.setState({ value });
     } else if (value < 1) {
       value = 1;
-      this.setState({ value });
     }
     super.returnData(value);
   }
 
   content() {
     const { paginationClasses, texts, total } = this.props;
-    const { value } = this.state;
     const cn = ['pagination', paginationClasses];
     const isFirst = this.isFirst();
     const isLast = this.isLast();
@@ -105,7 +102,7 @@ export default class PaginationField extends Field {
       <li className="page-item disabled">
         <span className="page-link border-start-0 border-end-0 px-1">/</span>
       </li>
-      <li className="page-item disabled" title={total + ' ' + texts.pages} style={{ width: 50 }}>
+      <li className="page-item disabled" title={total + ' ' + texts.pages} style={{ width: 58 }}>
         <span className="page-link border-start-0" >{total}</span>
       </li>
       <li className={'page-item' + (isLast ? ' disabled' : '')} title={texts.next}>

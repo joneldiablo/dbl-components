@@ -24,7 +24,7 @@ class HeaderColumn extends React.Component {
     const { sortDir } = this.state;
     const showOrder = typeof col.orderable !== 'undefined' ? col.orderable : orderable;
     const style = {
-      width: col.width
+      minWidth: col.width
     }
     const cn = ['header position-relative', col.type, col.name + '-header', col.classes, classes];
     if (showOrder) cn.push('pe-3 me-2');
@@ -54,13 +54,6 @@ export default class Table extends Component {
       caretUp: 'caret-up',
       caretDown: 'caret-down',
     }
-  }
-
-  constructor(props) {
-    super(props);
-    // TODO: si cambian las columnas desde props, no se actualizaran
-    this.state.columns = Array.isArray(props.columns) ? props.columns :
-      Object.keys(props.columns).map(colName => ({ name: colName, ...props.columns[colName] }));
   }
 
   // Events
@@ -100,7 +93,7 @@ export default class Table extends Component {
   }
 
   mapRows = (row, i) => {
-    const { columns } = this.state;
+    const { columns } = this.props;
     return <tr key={i + '-' + row.id} >
       {columns.map((col, j) => this.mapRowColumns(row, col, j))}
     </tr>
@@ -108,7 +101,7 @@ export default class Table extends Component {
 
   content(children = this.props.children) {
     const { data } = this.props;
-    const { columns } = this.state;
+    const { columns } = this.props;
     let header, footer;
     if (Array.isArray(children))
       [header, footer] = children;
