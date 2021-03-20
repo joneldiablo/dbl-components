@@ -1,4 +1,5 @@
 import React, { createRef } from "react";
+import eventHandler from "../../functions/event-handler";
 import Field from "./field";
 
 export default class AutocompleteField extends Field {
@@ -8,61 +9,47 @@ export default class AutocompleteField extends Field {
     maxLength: 6
   }
 
-  listName = this.props.name + '-list';
-  closeStyle = {
-    top: 0,
-    left: 0,
-    position: 'fixed',
-    width: '100%',
-    height: '100vh',
-    opacity: 0
-  };
-
   constructor(props) {
     super(props);
     this.menuDropdown = createRef();
-    this.state.options = props.options || [];
     this.state.options = (props.options || []).slice(0, props.maxLength);
-    this.state.more = (props.options || []).slice(props.maxLength);
+    this.state.more = !!(props.options || []).slice(props.maxLength).length;
     this.state.showDropdown = '';
   }
 
   onChange(e) {
     let { value } = e.target;
-    this.setState({
-      value,
-      error: this.isInvalid(value)
-    }, this.onFilter);
-
+    this.setState({ value }, () => this.onFilter());
   }
 
   onFilter(value = this.state.value) {
-    const { onFilter, maxLength } = this.props;
-    const { error } = this.state;
-    if (!error) {
-      if (typeof onFilter === 'function') {
-        clearTimeout(this.timeoutFilter);
+    const { options } = this.props;
+    if (options?.length) {
+      const { maxLength } = this.props;
+      const allOpts = options.filter(opt =>
+        opt.label.toLowerCase().includes(value.toLowerCase())
+      );
+      this.setState({
+        options: allOpts.slice(0, maxLength),
+        more: !!allOpts.slice(maxLength).length
+      });
+    } else {
+      clearTimeout(this.timeoutFilter);
+      this.timeoutFilter = setTimeout(() => {
         this.setState({ loading: true });
-        this.timeoutFilter = setTimeout(async () => {
-          const allOpts = await onFilter(value);
-          this.setState({
-            options: allOpts.slice(0, maxLength),
-            more: allOpts.slice(maxLength),
-            loading: false
-          });
-        }, 300);
-      } else {
-        const { options } = this.props;
-        const allOpts = options.filter(opt =>
-          opt.label.toLowerCase()
-            .includes(value.toLowerCase()));
-        this.setState({
-          options: allOpts.slice(0, maxLength),
-          more: allOpts.slice(maxLength)
-        });
-      }
+        eventHandler.dispatch('filter.' + this.name, value);
+      }, 300);
     }
+  }
 
+  onUpdate({ options, more, ...data }) {
+    const { maxLength } = this.props;
+    this.setState({
+      options: options.slice(0, maxLength),
+      more: (options.length > maxLength) || more,
+      loading: false
+    });
+    super.onUpdate(data);
   }
 
   show = () => {
@@ -79,11 +66,10 @@ export default class AutocompleteField extends Field {
 
   onSelectOption(opt) {
     this.hide();
-    this.returnData(opt.value);
     this.setState({
       value: opt.value !== null ? opt.label : '',
-      error: this.isInvalid(opt.label)
-    });
+      error: this.isInvalid(opt.value)
+    }, () => this.returnData(opt.value));
   }
 
   mapOptions = (opt, i) => {
@@ -93,7 +79,7 @@ export default class AutocompleteField extends Field {
       >
         {opt.label}
       </span>
-      {opt.divider && <hr className="m-0"/>}
+      {opt.divider && <hr className="m-0" />}
     </li>
   }
 
@@ -109,16 +95,24 @@ export default class AutocompleteField extends Field {
   }
 
   get inputNode() {
-    const { options, more, showDropdown, loading: l } = this.state;
     const { loading } = this.props;
+    const { options, more, showDropdown, loading: l } = this.state;
     const cn = ['dropdown-menu', showDropdown];
+    const closeStyle = {
+      top: 0,
+      left: 0,
+      position: 'fixed',
+      width: '100%',
+      height: '100vh',
+      opacity: 0
+    };
     return <>
-      {showDropdown && <div onClick={this.hide} style={this.closeStyle}></div>}
+      {showDropdown && <div onClick={this.hide} style={closeStyle}></div>}
       {super.inputNode}
       {l && loading}
       <ul className={cn.join(' ')} ref={this.menuDropdown} style={{ width: '100%', overflow: 'hidden' }}>
         {options.map(this.mapOptions)}
-        {!!(more?.length) && <li >
+        {more && <li >
           <span className="dropdown-item text-wrap" >...</span>
         </li>}
       </ul>

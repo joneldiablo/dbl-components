@@ -4,7 +4,7 @@ class EventHandler {
   }
   dispatch(event, data) {
     if (!this.events[event]) return;
-    this.events[event].forEach(([callback]) => callback(data));
+    this.events[event].forEach(([callback, id]) => callback(data, id));
   }
   subscribe(eventString, callback, id) {
     let events = eventString.split(/[ ,]+/);

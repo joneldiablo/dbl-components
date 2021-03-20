@@ -25,6 +25,16 @@ export default class PaginationField extends Field {
 
   tag = 'nav';
 
+  constructor(props) {
+    super(props);
+    this.state.total = props.total;
+  }
+
+  onUpdate({ total, ...data }) {
+    if (total) this.setState({ total });
+    super.onUpdate(data);
+  }
+
   get type() {
     return 'number';
   }
@@ -36,7 +46,7 @@ export default class PaginationField extends Field {
       ...props.style,
       width: 58,
     }
-    props.max = this.props.total;
+    props.max = this.state.total;
     props.min = 1;
     return props;
   }
@@ -46,7 +56,7 @@ export default class PaginationField extends Field {
   }
 
   isLast() {
-    return this.state.value == this.props.total;
+    return this.state.value == this.state.total;
   }
 
   gotoPage(newPage) {
@@ -57,7 +67,7 @@ export default class PaginationField extends Field {
         value = 1;
         break;
       case 'last':
-        value = this.props.total;
+        value = this.state.total;
         break;
       default:
         value += newPage;
@@ -69,7 +79,7 @@ export default class PaginationField extends Field {
   }
 
   returnData(value = this.state.value) {
-    const { total } = this.props;
+    const { total } = this.state;
     if (value > total) {
       value = total;
     } else if (value < 1) {
@@ -79,19 +89,20 @@ export default class PaginationField extends Field {
   }
 
   content() {
-    const { paginationClasses, texts, total } = this.props;
+    const { paginationClasses, texts } = this.props;
+    const { total } = this.state;
     const cn = ['pagination', paginationClasses];
     const isFirst = this.isFirst();
     const isLast = this.isLast();
     return <ul className={cn.join(' ')}>
       <li className={'page-item' + (isFirst ? ' disabled' : '')} title={texts.first}>
-        <button className="page-link" disabled={isFirst}
+        <button type="button" className="page-link" disabled={isFirst}
           onClick={() => this.gotoPage('first')}>
           <span>«</span>
         </button>
       </li>
       <li className={'page-item' + (isFirst ? ' disabled' : '')} title={texts.previus}>
-        <button className="page-link" disabled={isFirst}
+        <button type="button" className="page-link" disabled={isFirst}
           onClick={() => this.gotoPage(-1)}>
           <span>‹</span>
         </button>
@@ -106,13 +117,13 @@ export default class PaginationField extends Field {
         <span className="page-link border-start-0" >{total}</span>
       </li>
       <li className={'page-item' + (isLast ? ' disabled' : '')} title={texts.next}>
-        <button className="page-link" className="page-link" disabled={isLast}
+        <button type="button" className="page-link" className="page-link" disabled={isLast}
           onClick={() => this.gotoPage(1)}>
           <span>›</span>
         </button>
       </li>
       <li className={'page-item' + (isLast ? ' disabled' : '')} title={texts.last}>
-        <button className="page-link" className="page-link" disabled={isLast}
+        <button type="button" className="page-link" className="page-link" disabled={isLast}
           onClick={() => this.gotoPage('last')}>
           <span>»</span>
         </button>

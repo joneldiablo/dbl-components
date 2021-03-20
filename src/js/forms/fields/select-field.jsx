@@ -3,26 +3,6 @@ import Field from "./field";
 
 export default class SelectField extends Field {
 
-  static propTypes = {
-    ...Field.propTypes
-  }
-
-  static defaultProps = {
-    ...Field.defaultProps,
-    type: 'select'
-  };
-
-  constructor(props) {
-    super(props);
-    this.state.value = props.value;
-  }
-
-  get inputProps() {
-    const props = super.inputProps;
-    props.defaultValue = this.props.default;
-    return props;
-  }
-
   get inputNode() {
     const { inline, placeholder, options } = this.props;
     const inputNode = (<select {...this.inputProps} >

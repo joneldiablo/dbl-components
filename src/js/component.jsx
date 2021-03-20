@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 export default class Component extends React.Component {
 
   static propTypes = {
+    name: PropTypes.string.isRequired,
     classes: PropTypes.string,
     style: PropTypes.object
   }
@@ -24,7 +25,7 @@ export default class Component extends React.Component {
     this.ref = createRef();
   }
 
-  name() {
+  get name() {
     const { name } = this.props;
     return name + '-' + this.constructor.name;
   }
@@ -37,7 +38,7 @@ export default class Component extends React.Component {
     const { classes, style, name } = this.props;
     const { localClasses, localStyles } = this.state;
     const content = this.content();
-    const cn = [this.constructor.name, this.name(), localClasses, classes];
+    const cn = [this.constructor.name, this.name, localClasses, classes];
     const s = Object.assign({}, localStyles, style);
     const Tag = this.tag;
     return <Tag id={name} className={cn.join(' ')} style={s} ref={this.ref}>

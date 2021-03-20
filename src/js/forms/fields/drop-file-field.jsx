@@ -83,16 +83,14 @@ export default class DropFileField extends Field {
     return props;
   }
   content(children = this.props.children) {
-    const { errorMessage, label } = this.props;
+    const { label } = this.props;
     const { value } = this.state;
     return <div className="card-body">
       {(!value && label) && this.labelNode}
-      {children}
+      {children && (!value ? children[0] : children[1])}
       {this.inputNode}
-      <small className="invalid-feedback">
-        {errorMessage}
-      </small>
-      {value && !children && <p>{value}</p>}
+      <div>{this.errorMessageNode}</div>
+      {(!children && value) && <p>{value}</p>}
     </div>
   }
 }

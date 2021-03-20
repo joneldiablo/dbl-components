@@ -1,17 +1,7 @@
 import React from "react";
-import PropTypes from "prop-types";
 import RadioField from "./radio-field";
 
 export default class CheckboxField extends RadioField {
-
-  static propTypes = {
-    ...RadioField.propTypes
-  }
-
-  static defaultProps = {
-    ...RadioField.defaultProps,
-    type: 'checkbox'
-  }
 
   get type() {
     return 'checkbox';
@@ -37,8 +27,14 @@ export default class CheckboxField extends RadioField {
     }, () => this.returnData());
   }
 
+  get inputProps() {
+    const props = super.inputProps;
+    props.required = (this.props.required && !this.state.value.length);
+    return props;
+  }
+
   content() {
-    let { options, errorMessage, label, name } = this.props;
+    let { options, errorMessage, label } = this.props;
     let { error } = this.state;
     return <>
       {label && this.nodeLabel}

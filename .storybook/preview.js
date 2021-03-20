@@ -6,5 +6,10 @@ addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRout
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
-  layout: 'fullscreen'
+  //layout: 'fullscreen',
+  options: {
+    storySort: {
+      order: ['Intro', 'React Components', ['Component']],
+    },
+  }
 }

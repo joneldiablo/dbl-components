@@ -1,6 +1,6 @@
 {
   "name": "dbl-components",
-  "version": "1.0.70",
+  "version": "1.0.71",
   "description": "My own components",
   "main": "lib/js/main.js",
   "scripts": {
@@ -36,6 +36,7 @@
     "@babel/preset-react": "^7.12.5",
     "@babel/preset-typescript": "^7.12.1",
     "@storybook/addon-actions": "^6.1.21",
+    "@storybook/addon-controls": "^6.1.21",
     "@storybook/addon-essentials": "^6.1.21",
     "@storybook/addon-links": "^6.1.21",
     "@storybook/preset-scss": "^1.0.3",
@@ -52,6 +53,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.11.2",
+    "@storybook/addon-docs": "^6.1.21",
     "css-element-queries": "^1.2.3",
     "flat": "^5.0.2",
     "html-react-parser": "^1.2.4",

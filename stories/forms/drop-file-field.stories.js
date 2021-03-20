@@ -1,35 +1,27 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { action } from '@storybook/addon-actions';
 import "bootstrap/scss/bootstrap.scss";
+
+import eventHandler from "../../src/js/functions/event-handler";
 import DropFileField from "../../src/js/forms/fields/drop-file-field";
 import "../assets/scss/forms.scss";
 
 export default {
-  title: 'Forms/DropFileField',
+  title: 'React Components/Fields/DropFileField',
   component: DropFileField
 };
 
-const Template = (args) => <form onSubmit={(e) => { e.preventDefault(); action('onSubmit')(e) }}>
-  <ul>{Object.keys(args).map(arg => <li key={arg}>{arg}</li>)}</ul>
-  <DropFileField {...args} onChange={action('onChange')} />
-  <br /><br />
-  <button className="btn btn-primary" type="submit">Probar error</button>
-</form>;
+const Template = (args) => {
+  useEffect(() => {
+    eventHandler.subscribe('pdf-DropFileField pdf_fill-DropFileField', action('onChange'));
+  }, []);
+  /*  useEffect(() => {
+     eventHandler.unsubscribe('name-Field pass-Field email-Field');
+   }, []); */
 
-const TemplateChildren = (args) => {
-  const [filled, setFilled] = useState(false);
-  return <form onSubmit={(e) => { e.preventDefault(); action('onSubmit')(e) }}>
-    <ul>{Object.keys(args).map(arg => <li key={arg}>{arg}</li>)}</ul>
-    <DropFileField {...args} onChange={e => { setFilled(true); action('onChange')(e) }} >
-      {filled ? <div>
-        archivo seleccionado
-        <img src="https://dummyimage.com/600x400/000/999" className="img-fluid" />
-      </div> : <div>
-          seleccionar archivo
-          <img src="https://dummyimage.com/600x400/999/000" className="img-fluid" />
-        </div>}
-    </DropFileField>
-    <br /><br />
+  return <form onSubmit={e => { e.preventDefault(); action('onSubmit')(e); }}>
+    <DropFileField {...args} />
+    <br />
     <button className="btn btn-primary" type="submit">Probar error</button>
   </form>
 };
@@ -44,10 +36,20 @@ withLabel.args = {
   multiple: true
 }
 
-export const withContent = TemplateChildren.bind({});
+export const withContent = Template.bind({});
 withContent.args = {
   accept: 'application/pdf',
-  name: 'pdf',
+  name: 'pdf_fill',
   required: true,
-  errorMessage: 'El archivo es requerido'
+  errorMessage: 'El archivo es requerido',
+  children: [
+    <div key="empty">
+      <span>seleccionar archivo</span>
+      <img src="https://dummyimage.com/600x400/999/000" className="img-fluid" />
+    </div>,
+    <div key="filled">
+      <span>archivo seleccionado YA</span>
+      <img src="https://dummyimage.com/600x400/000/999" className="img-fluid" />
+    </div>
+  ]
 }

@@ -1,18 +1,28 @@
-import { action } from '@storybook/addon-actions';
+import React, { useEffect } from "react";
+import { action } from "@storybook/addon-actions";
 import "bootstrap/scss/bootstrap.scss";
+
+import eventHandler from "../../src/js/functions/event-handler";
 import DateRangeField from "../../src/js/forms/fields/date-range-field";
 
 export default {
-  title: 'Forms/DateRangeField',
+  title: 'React Components/Fields/DateRangeField',
   component: DateRangeField
 };
 
-const Template = (args) => <form onSubmit={(e) => { e.preventDefault(); action('onSubmit')(e) }}>
-  <ul>{Object.keys(args).map(arg => <li key={arg}>{arg}</li>)}</ul>
-  <DateRangeField {...args} onChange={action('onChange')} />
-  <br /><br />
-  <button className="btn btn-primary" type="submit">Probar error</button>
-</form>;
+const Template = (args) => {
+  useEffect(() => {
+    eventHandler.subscribe('created_at-DateRangeField', action('onChange'));
+  }, []);
+  /* useEffect(() => {
+    eventHandler.unsubscribe('created_at-DateRangeField');
+  }, []); */
+  return <form onSubmit={e => { e.preventDefault(); action('onSubmit')(e.target); }}>
+    <DateRangeField {...args} />
+    <br />
+    <button className="btn btn-primary" type="submit">Probar</button>
+  </form>
+};
 
 export const defaultRange = Template.bind({});
 defaultRange.args = {
@@ -21,6 +31,6 @@ defaultRange.args = {
   name: 'created_at',
   inline: true,
   required: true,
-  default: ['2020-01-01', '2020-12-31'],
+  default: undefined,
   errorMessage: "Ingresa un perido de tiempo válido"
 }

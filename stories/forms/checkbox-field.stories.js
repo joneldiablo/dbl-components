@@ -1,19 +1,29 @@
+import React, { useEffect } from 'react';
 import { action } from '@storybook/addon-actions';
-
 import "bootstrap/scss/bootstrap.scss";
+
+import eventHandler from "../../src/js/functions/event-handler";
 import CheckboxField from "../../src/js/forms/fields/checkbox-field";
 
 export default {
-  title: 'Forms/CheckboxField',
+  title: 'React Components/Fields/CheckboxField',
   component: CheckboxField,
   parameters: { actions: { argTypesRegex: '^on.*' } },
 };
 
-const Template = (args) => <form onSubmit={(e) => { e.preventDefault(); action('onSubmit')(e) }}>
-  <ul>{Object.keys(args).map(arg => <li key={arg}>{arg}</li>)}</ul>
-  <CheckboxField {...args} onChange={action('onChange')} />
-  <button className="btn btn-primary" type="submit">Probar error</button>
-</form>;
+const Template = (args) => {
+  useEffect(() => {
+    eventHandler.subscribe('opt-CheckboxField slow-CheckboxField number-CheckboxField', action('onChange'));
+  }, []);
+  /* useEffect(() => {
+      eventHandler.unsubscribe('opt-CheckboxField slow-CheckboxField number-CheckboxField');
+    }, []); */
+  return <form onSubmit={e => { e.preventDefault(); action('onSubmit')(e.target); }}>
+    <CheckboxField {...args} />
+    <br />
+    <button className="btn btn-primary" type="submit">Probar</button>
+  </form>
+}
 
 export const checkboxStringValue = Template.bind({});
 checkboxStringValue.args = {

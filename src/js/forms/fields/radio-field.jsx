@@ -1,17 +1,10 @@
 import React from "react";
-import PropTypes from "prop-types";
 import Field from "./field";
 
 export default class RadioField extends Field {
 
-  static propTypes = {
-    ...Field.propTypes,
-    inline: PropTypes.bool
-  }
-
   static defaultProps = {
     ...Field.defaultProps,
-    type: 'radio',
     inline: false
   }
 
