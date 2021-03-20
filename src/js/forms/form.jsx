@@ -3,28 +3,24 @@ import PropTypes from 'prop-types';
 import { randomS4 } from "../functions";
 import eventHandler from "../functions/event-handler";
 import Component from "../component";
-import fields from "./fields";
-import groups from "./groups";
+import fieldComponents from "./fields";
 
 
 export default class Form extends Component {
 
   static propTypes = {
     ...Component.propTypes,
-    clearAfterDone: PropTypes.bool,
-    fields: PropTypes.array,
+    label: PropTypes.string,
+    labelClasses: PropTypes.string,
     fieldClasses: PropTypes.string,
-    title: PropTypes.string,
-    titleClasses: PropTypes.string,
-    template: PropTypes.string,
-    templateProps: PropTypes.object
+    fields: PropTypes.array,
+    clearAfterDone: PropTypes.bool
   }
 
   static defaultProps = {
     ...Component.defaultProps,
-    fields: [],
     fieldClasses: 'mb-3',
-    templateProps: {}
+    fields: []
   }
 
   unique = randomS4();
@@ -33,6 +29,7 @@ export default class Form extends Component {
   constructor(props) {
     super(props);
     this.form = createRef();
+    this.mapFields = this.mapFields.bind(this);
     this.onChange = this.onChange.bind(this);
     this.state.data = {};
   }
@@ -98,12 +95,15 @@ export default class Form extends Component {
     }
   }
 
-  mapFields = (field, i) => {
+  mapFields(field, i) {
     const { fieldClasses } = this.props;
+    if (!this.state.data[field.name] && typeof field.default !== 'undefined')
+      // asignación directa, no provocar render
+      this.state.data[field.name] = field.default;
     const DefaultField = field.type?.toLowerCase().includes('group') ?
-      fields.Group :
-      fields.Field
-    const Field = (fields[field.type] || DefaultField);
+      fieldComponents.Group :
+      fieldComponents.Field
+    const Field = (fieldComponents[field.type] || DefaultField);
     this.fieldNames.add(field.name + '-' + Field.name);
     const cn = [field.classes, fieldClasses];
     const fieldProps = {
@@ -111,22 +111,19 @@ export default class Form extends Component {
       ...field,
       classes: cn.join(' ')
     }
-    if (field.fields) fieldProps.children = field.fields.map(this.mapFields);
-    if (!this.state.data[field.name] && typeof field.default !== 'undefined')
-      // asignación directa, no provocar render
-      this.state.data[field.name] = field.default;
+    if (field.fields) {
+      fieldProps.children = field.fields.map(this.mapFields);
+      delete fieldProps.fields;
+    }
     return (<Field {...fieldProps} />);
   }
 
   content(children = this.props.children) {
-    const { template, templateProps, fields } = this.props;
-    let Tpl;
-    if (template) Tpl = groups[template] || groups.Group;
+    const { label, fields, labelClasses } = this.props;
     return (<form onSubmit={this.onSubmit} onInvalid={this.onInvalid} ref={this.form} >
-      {Tpl ?
-        <Tpl {...templateProps} fields={fields.map(this.mapFields)} /> :
-        fields.map(this.mapFields)}
+      {label && <label className={labelClasses}>{label}</label>}
+      {fields && fields.map(this.mapFields)}
       {children}
-    </form >);
+    </form>);
   }
 }

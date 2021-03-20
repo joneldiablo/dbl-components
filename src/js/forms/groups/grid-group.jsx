@@ -1,25 +1,19 @@
 import React from "react";
-import fieldComponents from "../fields";
 import Group from "./group";
 
 export default class GridGroup extends Group {
 
-  mapFields = (field, i) => {
+  mapFields(field, i) {
     const { colClasses } = this.props;
-    let fieldColClasses;
-    let fieldNode;
-    if (React.isValidElement(field)) {
-      fieldColClasses = field.props.colClasses;
-      fieldNode = field;
-    } else {
-      const DefaultField = field.type.toLowerCase().includes('group') ?
-        fieldComponents.Group :
-        fieldComponents.Field
-      const Field = (fieldComponents[field.type] || DefaultField);
-      fieldColClasses = field.colClasses;
-      fieldNode = (<Field key={i + '-' + field.name} {...this.fieldProps(field)} />);
-    }
-    const cnc = ['col', colClasses, fieldColClasses];
+    const cnc = ['col', colClasses, field.colClasses];
+    return (<div key={i} className={cnc.join(' ')}>
+      {super.mapFields(field, i)}
+    </div>);
+  }
+
+  mapChildren = (fieldNode, i) => {
+    const { colClasses } = this.props;
+    const cnc = ['col', colClasses, fieldNode.props.colClasses];
     return (<div key={i} className={cnc.join(' ')}>
       {fieldNode}
     </div>);
@@ -30,8 +24,10 @@ export default class GridGroup extends Group {
     const rcn = ['row', rowClasses];
     return <>
       {label && <label className={labelClasses}>{label}</label>}
-      <div className={rcn.join(' ')}>{fields.map(this.mapFields)}</div>
-      {children}
+      <div className={rcn.join(' ')}>
+        {fields && fields.map(this.mapFields)}
+        {children && children.map(this.mapChildren)}
+      </div>
     </>
   }
 
