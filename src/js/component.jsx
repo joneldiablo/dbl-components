@@ -26,8 +26,7 @@ export default class Component extends React.Component {
   }
 
   get name() {
-    const { name } = this.props;
-    return name + '-' + this.constructor.name;
+    return this.props.name + '-' + this.constructor.name;
   }
 
   content(children = this.props.children) {
@@ -41,7 +40,7 @@ export default class Component extends React.Component {
     const cn = [this.constructor.name, this.name, localClasses, classes];
     const s = Object.assign({}, localStyles, style);
     const Tag = this.tag;
-    return <Tag id={name} className={cn.join(' ')} style={s} ref={this.ref}>
+    return <Tag id={name} className={cn.join(' ')} style={s} ref={this.ref} onClick={this.onClick}>
       {content}
     </Tag>
   }

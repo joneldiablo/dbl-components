@@ -55,7 +55,7 @@ export default class NewPasswordField extends Field {
 
   content(children = this.props.children) {
     const { labelRepeat, placeholderRepeat, name,
-      errorMessageRepeat, dividerClasses } = this.props;
+      errorMessageRepeat, dividerClasses, inlineFields } = this.props;
     const cloneFieldProps = {
       ...this.props,
       name: name + '-repeat',
@@ -65,12 +65,24 @@ export default class NewPasswordField extends Field {
       errorMessage: errorMessageRepeat,
       required: true
     };
-    return <>
-      {super.content(false)}
-      <div className={dividerClasses}></div>
-      <NoWrapField {...cloneFieldProps} />
-      {children}
-    </>
+    return inlineFields ?
+      <div className="row">
+        <div className="col">
+          {super.content(false)}
+        </div>
+        <div className="col">
+          <NoWrapField {...cloneFieldProps} />
+        </div>
+        <div className="col-12">
+          {children}
+        </div>
+      </div> :
+      <>
+        {super.content(false)}
+        <div className={dividerClasses}></div>
+        <NoWrapField {...cloneFieldProps} />
+        {children}
+      </>
   }
 
 };

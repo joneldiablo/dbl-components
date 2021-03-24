@@ -1,13 +1,17 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import Collapse from "bootstrap/js/dist/collapse"
-import Icons from "../media/icons";
-import Component from "../component";
+import Collapse from "bootstrap/js/dist/collapse";
+import parseReact from "html-react-parser";
 
-export class ToggleTextNavigation extends Component {
+import eventHandler from "../functions/event-handler";
+import Component from "../component";
+import Icons from "../media/icons";
+import Action from "../actions/action";
+
+export class ToggleTextNavigation extends Action {
+
   content() {
-    const { icon } = this.props;
-    return <Icons icon={icon} />
+    return <Icons icon={this.props.icon} />
   }
 }
 
@@ -25,6 +29,7 @@ export default class Navigation extends Component {
     super(props);
     this.state.localClasses = 'nav';
     this.state.carets = {};
+    this.state.open = true;
     this.collapses = {};
   }
 
@@ -45,6 +50,17 @@ export default class Navigation extends Component {
         });
       });
     });
+    eventHandler.subscribe(this.props.toggle + '-ToggleTextNavigation', this.toggleText);
+  }
+
+  componentWillUnmount() {
+    eventHandler.unsubscribe(this.props.toggle + '-ToggleTextNavigation');
+  }
+
+  toggleText = () => {
+    this.setState({
+      open: !this.state.open
+    }, () => eventHandler.dispatch(this.name, this.state.open));
   }
 
   collapseRef = (ref, item) => {
@@ -55,36 +71,43 @@ export default class Navigation extends Component {
 
   link = (item, i) => {
     const { caretIcons, linkClasses } = this.props;
-    const { carets } = this.state;
+    const { carets, open } = this.state;
     carets[item.name] = carets[item.name] || caretIcons[0];
-    const cnLink = ['nav-link', linkClasses, item.classes];
-    const propsLink = {
-      to: item.path,
-      id: item.name + '-link',
-      className: cnLink.join(' '),
-      activeClassName: 'active',
-      strict: item.strict,
-      exact: item.exact
-    }
+
     const iconStyle = {
       style: {
         fill: 'currentColor'
       }
     };
     const innerNode = <span data-bs-toggle="collapse" data-bs-target={'#' + item.name + '-collapse'}>
-      <Icons icon={item.icon} className="mx-2" {...iconStyle} />
-      <span className="label">{item.label}</span>
-      {item.menu?.length &&
-        <span className="float-end caret-icon">
-          <Icons icon={carets[item.name]} {...iconStyle} />
-        </span>}
+      {item.content ? parseReact(open ? item.content[0] : item.content[1]) :
+        <>
+          <Icons icon={item.icon} className="mx-2" {...iconStyle} />
+          {open &&
+            <>
+              <span className="label">{item.label}</span>
+              {item.menu?.length &&
+                <span className="float-end caret-icon">
+                  <Icons icon={carets[item.name]} {...iconStyle} />
+                </span>}
+            </>}
+        </>
+      }
     </span>
+    const propsLink = {
+      to: item.path,
+      id: item.name + '-link',
+      className: ['nav-link', linkClasses, item.classes].join(' '),
+      activeClassName: 'active',
+      strict: item.strict,
+      exact: item.exact
+    }
     return (<React.Fragment key={i + '-' + item.path}>
       {item.path ?
         <NavLink {...propsLink} >
           {innerNode}
         </NavLink> :
-        <span id={item.name + '-link'} className={[...cnLink, 'cursor-pointer'].join(' ')}>{innerNode}</span>
+        <span id={item.name + '-link'} className={[propsLink.className, 'cursor-pointer'].join(' ')}>{innerNode}</span>
       }
       {item.menu?.length &&
         <div ref={(ref) => this.collapseRef(ref, item)} id={item.name + '-collapse'} className="collapse">

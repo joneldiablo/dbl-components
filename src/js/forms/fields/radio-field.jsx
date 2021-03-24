@@ -24,7 +24,7 @@ export default class RadioField extends Field {
     }
     this.setState({
       value: setValue,
-      error: this.isInvalid(value)
+      error: this.isInvalid(setValue)
     }, () => this.returnData());
   }
 
@@ -43,15 +43,16 @@ export default class RadioField extends Field {
   }
 
   nodeOption = (item, i) => {
-    const { inline, name } = this.props;
+    const { inline, name, format } = this.props;
     const { value } = this.state;
     const cn = ['form-check'];
     if (inline) cn.push('form-check-inline');
     const id = name + '-' + item.value;
-    const checked = ['boolean', 'number'].includes(typeof value) ?
+    const checked = (['boolean', 'number'].includes(typeof value) ?
       item.value === value :
-      value.includes(item.value);
+      value.includes(item.value));
     if (item.hidden && !checked) cn.push('visually-hidden-focusable');
+    if (format === 'switch') cn.push('form-switch');
     const inputProps = {
       ...this.inputProps,
       id,

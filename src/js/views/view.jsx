@@ -1,10 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import parseReact, { domToReact, attributesToProps } from "html-react-parser";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { hash } from "../functions";
 import Component from "../component";
-import COMPONENTS from "..";
+import Icons from "../media/icons";
+import COMPONENTS from "../components";
 
 const DefaultComponent = Component;
 
@@ -39,11 +40,26 @@ export default class View extends Component {
 
   parseOpts = {
     replace: domNode => {
-      if (domNode.name === 'navlink') {
-        return <NavLink {...attributesToProps(domNode.attribs)}>
-          {domToReact(domNode.children, this.parseOpts)}
-        </NavLink>;
+      let C7tReplace;
+      switch (domNode.name) {
+        case 'navlink':
+          C7tReplace = NavLink;
+          break;
+        case 'a':
+          C7tReplace = Link;
+          if (domNode.attribs.href && !domNode.attribs.to)
+            domNode.attribs.to = domNode.attribs.href;
+          break;
+        case 'icons':
+          C7tReplace = Icons;
+          break;
+        default:
+          return;
       }
+      return <C7tReplace
+        {...attributesToProps(domNode.attribs)}
+        children={domToReact(domNode.children, this.parseOpts)}
+      />;
     }
   }
 
@@ -81,14 +97,16 @@ export default class View extends Component {
     }
   }
 
-  sections(section, i) {
-    if (typeof section === 'string') {
-      return (<section key={i + '-' + section.name}>
-        {parseReact(section, this.parseOpts)}
+  sections(sectionRaw, i) {
+    if (React.isValidElement(sectionRaw)) return sectionRaw;
+    if (typeof sectionRaw === 'string') {
+      return (<section key={i + '-' + sectionRaw.name}>
+        {parseReact(sectionRaw, this.parseOpts)}
       </section>);
     }
+    const { component: componentName, ...section } = sectionRaw;
     const { location, match, history, routesIn, children } = this.props;
-    let Component = COMPONENTS[section.component] || (DefaultComponent);
+    let Component = COMPONENTS[componentName] || (DefaultComponent);
     let componentProps = {
       ...section,
       // views que hereden de este componente podrían mandarle 
@@ -115,11 +133,20 @@ export default class View extends Component {
       if (this.props.test) cnSection.push('overflow-auto');
     }
 
-    return (<section key={i + '-' + section.name} className={cnSection.join(' ')}>
-      <Component {...componentProps}>
-        {subcontent}
-      </Component>
-    </section>);
+    switch (componentName) {
+      case 'NavLink':
+      case 'Link':
+      case 'Icons':
+        return <Component key={i + '-' + section.name} {...componentProps}>
+          {subcontent}
+        </Component>;
+      default:
+        return (<section key={i + '-' + section.name} className={cnSection.join(' ')}>
+          <Component {...componentProps}>
+            {subcontent}
+          </Component>
+        </section>);
+    }
   }
 
   content(children = this.props.children) {

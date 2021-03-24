@@ -5,7 +5,6 @@ import eventHandler from "../functions/event-handler";
 import Component from "../component";
 import fieldComponents from "./fields";
 
-
 export default class Form extends Component {
 
   static propTypes = {
@@ -13,8 +12,7 @@ export default class Form extends Component {
     label: PropTypes.string,
     labelClasses: PropTypes.string,
     fieldClasses: PropTypes.string,
-    fields: PropTypes.array,
-    clearAfterDone: PropTypes.bool
+    fields: PropTypes.array
   }
 
   static defaultProps = {
@@ -25,6 +23,7 @@ export default class Form extends Component {
 
   unique = randomS4();
   fieldNames = new Set();
+  allFields = {};
 
   constructor(props) {
     super(props);
@@ -32,46 +31,74 @@ export default class Form extends Component {
     this.mapFields = this.mapFields.bind(this);
     this.onChange = this.onChange.bind(this);
     this.state.data = {};
+    this.state.invalidFields = {};
   }
 
   componentDidMount() {
-    this.fieldNames.forEach(fieldName => {
-      eventHandler.subscribe(fieldName, this.onChange, this.unique);
+    Object.keys(this.allFields).forEach(fieldName => {
+      let prefix = '';
+      if (fieldName.endsWith('-Form')) prefix = 'change.';
+      eventHandler.subscribe(prefix + fieldName, this.onChange, this.unique);
       eventHandler.subscribe('invalid.' + fieldName, this.onInvalidField, this.unique);
     });
+    eventHandler.subscribe('update.' + this.name, this.onUpdate, this.unique);
+    // set defaults dont propagate event
+    this.reset(true);
+    this.toggleSubmit();
   }
 
   componentWillUnmount() {
     clearTimeout(this.timeoutInvalid);
-    this.fieldNames.forEach(fieldName => {
-      eventHandler.unsubscribe(fieldName, this.unique);
+    Object.keys(this.allFields).forEach(fieldName => {
+      let prefix = '';
+      if (fieldName.endsWith('-Form')) prefix = 'change.';
+      eventHandler.unsubscribe(prefix + fieldName, this.unique);
       eventHandler.unsubscribe('invalid.' + fieldName, this.unique);
     });
+    eventHandler.unsubscribe('update.' + this.name, this.unique);
   }
 
-  clear() {
-    let { clearAfterDone } = this.props;
-    if (clearAfterDone)
-      this.defaults();
+  reset(dontDispatch) {
+    const dataDefault = {}
+    Object.keys(this.allFields).forEach((fieldName) => {
+      const field = this.allFields[fieldName];
+      dataDefault[field.name] = field.default;
+      if (!dontDispatch) eventHandler.dispatch('update.' + fieldName, { reset: true });
+    });
+    this.setState({ data: dataDefault });
   }
 
-  defaults() {
-    // TODO: cargar valores default
-    this.setState({ data: {} });
+  onUpdate = ({ data, loading, reset }) => {
+    if (data) {
+      Object.keys(data || {}).forEach((itemName) => {
+        const fieldNames = Object.keys(this.allFields);
+        const fieldName = fieldNames.find(fieldName => fieldName.startsWith(itemName));
+        eventHandler.dispatch('update.' + fieldName, update[itemName]);
+      });
+      this.setState({ data: update });
+    }
+    if (typeof loading === 'boolean') {
+      const enabled = !loading;
+      this.toggleSubmit(enabled);
+    }
+    if (typeof reset === 'boolean') {
+      this.reset();
+    }
   }
 
-  onInvalid = (e) => {
+  onInvalid = () => {
     const { invalidFields } = this.state;
+    // timeout becouse avery field trigger this onInvalid
     clearTimeout(this.timeoutInvalid);
     this.timeoutInvalid = setTimeout(() => {
       eventHandler.dispatch('invalid.' + this.name, invalidFields);
+      this.toggleSubmit();
     }, 400);
   }
 
-  onInvalidField = (data) => {
-    const { invalidFields } = this.state;
-    // asignacion directa para no ejecutar un render
-    this.state.invalidFields = { ...invalidFields, ...data };
+  onInvalidField = (invalidData) => {
+    // Asignación directa para no ejecutar render
+    Object.assign(this.state.invalidFields, invalidData);
   }
 
   onSubmit = async (e) => {
@@ -82,36 +109,49 @@ export default class Form extends Component {
   }
 
   onChange(fieldData) {
-    const { data, invalidFields = {} } = this.state;
-    // remove elements from invalids
-    Object.keys(fieldData).forEach(key => {
-      delete invalidFields[key];
-    });
+    const { data, invalidFields } = this.state;
+    // remove elements from invalids if now is valid
+    Object.keys(fieldData).forEach(key => (delete invalidFields[key]));
     Object.assign(data, fieldData);
     this.setState({ data, invalidFields });
     eventHandler.dispatch('change.' + this.name, data);
     if (this.form.current?.checkValidity()) {
       eventHandler.dispatch('valid.' + this.name, data);
+      this.toggleSubmit(true);
     }
+  }
+
+  toggleSubmit(enabled) {
+    // set disabled every button type=submit
+    const submits = this.form.current.querySelectorAll('*[type=submit]');
+    submits.forEach(s => {
+      s.disabled = !enabled;
+    });
   }
 
   mapFields(field, i) {
     const { fieldClasses } = this.props;
-    if (!this.state.data[field.name] && typeof field.default !== 'undefined')
-      // asignación directa, no provocar render
-      this.state.data[field.name] = field.default;
-    const DefaultField = field.type?.toLowerCase().includes('group') ?
-      fieldComponents.Group :
-      fieldComponents.Field
-    const Field = (fieldComponents[field.type] || DefaultField);
-    this.fieldNames.add(field.name + '-' + Field.name);
+    let Field;
+    if (field.type === 'Form') Field = Form;
+    else {
+      const isGroup = field.type?.toLowerCase().includes('group');
+      const DefaultField = isGroup ?
+        fieldComponents.Group :
+        fieldComponents.Field
+      Field = (fieldComponents[field.type] || DefaultField);
+      if (!isGroup) {
+        const fieldName = field.name + '-' + Field.name;
+        this.allFields[fieldName] = field;
+      }
+    }
+
     const cn = [field.classes, fieldClasses];
     const fieldProps = {
       key: i + '-' + field.name,
       ...field,
       classes: cn.join(' ')
     }
-    if (field.fields) {
+    if (field.fields && field.type !== 'Form') {
       fieldProps.children = field.fields.map(this.mapFields);
       delete fieldProps.fields;
     }

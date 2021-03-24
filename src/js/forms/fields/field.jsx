@@ -44,6 +44,7 @@ export default class Field extends Component {
   }
 
   state = {
+    label: this.props.label,
     value: this.props.value || this.props.default,
     options: this.props.options,
     error: false
@@ -117,16 +118,21 @@ export default class Field extends Component {
     }, () => this.returnData());
   }
 
-  onUpdate({ value, options, error }) {
+  onUpdate({ value, options, error, reset, label }) {
     const newState = {};
     if (value) newState.value = value;
     if (options) newState.options = options;
-    if (error) {
+    if (typeof error === 'boolean') {
       newState.error = error;
-      this.input.current.setCustomValidity(this.props.errorMessage);
-    } else if (typeof error === 'boolean' && !error) {
-      newState.error = error;
-      this.input.current.setCustomValidity('');
+      let message = '';
+      if (error) message = this.props.errorMessage;
+      this.input.current.setCustomValidity(message);
+    }
+    if (reset) {
+      this.setState({ value: this.props.default });
+    }
+    if (label) {
+      this.setState({ label });
     }
     this.setState(newState);
   }
@@ -161,8 +167,9 @@ export default class Field extends Component {
   }
 
   get labelNode() {
-    const { label, placeholder, required, name, labelClasses,
+    const { placeholder, required, name, labelClasses,
       inline, inlineLabelClasses } = this.props;
+    const { label } = this.state;
     const cn = ['form-label', labelClasses];
     if (inline) cn.shift();
     const labelNode = <label className={cn.join(' ')} htmlFor={name}>

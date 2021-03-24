@@ -13,7 +13,10 @@ export default {
 
 const Template = (args) => {
   useEffect(() => {
-    eventHandler.subscribe('countries-AutocompleteField countries_by_code-AutocompleteField', action('onChange'));
+    eventHandler.subscribe(
+      'countries-AutocompleteField countries_by_code-AutocompleteField',
+      action('onChange')
+    );
     if (args.name === 'countries_by_code') {
       const setOpts = (search) => {
         setTimeout(() => {

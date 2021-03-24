@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import FooterContainer from "./containers/footer-container";
 import FullscreenContainer from "./containers/fullscreen-container";
 import Icons from "./media/icons";
@@ -39,7 +39,9 @@ const COMPONENTS = {
   DropdownButtonContainer,
   Form,
   ...fields,
-  NavLink
+  NavLink,
+  Link,
+  Icons
 }
 
 export default COMPONENTS;
