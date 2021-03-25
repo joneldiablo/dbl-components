@@ -17,13 +17,9 @@ export default class View extends Component {
     name: PropTypes.string.isRequired,
     content: PropTypes.oneOfType([
       PropTypes.string,
-      PropTypes.array
+      PropTypes.array,
+      PropTypes.object
     ])
-  }
-
-  static defaultProps = {
-    classes: '',
-    style: {}
   }
 
   state = {
@@ -32,12 +28,6 @@ export default class View extends Component {
 
   localClasses = '';
   localStyles = {};
-
-  constructor(props) {
-    super(props);
-    this.sections = this.sections.bind(this);
-  }
-
   parseOpts = {
     replace: domNode => {
       let C7tReplace;
@@ -63,47 +53,49 @@ export default class View extends Component {
     }
   }
 
-  buildContent() {
-    // crear un clone de lo que se recibe
-    const schemaContentStr = JSON.stringify(this.props.content);
-    const contentSchema = JSON.parse(schemaContentStr);
-    // se crea el contenido de forma única.
-    let content;
-    if (Array.isArray(contentSchema))
-      content = contentSchema.map(this.sections)
-    else if (typeof contentSchema === 'object')
-      content = Object.keys(contentSchema)
-        .map((name, i) => this.sections({ ...contentSchema[name], name }, i));
-    else
-      content = parseReact(contentSchema, this.parseOpts);
-
-    this.setState({
-      content,
-      localClasses: this.props.test ? 'test-view-wrapper' : ''
-    });
-  }
-
-  componentDidMount() {
-    this.buildContent();
+  constructor(props) {
+    super(props);
+    this.sections = this.sections.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // comprobar que haya cambiado el contenido para actualizar
-    let newHash = hash(JSON.stringify(this.props.content));
-    if (this.contentHash !== newHash) {
-      // guardar un identificador de la cadena
-      this.contentHash = newHash;
-      this.buildContent();
+    const { test } = this.props;
+    // add class test-view-wrapper
+    // why react is so complicated? with classList just add class or remove =/
+    if (prevProps.test != test) {
+      const { localClasses } = this.state;
+      const setClasses = new Set(localClasses.split(' '));
+      if (test) {
+        setClasses.add('test-view-wrapper');
+      } else {
+        setClasses.delete('test-view-wrapper');
+      }
+      this.setState({
+        localClasses: [...setClasses].join(' ')
+      });
     }
+  }
+
+
+  buildContent() {
+    const { content } = this.props;
+    if (Array.isArray(content))
+      return content.map(this.sections);
+    else if (typeof content === 'object')
+      return Object.keys(content)
+        .map((name, i) => this.sections({ ...content[name], name }, i));
+    else
+      return parseReact(content, this.parseOpts);
   }
 
   sections(sectionRaw, i) {
     if (React.isValidElement(sectionRaw)) return sectionRaw;
     if (typeof sectionRaw === 'string') {
-      return (<section key={i + '-' + sectionRaw.name}>
+      return (<React.Fragment key={i + '-' + sectionRaw.name}>
         {parseReact(sectionRaw, this.parseOpts)}
-      </section>);
+      </React.Fragment>);
     }
+    if (typeof sectionRaw.active === 'boolean' && !sectionRaw.active) return false;
     const { component: componentName, ...section } = sectionRaw;
     const { location, match, history, routesIn, children } = this.props;
     let Component = COMPONENTS[componentName] || (DefaultComponent);
@@ -133,27 +125,21 @@ export default class View extends Component {
       if (this.props.test) cnSection.push('overflow-auto');
     }
 
-    switch (componentName) {
-      case 'NavLink':
-      case 'Link':
-      case 'Icons':
-        return <Component key={i + '-' + section.name} {...componentProps}>
-          {subcontent}
-        </Component>;
-      default:
-        return (<section key={i + '-' + section.name} className={cnSection.join(' ')}>
-          <Component {...componentProps}>
-            {subcontent}
-          </Component>
-        </section>);
-    }
+    const finalComponent =
+      (<Component key={i + '-' + section.name} {...componentProps}>
+        {subcontent}
+      </Component>);
+    return (['NavLink', 'Image', 'Link', 'Icons', 'Action']
+      .includes(componentName) ? finalComponent :
+      <section key={i + '-' + section.name} className={cnSection.join(' ')}>
+        {finalComponent}
+      </section>);
   }
 
   content(children = this.props.children) {
     const { routesIn } = this.props;
-    const { content } = this.state;
     return <>
-      {content}
+      {this.buildContent()}
       {!routesIn && children}
     </>
   }

@@ -7,7 +7,7 @@ export default class TitleView extends View {
     const { label, labelClasses } = this.props;
     return (<>
       <h1 className={labelClasses}>{label}</h1>
-      {super.content()}
+      {super.content(children)}
     </>);
   }
 

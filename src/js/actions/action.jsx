@@ -4,6 +4,11 @@ import Component from "../component";
 
 export default class ActionComponent extends Component {
 
+  static defaultProps = {
+    ...Component.defaultProps,
+    type: 'button'
+  }
+
   tag = 'button';
 
   constructor(props) {
@@ -13,7 +18,11 @@ export default class ActionComponent extends Component {
   }
 
   onClick() {
-    eventHandler.dispatch(this.name);
+    eventHandler.dispatch(this.props.name);
+  }
+
+  get componentProps() {
+    return { type: this.props.type };
   }
 
   content(children = this.props.children) {

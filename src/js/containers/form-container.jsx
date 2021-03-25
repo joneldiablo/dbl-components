@@ -1,41 +1,35 @@
 import React, { createRef } from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { randomS4 } from "../functions";
 import eventHandler from "../functions/event-handler";
 import Component from "../component";
-import fieldComponents from "./fields";
 
-export default class Form extends Component {
+export default class FormContainer extends Component {
 
   static propTypes = {
     ...Component.propTypes,
     label: PropTypes.string,
     labelClasses: PropTypes.string,
-    fieldClasses: PropTypes.string,
     fields: PropTypes.array
   }
 
   static defaultProps = {
     ...Component.defaultProps,
-    fieldClasses: 'mb-3',
     fields: []
   }
 
   unique = randomS4();
-  fieldNames = new Set();
-  allFields = {};
 
   constructor(props) {
     super(props);
     this.form = createRef();
-    this.mapFields = this.mapFields.bind(this);
     this.onChange = this.onChange.bind(this);
     this.state.data = {};
     this.state.invalidFields = {};
   }
 
   componentDidMount() {
-    Object.keys(this.allFields).forEach(fieldName => {
+    Object.keys(this.props.fields).forEach(fieldName => {
       let prefix = '';
       if (fieldName.endsWith('-Form')) prefix = 'change.';
       eventHandler.subscribe(prefix + fieldName, this.onChange, this.unique);
@@ -49,9 +43,9 @@ export default class Form extends Component {
 
   componentWillUnmount() {
     clearTimeout(this.timeoutInvalid);
-    Object.keys(this.allFields).forEach(fieldName => {
+    Object.keys(this.props.fields).forEach(fieldName => {
       let prefix = '';
-      if (fieldName.endsWith('-form')) prefix = 'change.';
+      if (fieldName.endsWith('-Form')) prefix = 'change.';
       eventHandler.unsubscribe(prefix + fieldName, this.unique);
       eventHandler.unsubscribe('invalid.' + fieldName, this.unique);
     });
@@ -60,8 +54,8 @@ export default class Form extends Component {
 
   reset(dontDispatch) {
     const dataDefault = {}
-    Object.keys(this.allFields).forEach((fieldName) => {
-      const field = this.allFields[fieldName];
+    Object.keys(this.props.fields).forEach((fieldName) => {
+      const field = this.props.fields[fieldName];
       dataDefault[field.name] = field.default;
       if (!dontDispatch) eventHandler.dispatch('update.' + fieldName, { reset: true });
     });
@@ -71,11 +65,11 @@ export default class Form extends Component {
   onUpdate = ({ data, loading, reset }) => {
     if (data) {
       Object.keys(data || {}).forEach((itemName) => {
-        const fieldNames = Object.keys(this.allFields);
-        const fieldName = fieldNames.find(fieldName => fieldName.startsWith(itemName));
-        eventHandler.dispatch('update.' + fieldName, update[itemName]);
+        const field = this.props.fields.find(field => field.name === itemName);
+        if (!field) return;
+        eventHandler.dispatch('update.' + field.name, { value: data[itemName] });
       });
-      this.setState({ data: update });
+      this.setState({ ...this.state.data, ...data });
     }
     if (typeof loading === 'boolean') {
       const enabled = !loading;
@@ -129,40 +123,10 @@ export default class Form extends Component {
     });
   }
 
-  mapFields(field, i) {
-    const { fieldClasses } = this.props;
-    let Field;
-    if (field.type === 'Form') Field = Form;
-    else {
-      const isGroup = field.type?.toLowerCase().includes('group');
-      const DefaultField = isGroup ?
-        fieldComponents.Group :
-        fieldComponents.Field
-      Field = (fieldComponents[field.type] || DefaultField);
-      if (!isGroup) {
-        const fieldName = field.name;
-        this.allFields[fieldName] = field;
-      }
-    }
-
-    const cn = [field.classes, fieldClasses];
-    const fieldProps = {
-      key: i + '-' + field.name,
-      ...field,
-      classes: cn.join(' ')
-    }
-    if (field.fields && field.type !== 'Form') {
-      fieldProps.children = field.fields.map(this.mapFields);
-      delete fieldProps.fields;
-    }
-    return (<Field {...fieldProps} />);
-  }
-
   content(children = this.props.children) {
-    const { label, fields, labelClasses } = this.props;
+    const { label, labelClasses } = this.props;
     return (<form onSubmit={this.onSubmit} onInvalid={this.onInvalid} ref={this.form} >
       {label && <label className={labelClasses}>{label}</label>}
-      {fields && fields.map(this.mapFields)}
       {children}
     </form>);
   }

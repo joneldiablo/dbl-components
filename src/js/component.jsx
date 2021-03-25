@@ -6,15 +6,18 @@ export default class Component extends React.Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
     classes: PropTypes.string,
-    style: PropTypes.object
+    style: PropTypes.object,
+    active: PropTypes.bool
   }
 
   static defaultProps = {
     classes: '',
     style: {},
+    active: true
   }
 
   tag = 'div';
+  classes = '';
   state = {
     localClasses: '',
     localStyles: {}
@@ -34,14 +37,14 @@ export default class Component extends React.Component {
   }
 
   render() {
-    const { classes, style, name } = this.props;
+    const { classes, style, name, tag, active } = this.props;
     const { localClasses, localStyles } = this.state;
     const content = this.content();
-    const cn = [this.constructor.name, this.name, localClasses, classes];
+    const cn = [this.constructor.name, this.name, localClasses, classes, this.classes];
     const s = Object.assign({}, localStyles, style);
-    const Tag = this.tag;
-    return <Tag id={name} className={cn.join(' ')} style={s} ref={this.ref} onClick={this.onClick}>
+    const Tag = tag || this.tag;
+    return (active ? <Tag id={name} className={cn.join(' ')} style={s} ref={this.ref} onClick={this.onClick} {...this.componentProps}>
       {content}
-    </Tag>
+    </Tag> : <React.Fragment />);
   }
 }

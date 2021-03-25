@@ -13,6 +13,7 @@ export default class Field extends Component {
     controlClasses: PropTypes.string,
     default: PropTypes.any,
     disabled: PropTypes.bool,
+    readOnly: PropTypes.bool,
     errorMessage: PropTypes.string,
     first: PropTypes.oneOf(['label', 'control']),
     inline: PropTypes.bool,
@@ -44,7 +45,6 @@ export default class Field extends Component {
   }
 
   state = {
-    label: this.props.label,
     value: this.props.value || this.props.default,
     options: this.props.options,
     error: false
@@ -61,12 +61,12 @@ export default class Field extends Component {
   }
 
   componentDidMount() {
-    eventHandler.subscribe('update.' + this.name, this.onUpdate, this.unique);
+    eventHandler.subscribe('update.' + this.props.name, this.onUpdate, this.unique);
   }
 
   componentWillUnmount() {
     clearTimeout(this.timeout);
-    eventHandler.unsubscribe('update.' + this.name, this.unique);
+    eventHandler.unsubscribe('update.' + this.props.name, this.unique);
   }
 
   returnData(value = this.state.value) {
@@ -75,7 +75,7 @@ export default class Field extends Component {
     if (!error) {
       clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
-        eventHandler.dispatch(this.name, { [name]: value });
+        eventHandler.dispatch(name, { [name]: value });
       }, 300);
     }
   }
@@ -106,7 +106,7 @@ export default class Field extends Component {
     const { value } = this.state;
     this.setState(
       { error: true },
-      () => eventHandler.dispatch('invalid.' + this.name, { [name]: value })
+      () => eventHandler.dispatch('invalid.' + name, { [name]: value })
     );
   }
 
@@ -118,9 +118,10 @@ export default class Field extends Component {
     }, () => this.returnData());
   }
 
-  onUpdate({ value, options, error, reset, label }) {
+  onUpdate({ value, options, error, reset }) {
     const newState = {};
-    if (value) newState.value = value;
+    if (typeof value !== 'undefined')
+      newState.value = value !== null ? value : '';
     if (options) newState.options = options;
     if (typeof error === 'boolean') {
       newState.error = error;
@@ -131,9 +132,6 @@ export default class Field extends Component {
     if (reset) {
       this.setState({ value: this.props.default });
     }
-    if (label) {
-      this.setState({ label });
-    }
     this.setState(newState);
   }
 
@@ -142,14 +140,16 @@ export default class Field extends Component {
   }
 
   get inputProps() {
-    const { disabled,
+    const { disabled, readOnly,
       required, name, controlClasses,
       placeholder, step, noValidate,
       min, max, pattern, autoComplete } = this.props;
     const { value, error } = this.state;
-    const cn = ['form-control', controlClasses, error ? 'is-invalid' : ''];
+    const cn = [
+      'form-control',
+      controlClasses, error ? 'is-invalid' : ''
+    ];
     return {
-      disabled,
       id: name,
       name,
       pattern,
@@ -158,18 +158,19 @@ export default class Field extends Component {
       autoComplete,
       type: this.type,
       value,
-      onChange: this.onChange,
-      onInvalid: this.onInvalid,
       className: cn.join(' '),
       min, max, step, noValidate,
-      ref: this.input
+      disabled,
+      readOnly,
+      ref: this.input,
+      onChange: this.onChange,
+      onInvalid: this.onInvalid
     }
   }
 
   get labelNode() {
     const { placeholder, required, name, labelClasses,
-      inline, inlineLabelClasses } = this.props;
-    const { label } = this.state;
+      inline, inlineLabelClasses, label } = this.props;
     const cn = ['form-label', labelClasses];
     if (inline) cn.shift();
     const labelNode = <label className={cn.join(' ')} htmlFor={name}>

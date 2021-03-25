@@ -14,14 +14,13 @@ export default class CardContainer extends Container {
   }
 
   content(children = this.props.children) {
-    const { content } = this.props;
     let header = [];
     let body = [];
     let footer = [];
     children.forEach((child, i) => {
-      if (content[i].header) {
+      if (child.props.header) {
         header.push(child);
-      } else if (content[i].footer) {
+      } else if (child.props.footer) {
         footer.push(child);
       } else {
         body.push(child);

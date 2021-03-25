@@ -27,12 +27,12 @@ export default class NewPasswordField extends Field {
 
   componentDidMount() {
     super.componentDidMount();
-    eventHandler.subscribe(`${this.props.name}-repeat-NoWrapField`, this.onUpdateRepeat, this.unique);
+    eventHandler.subscribe(`${this.props.name}-repeat`, this.onUpdateRepeat, this.unique);
   }
 
   componentWillUnmount() {
     super.componentWillUnmount();
-    eventHandler.unsubscribe(`${this.props.name}-repeat-NoWrapField`, this.unique);
+    eventHandler.unsubscribe(`${this.props.name}-repeat`, this.unique);
   }
 
   returnData(value = this.state.value, valueRepeat = this.state.valueRepeat) {
@@ -49,7 +49,7 @@ export default class NewPasswordField extends Field {
   isInvalid(value = this.state.value, valueRepeat = this.state.valueRepeat) {
     const error = super.isInvalid(value);
     const diff = (value !== valueRepeat);
-    eventHandler.dispatch(`update.${this.props.name}-repeat-NoWrapField`, { error: diff });
+    eventHandler.dispatch(`update.${this.props.name}-repeat`, { error: diff });
     return error;
   }
 

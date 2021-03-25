@@ -9,6 +9,7 @@ import AutocompleteField from "./fields/autocomplete-field";
 import DateRangeField from "./fields/date-range-field";
 import PaginationField from "./fields/pagination-field";
 import groups from "./groups";
+import FileButtonField from "./fields/file-button-field";
 
 const fieldComponents = {
   Field,
@@ -24,6 +25,7 @@ const fieldComponents = {
   radio: RadioField,
   hidden: HiddenField,
   select: SelectField,
+  FileButtonField,
   ...groups
 };
 

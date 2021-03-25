@@ -50,17 +50,17 @@ export default class Navigation extends Component {
         });
       });
     });
-    eventHandler.subscribe(this.props.toggle + '-ToggleTextNavigation', this.toggleText);
+    eventHandler.subscribe(this.props.toggle, this.toggleText);
   }
 
   componentWillUnmount() {
-    eventHandler.unsubscribe(this.props.toggle + '-ToggleTextNavigation');
+    eventHandler.unsubscribe(this.props.toggle);
   }
 
   toggleText = () => {
     this.setState({
       open: !this.state.open
-    }, () => eventHandler.dispatch(this.name, this.state.open));
+    }, () => eventHandler.dispatch(this.props.name, this.state.open));
   }
 
   collapseRef = (ref, item) => {

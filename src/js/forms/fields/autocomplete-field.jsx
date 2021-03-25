@@ -37,7 +37,7 @@ export default class AutocompleteField extends Field {
       clearTimeout(this.timeoutFilter);
       this.timeoutFilter = setTimeout(() => {
         this.setState({ loading: true });
-        eventHandler.dispatch('filter.' + this.name, value);
+        eventHandler.dispatch('filter.' + this.props.name, value);
       }, 300);
     }
   }
