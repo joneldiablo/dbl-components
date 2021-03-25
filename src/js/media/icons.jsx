@@ -21,7 +21,7 @@ export default class Icons extends React.Component {
   }
 
   render() {
-    let { inline, icon, ...props } = this.props;
+    let { inline, icon, active, ...props } = this.props;
     // first element empty to generate an space
     let className = [, this.constructor.name];
     if (inline) className.push('icon-inline');

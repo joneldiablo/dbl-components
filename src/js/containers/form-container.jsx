@@ -29,11 +29,9 @@ export default class FormContainer extends Component {
   }
 
   componentDidMount() {
-    Object.keys(this.props.fields).forEach(fieldName => {
-      let prefix = '';
-      if (fieldName.endsWith('-Form')) prefix = 'change.';
-      eventHandler.subscribe(prefix + fieldName, this.onChange, this.unique);
-      eventHandler.subscribe('invalid.' + fieldName, this.onInvalidField, this.unique);
+    this.props.fields.forEach(field => {
+      eventHandler.subscribe(field.name, this.onChange, this.unique);
+      eventHandler.subscribe('invalid.' + field.name, this.onInvalidField, this.unique);
     });
     eventHandler.subscribe('update.' + this.props.name, this.onUpdate, this.unique);
     // set defaults dont propagate event
@@ -43,21 +41,18 @@ export default class FormContainer extends Component {
 
   componentWillUnmount() {
     clearTimeout(this.timeoutInvalid);
-    Object.keys(this.props.fields).forEach(fieldName => {
-      let prefix = '';
-      if (fieldName.endsWith('-Form')) prefix = 'change.';
-      eventHandler.unsubscribe(prefix + fieldName, this.unique);
-      eventHandler.unsubscribe('invalid.' + fieldName, this.unique);
+    this.props.fields.forEach(field => {
+      eventHandler.unsubscribe(field.name, this.unique);
+      eventHandler.unsubscribe('invalid.' + field.name, this.unique);
     });
     eventHandler.unsubscribe('update.' + this.props.name, this.unique);
   }
 
   reset(dontDispatch) {
     const dataDefault = {}
-    Object.keys(this.props.fields).forEach((fieldName) => {
-      const field = this.props.fields[fieldName];
+    this.props.fields.forEach((field) => {
       dataDefault[field.name] = field.default;
-      if (!dontDispatch) eventHandler.dispatch('update.' + fieldName, { reset: true });
+      if (!dontDispatch) eventHandler.dispatch('update.' + field.name, { reset: true });
     });
     this.setState({ data: dataDefault });
   }

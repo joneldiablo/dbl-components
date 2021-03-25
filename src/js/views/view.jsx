@@ -36,9 +36,8 @@ export default class View extends Component {
           C7tReplace = NavLink;
           break;
         case 'a':
+          if (!domNode.attribs.to && domNode.attribs.href) return;
           C7tReplace = Link;
-          if (domNode.attribs.href && !domNode.attribs.to)
-            domNode.attribs.to = domNode.attribs.href;
           break;
         case 'icons':
           C7tReplace = Icons;
