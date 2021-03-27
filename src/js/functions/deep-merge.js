@@ -23,7 +23,7 @@ export default function deepMerge(target, ...sources) {
                     [key]: {}
                 });
                 deepMerge(target[key], source[key]);
-            } else {
+            } else if (typeof source[key] !== 'undefined') {
                 Object.assign(target, {
                     [key]: source[key]
                 });

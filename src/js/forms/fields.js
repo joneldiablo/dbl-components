@@ -10,6 +10,7 @@ import DateRangeField from "./fields/date-range-field";
 import PaginationField from "./fields/pagination-field";
 import groups from "./groups";
 import FileButtonField from "./fields/file-button-field";
+import EditorField from "./fields/editor-field";
 
 const fieldComponents = {
   Field,
@@ -26,6 +27,7 @@ const fieldComponents = {
   hidden: HiddenField,
   select: SelectField,
   FileButtonField,
+  EditorField,
   ...groups
 };
 
