@@ -18,7 +18,7 @@ export default class ActionComponent extends Component {
   }
 
   onClick() {
-    eventHandler.dispatch(this.props.name);
+    eventHandler.dispatch(this.props.name, this.props.name);
   }
 
   get componentProps() {

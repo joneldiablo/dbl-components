@@ -71,7 +71,7 @@ export default class RadioField extends Field {
     let { options, errorMessage, label } = this.props;
     let { error } = this.state;
     return <>
-      {label && this.nodeLabel}
+      {label && this.labelNode}
       {options.map(this.nodeOption)}
       {error && <small className="text-danger">
         {errorMessage}

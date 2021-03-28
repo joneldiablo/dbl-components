@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { Dropdown } from "bootstrap";
 import Icons from "../media/icons";
 import Svg from "../media/svg";
-import AspectRatioContainer from "../containers/aspect-ratio-container";
+import ProportionalContainer from "../containers/proportional-container";
 import components from "../functions/components-manager";
 
 export default class HeaderNavigation extends Navigation {
@@ -32,10 +32,10 @@ export default class HeaderNavigation extends Navigation {
     let content = <>
       {item.icon && <Icons icon={item.icon} className="mr-1" />}
       {(item.svg || item.image) &&
-        <AspectRatioContainer className="rounded-circle mr-1">
+        <ProportionalContainer className="rounded-circle mr-1">
           {item.svg && <Svg {...item.svg} className="w-100 h-100" />}
           {item.image && <img {...item.image} className="w-100 h-100 img-cover" />}
-        </AspectRatioContainer>}
+        </ProportionalContainer>}
       <span className={item.icon && !item.dropdown ? 'd-none d-sm-inline' : ''}>{item.label}</span>
     </>;
     return <li key={item.name} className={cn.join(' ')}>

@@ -20,7 +20,7 @@ export default (object, schema) => {
       // Obtiene el contenido de $path/to/element 
       // si el objeto es arreglo, se deviuelve tal cual, si es objeto se integra su llave como name
       let data = keys.reduce(
-        (obj, key) => (Array.isArray(obj[key]) ? obj[key] : { ...obj[key], name: key }),
+        (obj, key) => (Array.isArray(obj[key]) ? obj[key] : { name: key, ...obj[key] }),
         schema);
       return loop(data);
     } else return item;

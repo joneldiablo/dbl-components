@@ -21,11 +21,19 @@ export default class Icons extends React.Component {
   }
 
   render() {
-    let { inline, icon, active, classes, style, className } = this.props;
+    let { inline, icon, classes, className, style, width, height } = this.props;
     // first element empty to generate an space
     let cn = [className, classes, this.constructor.name];
     if (inline) cn.push('icon-inline');
-    return (<IcoMoon icon={icon} iconSet={is} className={cn.join(' ')} style={style} />);
+    const props = {
+      icon,
+      iconSet: is,
+      className: cn.join(' '),
+      style,
+      width,
+      height
+    }
+    return (<IcoMoon {...props} />);
   }
 }
 

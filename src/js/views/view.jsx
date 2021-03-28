@@ -82,7 +82,7 @@ export default class View extends Component {
       return content.map(this.sections);
     else if (typeof content === 'object')
       return Object.keys(content)
-        .map((name, i) => this.sections({ ...content[name], name }, i));
+        .map((name, i) => this.sections({ name, ...content[name] }, i));
     else
       return parseReact(content, this.parseOpts);
   }
@@ -108,11 +108,13 @@ export default class View extends Component {
       history
     }
     let subcontent;
-    if (Array.isArray(componentProps.content))
+    if (React.isValidElement(componentProps.content))
+      subcontent = componentProps.content;
+    else if (Array.isArray(componentProps.content))
       subcontent = componentProps.content.map(this.sections)
     else if (typeof componentProps.content === 'object')
       subcontent = Object.keys(componentProps.content)
-        .map((name, i) => this.sections({ ...componentProps.content[name], name }, i));
+        .map((name, i) => this.sections({ name, ...componentProps.content[name] }, i));
     else
       subcontent = [!!componentProps.content && <React.Fragment key="content">
         {parseReact(componentProps.content, this.parseOpts)}

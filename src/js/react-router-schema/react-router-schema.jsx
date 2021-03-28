@@ -80,7 +80,7 @@ export default class SchemaController extends React.Component {
       routes = routesSchema.map(this.views);
     else if (typeof routesSchema === 'object')
       routes = Object.keys(routesSchema)
-        .map((name, i) => this.views({ ...routesSchema[name], name }, i))
+        .map((name, i) => this.views({ name, ...routesSchema[name] }, i))
     this.setState({
       routeNodes: routes
     });
@@ -111,7 +111,7 @@ export default class SchemaController extends React.Component {
     else if (typeof route.routes === 'object') {
       subroutes = [];
       route.routes = Object.keys(route.routes)
-        .map((name, i) => ({ ...route.routes[name], name }));
+        .map((name, i) => ({ name, ...route.routes[name] }));
     }
     if (subroutes) {
       const mapRoutes = (subRoute, i) => {

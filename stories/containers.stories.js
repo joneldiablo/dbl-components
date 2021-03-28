@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import AspectRatioContainer from "../src/js/containers/aspect-ratio-container";
+import ProportionalContainer from "../src/js/containers/proportional-container";
 import FullscreenContainer from "../src/js/containers/fullscreen-container";
 import AutoResponsiveContainer from "../src/js/containers/auto-responsive-container";
 import GridContainer from "../src/js/containers/grid-container";
@@ -17,17 +17,17 @@ export const Fullscreen = () => <FullscreenContainer >
 </FullscreenContainer >;
 
 export const Proportional = () => <div style={{ width: 100 }}>
-  <AspectRatioContainer >
+  <ProportionalContainer >
     Contenedor proporcional 1:1
-  </AspectRatioContainer>
+  </ProportionalContainer>
   <hr />
-  <AspectRatioContainer ratio={2 / 3}>
+  <ProportionalContainer ratio={2 / 3}>
     Contenedor proporcional 2:1
-  </AspectRatioContainer>
+  </ProportionalContainer>
   <hr />
-  <AspectRatioContainer ratio={1 / 2}>
+  <ProportionalContainer ratio={1 / 2}>
     Contenedor proporcional 3:2
-  </AspectRatioContainer>
+  </ProportionalContainer>
 </div>;
 
 export const AutoResponsiveByEvent = () => {

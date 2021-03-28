@@ -51,6 +51,7 @@ export default class FormContainer extends Component {
   reset(dontDispatch) {
     const dataDefault = {}
     this.props.fields.forEach((field) => {
+      if (typeof field.default === 'undefined') return;
       dataDefault[field.name] = field.default;
       if (!dontDispatch) eventHandler.dispatch('update.' + field.name, { reset: true });
     });
