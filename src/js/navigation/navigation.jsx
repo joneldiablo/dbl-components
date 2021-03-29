@@ -10,6 +10,8 @@ import Action from "../actions/action";
 
 export class ToggleTextNavigation extends Action {
 
+  static jsClass = 'ToggleTextNavigation';
+
   content() {
     return <Icons icon={this.props.icon} />
   }
@@ -17,6 +19,7 @@ export class ToggleTextNavigation extends Action {
 
 export default class Navigation extends Component {
 
+  static jsClass = 'Navigation';
   static defaultProps = {
     ...Component.defaultProps,
     menu: [],

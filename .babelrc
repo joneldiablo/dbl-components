@@ -6,5 +6,12 @@
     "@babel/preset-react",
     "@babel/preset-typescript",
     "@babel/preset-env"
-  ]
+  ],
+  "env": {
+    "production": {
+      "presets": [
+        "minify"
+      ]
+    }
+  }
 }

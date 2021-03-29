@@ -4,6 +4,7 @@ import Container from "./container";
 
 export default class HeroContainer extends Container {
 
+  static jsClass = 'HeroContainer';
   static defaultProps = {
     ...Container.defaultProps,
     fullWidth: true,

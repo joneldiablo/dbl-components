@@ -4,6 +4,8 @@ import Component from "../component";
 
 export default class Table extends Component {
 
+  static jsClass = 'Table';
+  
   column(col, data, classes, i) {
     const colStyle = {
       width: col.width,

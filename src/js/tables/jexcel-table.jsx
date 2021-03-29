@@ -5,6 +5,7 @@ import Icons from "../media/icons";
 
 export default class JexcelTable extends React.Component {
 
+  static jsClass = 'JexcelTable';
   static defaultProps = {
     url: '',
     nestedHeaders: null,
@@ -15,7 +16,7 @@ export default class JexcelTable extends React.Component {
     super(props);
     this.tableRef = new React.createRef();
     let { pathname } = props.location;
-    this.instance = pathname + this.constructor.name;
+    this.instance = pathname + this.constructor.jsClass;
   }
 
   addRow = () => {

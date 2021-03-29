@@ -5,6 +5,7 @@ import Icons from "../media/icons";
 
 export default class Navbar extends React.Component {
 
+  static jsClass = 'Navbar';
   static defaultProps = {
     logo: null,
     background: false,
@@ -16,7 +17,7 @@ export default class Navbar extends React.Component {
     centeredLogo: false, //center|between|around|evenly
   }
 
-  id = this.constructor.name + '-' + randomS4();
+  id = this.constructor.jsClass + '-' + randomS4();
 
   render() {
     let { logo, logoHeight, site, menu,

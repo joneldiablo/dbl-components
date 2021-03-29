@@ -3,6 +3,8 @@ import Table from "./table";
 
 export default class EndpointTable extends Table {
 
+  static jsClass = 'EndpointTable';
+
   async componentDidMount() {
     const payload = await fetch(this.props.endpoint, {
       headers: {

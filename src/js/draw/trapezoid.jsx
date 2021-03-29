@@ -6,6 +6,7 @@ import { Stage, Layer, Line } from "react-konva";
 
 export default class Trapezoid extends React.Component {
 
+  static jsClass = 'Trapezoid';
   static propTypes = {
     className: PropTypes.string,
     style: PropTypes.object,
@@ -14,7 +15,6 @@ export default class Trapezoid extends React.Component {
     high: PropTypes.number,
     sideA: PropTypes.number,
   }
-
   static defaultProps = {
     className: '',
     style: {}
@@ -127,7 +127,7 @@ export default class Trapezoid extends React.Component {
         {this.drawSvg()}
       </div>
     ];
-    let cn = [this.constructor.name, className].join(' ');
+    let cn = [this.constructor.jsClass, className].join(' ');
     return (<div className={cn} style={style}>
       <FlexContainer colClassNames={['w-auto', 'w-100']}>
         {content}

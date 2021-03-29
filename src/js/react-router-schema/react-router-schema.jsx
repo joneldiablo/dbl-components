@@ -11,19 +11,7 @@ import {
   Switch
 } from "react-router-dom";
 import { hash } from "../functions";
-import DefaultView from "../views/view";
-import TitleView from "../views/title-view";
-import DebugView from "../views/debug-view";
-
-const VIEWS = {
-  debug: DebugView,
-  TitleView,
-  View: DefaultView
-};
-
-export const addViews = (viewsExtra) => {
-  Object.assign(VIEWS, viewsExtra);
-}
+import views from "../views";
 
 const routePropTypes = {
   path: PropTypes.oneOfType([
@@ -58,8 +46,8 @@ const schemaDefaultProps = {
 
 export default class SchemaController extends React.Component {
 
+  static jsClass = 'SchemaController';
   static propTypes = schemaPropTypes;
-
   static defaultProps = schemaDefaultProps;
 
   state = {
@@ -105,7 +93,7 @@ export default class SchemaController extends React.Component {
    * permite que el schema tenga un arreglo de paths
    **/
   views = (route, i) => {
-    let View = VIEWS[route.component] || (DefaultView);
+    let View = views[route.component] || (views.View);
     let subroutes = false;
     if (Array.isArray(route.routes)) subroutes = [];
     else if (typeof route.routes === 'object') {

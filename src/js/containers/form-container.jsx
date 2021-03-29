@@ -6,6 +6,7 @@ import Component from "../component";
 
 export default class FormContainer extends Component {
 
+  static jsClass = 'FormContainer';
   static propTypes = {
     ...Component.propTypes,
     label: PropTypes.string,

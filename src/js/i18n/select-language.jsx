@@ -1,5 +1,5 @@
 import React from "react";
-import Select from "../forms/fields/material/select-field";
+import SelectField from "../forms/fields/select-field";
 
 import mxSvg from "./flags/mx.svg";
 import usSvg from "./flags/us.svg";
@@ -16,10 +16,11 @@ const Flag = ({ value, children: label, flag }) => {
   </div>
 }
 
-export default class SelectLanguage extends Select {
+export default class SelectLanguage extends SelectField {
 
+  static jsClass = 'SelectLanguage';
   static defaultProps = {
-    ...Select.defaultProps,
+    ...SelectField.defaultProps,
     variant: 'standard',
     value: null,
     ValueTemplate: Flag,

@@ -2,7 +2,8 @@ import React from "react";
 import Icons, { iconSet } from "../src/js/media/icons";
 import Svg from "../src/js/media/svg";
 import { iconList } from "react-icomoon";
-import svgFile from "./assets/images/fb-messenger-icon_1.svg"
+import svgFile from "./assets/images/fb-messenger-icon_1.svg";
+import "../src/scss/images/_icons.scss";
 
 const is = require('./assets/font-awesome/selection.json');
 iconSet(is);

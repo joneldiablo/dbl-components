@@ -3,6 +3,7 @@ import GridContainer from "./grid-container";
 
 export default class GridSwitchContainer extends GridContainer {
 
+  static jsClass = 'GridSwitchContainer';
   static defaultProps = {
     ...GridContainer.defaultProps
   }

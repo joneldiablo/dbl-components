@@ -8,6 +8,8 @@ import components from "../functions/components-manager";
 
 export default class HeaderNavigation extends Navigation {
 
+  static jsClass = 'HeaderNavigation';
+
   dropdowns = [];
 
   componentWillUnmount() {

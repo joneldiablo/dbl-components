@@ -3,6 +3,7 @@ import Container from "./container";
 
 export default class GridContainer extends Container {
 
+  static jsClass = 'GridContainer';
   static defaultProps = {
     ...Container.defaultProps,
     colClasses: [],
@@ -11,6 +12,7 @@ export default class GridContainer extends Container {
   }
 
   classes = 'row';
+
 
   grid(children = this.props.children) {
     const { colClasses } = this.props;

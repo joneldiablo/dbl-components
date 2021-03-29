@@ -3,6 +3,7 @@ import DropFileField from "./drop-file-field";
 
 export default class FileButtonField extends DropFileField {
 
+  static jsClass = 'FileButtonField';
   static defaultProps = {
     ...DropFileField.defaultProps,
     labelClasses: 'mb-0'

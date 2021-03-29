@@ -20,6 +20,8 @@ export class DropdownItem extends React.Component {
 
 export default class DropdownButtonContainer extends Component {
 
+  static jsClass = 'DropdownButtonContainer';
+
   constructor(props) {
     super(props);
     this.state.localClasses = 'dropdown';
@@ -28,7 +30,7 @@ export default class DropdownButtonContainer extends Component {
   onClick = (value) => {
     const { onClick, name } = this.props;
     if (typeof onClick === 'function') onClick({ [name]: value });
-    else eventHandler.dispatch('DropdownButtonContainer.' + name, value);
+    else eventHandler.dispatch(name, value);
   }
 
   content(children = this.props.children) {

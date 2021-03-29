@@ -2,9 +2,12 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 
 export default class Footer extends React.Component {
+  
+  static jsClass = 'Footer';
   static defaultProps = {
     textOverColor: 'light',//light|dark
   }
+
   render() {
     let { menu, copyright, textOverColor } = this.props;
     let className = [

@@ -2,6 +2,7 @@ import React from "react";
 
 export default class FlexContainer extends React.Component {
 
+  static jsClass = 'FlexContainer';
   static defaultProps = {
     className: '',
     style: {},
@@ -24,7 +25,7 @@ export default class FlexContainer extends React.Component {
 
   render() {
     let { className, style, children } = this.props;
-    let cn = [this.constructor.name, className, 'd-flex'].join(' ');
+    let cn = [this.constructor.jsClass, className, 'd-flex'].join(' ');
     return (<div className={cn} style={style}>
       {Array.isArray(children) && children.map(this.column)}
     </div>);

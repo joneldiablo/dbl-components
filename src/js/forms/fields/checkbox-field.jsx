@@ -3,6 +3,8 @@ import RadioField from "./radio-field";
 
 export default class CheckboxField extends RadioField {
 
+  static jsClass = 'CheckboxField';
+
   get type() {
     return 'checkbox';
   }

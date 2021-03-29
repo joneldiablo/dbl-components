@@ -4,6 +4,7 @@ import { randomS4 } from "../functions";
 
 export default class AutoResponsiveContainer extends React.Component {
 
+  static jsClass = 'AutoResponsiveContainer';
   static defaultProps = {
     id: null,
     className: '',
@@ -12,7 +13,7 @@ export default class AutoResponsiveContainer extends React.Component {
   }
 
   state = {
-    id: (this.props.id || this.constructor.name + '-' + randomS4())
+    id: (this.props.id || this.constructor.jsClass + '-' + randomS4())
   }
 
   wrapper = React.createRef();
@@ -40,7 +41,7 @@ export default class AutoResponsiveContainer extends React.Component {
   render() {
     let { className, style } = this.props;
     let { id } = this.state;
-    let cn = [this.constructor.name, className].join(' ');
+    let cn = [this.constructor.jsClass, className].join(' ');
     return <div id={id} ref={this.wrapper} className={cn} style={style}>
       {this.props.children}
     </div>

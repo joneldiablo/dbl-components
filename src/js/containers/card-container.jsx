@@ -3,6 +3,7 @@ import Container from "./container";
 
 export default class CardContainer extends Container {
 
+  static jsClass = 'CardContainer';
   static defaultProps = {
     ...Container.defaultProps,
     fullWidth: true

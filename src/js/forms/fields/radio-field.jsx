@@ -3,6 +3,7 @@ import Field from "./field";
 
 export default class RadioField extends Field {
 
+  static jsClass = 'RadioField';
   static defaultProps = {
     ...Field.defaultProps,
     inline: false

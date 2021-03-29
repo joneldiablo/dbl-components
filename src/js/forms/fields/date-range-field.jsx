@@ -4,6 +4,7 @@ import moment from "moment";
 
 export default class DateRangeField extends Field {
 
+  static jsClass = 'DateRangeField';
   static defaultProps = {
     ...Field.defaultProps,
     default: ['', '']

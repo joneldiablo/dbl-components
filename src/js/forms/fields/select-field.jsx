@@ -3,6 +3,8 @@ import Field from "./field";
 
 export default class SelectField extends Field {
 
+  static jsClass = 'SelectField';
+
   get inputNode() {
     const { inline, placeholder, options } = this.props;
     const inputNode = (<select {...this.inputProps} >
@@ -20,4 +22,5 @@ export default class SelectField extends Field {
       {inputNode}
     </div> : inputNode);
   }
+
 }

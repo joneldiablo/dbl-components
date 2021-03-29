@@ -9,13 +9,13 @@ import NoWrapField from "./no-wrap-field";
 
 export default class NewPasswordField extends Field {
 
+  static jsClass = 'NewPasswordField';
   static propTypes = {
     ...Field.propTypes,
     labelRepeat: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     placeholderRepeat: PropTypes.string,
     dividerClasses: PropTypes.string
   }
-
   static defaultProps = {
     ...Field.defaultProps,
     dividerClasses: 'mb-3'

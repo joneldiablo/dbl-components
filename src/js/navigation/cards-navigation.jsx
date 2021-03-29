@@ -5,6 +5,7 @@ import Icons from "../media/icons";
 
 export default class CardsNavigation extends React.Component {
 
+  static jsClass = 'CardsNavigation';
   static defaultProps = {
     menu: []
   }

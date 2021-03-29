@@ -6,6 +6,7 @@ import Component from "../../component";
 
 export default class Field extends Component {
 
+  static jsClass = 'Field';
   static propTypes = {
     ...Component.propTypes,
     autoComplete: PropTypes.string,
@@ -36,7 +37,6 @@ export default class Field extends Component {
     type: PropTypes.string.isRequired,
     value: PropTypes.any
   }
-
   static defaultProps = {
     ...Component.defaultProps,
     type: 'text',
@@ -44,13 +44,13 @@ export default class Field extends Component {
     first: 'label'
   }
 
+  unique = randomS4();
+
   state = {
     value: this.props.value || this.props.default,
     options: this.props.options,
     error: false
   }
-
-  unique = randomS4();
 
   constructor(props) {
     super(props);

@@ -4,6 +4,7 @@ import Container from "./container";
 
 export default class TabsContainer extends Container {
 
+  static jsClass = 'TabsContainer';
   static defaultProps = {
     ...Container.defaultProps,
     fullWidth: true

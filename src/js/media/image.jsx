@@ -3,6 +3,7 @@ import Component from "../component";
 
 export default class Image extends Component {
 
+  static jsClass = 'Image';
   static defaultProps = {
     ...Component.defaultProps,
     objectFit: 'cover',

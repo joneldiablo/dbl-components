@@ -3,6 +3,8 @@ import CheckboxField from "./checkbox-field";
 
 export default class SwitchField extends CheckboxField {
 
+  static jsClass = 'SwitchField';
+
   nodeOption = (item, i) => {
     const { name, labels, optionClasses, disabled } = this.props;
     const { value } = this.state;

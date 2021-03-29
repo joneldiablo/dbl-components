@@ -7,6 +7,7 @@ import Field from "./field";
 
 export default class EditorField extends Field {
 
+  static jsClass = 'EditorField';
   static defaultProps = {
     ...Field.defaultProps,
     config: {

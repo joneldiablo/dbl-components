@@ -3,6 +3,8 @@ import Group from "./group";
 
 export default class GridGroup extends Group {
 
+  static jsClass = 'GridGroup';
+
   columnClasses(colClasses, i) {
     let colcn = ['col-md', i % 2 ? 'even' : 'odd', 'col-num-' + i];
     // unir clases generales, si es un string se une  todas las columnas

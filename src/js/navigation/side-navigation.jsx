@@ -3,6 +3,8 @@ import { NavLink } from "react-router-dom";
 import Icons from "../media/icons";
 
 export default class SideNavigation extends React.Component {
+  
+  static jsClass = 'SideNavigation';
   static defaultProps = {
     className: '',
     style: {},
@@ -25,7 +27,7 @@ export default class SideNavigation extends React.Component {
   render() {
     let { menu, iconSize, className, style } = this.props;
     let { stick, icon } = this.state;
-    let cn = [this.constructor.name, (stick ? 'stick' : ''), className].join(' ');
+    let cn = [this.constructor.jsClass, (stick ? 'stick' : ''), className].join(' ');
     return (<div className={cn} style={style}>
       <ul className="nav flex-column">
         <li className="nav-item">

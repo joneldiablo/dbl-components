@@ -3,6 +3,8 @@ import Field from "./field";
 
 export default class HiddenField extends Field {
 
+  static jsClass = 'HiddenField';
+  
   get type() {
     return 'hidden';
   }

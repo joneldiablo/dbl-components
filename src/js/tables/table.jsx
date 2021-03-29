@@ -20,6 +20,8 @@ export const addFormatTemplates = (newTemplates = {}) => {
 
 export class HeaderColumn extends React.Component {
 
+  static jsClass = 'HeaderColumn';
+
   state = {};
 
   sort(dir) {
@@ -77,6 +79,7 @@ export class HeaderColumn extends React.Component {
 
 export default class Table extends Component {
 
+  static jsClass = 'Table';
   static defaultProps = {
     ...Component.defaultProps,
     data: [],

@@ -4,6 +4,7 @@ import Field from "./field";
 
 export default class AutocompleteField extends Field {
 
+  static jsClass = 'AutocompleteField';
   static defaultProps = {
     ...Field.defaultProps,
     maxLength: 6

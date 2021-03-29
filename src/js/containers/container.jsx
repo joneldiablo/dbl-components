@@ -4,6 +4,7 @@ import ResizeSensor from "css-element-queries/src/ResizeSensor";
 
 export default class Container extends Component {
 
+  static jsClass = 'Container';
   static defaultProps = {
     ...Component.defaultProps,
     fluid: true,

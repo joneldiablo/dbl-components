@@ -6,6 +6,7 @@ import AspectRatioContainer from "../containers/proportional-container";
 
 export default class YoutubeVideoComponent extends Component {
 
+  static jsClass = 'YoutubeVideoComponent';
   static propTypes = {
     ...Component.propTypes,
     ratio: PropTypes.number,
@@ -45,7 +46,6 @@ export default class YoutubeVideoComponent extends Component {
     onPlaybackRateChange: PropTypes.func,
     onPlaybackQualityChange: PropTypes.func
   }
-
   static defaultProps = {
     ...Component.defaultProps,
     ratio: 2 / 3

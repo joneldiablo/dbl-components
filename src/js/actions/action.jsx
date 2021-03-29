@@ -3,7 +3,8 @@ import eventHandler from "../functions/event-handler";
 import Component from "../component";
 
 export default class ActionComponent extends Component {
-
+  
+  static jsClass = 'ActionComponent';
   static defaultProps = {
     ...Component.defaultProps,
     type: 'button'

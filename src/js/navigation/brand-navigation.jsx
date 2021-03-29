@@ -4,6 +4,7 @@ import Navigation from "./navigation";
 
 export default class BrandNavigation extends Navigation {
 
+  static jsClass = 'BrandNavigation';
   static defaultProps = {
     ...Navigation.defaultProps,
     path: '/',

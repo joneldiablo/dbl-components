@@ -6,6 +6,7 @@ import Component from "../../component";
 
 export default class Group extends Component {
 
+  static jsClass = 'Group';
   static propTypes = {
     ...Component.propTypes,
     label: PropTypes.string,
@@ -13,7 +14,6 @@ export default class Group extends Component {
     fieldClasses: PropTypes.string,
     fields: PropTypes.array
   }
-
   static defaultProps = {
     ...Component.defaultProps,
     fieldClasses: 'mb-3',

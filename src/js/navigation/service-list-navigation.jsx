@@ -4,6 +4,8 @@ import urlJoin from "url-join";
 import Icons from "../media/icons";
 
 export default class ServiceListNavigation extends React.Component {
+
+  static jsClass = 'ServiceListNavigation';
   static defaultProps = {
     url: '',
     iconSize: 40,
@@ -46,7 +48,7 @@ export default class ServiceListNavigation extends React.Component {
   render() {
     let { iconDefault, iconSize, iconFrom, labelFrom, pathFrom, className, style } = this.props;
     let { menu, stick, icon } = this.state;
-    let cn = [this.constructor.name, (stick ? 'stick' : ''), className].join(' ');
+    let cn = [this.constructor.jsClass, (stick ? 'stick' : ''), className].join(' ');
     return <div className={cn} style={style}>
       <ul className="nav flex-column">
         <li className="nav-item">

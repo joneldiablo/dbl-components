@@ -2,6 +2,8 @@ import React from "react";
 
 export default class DebugView extends React.Component {
 
+  static jsClass = 'DebugView';
+
   render() {
     const { children, name, view, ...props } = this.props;
     return (<div style={{ display: 'flex', border: '1px solid', padding: 5, margin: 2 }}>

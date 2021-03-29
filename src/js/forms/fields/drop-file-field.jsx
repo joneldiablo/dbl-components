@@ -2,6 +2,8 @@ import React from "react";
 import Field from "./field";
 export default class DropFileField extends Field {
 
+  static jsClass = 'DropFileField';
+
   constructor(props) {
     super(props);
     this.state.localClasses = 'card';

@@ -7,6 +7,7 @@ import fieldComponents from "./fields";
 
 export default class Form extends Component {
 
+  static jsClass = 'Form';
   static propTypes = {
     ...Component.propTypes,
     label: PropTypes.string,
@@ -14,7 +15,6 @@ export default class Form extends Component {
     fieldClasses: PropTypes.string,
     fields: PropTypes.array
   }
-
   static defaultProps = {
     ...Component.defaultProps,
     fieldClasses: 'mb-3',

@@ -2,14 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import parseReact, { domToReact, attributesToProps } from "html-react-parser";
 import { NavLink, Link } from "react-router-dom";
-import { hash } from "../functions";
-import Component from "../component";
 import Icons from "../media/icons";
 import COMPONENTS from "../components";
 
-const DefaultComponent = Component;
-
-export default class View extends Component {
+export default class View extends COMPONENTS.Component {
 
   static propTypes = {
     classes: PropTypes.string,
@@ -97,7 +93,7 @@ export default class View extends Component {
     if (typeof sectionRaw.active === 'boolean' && !sectionRaw.active) return false;
     const { component: componentName, ...section } = sectionRaw;
     const { location, match, history, routesIn, children } = this.props;
-    let Component = COMPONENTS[componentName] || (DefaultComponent);
+    let Component = COMPONENTS[componentName] || (COMPONENTS.Component);
     let componentProps = {
       ...section,
       // views que hereden de este componente podrían mandarle 

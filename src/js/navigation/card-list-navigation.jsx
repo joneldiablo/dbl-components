@@ -4,6 +4,8 @@ import { assets } from "../functions";
 import Icons from "../media/icons";
 
 export default class NavListCards extends React.Component {
+  
+  static jsClass = 'NavListCards';
   static defaultProps = {
     menu: []
   }

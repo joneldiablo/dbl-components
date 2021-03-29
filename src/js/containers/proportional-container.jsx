@@ -3,6 +3,7 @@ import Container from "./container";
 
 export default class ProportionalContainer extends Container {
 
+  static jsClass = 'ProportionalContainer';
   static defaultProps = {
     ...Container.defaultProps,
     containerClasses: '',

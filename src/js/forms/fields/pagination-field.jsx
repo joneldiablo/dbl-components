@@ -4,11 +4,11 @@ import Field from "./field";
 
 export default class PaginationField extends Field {
 
+  static jsClass = 'PaginationField';
   static propTypes = {
     ...Field.propTypes,
     total: PropTypes.number.isRequired
   }
-
   static defaultProps = {
     ...Field.defaultProps,
     total: 1,

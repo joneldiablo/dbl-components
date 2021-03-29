@@ -4,6 +4,8 @@ import Group from "./group";
 
 export default class CardGroup extends Group {
 
+  static jsClass = 'CardGroup';
+
   constructor(props) {
     super(props);
     this.state.localClasses = 'card';
