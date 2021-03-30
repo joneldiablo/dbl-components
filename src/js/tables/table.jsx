@@ -56,8 +56,9 @@ export class HeaderColumn extends React.Component {
         </div>
         <div className="d-flex">
           {col.filter && <div className="ps-2 mt-1 dropstart">
-            <Icons icon={icons.search} className="cursor-pointer"
-              data-bs-toggle="dropdown" />
+            <span data-bs-toggle="dropdown" >
+              <Icons icon={icons.search} className="cursor-pointer" />
+            </span>
             <div className="dropdown-menu dropdown-menu-end p-0">
               {/*TODO: Cambiar ícono y color cuando haya un filtro*/}
               {React.createElement(fields[col.filter.type] || fields.Field, col.filter)}
@@ -146,33 +147,31 @@ export default class Table extends Component {
     let header, footer;
     if (Array.isArray(children))
       [header, footer] = children;
-    return <div className="table-responsive">
-      <table className="table table-striped table-hover">
-        <thead>
-          {header &&
-            <tr>
-              <td colSpan="1000">
-                <div>{header}</div>
-              </td>
-            </tr>
-          }
+    return <table className="table table-striped table-hover">
+      <thead>
+        {header &&
           <tr>
-            {columns.map(this.mapHeaderColumns)}
+            <td colSpan="1000">
+              <div>{header}</div>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {data.map(this.mapRows)}
-        </tbody>
-        {footer &&
-          <tfooter>
-            <tr>
-              <td colSpan="1000">
-                <div>{footer}</div>
-              </td>
-            </tr>
-          </tfooter>
         }
-      </table>
-    </div>
+        <tr>
+          {columns.map(this.mapHeaderColumns)}
+        </tr>
+      </thead>
+      <tbody>
+        {data.map(this.mapRows)}
+      </tbody>
+      {footer &&
+        <tfooter>
+          <tr>
+            <td colSpan="1000">
+              <div>{footer}</div>
+            </td>
+          </tr>
+        </tfooter>
+      }
+    </table>
   }
 }
