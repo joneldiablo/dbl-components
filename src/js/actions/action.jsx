@@ -19,10 +19,10 @@ export default class ActionComponent extends Component {
   }
 
   onClick() {
-    const { value, name } = this.props;
+    const { value, name, id } = this.props;
     let dispatch = name;
-    if (value) {
-      dispatch = { [name]: value }
+    if (value || id) {
+      dispatch = { [name]: value, id }
     }
     eventHandler.dispatch(name, dispatch);
   }

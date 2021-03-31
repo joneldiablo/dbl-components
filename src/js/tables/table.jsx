@@ -8,7 +8,7 @@ import Icons from "../media/icons";
 import eventHandler from "../functions/event-handler";
 
 const FORMATS = {
-  component: (raw, props) => {
+  component: (raw, props, id) => {
     const buildContent = (content, index) => {
       if (!content) return false;
       else if (typeof content === 'string') {
@@ -35,7 +35,13 @@ const FORMATS = {
         {children}
       </Component>);
     }
-    props.value = raw;
+    if (props.type === 'boolean') {
+      props.value = !!raw;
+    } else {
+      props.value = raw;
+    }
+    props.name += '.cell';
+    props.id = id;
     return buildContent(props);
   },
   date: (raw, { format: f = 'DD/MM/YYYY' } = {}) => moment(raw).format(f),
@@ -158,11 +164,36 @@ export default class Table extends Component {
     }
   }
 
+  componentDidMount() {
+    this.events = [];
+    this.props.columns.forEach(col => {
+      if (col.format === 'component') {
+        const event = [col.formatOpts.name + '.cell', this.onEventCell];
+        this.events.push(event);
+        eventHandler.subscribe(...event);
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    for (const event of this.events) {
+      eventHandler.unsubscribe(event[0]);
+    }
+  }
+
   // Events
   onSort = (orderBy) => {
     const { onChange } = this.props;
     this.setState({ orderBy: orderBy && Object.keys(orderBy).pop() });
     if (typeof onChange === 'function') onChange({ orderBy });
+  }
+
+  onEventCell = (dataRaw) => {
+    const data = {};
+    for (const event in dataRaw) {
+      data[event.replace(/\.cell$/, '')] = dataRaw[event];
+    }
+    eventHandler.dispatch(this.props.name, data);
   }
   //------
 
@@ -187,15 +218,15 @@ export default class Table extends Component {
     </tr>
   }
 
-  mapCells = (row, col, i) => {
+  mapCells = (rowData, col, i) => {
     const { colClasses } = this.props;
     const colName = col.name;
     const style = {
       ...col.style
     }
     const cn = ['cell', col.type, col.name + '-cell', col.classes, colClasses];
-    const cell = (<div className={cn.join(' ')} style={style} title={row[colName]}>
-      {this.format(col, col.format === 'component' ? row : row[colName])}
+    const cell = (<div className={cn.join(' ')} style={style} title={rowData[colName]}>
+      {this.format(col, rowData)}
     </div>);
     return (colName === 'id' ?
       <th key={i + '-' + colName} scope="row">{cell}</th> :
@@ -203,9 +234,12 @@ export default class Table extends Component {
     );
   }
 
-  format(col, data) {
+  format(col, rowData) {
     const formater = FORMATS[col.format] || (raw => raw);
-    return formater(data, col.formatOpts);
+    const cellData = typeof rowData[col.name] !== 'undefined' ? rowData[col.name] : rowData;
+    formatOpts = {};
+    if (col.formatOpts) formatOpts = JSON.parse(JSON.stringify(col.formatOpts));
+    return formater(cellData, formatOpts, rowData.id);
   }
 
   content(children = this.props.children) {

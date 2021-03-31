@@ -70,12 +70,12 @@ export default class Field extends Component {
   }
 
   returnData(value = this.state.value) {
-    let { name } = this.props;
+    let { name, id } = this.props;
     let { error } = this.state;
     if (!error) {
       clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
-        eventHandler.dispatch(name, { [name]: value });
+        eventHandler.dispatch(name, { [name]: value, id });
       }, 300);
     }
   }

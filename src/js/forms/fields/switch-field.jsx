@@ -4,6 +4,10 @@ import CheckboxField from "./checkbox-field";
 export default class SwitchField extends CheckboxField {
 
   static jsClass = 'SwitchField';
+  static defaultProps = {
+    ...CheckboxField.defaultProps,
+    labels: []
+  }
 
   nodeOption = (item, i) => {
     const { name, labels, optionClasses, disabled } = this.props;
@@ -24,8 +28,10 @@ export default class SwitchField extends CheckboxField {
       'data-type': typeof item.value
     }
     return <div key={i + '-' + item.value} className={cn.join(' ')} >
-      <label className="form-check-label" htmlFor={id}>{item.label}</label>
-      <br />
+      {item.label && <>
+        <label className="form-check-label" htmlFor={id}>{item.label}</label>
+        <br />
+      </>}
       {labels[0]}<input {...inputProps} />{labels[1]}
     </div>
   }
