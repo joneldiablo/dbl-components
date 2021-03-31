@@ -1,10 +1,43 @@
 import React from "react";
+import moment from "moment";
+import parseReact from "html-react-parser";
 import Component from "../component";
 import fields from "../forms/fields";
+import COMPONENTS from "../components";
 import Icons from "../media/icons";
-import moment from "moment";
+import eventHandler from "../functions/event-handler";
 
 const FORMATS = {
+  component: (raw, props) => {
+    const buildContent = (content, index) => {
+      if (!content) return false;
+      else if (typeof content === 'string') {
+        return (<React.Fragment key={index + '-' + content.name}>
+          {parseReact(content)}
+        </React.Fragment>);
+      } else if (React.isValidElement(content)) {
+        content.key = index + '-' + content.name;
+        return content;
+      }
+      else if (Array.isArray(content)) return content.map(buildContent);
+      else if (typeof content === 'object' && typeof content.name !== 'string')
+        return Object.keys(content)
+          .map((name, i) => buildContent({ name, ...content[name] }, i));
+
+      if (typeof content.active === 'boolean' && !content.active) return false;
+      const { component: componentName, content: subContent, ...section } = content;
+      let Component = COMPONENTS[componentName] || (COMPONENTS.Component);
+      let children = buildContent(subContent);
+      if (props.valueIn === section.name) {
+        section.value = raw;
+      }
+      return (<Component key={index + '-' + section.name} {...section}>
+        {children}
+      </Component>);
+    }
+    props.value = raw;
+    return buildContent(props);
+  },
   date: (raw, { format: f = 'DD/MM/YYYY' } = {}) => moment(raw).format(f),
   currency: (raw, { locale = 'en-US', currency = 'USD' } = {}) =>
     (new Intl.NumberFormat(locale, {
@@ -18,11 +51,43 @@ export const addFormatTemplates = (newTemplates = {}) => {
   Object.assign(FORMATS, newTemplates);
 }
 
-export class HeaderColumn extends React.Component {
+export class HeaderCell extends React.Component {
 
   static jsClass = 'HeaderColumn';
 
   state = {};
+
+  constructor(props) {
+    super(props);
+    this.events = [];
+  }
+
+  componentDidMount() {
+    const { col } = this.props;
+    if (col.filter) {
+      this.events.push([col.filter.name, this.onChangeFilter]);
+    }
+    for (const event of this.events) {
+      eventHandler.subscribe(...event);
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (!this.props.sort && this.state.sortDir) this.setState({ sortDir: null });
+  }
+
+  componentWillUnmount() {
+    for (const event of this.events) {
+      eventHandler.unsubscribe(event[0]);
+    }
+  }
+
+  onChangeFilter = (data) => {
+    const { filter } = this.props.col;
+    if (data[filter.name]) {
+      this.setState({ searchActive: true });
+    }
+  }
 
   sort(dir) {
     const { onSort, col } = this.props;
@@ -33,13 +98,9 @@ export class HeaderColumn extends React.Component {
     if (typeof onSort === 'function') onSort(newDir ? { [col.name]: newDir } : null);
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (!this.props.sort && this.state.sortDir) this.setState({ sortDir: null });
-  }
-
   render() {
     const { col, classes, icons, orderable } = this.props;
-    const { sortDir } = this.state;
+    const { sortDir, searchActive } = this.state;
     const showOrder = typeof col.orderable !== 'undefined' ? col.orderable : orderable;
     const style = {
       minWidth: col.width
@@ -49,6 +110,8 @@ export class HeaderColumn extends React.Component {
       col.type, col.name + '-header',
       col.classes, classes
     ];
+    const cnSearch = ['cursor-pointer'];
+    if (!searchActive) cnSearch.push('text-muted');
     return <th className="align-middle">
       <div className="d-flex align-items-center">
         <div className={cn.join(' ')} style={style}>
@@ -57,7 +120,7 @@ export class HeaderColumn extends React.Component {
         <div className="d-flex">
           {col.filter && <div className="ps-2 mt-1 dropstart">
             <span data-bs-toggle="dropdown" >
-              <Icons icon={icons.search} className="cursor-pointer" />
+              <Icons icon={icons.search} className={cnSearch.join(' ')} />
             </span>
             <div className="dropdown-menu dropdown-menu-end p-0">
               {/*TODO: Cambiar ícono y color cuando haya un filtro*/}
@@ -65,12 +128,16 @@ export class HeaderColumn extends React.Component {
             </div>
           </div>}
           {showOrder && <div className="ps-2 text-muted" style={{ fontSize: 10 }}>
-            <Icons icon={icons.caretUp}
-              className={'cursor-pointer ' + (sortDir === 'DESC' ? 'text-body' : '')}
-              onClick={(e) => this.sort('DESC', e)} />
-            <Icons icon={icons.caretDown}
-              className={'cursor-pointer ' + (sortDir === 'ASC' ? 'text-body' : '')}
-              onClick={(e) => this.sort('ASC', e)} />
+            <span onClick={(e) => this.sort('DESC', e)}>
+              <Icons icon={icons.caretUp}
+                className={'cursor-pointer ' + (sortDir === 'DESC' ? 'text-body' : '')}
+              />
+            </span>
+            <span onClick={(e) => this.sort('ASC', e)}>
+              <Icons icon={icons.caretDown}
+                className={'cursor-pointer ' + (sortDir === 'ASC' ? 'text-body' : '')}
+              />
+            </span>
           </div>}
         </div>
       </div>
@@ -99,7 +166,7 @@ export default class Table extends Component {
   }
   //------
 
-  mapHeaderColumns = (col, i) => {
+  mapHeaderCell = (col, i) => {
     const { colClasses, icons, orderable } = this.props;
     const { orderBy } = this.state;
     const props = {
@@ -110,7 +177,7 @@ export default class Table extends Component {
       onSort: this.onSort,
       sort: orderBy === col.name
     };
-    return <HeaderColumn key={i + '-' + col.name} {...props} />
+    return <HeaderCell key={i + '-' + col.name} {...props} />
   }
 
   mapRows = (row, i) => {
@@ -128,7 +195,7 @@ export default class Table extends Component {
     }
     const cn = ['cell', col.type, col.name + '-cell', col.classes, colClasses];
     const cell = (<div className={cn.join(' ')} style={style} title={row[colName]}>
-      {this.format(col, row[colName])}
+      {this.format(col, col.format === 'component' ? row : row[colName])}
     </div>);
     return (colName === 'id' ?
       <th key={i + '-' + colName} scope="row">{cell}</th> :
@@ -157,7 +224,7 @@ export default class Table extends Component {
           </tr>
         }
         <tr>
-          {columns.map(this.mapHeaderColumns)}
+          {columns.map(this.mapHeaderCell)}
         </tr>
       </thead>
       <tbody>

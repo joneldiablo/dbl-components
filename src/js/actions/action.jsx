@@ -3,7 +3,7 @@ import eventHandler from "../functions/event-handler";
 import Component from "../component";
 
 export default class ActionComponent extends Component {
-  
+
   static jsClass = 'ActionComponent';
   static defaultProps = {
     ...Component.defaultProps,
@@ -19,7 +19,12 @@ export default class ActionComponent extends Component {
   }
 
   onClick() {
-    eventHandler.dispatch(this.props.name, this.props.name);
+    const { value, name } = this.props;
+    let dispatch = name;
+    if (value) {
+      dispatch = { [name]: value }
+    }
+    eventHandler.dispatch(name, dispatch);
   }
 
   get componentProps() {

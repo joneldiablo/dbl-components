@@ -51,6 +51,7 @@ export default class View extends COMPONENTS.Component {
   constructor(props) {
     super(props);
     this.sections = this.sections.bind(this);
+    this.buildContent = this.buildContent.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -72,71 +73,60 @@ export default class View extends COMPONENTS.Component {
   }
 
 
-  buildContent() {
-    const { content } = this.props;
-    if (Array.isArray(content))
-      return content.map(this.sections);
-    else if (typeof content === 'object')
+  buildContent(content, index) {
+    if (!content) return false;
+    else if (typeof content === 'string') {
+      return (<React.Fragment key={index + '-' + content.name}>
+        {parseReact(content, this.parseOpts)}
+      </React.Fragment>);
+    } else if (React.isValidElement(content)) {
+      content.key = index + '-' + content.name;
+      return content;
+    }
+    else if (Array.isArray(content)) return content.map(this.buildContent);
+    else if (typeof content === 'object' && typeof content.name !== 'string')
       return Object.keys(content)
-        .map((name, i) => this.sections({ name, ...content[name] }, i));
-    else
-      return parseReact(content, this.parseOpts);
+        .map((name, i) => this.buildContent({ name, ...content[name] }, i));
+    return this.sections(content, index);
   }
 
   sections(sectionRaw, i) {
-    if (React.isValidElement(sectionRaw)) return sectionRaw;
-    if (typeof sectionRaw === 'string') {
-      return (<React.Fragment key={i + '-' + sectionRaw.name}>
-        {parseReact(sectionRaw, this.parseOpts)}
-      </React.Fragment>);
-    }
     if (typeof sectionRaw.active === 'boolean' && !sectionRaw.active) return false;
-    const { component: componentName, ...section } = sectionRaw;
+    const { component: componentName, content, ...section } = sectionRaw;
     const { location, match, history, routesIn, children } = this.props;
     let Component = COMPONENTS[componentName] || (COMPONENTS.Component);
     let componentProps = {
       ...section,
-      // views que hereden de este componente podrían mandarle 
-      // datos a los componentes por el name de cada uno
-      ...this.state[section.name],
       location,
       match,
       history
     }
-    let subcontent;
-    if (React.isValidElement(componentProps.content))
-      subcontent = componentProps.content;
-    else if (Array.isArray(componentProps.content))
-      subcontent = componentProps.content.map(this.sections)
-    else if (typeof componentProps.content === 'object')
-      subcontent = Object.keys(componentProps.content)
-        .map((name, i) => this.sections({ name, ...componentProps.content[name] }, i));
-    else
-      subcontent = [!!componentProps.content && <React.Fragment key="content">
-        {parseReact(componentProps.content, this.parseOpts)}
-      </React.Fragment>];
+    let subcontent = this.buildContent(content);
+    if (routesIn === section.name) {
+      subcontent = <>
+        {subcontent}
+        {children}
+      </>
+    }
     const cnSection = [componentProps.name + '-section'];
     if (this.props.test) cnSection.push('test-section-wrapper');
-    if (routesIn && routesIn === componentProps.name) {
-      subcontent.push(children);
-      if (this.props.test) cnSection.push('overflow-auto');
-    }
 
-    const finalComponent =
-      (<Component key={i + '-' + section.name} {...componentProps}>
-        {subcontent}
-      </Component>);
     return (['NavLink', 'Image', 'Link', 'Icons', 'Action']
-      .includes(componentName) ? finalComponent :
+      .includes(componentName) ?
+      <Component key={i + '-' + section.name} {...componentProps}>
+        {subcontent}
+      </Component> :
       <section key={i + '-' + section.name} className={cnSection.join(' ')}>
-        {finalComponent}
+        <Component {...componentProps}>
+          {subcontent}
+        </Component>
       </section>);
   }
 
   content(children = this.props.children) {
-    const { routesIn } = this.props;
+    const { routesIn, content } = this.props;
     return <>
-      {this.buildContent()}
+      {this.buildContent(content)}
       {!routesIn && children}
     </>
   }

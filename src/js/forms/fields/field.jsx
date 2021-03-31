@@ -121,7 +121,7 @@ export default class Field extends Component {
   onUpdate({ value, options, error, reset }) {
     const newState = {};
     if (typeof value !== 'undefined')
-      newState.value = value !== null ? value : '';
+      newState.value = (value !== null ? value : '');
     if (options) newState.options = options;
     if (typeof error === 'boolean') {
       newState.error = error;

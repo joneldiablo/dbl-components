@@ -66,7 +66,7 @@ export default class FormContainer extends Component {
         if (!field) return;
         eventHandler.dispatch('update.' + field.name, { value: data[itemName] });
       });
-      this.setState({ ...this.state.data, ...data });
+      this.setState({ data: { ...this.state.data, ...data } });
     }
     if (typeof loading === 'boolean') {
       const enabled = !loading;
