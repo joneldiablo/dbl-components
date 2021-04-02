@@ -21,7 +21,6 @@ export default class FileButtonField extends DropFileField {
     return <>
       {this.labelNode}
       {children && (!value ? children[0] : children[1])}
-      {!children && value}
       {this.inputNode}
     </>
   }

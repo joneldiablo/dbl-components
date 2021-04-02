@@ -11,7 +11,7 @@ export default class FormContainer extends Component {
     ...Component.propTypes,
     label: PropTypes.string,
     labelClasses: PropTypes.string,
-    fields: PropTypes.array
+    fields: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
   }
 
   static defaultProps = {
@@ -27,31 +27,36 @@ export default class FormContainer extends Component {
     this.onChange = this.onChange.bind(this);
     this.state.data = {};
     this.state.invalidFields = {};
+    this.events = [];
+    this.fieldsForEach(field => {
+      this.events.push([field.name, this.onChange, this.unique]);
+      this.events.push(['invalid.' + field.name, this.onInvalidField, this.unique]);
+    });
+    this.events.push(['update.' + props.name, this.onUpdate, this.unique]);
+    this.events.push(['default.' + props.name, this.onDefault, this.unique]);
   }
 
   componentDidMount() {
-    this.props.fields.forEach(field => {
-      eventHandler.subscribe(field.name, this.onChange, this.unique);
-      eventHandler.subscribe('invalid.' + field.name, this.onInvalidField, this.unique);
-    });
-    eventHandler.subscribe('update.' + this.props.name, this.onUpdate, this.unique);
+    this.events.forEach(event => eventHandler.subscribe(...event));
     // set defaults dont propagate event
     this.reset(true);
-    this.toggleSubmit();
   }
 
   componentWillUnmount() {
     clearTimeout(this.timeoutInvalid);
-    this.props.fields.forEach(field => {
-      eventHandler.unsubscribe(field.name, this.unique);
-      eventHandler.unsubscribe('invalid.' + field.name, this.unique);
-    });
-    eventHandler.unsubscribe('update.' + this.props.name, this.unique);
+    this.events.forEach(([eventName]) => eventHandler.unsubscribe(eventName));
+  }
+
+  fieldsForEach(func) {
+    const { fields } = this.props;
+    if (Array.isArray(fields)) fields.forEach(func);
+    else Object.keys(fields)
+      .forEach((name, i) => func({ name, ...fields[name] }, i));
   }
 
   reset(dontDispatch) {
-    const dataDefault = {}
-    this.props.fields.forEach((field) => {
+    const dataDefault = {};
+    this.fieldsForEach(field => {
       if (typeof field.default === 'undefined') return;
       dataDefault[field.name] = field.default;
       if (!dontDispatch) eventHandler.dispatch('update.' + field.name, { reset: true });
@@ -59,22 +64,22 @@ export default class FormContainer extends Component {
     this.setState({ data: dataDefault });
   }
 
-  onUpdate = ({ data, loading, reset }) => {
+  onUpdate = ({ data, reset }) => {
     if (data) {
-      Object.keys(data || {}).forEach((itemName) => {
-        const field = this.props.fields.find(field => field.name === itemName);
-        if (!field) return;
-        eventHandler.dispatch('update.' + field.name, { value: data[itemName] });
+      Object.keys(data).forEach(fieldName => {
+        eventHandler.dispatch('update.' + fieldName, { value: data[fieldName] });
       });
       this.setState({ data: { ...this.state.data, ...data } });
-    }
-    if (typeof loading === 'boolean') {
-      const enabled = !loading;
-      this.toggleSubmit(enabled);
     }
     if (typeof reset === 'boolean') {
       this.reset();
     }
+  }
+
+  onDefault = (data) => {
+    Object.keys(data).forEach(fieldName => {
+      eventHandler.dispatch('update.' + fieldName, { value: data[fieldName] });
+    });
   }
 
   onInvalid = () => {
@@ -83,7 +88,6 @@ export default class FormContainer extends Component {
     clearTimeout(this.timeoutInvalid);
     this.timeoutInvalid = setTimeout(() => {
       eventHandler.dispatch('invalid.' + this.props.name, invalidFields);
-      this.toggleSubmit();
     }, 400);
   }
 
@@ -108,16 +112,7 @@ export default class FormContainer extends Component {
     eventHandler.dispatch('change.' + this.props.name, data);
     if (this.form.current?.checkValidity()) {
       eventHandler.dispatch('valid.' + this.props.name, data);
-      this.toggleSubmit(true);
     }
-  }
-
-  toggleSubmit(enabled) {
-    // set disabled every button type=submit
-    const submits = this.form.current.querySelectorAll('*[type=submit]');
-    submits.forEach(s => {
-      s.disabled = !enabled;
-    });
   }
 
   content(children = this.props.children) {

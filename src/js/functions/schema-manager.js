@@ -18,7 +18,7 @@ class SchemaManager {
       if (item.ref) {
         let ref = item.ref;
         delete item.ref;
-        toReturn = deepMerge(this.resolveRefs(ref), this.resolveRefs(item));
+        toReturn = deepMerge({}, this.resolveRefs(ref), this.resolveRefs(item));
       } else {
         Object.keys(item).forEach(i => {
           toReturn[i] = this.resolveRefs(item[i])

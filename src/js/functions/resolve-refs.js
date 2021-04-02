@@ -8,7 +8,9 @@ export default (object, schema) => {
       if (item.ref) {
         let ref = item.ref;
         delete item.ref;
-        toReturn = deepMerge(loop(ref), loop(item));
+        const refObj = loop(ref);
+        const modify = loop(item);
+        toReturn = deepMerge({}, refObj, modify);
       } else {
         Object.keys(item).forEach(i => {
           toReturn[i] = loop(item[i])
@@ -18,10 +20,8 @@ export default (object, schema) => {
     } else if (typeof item === 'string' && item[0] === '$') {
       let keys = item.substring(1).split('/');
       // Obtiene el contenido de $path/to/element 
-      // si el objeto es arreglo, se deviuelve tal cual, si es objeto se integra su llave como name
-      let data = keys.reduce(
-        (obj, key) => (Array.isArray(obj[key]) ? obj[key] : { name: key, ...obj[key] }),
-        schema);
+      let data = keys.reduce((obj, key) => obj[key], schema);
+      data = JSON.parse(JSON.stringify(data));
       return loop(data);
     } else return item;
   }

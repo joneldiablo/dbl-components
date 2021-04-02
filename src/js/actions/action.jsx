@@ -28,7 +28,8 @@ export default class ActionComponent extends Component {
   }
 
   get componentProps() {
-    return { type: this.props.type };
+    const { type, disabled } = this.props;
+    return { type, disabled };
   }
 
   content(children = this.props.children) {

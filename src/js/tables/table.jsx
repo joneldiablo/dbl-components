@@ -90,9 +90,8 @@ export class HeaderCell extends React.Component {
 
   onChangeFilter = (data) => {
     const { filter } = this.props.col;
-    if (data[filter.name]) {
-      this.setState({ searchActive: true });
-    }
+    this.setState({ searchActive: !!data[filter.name] });
+    eventHandler.dispatch(this.props.tableName, data);
   }
 
   sort(dir) {
@@ -176,8 +175,8 @@ export default class Table extends Component {
   }
 
   componentWillUnmount() {
-    for (const event of this.events) {
-      eventHandler.unsubscribe(event[0]);
+    for (const [eventName] of this.events) {
+      eventHandler.unsubscribe(eventName);
     }
   }
 
@@ -198,7 +197,7 @@ export default class Table extends Component {
   //------
 
   mapHeaderCell = (col, i) => {
-    const { colClasses, icons, orderable } = this.props;
+    const { colClasses, icons, orderable, name } = this.props;
     const { orderBy } = this.state;
     const props = {
       col,
@@ -206,7 +205,8 @@ export default class Table extends Component {
       classes: colClasses,
       icons,
       onSort: this.onSort,
-      sort: orderBy === col.name
+      sort: orderBy === col.name,
+      tableName: name
     };
     return <HeaderCell key={i + '-' + col.name} {...props} />
   }
@@ -236,8 +236,8 @@ export default class Table extends Component {
 
   format(col, rowData) {
     const formater = FORMATS[col.format] || (raw => raw);
-    const cellData = typeof rowData[col.name] !== 'undefined' ? rowData[col.name] : rowData;
-    formatOpts = {};
+    const cellData = rowData[col.name] || true;
+    let formatOpts = {};
     if (col.formatOpts) formatOpts = JSON.parse(JSON.stringify(col.formatOpts));
     return formater(cellData, formatOpts, rowData.id);
   }
