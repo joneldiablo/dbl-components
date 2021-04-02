@@ -112,7 +112,7 @@ export default class View extends COMPONENTS.Component {
     if (this.props.test) cnSection.push('test-section-wrapper');
 
     return (['NavLink', 'Image', 'Link', 'Icons', 'Action']
-      .includes(componentName) || ['span', 'small', 'a', 'br', 'hr', 'p'].includes(section.tag) ?
+      .includes(componentName) || ['span', 'small', 'a', 'br', 'hr', 'p', 'u', 's'].includes(section.tag) ?
       <Component key={i + '-' + section.name} {...componentProps}>
         {subcontent}
       </Component> :
