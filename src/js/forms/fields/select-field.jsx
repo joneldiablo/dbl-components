@@ -5,6 +5,12 @@ export default class SelectField extends Field {
 
   static jsClass = 'SelectField';
 
+  get inputProps() {
+    const props = super.inputProps;
+    props.className = props.className.replace('form-control', 'form-select');
+    return props;
+  }
+
   get inputNode() {
     const { inline, placeholder, options } = this.props;
     const inputNode = (<select {...this.inputProps} >

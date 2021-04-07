@@ -111,7 +111,7 @@ export default class AutocompleteField extends Field {
       {showDropdown && <div onClick={this.hide} style={closeStyle}></div>}
       {super.inputNode}
       {l && loading}
-      <ul className={cn.join(' ')} ref={this.menuDropdown} style={{ width: '100%', overflow: 'hidden' }}>
+      <ul className={cn.join(' ')} ref={this.menuDropdown} style={{ minWidth: '100%', overflow: 'hidden' }}>
         {options.map(this.mapOptions)}
         {more && <li >
           <span className="dropdown-item text-wrap" >...</span>

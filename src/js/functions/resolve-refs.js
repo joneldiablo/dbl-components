@@ -1,6 +1,7 @@
 import deepMerge from "./deep-merge";
 export default (object, schema) => {
   const loop = (item) => {
+    if (item === null) return item;
     if (Array.isArray(item)) {
       return item.map(a => loop(a));
     } else if (typeof item === 'object') {

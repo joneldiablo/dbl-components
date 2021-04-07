@@ -9,7 +9,7 @@ export default class FormContainer extends Component {
   static jsClass = 'FormContainer';
   static propTypes = {
     ...Component.propTypes,
-    label: PropTypes.string,
+    label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     labelClasses: PropTypes.string,
     fields: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
   }

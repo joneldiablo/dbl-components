@@ -75,15 +75,14 @@ export default class View extends COMPONENTS.Component {
 
   buildContent(content, index) {
     if (!content) return false;
-    else if (typeof content === 'string') {
+    if (typeof content === 'string') {
       return (<React.Fragment key={index + '-' + content.name}>
         {parseReact(content, this.parseOpts)}
       </React.Fragment>);
     } else if (React.isValidElement(content)) {
       content.key = index + '-' + content.name;
       return content;
-    }
-    else if (Array.isArray(content)) return content.map(this.buildContent);
+    } else if (Array.isArray(content)) return content.map(this.buildContent);
     else if (typeof content === 'object' && typeof content.name !== 'string')
       return Object.keys(content)
         .map((name, i) => this.buildContent({ name, ...content[name] }, i));
@@ -92,34 +91,31 @@ export default class View extends COMPONENTS.Component {
 
   sections(sectionRaw, i) {
     if (typeof sectionRaw.active === 'boolean' && !sectionRaw.active) return false;
-    const { component: componentName, content, ...section } = sectionRaw;
+    const { component: componentName, content, label, ...section } = sectionRaw;
     const { location, match, history, routesIn, children } = this.props;
     let Component = COMPONENTS[componentName] || (COMPONENTS.Component);
     let componentProps = {
       ...section,
+      label: (typeof label === 'object' ? this.buildContent(label) : label),
       location,
       match,
-      history
-    }
-    let subcontent = this.buildContent(content);
-    if (routesIn === section.name) {
-      subcontent = <>
-        {subcontent}
-        {children}
-      </>
+      history,
+      children: (routesIn === section.name ?
+        <>
+          {this.buildContent(content)}
+          {children}
+        </> :
+        this.buildContent(content)
+      )
     }
     const cnSection = [componentProps.name + '-section'];
     if (this.props.test) cnSection.push('test-section-wrapper');
 
     return (['NavLink', 'Image', 'Link', 'Icons', 'Action']
-      .includes(componentName) || ['span', 'small', 'a', 'br', 'hr', 'p', 'u', 's'].includes(section.tag) ?
-      <Component key={i + '-' + section.name} {...componentProps}>
-        {subcontent}
-      </Component> :
-      <section key={i + '-' + section.name} className={cnSection.join(' ')}>
-        <Component {...componentProps}>
-          {subcontent}
-        </Component>
+      .includes(componentName) || ['span', 'small', 'a', 'br', 'hr', 'p', 'u', 's'].includes(componentProps.tag) ?
+      <Component key={i + '-' + componentProps.name} {...componentProps} /> :
+      <section key={i + '-' + componentProps.name} className={cnSection.join(' ')}>
+        <Component {...componentProps} />
       </section>);
   }
 
