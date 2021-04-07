@@ -18,6 +18,7 @@ export default class Component extends React.Component {
 
   tag = 'div';
   classes = '';
+  style = {};
   name = this.props.name + '-' + this.constructor.jsClass;
 
   state = {
@@ -38,8 +39,8 @@ export default class Component extends React.Component {
     const { classes, style, name, tag, active } = this.props;
     const { localClasses, localStyles } = this.state;
     const content = this.content();
-    const cn = [this.constructor.jsClass, this.name, localClasses, classes, this.classes];
-    const s = Object.assign({}, localStyles, style);
+    const cn = [this.constructor.jsClass, this.name, this.classes, localClasses, classes];
+    const s = Object.assign({}, this.style, localStyles, style);
     const Tag = tag || this.tag;
     return (active ? <Tag id={name} className={cn.join(' ')} style={s} ref={this.ref} onClick={this.onClick} {...this.componentProps}>
       {content}

@@ -57,7 +57,7 @@ export default class RadioField extends Field {
     const inputProps = {
       ...this.inputProps,
       id,
-      value: item.value,
+      value: item.value === null ? "" : item.value,
       checked: checked,
       disabled: item.disabled,
       'data-type': typeof item.value
