@@ -35,11 +35,11 @@ export default class DropdownButtonContainer extends Component {
   }
 
   content(children = this.props.children) {
-    const { btnClasses, label, menu, allowClose, disabled } = this.props;
+    const { btnClasses, label, value, menu, allowClose, disabled } = this.props;
     const cn = ['btn dropdown-toggle', btnClasses];
     return <>
       <button className={cn.join(' ')} type="button" data-bs-toggle="dropdown" disabled={disabled}>
-        {label}
+        {label || value}
       </button>
       <div className="dropdown-menu" style={{ minWidth: '100%' }}
         onClick={allowClose ? null : (e) => e.stopPropagation()}>

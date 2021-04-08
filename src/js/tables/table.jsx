@@ -8,7 +8,7 @@ import Icons from "../media/icons";
 import eventHandler from "../functions/event-handler";
 
 const FORMATS = {
-  component: (raw, props, id) => {
+  component: (raw, props, data) => {
     const buildContent = (content, index) => {
       if (!content) return false;
       else if (typeof content === 'string') {
@@ -41,7 +41,8 @@ const FORMATS = {
       props.value = raw;
     }
     props.name += '.cell';
-    props.id = id;
+    props.id = data.id;
+    props.data = data;
     return buildContent(props);
   },
   date: (raw, { format: f = 'DD/MM/YYYY' } = {}) => moment(raw).format(f),
@@ -166,7 +167,9 @@ export default class Table extends Component {
   componentDidMount() {
     this.events = [];
     this.props.columns.forEach(col => {
-      if (col.format === 'component') {
+      // TODO: mejorar esto, filtrar el componente dropdown
+      // buscar una forma de que solo los componentes field carguen evento
+      if (col.format === 'component' && col.formatOpts.component !== 'DropdownButtonContainer') {
         const event = [col.formatOpts.name + '.cell', this.onEventCell];
         this.events.push(event);
         eventHandler.subscribe(...event);
@@ -239,7 +242,7 @@ export default class Table extends Component {
     const cellData = rowData[col.name] || true;
     let formatOpts = {};
     if (col.formatOpts) formatOpts = JSON.parse(JSON.stringify(col.formatOpts));
-    return formater(cellData, formatOpts, rowData.id);
+    return formater(cellData, formatOpts, rowData);
   }
 
   content(children = this.props.children) {
