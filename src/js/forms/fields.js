@@ -8,9 +8,10 @@ import SelectField from "./fields/select-field";
 import AutocompleteField from "./fields/autocomplete-field";
 import DateRangeField from "./fields/date-range-field";
 import PaginationField from "./fields/pagination-field";
-import groups from "./groups";
 import FileButtonField from "./fields/file-button-field";
+import DropFileField from "./fields/drop-file-field";
 import EditorField from "./fields/editor-field";
+import groups from "./groups";
 
 const fieldComponents = {
   Field,
@@ -27,6 +28,7 @@ const fieldComponents = {
   hidden: HiddenField,
   select: SelectField,
   FileButtonField,
+  DropFileField,
   EditorField,
   ...groups
 };

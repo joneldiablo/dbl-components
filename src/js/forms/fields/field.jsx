@@ -33,7 +33,7 @@ export default class Field extends Component {
     pattern: PropTypes.string,
     placeholder: PropTypes.string,
     required: PropTypes.bool,
-    step: PropTypes.oneOf([PropTypes.string, PropTypes.number]),
+    step: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     type: PropTypes.string.isRequired,
     value: PropTypes.any
   }
@@ -95,6 +95,7 @@ export default class Field extends Component {
     if (!error && typeof checkValidity === 'function')
       error = !checkValidity(value);
     else if (pattern) error = !(new RegExp(pattern, "i")).test(value);
+    if (!required && !value) error = false;
     if (error) {
       this.input.current?.setCustomValidity(this.props.errorMessage);
     }
@@ -102,8 +103,9 @@ export default class Field extends Component {
   }
 
   onInvalid() {
-    const { name } = this.props;
+    const { name, required } = this.props;
     const { value } = this.state;
+    if (!required && !value) return;
     this.setState(
       { error: true },
       () => eventHandler.dispatch('invalid.' + name, { [name]: value })

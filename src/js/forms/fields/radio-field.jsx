@@ -46,7 +46,7 @@ export default class RadioField extends Field {
   nodeOption = (item, i) => {
     const { inline, name, format } = this.props;
     const { value } = this.state;
-    const cn = ['form-check'];
+    const cn = ['form-check', item.classes];
     if (inline) cn.push('form-check-inline');
     const id = name + '-' + item.value;
     const checked = (['boolean', 'number'].includes(typeof value) ?

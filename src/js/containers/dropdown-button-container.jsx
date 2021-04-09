@@ -1,4 +1,6 @@
 import React from "react";
+import "bootstrap/js/dist/dropdown";
+
 import eventHandler from "../functions/event-handler";
 import Component from "../component";
 
