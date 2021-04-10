@@ -82,7 +82,7 @@ export default class FormContainer extends Component {
     });
   }
 
-  onInvalid = () => {
+  onInvalid = (e) => {
     const { invalidFields } = this.state;
     // timeout becouse avery field trigger this onInvalid
     clearTimeout(this.timeoutInvalid);

@@ -31,6 +31,10 @@ export default class Component extends React.Component {
     this.ref = createRef();
   }
 
+  get componentProps() {
+    return this.props._props;
+  }
+
   content(children = this.props.children) {
     return children;
   }

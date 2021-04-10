@@ -22,6 +22,7 @@ import Form from "./forms/form";
 import Table from "./tables/table";
 import EndpointTable from "./tables/endpoint-table";
 import DropdownButtonContainer from "./containers/dropdown-button-container";
+import ModalButtonContainer from "./containers/modal-button-container";
 import TabsContainer from "./containers/tabs-container";
 import fields from "./forms/fields";
 import Action from "./actions/action";
@@ -42,6 +43,7 @@ const COMPONENTS = {
   Table,
   EndpointTable,
   DropdownButtonContainer,
+  ModalButtonContainer,
   ProportionalContainer,
   TabsContainer,
   FormContainer,

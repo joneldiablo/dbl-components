@@ -99,8 +99,10 @@ export default class View extends COMPONENTS.Component {
       label: (typeof label === 'object' ? this.buildContent(label) : label),
       location,
       match,
-      history,
-      children: (routesIn === section.name ?
+      history
+    }
+    if (content || (routesIn === section.name)) {
+      componentProps.children = (routesIn === section.name ?
         <>
           {this.buildContent(content)}
           {children}
@@ -108,10 +110,11 @@ export default class View extends COMPONENTS.Component {
         this.buildContent(content)
       )
     }
+
     const cnSection = [componentProps.name + '-section'];
     if (this.props.test) cnSection.push('test-section-wrapper');
-    return (['NavLink', 'Image', 'Link', 'Icons', 'Action']
-      .includes(componentName) || ['span', 'small', 'a', 'br', 'hr', 'p', 'u', 's', 'b'].includes(componentProps.tag) ?
+    return (['NavLink', 'Image', 'Link', 'Icons', 'Action', 'DropdownButtonContainer', 'ModalButtonContainer']
+      .includes(componentName) || ['span', 'small', 'a', 'br', 'hr', 'p', 'u', 's', 'b', 'img'].includes(componentProps.tag) ?
       <Component key={i + '-' + componentProps.name} {...componentProps} /> :
       <section key={i + '-' + componentProps.name} className={cnSection.join(' ')}>
         <Component {...componentProps} />

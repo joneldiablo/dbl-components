@@ -18,7 +18,7 @@ export default class ActionComponent extends Component {
     this.onClick = this.onClick.bind(this);
   }
 
-  onClick() {
+  onClick(e) {
     const { value, name, id } = this.props;
     let dispatch = name;
     if (value || id) {

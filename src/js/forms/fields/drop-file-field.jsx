@@ -21,8 +21,8 @@ export default class DropFileField extends Field {
     lc.delete('filled');
     lc.delete('border-danger');
     const error = this.isInvalid(value);
-    const className = error ? 'border-danger' : 'filled';
-    lc.add(className);
+    if (error) lc.add('border-danger');
+    if (files.length) lc.add('filled');
     let filesArr = Array.from(files);
     this.setState({
       value: filesArr.map(f => f.name).join(', '),
@@ -58,6 +58,21 @@ export default class DropFileField extends Field {
     const lc = new Set(localClasses.split(' '));
     lc.delete('active');
     this.setState({ localClasses: Array.from(lc).join(' ') });
+  }
+
+  onUpdate(update) {
+    const { localClasses } = this.state;
+    const lc = new Set(localClasses.split(' '));
+    lc.delete('active');
+    if (!(update.value?.length)) {
+      lc.delete('filled');
+    } else {
+      lc.add('filled');
+    }
+    this.setState({
+      localClasses: Array.from(lc).join(' ')
+    });
+    super.onUpdate(update);
   }
 
   get type() {
