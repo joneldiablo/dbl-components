@@ -26,6 +26,7 @@ export default class DropFileField extends Field {
     let filesArr = Array.from(files);
     this.setState({
       value: filesArr.map(f => f.name).join(', '),
+      valueInput: value,
       files: filesArr,
       error,
       localClasses: Array.from(lc).join(' ')
@@ -64,14 +65,25 @@ export default class DropFileField extends Field {
     const { localClasses } = this.state;
     const lc = new Set(localClasses.split(' '));
     lc.delete('active');
-    if (!(update.value?.length)) {
-      lc.delete('filled');
-    } else {
-      lc.add('filled');
+    const newState = {};
+    if (typeof update.value !== 'undefined') {
+      if (!update.value.length) {
+        lc.delete('filled');
+      } else {
+        lc.add('filled');
+      }
+      newState.files = update.value;
     }
-    this.setState({
-      localClasses: Array.from(lc).join(' ')
-    });
+    if (update.reset) {
+      if (!newState.length) {
+        lc.delete('filled');
+      } else {
+        lc.add('filled');
+      }
+      newState.files = this.props.default || [];
+    }
+    newState.localClasses = Array.from(lc).join(' ');
+    this.setState(newState);
     super.onUpdate(update);
   }
 
@@ -82,7 +94,8 @@ export default class DropFileField extends Field {
   get inputProps() {
     const props = super.inputProps;
     const { accept, multiple } = this.props;
-    delete props.value;
+    const { valueInput, value } = this.state;
+    props.value = !!(value?.length) ? valueInput : value;
     props.accept = accept;
     props.multiple = multiple;
     props.onDragOver = this.onDragover;

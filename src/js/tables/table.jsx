@@ -239,7 +239,7 @@ export default class Table extends Component {
 
   format(col, rowData) {
     const formater = FORMATS[col.format] || (raw => raw);
-    const cellData = rowData[col.name] || true;
+    const cellData = typeof rowData[col.name] !== 'undefined' ? rowData[col.name] : true;
     let formatOpts = {};
     if (col.formatOpts) formatOpts = JSON.parse(JSON.stringify(col.formatOpts));
     return formater(cellData, formatOpts, rowData);
