@@ -27,13 +27,14 @@ export default class FormContainer extends Component {
     this.onChange = this.onChange.bind(this);
     this.state.data = {};
     this.state.invalidFields = {};
-    this.events = [];
+    this.events = [
+      ['update.' + props.name, this.onUpdate, this.unique],
+      ['default.' + props.name, this.onDefault, this.unique]
+    ];
     this.fieldsForEach(field => {
       this.events.push([field.name, this.onChange, this.unique]);
       this.events.push(['invalid.' + field.name, this.onInvalidField, this.unique]);
     });
-    this.events.push(['update.' + props.name, this.onUpdate, this.unique]);
-    this.events.push(['default.' + props.name, this.onDefault, this.unique]);
   }
 
   componentDidMount() {
@@ -44,7 +45,7 @@ export default class FormContainer extends Component {
 
   componentWillUnmount() {
     clearTimeout(this.timeoutInvalid);
-    this.events.forEach(([eventName]) => eventHandler.unsubscribe(eventName));
+    this.events.forEach(([eventName]) => eventHandler.unsubscribe(eventName, this.unique));
   }
 
   fieldsForEach(func) {

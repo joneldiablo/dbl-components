@@ -9,7 +9,10 @@ export default class ModalContainer extends Component {
   static jsClass = 'ModalContainer';
   static defaultProps = {
     ...Component.defaultProps,
-    modal: {}
+    modal: {},
+    headerClasses: '',
+    bodyClasses: '',
+    footerClasses: ''
   }
 
   constructor(props) {
@@ -91,7 +94,7 @@ export default class ModalContainer extends Component {
         <div className="modal-content">
           {showClose && <button type='button'
             className='btn-close position-absolute end-0 m-3'
-            data-bs-dismiss='modal'></button>}
+            data-bs-dismiss='modal' style={{ zIndex: 1 }}></button>}
           {cg.content}
           {!!cg.header.length && <div className={'modal-header ' + headerClasses}>{cg.header}</div>}
           {!!cg.body.length && <div className={'modal-body ' + bodyClasses}>{cg.body}</div>}
