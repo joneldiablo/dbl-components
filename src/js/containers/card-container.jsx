@@ -20,9 +20,10 @@ export default class CardContainer extends Container {
     let footer = [];
     children.forEach((child, i) => {
       if (!child) return;
-      if (child.props.header) {
+      const props = child.type === 'section' ? child.props.children.props : child.props;
+      if (props.header) {
         header.push(child);
-      } else if (child.props.footer) {
+      } else if (props.footer) {
         footer.push(child);
       } else {
         body.push(child);
