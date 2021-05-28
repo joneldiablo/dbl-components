@@ -107,10 +107,10 @@ export default class SchemaController extends React.Component {
         subRoute = JSON.parse(JSON.stringify(subRoute));
         // si las rutas son un arreglo
         if (Array.isArray(route.path) && Array.isArray(subRoute.path)) {
-          subRoute.path = subRoute.path
-            .reduce((paths, path) => {
-              paths.push(route.path.map(parentPath => urlJoin(parentPath, path)))
-            }, []);
+          subRoute.path = subRoute.path.reduce((paths, path) => {
+            paths.push(route.path.map(parentPath => urlJoin(parentPath, path)));
+            return paths;
+          }, []);
         } else if (Array.isArray(subRoute.path)) {
           subRoute.path = subRoute.path.map(path => urlJoin(route.path, path));
         } else if (Array.isArray(route.path)) {
