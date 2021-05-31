@@ -8,6 +8,7 @@ import Component from "./component";
 import Image from "./media/image";
 import Container from "./containers/container";
 import GridContainer from "./containers/grid-container";
+import ListContainer from "./containers/list-container";
 import HeroContainer from "./containers/hero-container";
 import AspectRatioContainer from "./containers/proportional-container";
 import GridSwitchContainer from "./containers/grid-switch-container";
@@ -55,7 +56,8 @@ const COMPONENTS = {
   Link,
   Icons,
   Image,
-  Action
+  Action,
+  ListContainer
 }
 
 export default COMPONENTS;
