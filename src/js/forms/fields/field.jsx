@@ -21,8 +21,8 @@ export default class Field extends Component {
     inlineLabelClasses: PropTypes.string,
     label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     labelClasses: PropTypes.string,
-    max: PropTypes.number,
-    min: PropTypes.number,
+    max: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    min: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     noValidate: PropTypes.bool,
     options: PropTypes.arrayOf(PropTypes.shape({
       label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),

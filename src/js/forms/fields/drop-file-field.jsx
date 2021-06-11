@@ -66,7 +66,7 @@ export default class DropFileField extends Field {
     const lc = new Set(localClasses.split(' '));
     lc.delete('active');
     const newState = {};
-    if (typeof update.value !== 'undefined') {
+    if (typeof update.value !== 'undefined' && update.value !== null) {
       if (!update.value.length) {
         lc.delete('filled');
       } else {

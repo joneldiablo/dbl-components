@@ -55,11 +55,12 @@ export default class RadioField extends Field {
     if (item.hidden && !checked) cn.push('visually-hidden-focusable');
     if (format === 'switch') cn.push('form-switch');
     const inputProps = {
+      disabled: item.disabled,
+      readOnly: item.readOnly,
       ...this.inputProps,
       id,
       value: item.value === null ? "" : item.value,
       checked: checked,
-      disabled: item.disabled,
       'data-type': typeof item.value
     }
     return <div key={i + '-' + item.value} className={cn.join(' ')} >
