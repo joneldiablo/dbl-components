@@ -44,12 +44,15 @@ export default class AutocompleteField extends Field {
   }
 
   onUpdate({ options, more, ...data }) {
-    const { maxLength } = this.props;
-    this.setState({
-      options: options.slice(0, maxLength),
-      more: (options.length > maxLength) || more,
+    const newState = {
       loading: false
-    });
+    };
+    if (typeof options !== 'undefined') {
+      const { maxLength } = this.props;
+      newState.options = options.slice(0, maxLength);
+      newState.more = (options.length > maxLength) || more;
+    }
+    this.setState(newState);
     super.onUpdate(data);
   }
 
@@ -90,7 +93,7 @@ export default class AutocompleteField extends Field {
 
   get inputProps() {
     const props = super.inputProps;
-    props.onFocus = this.show;
+    props.onFocus = () => [this.show(), super.inputProps.onFocus()];
     props.autoComplete = "off";
     return props;
   }

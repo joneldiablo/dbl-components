@@ -140,6 +140,11 @@ export default class Field extends Component {
     this.setState(newState);
   }
 
+  onFocus = () => {
+    const { name } = this.props;
+    eventHandler.dispatch('focus.' + name);
+  }
+
   get type() {
     return this.props.type;
   }
@@ -169,7 +174,8 @@ export default class Field extends Component {
       readOnly,
       ref: this.input,
       onChange: this.onChange,
-      onInvalid: this.onInvalid
+      onInvalid: this.onInvalid,
+      onFocus: this.onFocus
     }
   }
 

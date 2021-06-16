@@ -1,4 +1,5 @@
 import deepMerge from "./deep-merge";
+import { unflatten } from "flat";
 export default (object, schema) => {
   const loop = (item) => {
     if (item === null) return item;
@@ -7,10 +8,11 @@ export default (object, schema) => {
     } else if (typeof item === 'object') {
       let toReturn = {};
       if (item.ref) {
-        let ref = item.ref;
+        const ref = item.ref;
         delete item.ref;
+        const unflattened = unflatten(item, { safe: true, delimiter: '/' });
         const refObj = loop(ref);
-        const modify = loop(item);
+        const modify = loop(unflattened);
         toReturn = deepMerge({}, refObj, modify);
       } else {
         Object.keys(item).forEach(i => {

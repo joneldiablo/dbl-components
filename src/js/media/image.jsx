@@ -24,7 +24,7 @@ export default class Image extends Component {
         {typeof src === 'object' && Object.keys(src).map(min =>
           <source srcset={src[min]} media={`(min-width: ${min}px)`} />
         )}
-        <img src={imgSrc} alt={alt} width={width} height={height} style={{ objectFit }} />
+        <img src={imgSrc} alt={alt} width={width} height={height} style={{ objectFit, objectPosition: 'center' }} />
       </picture>
       <figcaption>{children}</figcaption>
     </>);
