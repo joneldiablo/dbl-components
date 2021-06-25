@@ -1,4 +1,3 @@
-import { NavLink, Link } from "react-router-dom";
 import FooterContainer from "./containers/footer-container";
 import FullscreenContainer from "./containers/fullscreen-container";
 import Icons from "./media/icons";
@@ -28,6 +27,8 @@ import ModalContainer from "./containers/modal-container";
 import TabsContainer from "./containers/tabs-container";
 import fields from "./forms/fields";
 import Action from "./actions/action";
+import Link from "./navigation/react-router-link";
+import NavLink from "./navigation/raect-router-navlink";
 
 const COMPONENTS = {
   Debug,

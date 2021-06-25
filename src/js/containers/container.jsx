@@ -20,6 +20,7 @@ export default class Container extends Component {
   onResize = () => {
     clearTimeout(this.onResizeTimeout);
     this.onResizeTimeout = setTimeout(() => {
+      if (!this.ref.current) return;
       let { offsetWidth: width, offsetHeight: height } = this.ref.current;
       if (typeof this.props.onResize === 'function') {
         this.props.onResize({ width, height });
@@ -42,8 +43,7 @@ export default class Container extends Component {
   }
 
   componentWillUnmount() {
-    if (this.ref)
-      clearTimeout(this.onResizeTimeout);
+    clearTimeout(this.onResizeTimeout);
   }
 
 }
