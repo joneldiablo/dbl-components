@@ -17,11 +17,16 @@ export default class Image extends Component {
 
   content() {
     const { src, alt, children, width, height, objectFit } = this.props;
-    const imgSrc = typeof src === 'object' ? src.default : src;
-    delete src.default;
+    let imgSrc = src;
+    if (imgSrc === null) {
+      imgSrc = '';
+    } else if (typeof imgSrcy === 'object') {
+      imgSrc = src.default;
+      delete src.default;
+    }
     return (<>
       <picture>
-        {typeof src === 'object' && Object.keys(src).map(min =>
+        {src !== null && typeof src === 'object' && Object.keys(src).map(min =>
           <source srcset={src[min]} media={`(min-width: ${min}px)`} />
         )}
         <img src={imgSrc} alt={alt} width={width} height={height} style={{ objectFit, objectPosition: 'center' }} />

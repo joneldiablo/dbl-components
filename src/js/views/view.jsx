@@ -95,9 +95,7 @@ export default class View extends COMPONENTS.Component {
 
   sections(sectionRaw, i) {
     const m = this.mutations(sectionRaw.name);
-    if (m) {
-      Object.assign(sectionRaw, m);
-    }
+    if (m) Object.assign(sectionRaw, m);
     if (typeof sectionRaw.active === 'boolean' && !sectionRaw.active) return false;
     const { component: componentName, content, label, ...section } = sectionRaw;
     const { location, match, history, routesIn, children } = this.props;
