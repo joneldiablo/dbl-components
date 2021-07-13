@@ -153,7 +153,7 @@ export default class Field extends Component {
     const { disabled, readOnly,
       required, name, controlClasses,
       placeholder, step, noValidate,
-      min, max, pattern, autoComplete } = this.props;
+      min, max, pattern, autoComplete, dir } = this.props;
     const { value, error } = this.state;
     const cn = [
       'form-control',
@@ -173,6 +173,7 @@ export default class Field extends Component {
       disabled,
       readOnly,
       ref: this.input,
+      dir,
       onChange: this.onChange,
       onInvalid: this.onInvalid,
       onFocus: this.onFocus
