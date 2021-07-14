@@ -33,6 +33,7 @@ export default class Navigation extends Component {
     this.state.localClasses = 'nav';
     this.state.carets = {};
     this.state.open = true;
+    this.state.localClasses = 'label-show';
     this.collapses = {};
   }
 
@@ -62,7 +63,9 @@ export default class Navigation extends Component {
 
   toggleText = () => {
     this.setState({
-      open: !this.state.open
+      open: !this.state.open,
+      // INFO: invertido, el nuevo estado será false
+      localClasses: this.state.open ? 'label-collapsed' : 'label-show'
     }, () => eventHandler.dispatch(this.props.name, this.state.open));
   }
 
