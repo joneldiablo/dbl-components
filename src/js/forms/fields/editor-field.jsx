@@ -27,7 +27,6 @@ export default class EditorField extends Field {
 
   get inputNode() {
     const { config, editor } = this.props;
-    console.log(this.props);
     const { value } = this.state;
     const { disabled } = this.inputProps;
     const attrs = {

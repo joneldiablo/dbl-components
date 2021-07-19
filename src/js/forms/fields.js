@@ -11,6 +11,7 @@ import PaginationField from "./fields/pagination-field";
 import FileButtonField from "./fields/file-button-field";
 import DropFileField from "./fields/drop-file-field";
 import EditorField from "./fields/editor-field";
+import TextareaField from "./fields/textarea-field";
 import groups from "./groups";
 
 const fieldComponents = {
@@ -30,6 +31,7 @@ const fieldComponents = {
   FileButtonField,
   DropFileField,
   EditorField,
+  TextareaField,
   ...groups
 };
 
