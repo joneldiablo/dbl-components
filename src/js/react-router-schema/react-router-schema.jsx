@@ -25,17 +25,17 @@ const routePropTypes = {
   strict: PropTypes.bool,
   location: PropTypes.object,
   sensitive: PropTypes.bool,
-  redirect: PropTypes.string
+  redirect: PropTypes.string,
+  routes: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.shape(routePropTypes)),
+    PropTypes.shape(routePropTypes)
+  ])
 };
-routePropTypes.routes = PropTypes.oneOfType([
-  PropTypes.arrayOf(PropTypes.shape(routePropTypes)),
-  PropTypes.objectOf(PropTypes.shape(routePropTypes))
-]);
 
 const schemaPropTypes = {
   test: PropTypes.bool,
   theme: PropTypes.string,
-  routes: PropTypes.arrayOf(PropTypes.shape(routePropTypes)),
+  routes: routePropTypes.routes,
   isAuth: PropTypes.func
 }
 
@@ -66,6 +66,8 @@ export default class SchemaController extends React.Component {
     let routes;
     if (Array.isArray(routesSchema))
       routes = routesSchema.map(this.views);
+    else if (typeof routesSchema === 'object' && routesSchema.name)
+      routes = this.views(routesSchema);
     else if (typeof routesSchema === 'object')
       routes = Object.keys(routesSchema)
         .map((name, i) => this.views({ name, ...routesSchema[name] }, i))
