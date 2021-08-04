@@ -85,7 +85,7 @@ export default class Navigation extends Component {
         fill: 'currentColor'
       }
     };
-    const innerNode = <span data-bs-toggle="collapse" data-bs-target={'#' + item.name + '-collapse'}>
+    const innerNode = <span>
       {item.content ? parseReact(open ? item.content[0] : item.content[1]) :
         <>
           <Icons icon={item.icon} className="mx-2" {...iconStyle} />
@@ -93,7 +93,7 @@ export default class Navigation extends Component {
             <>
               <span className="label">{item.label}</span>
               {item.menu?.length &&
-                <span className="float-end caret-icon">
+                <span className="float-end caret-icon" data-bs-toggle="collapse" data-bs-target={'#' + item.name + '-collapse'} onClick={(e) => { e.stopPropagation(); e.preventDefault() }}>
                   <Icons icon={carets[item.name]} {...iconStyle} />
                 </span>}
             </>}
@@ -113,7 +113,11 @@ export default class Navigation extends Component {
         <NavLink {...propsLink} >
           {innerNode}
         </NavLink> :
-        <span id={item.name + '-link'} className={[propsLink.className, 'cursor-pointer'].join(' ')}>{innerNode}</span>
+        <span id={item.name + '-link'}
+          className={[propsLink.className, 'cursor-pointer'].join(' ')}
+          data-bs-toggle="collapse" data-bs-target={'#' + item.name + '-collapse'}
+        >{innerNode}
+        </span>
       }
       {item.menu?.length &&
         <div ref={(ref) => this.collapseRef(ref, item)} id={item.name + '-collapse'} className="collapse">
