@@ -28,8 +28,8 @@ export default class ActionComponent extends Component {
   }
 
   get componentProps() {
-    const { type, disabled } = this.props;
-    return { type, disabled };
+    const { type, disabled, _props } = this.props;
+    return { type, disabled, ..._props };
   }
 
   content(children = this.props.children) {
