@@ -45,7 +45,6 @@ export default class HeroContainer extends Container {
             backgroundImage: `url("${props.image}")`,
             backgroundAttachment: props.imageAttachment
           }} >
-          {console.log(slide)}
           {slide}
         </SwiperSlide>
       })}
