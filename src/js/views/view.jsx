@@ -52,6 +52,9 @@ export default class View extends COMPONENTS.Component {
     super(props);
     this.sections = this.sections.bind(this);
     this.buildContent = this.buildContent.bind(this);
+    Object.assign(this.state, {
+      localClasses: this.props.test ? 'test-view-wrapper' : ''
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -120,7 +123,7 @@ export default class View extends COMPONENTS.Component {
     const cnSection = [componentProps.name + '-section'];
     if (this.props.test) cnSection.push('test-section-wrapper');
     return (['NavLink', 'Image', 'Link', 'Icons', 'Action', 'DropdownButtonContainer', 'ModalButtonContainer']
-      .includes(componentName) || ['span', 'small', 'a', 'br', 'hr', 'p', 'u', 's', 'b', 'img', 'nav'].includes(componentProps.tag) ?
+      .includes(componentName) || ['span', 'small', 'a', 'br', 'hr', 'p', 'u', 's', 'b', 'img', 'nav', 'section'].includes(componentProps.tag) ?
       <Component key={i + '-' + componentProps.name} {...componentProps} /> :
       <section key={i + '-' + componentProps.name} className={cnSection.join(' ')}>
         <Component {...componentProps} />

@@ -23,8 +23,13 @@ export default (object, schema) => {
     } else if (typeof item === 'string' && item[0] === '$') {
       let keys = item.substring(1).split('/');
       // Obtiene el contenido de $path/to/element 
-      let data = keys.reduce((obj, key) => obj[key], schema);
-      data = JSON.parse(JSON.stringify(data));
+      let data;
+      try {
+        data = keys.reduce((obj, key) => obj[key], schema);
+        data = JSON.parse(JSON.stringify(data));
+      } catch (error) {
+        return { ref: item };
+      }
       return loop(data);
     } else return item;
   }
