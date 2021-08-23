@@ -18,9 +18,9 @@ export default class Image extends Component {
   content() {
     const { src, alt, children, width, height, objectFit } = this.props;
     let imgSrc = src;
-    if (imgSrc === null) {
+    if (!imgSrc) {
       imgSrc = '';
-    } else if (typeof imgSrcy === 'object') {
+    } else if (typeof imgSrc === 'object') {
       imgSrc = src.default;
       delete src.default;
     }

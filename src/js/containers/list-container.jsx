@@ -15,9 +15,10 @@ export default class ListContainer extends Container {
     const { liClasses } = this.props;
     return Array.isArray(children) && children.map((child, i) => {
       if (!child) return false;
-      const childLiClasses =
-        (child.type === 'section' ? child.props.children.props : child.props).liClasses;
-      let licn = [ i % 2 ? 'even' : 'odd', 'li-num-' + i, childLiClasses];
+      const theChild =
+        (child.type === 'section' ? child.props.children.props : child.props);
+      const childLiClasses = theChild?.liClasses;
+      let licn = [i % 2 ? 'even' : 'odd', 'li-num-' + i, childLiClasses];
       // unir clases generales, si es un string se une  todas las columnas
       // si es un arreglo se une en su debido lugar y se repite la ultima clase 
       // si no coincide el número de columnas y clases
