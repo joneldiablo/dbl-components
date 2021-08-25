@@ -1,6 +1,6 @@
 {
   "name": "dbl-components",
-  "version": "1.1.37",
+  "version": "1.1.38",
   "description": "Framework based on bootstrap 5",
   "main": "lib/js/index.js",
   "scripts": {
@@ -16,7 +16,7 @@
     "css": "node-sass --importer node_modules/node-sass-import src/scss/style.scss lib/css/style.css && yarn postcss",
     "postcss": "postcss lib/css/style.css --use autoprefixer -d lib/css --no-map",
     "scss": "cp -r src/scss lib",
-    "build": "yarn clear && yarn css && yarn scss && yarn babel && yarn build-storybook"
+    "build": "yarn clear && yarn scss && yarn babel && yarn build-storybook"
   },
   "keywords": [
     "bs",
