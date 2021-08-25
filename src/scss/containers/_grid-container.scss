@@ -1,0 +1,14 @@
+@each $key, $br in $grid-breakpoints {
+    .row.#{$key} {
+        @for $i from 1 through $grid-columns {
+            > .auto-#{$key}-#{$i} {
+                flex: 0 0 auto;
+                width: percentage(divide($i, $grid-columns));
+            }
+            &.row-auto-#{$key}-#{$i} > *:not(.resize-sensor) {
+                flex: 0 0 auto !important;
+                width: percentage(divide($i, $grid-columns)) !important;
+            }
+        }
+    }
+}

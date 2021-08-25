@@ -1,6 +1,7 @@
-import React from "react";
-import Component from "../component";
 import ResizeSensor from "css-element-queries/src/ResizeSensor";
+
+import Component from "../component";
+import eventHandler from "../functions/event-handler"
 
 export default class Container extends Component {
 
@@ -8,13 +9,23 @@ export default class Container extends Component {
   static defaultProps = {
     ...Component.defaultProps,
     fluid: true,
-    fullWidth: false
+    fullWidth: false,
+    breakpoints: {
+      xs: 0,
+      sm: 540,
+      md: 720,
+      lg: 960,
+      xl: 1140,
+      xxl: 1320
+    }
   }
+
+  breakpoint = 'xs';
 
   updateSize() {
     const { fluid, fullWidth } = this.props;
     const containerType = (!fullWidth ? (fluid ? 'container-fluid' : 'container') : '');
-    this.setState({ localClasses: [containerType, this.state.containerClasses].join(' ') });
+    this.setState({ localClasses: [containerType, this.breakpoint].join(' ') });
   }
 
   onResize = () => {
@@ -24,9 +35,17 @@ export default class Container extends Component {
       let { offsetWidth: width, offsetHeight: height } = this.ref.current;
       if (typeof this.props.onResize === 'function') {
         this.props.onResize({ width, height });
-      } else {
-        this.ref.current.dispatchEvent(new CustomEvent('resize', { detail: { width, height } }));
       }
+      // TODO: no se toma en cuenta el ordenamiento de los breakpoints, ordenarlos
+      //       y buscar la manera de empatar automagicamente con sass $container-max-widths
+      this.breakpoint = Object.keys(this.props.breakpoints)
+        .filter(br => width >= this.props.breakpoints[br])
+        .pop();
+      eventHandler.dispatch('resize.' + this.props.name, {
+        width, height,
+        breakpoint: this.breakpoint
+      });
+      this.updateSize();
     }, 300);
   }
 

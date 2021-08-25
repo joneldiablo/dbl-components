@@ -33,5 +33,5 @@ export default (object, schema) => {
       return loop(data);
     } else return item;
   }
-  return loop(object);
+  return loop(JSON.parse(JSON.stringify(object)));
 }

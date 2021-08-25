@@ -1,12 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
-import parseReact, { domToReact, attributesToProps } from "html-react-parser";
 import { NavLink, Link } from "react-router-dom";
+import parseReact, { domToReact, attributesToProps } from "html-react-parser";
+import ResizeSensor from "css-element-queries/src/ResizeSensor";
+
+import eventHandler from "../functions/event-handler";
 import Icons from "../media/icons";
 import COMPONENTS from "../components";
 
 export default class View extends COMPONENTS.Component {
 
+  static jsClass = 'View';
   static propTypes = {
     classes: PropTypes.string,
     style: PropTypes.object,
@@ -17,13 +21,20 @@ export default class View extends COMPONENTS.Component {
       PropTypes.object
     ])
   }
-
-  state = {
-    content: []
+  static defaultProps = {
+    ...COMPONENTS.Component.defaultProps,
+    breakpoints: {
+      xs: 0,
+      sm: 576,
+      md: 768,
+      lg: 992,
+      xl: 1200,
+      xxl: 1400
+    }
   }
 
-  localClasses = '';
-  localStyles = {};
+  breakpoint = 'xs';
+
   parseOpts = {
     replace: domNode => {
       let C7tReplace;
@@ -53,8 +64,14 @@ export default class View extends COMPONENTS.Component {
     this.sections = this.sections.bind(this);
     this.buildContent = this.buildContent.bind(this);
     Object.assign(this.state, {
+      content: [],
       localClasses: this.props.test ? 'test-view-wrapper' : ''
     });
+  }
+
+  componentDidMount() {
+    if (this.ref)
+      this.resizeSensor = new ResizeSensor(this.ref.current, this.onResize);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -75,6 +92,37 @@ export default class View extends COMPONENTS.Component {
     }
   }
 
+  componentWillUnmount() {
+    clearTimeout(this.onResizeTimeout);
+  }
+
+  onResize = () => {
+    clearTimeout(this.onResizeTimeout);
+    this.onResizeTimeout = setTimeout(() => {
+      if (!this.ref.current) return;
+      let { offsetWidth: width, offsetHeight: height } = this.ref.current;
+      if (typeof this.props.onResize === 'function') {
+        this.props.onResize({ width, height });
+      }
+      const { localClasses } = this.state;
+      const setClasses = new Set(localClasses.split(' '));
+      // TODO: no se toma en cuenta el ordenamiento de los breakpoints, ordenarlos
+      //       y buscar la manera de empatar automagicamente con sass $container-max-widths
+      const brKeys = Object.keys(this.props.breakpoints)
+      this.breakpoint = brKeys.filter(br => {
+        setClasses.delete(br);
+        return width >= this.props.breakpoints[br]
+      }).pop();
+      eventHandler.dispatch('resize.' + this.props.name, {
+        width, height,
+        breakpoint: this.breakpoint
+      });
+      setClasses.add(this.breakpoint);
+      this.setState({
+        localClasses: [...setClasses].join(' ')
+      });
+    }, 300);
+  }
 
   buildContent(content, index) {
     if (!content) return false;

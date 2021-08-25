@@ -8,11 +8,18 @@ export default class GridContainer extends Container {
     ...Container.defaultProps,
     colClasses: [],
     fullWidth: true,
-    row: 'height-auto'
+    row: 'height-auto',
+    breakpoints: {
+      xs: 0,
+      sm: 576,
+      md: 768,
+      lg: 992,
+      xl: 1200,
+      xxl: 1400
+    }
   }
 
   classes = 'row';
-
 
   grid(children = this.props.children) {
     const { colClasses } = this.props;
