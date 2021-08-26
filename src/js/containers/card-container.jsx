@@ -9,9 +9,10 @@ export default class CardContainer extends Container {
     fullWidth: true
   }
 
+  classes = 'card';
+
   constructor(props) {
     super(props);
-    this.state.containerClasses = 'card mb-3';
   }
 
   content(children = this.props.children) {

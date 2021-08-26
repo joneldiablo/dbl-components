@@ -63,6 +63,8 @@ export default class Container extends Component {
 
   componentWillUnmount() {
     clearTimeout(this.onResizeTimeout);
+    if (this.resizeSensor)
+      this.resizeSensor.detach();
   }
 
 }

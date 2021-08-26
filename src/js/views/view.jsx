@@ -94,6 +94,8 @@ export default class View extends COMPONENTS.Component {
 
   componentWillUnmount() {
     clearTimeout(this.onResizeTimeout);
+    if (this.resizeSensor)
+      this.resizeSensor.detach();
   }
 
   onResize = () => {

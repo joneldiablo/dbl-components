@@ -6,8 +6,6 @@ export default class ProportionalContainer extends Container {
   static jsClass = 'ProportionalContainer';
   static defaultProps = {
     ...Container.defaultProps,
-    containerClasses: '',
-    containerStyle: {},
     ratio: '100%',
     overflow: 'hidden',
     fullWidth: true
