@@ -1,6 +1,8 @@
 import React, { createRef } from "react";
 import PropTypes from "prop-types";
 
+import eventHandler from "./functions/event-handler";
+
 export default class Component extends React.Component {
 
   static jsClass = 'Component';
@@ -29,6 +31,14 @@ export default class Component extends React.Component {
   constructor(props) {
     super(props);
     this.ref = createRef();
+    this.eventHandlers = {
+      onClick: this.onEvent,
+      onChange: this.onEvent,
+      onMouseOver: this.onEvent,
+      onMouseOut: this.onEvent,
+      onKeyDown: this.onEvent,
+      onLoad: this.onEvent
+    }
   }
 
   get componentProps() {
@@ -39,6 +49,10 @@ export default class Component extends React.Component {
     return children;
   }
 
+  onEvent = (e) => {
+    eventHandler.dispatch(`${e.type}.${this.props.name}`, { state: this.state, value: e.value });
+  }
+
   render() {
     const { classes, style, name, tag, active } = this.props;
     const { localClasses, localStyles } = this.state;
@@ -46,7 +60,7 @@ export default class Component extends React.Component {
     const cn = [this.constructor.jsClass, this.name, this.classes, localClasses, classes];
     const s = Object.assign({}, this.style, localStyles, style);
     const Tag = tag || this.tag;
-    return (active ? <Tag id={name} className={cn.join(' ')} style={s} ref={this.ref} onClick={this.onClick} {...this.componentProps}>
+    return (active ? <Tag id={name} className={cn.join(' ')} style={s} ref={this.ref} {...this.eventHandlers} {...this.componentProps}>
       {content}
     </Tag> : <React.Fragment />);
   }

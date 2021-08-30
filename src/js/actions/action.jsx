@@ -1,4 +1,3 @@
-import React from "react";
 import eventHandler from "../functions/event-handler";
 import Component from "../component";
 
@@ -15,10 +14,10 @@ export default class ActionComponent extends Component {
   constructor(props) {
     super(props);
     this.state.localClasses = 'btn';
-    this.onClick = this.onClick.bind(this);
+    Object.assign(this.eventHandlers, { onClick: this.onClick });
   }
 
-  onClick(e) {
+  onClick = (e) => {
     const { value, name, id } = this.props;
     let dispatch = name;
     if (value || id) {

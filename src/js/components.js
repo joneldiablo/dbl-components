@@ -26,6 +26,7 @@ import DropdownButtonContainer from "./containers/dropdown-button-container";
 import ModalButtonContainer from "./containers/modal-button-container";
 import ModalContainer from "./containers/modal-container";
 import TabsContainer from "./containers/tabs-container";
+import DetailsContainer from "./containers/details-container";
 import fields from "./forms/fields";
 import Action from "./actions/action";
 import Link from "./navigation/react-router-link";
@@ -51,6 +52,7 @@ const COMPONENTS = {
   ModalContainer,
   ProportionalContainer,
   TabsContainer,
+  DetailsContainer,
   FormContainer,
   Form,
   ...fields,
