@@ -3,11 +3,19 @@
         @for $i from 1 through $grid-columns {
             > .auto-#{$key}-#{$i} {
                 flex: 0 0 auto;
-                width: percentage(divide($i, $grid-columns));
+                @if function-exists(divide) {
+                    width: percentage(divide($i, $grid-columns));
+                } @else {
+                    width: percentage(($i/$grid-columns));
+                }
             }
             &.row-auto-#{$key}-#{$i} > *:not(.resize-sensor) {
                 flex: 0 0 auto !important;
-                width: percentage(divide($i, $grid-columns)) !important;
+                @if function-exists(divide) {
+                    width: percentage(divide($i, $grid-columns)) !important;
+                } @else {
+                    width: percentage(($i/$grid-columns)) !important;
+                }
             }
         }
     }

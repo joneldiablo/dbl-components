@@ -35,7 +35,9 @@ export default class Field extends Component {
     required: PropTypes.bool,
     step: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     type: PropTypes.string.isRequired,
-    value: PropTypes.any
+    value: PropTypes.any,
+    accept: PropTypes.string,
+    message: PropTypes.string
   }
   static defaultProps = {
     ...Component.defaultProps,
@@ -150,7 +152,7 @@ export default class Field extends Component {
   }
 
   get inputProps() {
-    const { disabled, readOnly,
+    const { disabled, readOnly, accept,
       required, name, controlClasses,
       placeholder, step, noValidate,
       min, max, pattern, autoComplete, dir } = this.props;
@@ -174,6 +176,7 @@ export default class Field extends Component {
       readOnly,
       ref: this.input,
       dir,
+      accept,
       onChange: this.onChange,
       onInvalid: this.onInvalid,
       onFocus: this.onFocus
@@ -206,12 +209,22 @@ export default class Field extends Component {
   get errorMessageNode() {
     const { errorMessage, inline } = this.props;
     const { error } = this.state;
-    const errorNode = (<small className="text-danger">
+    const errorNode = (<p className="m-1 lh-1"><small className="text-danger">
       {errorMessage}
-    </small>);
+    </small></p>);
     return (error && errorMessage && (inline ?
       <div className="col-auto">{errorNode}</div> :
       errorNode));
+  }
+
+  get messageNode() {
+    const { message, inline } = this.props;
+    const node = (<p className="m-1 lh-1"><small>
+      {message}
+    </small></p>);
+    return (message && (inline ?
+      <div className="col-auto">{node}</div> :
+      node));
   }
 
   content(children = this.props.children) {
@@ -225,6 +238,7 @@ export default class Field extends Component {
         {this.inputNode}
         {(first !== 'label' || (placeholder && !label)) && this.labelNode}
         {this.errorMessageNode}
+        {this.messageNode}
       </div>
       {children}
     </>);

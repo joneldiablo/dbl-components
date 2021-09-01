@@ -117,7 +117,7 @@ export default class DropFileField extends Field {
     const { value } = this.state;
     return <div className="card-body">
       {(!value && label) && this.labelNode}
-      {children && (!value ? children[0] : children[1])}
+      {children && (!value ? children[0] : (children[1] || value))}
       {this.inputNode}
       <div>{this.errorMessageNode}</div>
       {(!children && value) && <p>{value}</p>}

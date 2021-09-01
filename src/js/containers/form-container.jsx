@@ -45,7 +45,20 @@ export default class FormContainer extends Component {
 
   componentWillUnmount() {
     clearTimeout(this.timeoutInvalid);
+    clearTimeout(this.timeoutOnchage);
     this.events.forEach(([eventName]) => eventHandler.unsubscribe(eventName, this.unique));
+  }
+
+  get componentProps() {
+    const props = Object.assign({}, this.props._props || {});
+    if (typeof props.onChange === 'function') {
+      const past = this.props._props.onChange;
+      props.onChange = () => {
+        if (this.timeoutOnchage) clearTimeout(this.timeoutOnchage);
+        this.timeoutOnchage = setTimeout(() => past(this.state.data), 310);
+      };
+    }
+    return props;
   }
 
   fieldsForEach(func) {

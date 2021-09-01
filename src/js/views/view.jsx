@@ -58,6 +58,7 @@ export default class View extends COMPONENTS.Component {
       />;
     }
   }
+  events = [];
 
   constructor(props) {
     super(props);
@@ -72,6 +73,7 @@ export default class View extends COMPONENTS.Component {
   componentDidMount() {
     if (this.ref)
       this.resizeSensor = new ResizeSensor(this.ref.current, this.onResize);
+    this.events.forEach(e => eventHandler.subscribe(...e));
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -96,6 +98,7 @@ export default class View extends COMPONENTS.Component {
     clearTimeout(this.onResizeTimeout);
     if (this.resizeSensor)
       this.resizeSensor.detach();
+    this.events.forEach(([eName]) => eventHandler.unsubscribe(eName));
   }
 
   onResize = () => {
@@ -173,7 +176,7 @@ export default class View extends COMPONENTS.Component {
     const cnSection = [componentProps.name + '-section'];
     if (this.props.test) cnSection.push('test-section-wrapper');
     return (['NavLink', 'Image', 'Link', 'Icons', 'Action', 'DropdownButtonContainer', 'ModalButtonContainer']
-      .includes(componentName) || ['span', 'small', 'a', 'br', 'hr', 'p', 'u', 's', 'b', 'img', 'nav', 'section'].includes(componentProps.tag) ?
+      .includes(componentName) || ['span', 'small', 'a', 'br', 'hr', 'p', 'u', 's', 'b', 'img', 'nav', 'section', 'strong'].includes(componentProps.tag) ?
       <Component key={i + '-' + componentProps.name} {...componentProps} /> :
       <section key={i + '-' + componentProps.name} className={cnSection.join(' ')}>
         <Component {...componentProps} />
