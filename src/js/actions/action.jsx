@@ -14,10 +14,11 @@ export default class ActionComponent extends Component {
   constructor(props) {
     super(props);
     this.state.localClasses = 'btn';
-    Object.assign(this.eventHandlers, { onClick: this.onClick });
+    this.eventHandlers.onClick = this.onClick;
   }
 
   onClick = (e) => {
+    e.stopPropagation();
     const { value, name, id } = this.props;
     let dispatch = name;
     if (value || id) {

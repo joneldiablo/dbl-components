@@ -12,6 +12,7 @@ import FileButtonField from "./fields/file-button-field";
 import DropFileField from "./fields/drop-file-field";
 import EditorField from "./fields/editor-field";
 import TextareaField from "./fields/textarea-field";
+import FileField from "./fields/file-field";
 import groups from "./groups";
 
 const fieldComponents = {
@@ -32,6 +33,7 @@ const fieldComponents = {
   DropFileField,
   EditorField,
   TextareaField,
+  FileField,
   ...groups
 };
 

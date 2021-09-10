@@ -37,13 +37,15 @@ export default class Field extends Component {
     type: PropTypes.string.isRequired,
     value: PropTypes.any,
     accept: PropTypes.string,
-    message: PropTypes.string
+    message: PropTypes.string,
+    floating: PropTypes.bool
   }
   static defaultProps = {
     ...Component.defaultProps,
     type: 'text',
     default: '',
-    first: 'label'
+    first: 'label',
+    floating: true
   }
 
   unique = randomS4();
@@ -137,7 +139,8 @@ export default class Field extends Component {
       this.input.current.setCustomValidity(message);
     }
     if (reset) {
-      this.setState({ value: this.props.default });
+      newState.value = this.props.default;
+      return this.setState(newState, this.returnData);
     }
     this.setState(newState);
   }
@@ -154,7 +157,7 @@ export default class Field extends Component {
   get inputProps() {
     const { disabled, readOnly, accept,
       required, name, controlClasses,
-      placeholder, step, noValidate,
+      placeholder, step, noValidate, multiple,
       min, max, pattern, autoComplete, dir } = this.props;
     const { value, error } = this.state;
     const cn = [
@@ -162,21 +165,13 @@ export default class Field extends Component {
       controlClasses, error ? 'is-invalid' : ''
     ];
     return {
-      id: name,
-      name,
-      pattern,
-      placeholder,
-      required,
-      autoComplete,
-      type: this.type,
-      value,
-      className: cn.join(' '),
-      min, max, step, noValidate,
-      disabled,
-      readOnly,
-      ref: this.input,
-      dir,
-      accept,
+      id: name, name,
+      pattern, placeholder,
+      required, autoComplete, type: this.type,
+      value, className: cn.join(' '),
+      min, max, step, noValidate, disabled,
+      readOnly, ref: this.input, dir, accept,
+      multiple,
       onChange: this.onChange,
       onInvalid: this.onInvalid,
       onFocus: this.onFocus
@@ -228,15 +223,15 @@ export default class Field extends Component {
   }
 
   content(children = this.props.children) {
-    const { inline, first, placeholder, label } = this.props;
+    const { inline, first, placeholder, label, floating } = this.props;
     const cn = ['position-relative'];
     if (inline) cn.push('row gx-2 align-items-center');
-    if (placeholder && !label) cn.push('form-floating');
+    if (placeholder && !label && floating) cn.push('form-floating');
     return (<>
       <div className={cn.join(' ')}>
-        {(first === 'label' && label) && this.labelNode}
+        {floating && (first === 'label' && label) && this.labelNode}
         {this.inputNode}
-        {(first !== 'label' || (placeholder && !label)) && this.labelNode}
+        {floating && (first !== 'label' || (placeholder && !label)) && this.labelNode}
         {this.errorMessageNode}
         {this.messageNode}
       </div>

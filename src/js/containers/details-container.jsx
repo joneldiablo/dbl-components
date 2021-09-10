@@ -1,9 +1,15 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Component from "../component";
 
 export default class DetailsContainer extends Component {
 
   static jsClass = 'DetailsContainer';
+  static propTypes = {
+    ...Component.propTypes,
+    open: PropTypes.bool
+  };
+
   tag = 'details';
 
   constructor(props) {
@@ -12,9 +18,9 @@ export default class DetailsContainer extends Component {
   }
 
   content(children = this.props.children) {
-    const { containerClasses } = this.props;
+    const { containerClasses, labelClasses } = this.props;
     return <>
-      <summary>{this.props.label}</summary>
+      <summary className={labelClasses}>{this.props.label}</summary>
       <div className={containerClasses}>
         {children}
       </div>

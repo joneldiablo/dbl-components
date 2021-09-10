@@ -35,6 +35,7 @@ export default class FormContainer extends Component {
       this.events.push([field.name, this.onChange, this.unique]);
       this.events.push(['invalid.' + field.name, this.onInvalidField, this.unique]);
     });
+    delete this.eventHandlers.onChange;
   }
 
   componentDidMount() {
@@ -78,7 +79,10 @@ export default class FormContainer extends Component {
     this.setState({ data: dataDefault });
   }
 
-  onUpdate = ({ data, reset }) => {
+  onUpdate = ({ data, reset, default: dataDefault }) => {
+    if (dataDefault) {
+      this.onDefault(dataDefault);
+    }
     if (data) {
       Object.keys(data).forEach(fieldName => {
         eventHandler.dispatch('update.' + fieldName, { value: data[fieldName] });
@@ -91,8 +95,8 @@ export default class FormContainer extends Component {
   }
 
   onDefault = (data) => {
-    Object.keys(data).forEach(fieldName => {
-      eventHandler.dispatch('update.' + fieldName, { value: data[fieldName] });
+    this.fieldsForEach(field => {
+      eventHandler.dispatch('update.' + field.name, { value: data[field.name] });
     });
   }
 
