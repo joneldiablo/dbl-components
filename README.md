@@ -23,7 +23,6 @@ TODO:
 * Modificar componente menú para que los elementos funcionen igual que el resto de componentes el toggle se le debe pasar el nombre del evento que ejecuta el toggle text para colapsar el texto dejando únicamente el ícono
 * Crear nuevo componente tabla a la cual se le pasen las columnas como contenido
   * Que la nueva tabla controle las columnas visibles pasandole un arreglo de nombres
-* Crear toda la lógica de cambio y ajustes por tamaño de componente, auto responsive
 * permitir pasar componente react en "component"
 * hacer que ReactRouterSchecma funcione igual que view!!!! pufffff que se pueda usar uno u otro o fucionarlos!!!!
 * permitir indicar un arreglo de ubicaciones dónde colocar las rutas hijas, actualmente funciona con `{"routesIn":"string"}` modificarlo de tal forma que se pueda indicar nombe del componente que habrá de mostrar cada sección, por ejemplo, `{"routesIn":componentNames[]}` || `{"routesIn":{"componentWhereToPut1":"routeNameWhichMove"}}`
@@ -31,5 +30,18 @@ TODO:
 * separar functions en una librería aparte para poder usarla, por ejemplo, en proyectos backend.
 
 
-=======
-* permitir flat object, {"path/to/object":{"name":"componenteX"}} en el schema de rutas y controladores
+
+=============
+
+vectores de reconstrucción:
+ - control de contenido de forma recursiva
+ - control de estado lineal
+ - control de eventos
+ - estado global
+ - composiciones
+ - modulos
+ - autoresponsive
+ - no usar react O.o
+ - control de rutas
+ - control de elementos: 
+   [páginas/rutas, componentes, menus, webservices/sockets, eventos]

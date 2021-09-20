@@ -4257,6 +4257,11 @@ detab@2.0.4:
   dependencies:
     repeat-string "^1.5.4"
 
+details-polyfill@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/details-polyfill/-/details-polyfill-1.2.0.tgz#daa3e84d3842fee2555118ee1a521fa53bb1392f"
+  integrity sha512-jnozpT1eo4c61PGY14Hv1zzqRW+jbrYt8kvd2QwLO9wec0yD0o+3U+CE8SDS4zCRYjZmSedi6Wln5y91VFrZEg==
+
 detect-port-alt@1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/detect-port-alt/-/detect-port-alt-1.1.6.tgz#24707deabe932d4a3cf621302027c2b266568275"

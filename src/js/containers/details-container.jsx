@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Component from "../component";
+import "details-polyfill";
 
 export default class DetailsContainer extends Component {
 

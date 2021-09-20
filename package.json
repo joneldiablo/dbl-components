@@ -1,6 +1,6 @@
 {
   "name": "dbl-components",
-  "version": "1.1.42",
+  "version": "1.1.43",
   "description": "Framework based on bootstrap 5",
   "main": "lib/js/index.js",
   "scripts": {
@@ -64,6 +64,7 @@
     "@ckeditor/ckeditor5-react": "^3.0.2",
     "@splidejs/react-splide": "^0.4.4",
     "css-element-queries": "^1.2.3",
+    "details-polyfill": "^1.2.0",
     "flat": "^5.0.2",
     "html-react-parser": "^1.2.4",
     "jexcel": "^4.4.1",
