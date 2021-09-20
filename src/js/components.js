@@ -38,7 +38,7 @@ const COMPONENTS = {
   Container,
   GridContainer,
   GridSwitchContainer,
-  HeroContainer,
+  //HeroContainer,
   CardContainer,
   AspectRatioContainer,
   Navigation,
