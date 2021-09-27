@@ -45,7 +45,10 @@ const FORMATS = {
     props.data = data;
     return buildContent(props);
   },
-  date: (raw, { format: f = 'DD/MM/YYYY' } = {}) => raw ? moment.utc(raw).format(f) : '',
+  date: (raw, { format: f = 'DD/MM/YYYY', locale = false } = {}) =>
+    raw ? locale ? moment(raw).format(f) : moment.utc(raw).format(f) : '',
+  datetime: (raw, { format: f = 'DD/MM/YYYY HH:mm', locale = false } = {}) =>
+    raw ? locale ? moment(raw).format(f) : moment.utc(raw).format(f) : '',
   currency: (raw, { locale = 'en-US', currency = 'USD' } = {}) =>
     (new Intl.NumberFormat(locale, {
       style: 'currency',
