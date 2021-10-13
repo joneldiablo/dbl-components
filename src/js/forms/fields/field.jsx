@@ -155,8 +155,8 @@ export default class Field extends Component {
   }
 
   get inputProps() {
-    const { disabled, readOnly, accept,
-      required, name, controlClasses,
+    const { disabled, readOnly, accept, minLength,
+      required, name, controlClasses, maxLength,
       placeholder, step, noValidate, multiple,
       min, max, pattern, autoComplete, dir } = this.props;
     const { value, error } = this.state;
@@ -171,7 +171,7 @@ export default class Field extends Component {
       value, className: cn.join(' '),
       min, max, step, noValidate, disabled,
       readOnly, ref: this.input, dir, accept,
-      multiple,
+      multiple, maxLength, minLength,
       onChange: this.onChange,
       onInvalid: this.onInvalid,
       onFocus: this.onFocus

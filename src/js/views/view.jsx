@@ -3,10 +3,13 @@ import PropTypes from "prop-types";
 import { NavLink, Link } from "react-router-dom";
 import parseReact, { domToReact, attributesToProps } from "html-react-parser";
 import ResizeSensor from "css-element-queries/src/ResizeSensor";
+import { install } from "resize-observer";
 
 import eventHandler from "../functions/event-handler";
 import Icons from "../media/icons";
 import COMPONENTS from "../components";
+
+install();
 
 export default class View extends COMPONENTS.Component {
 
@@ -179,7 +182,7 @@ export default class View extends COMPONENTS.Component {
       .includes(componentName) || ['span', 'small', 'a', 'br',
         'hr', 'p', 'u', 's', 'b', 'img', 'nav', 'section',
         'strong', 'article', 'aside', 'i', 'h1',
-        'h2', 'h3', 'h4', 'h5', 'h6', 'head'
+        'h2', 'h3', 'h4', 'h5', 'h6', 'head', 'ol', 'ul'
       ].includes(componentProps.tag) ?
       <Component key={i + '-' + componentProps.name} {...componentProps} /> :
       <section key={i + '-' + componentProps.name} className={cnSection.join(' ')}>

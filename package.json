@@ -1,6 +1,6 @@
 {
   "name": "dbl-components",
-  "version": "1.1.47",
+  "version": "1.1.48",
   "description": "Framework based on bootstrap 5",
   "main": "lib/js/index.js",
   "scripts": {
@@ -74,6 +74,7 @@
     "react-icomoon": "^2.1.5",
     "react-konva": "^17.0.0-0",
     "react-youtube": "^7.13.1",
+    "resize-observer": "^1.0.2",
     "url-join": "^4.0.1"
   }
 }

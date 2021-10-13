@@ -1,7 +1,7 @@
 import ResizeSensor from "css-element-queries/src/ResizeSensor";
 
 import Component from "../component";
-import eventHandler from "../functions/event-handler"
+import eventHandler from "../functions/event-handler";
 
 export default class Container extends Component {
 

@@ -11,6 +11,13 @@ export default class FileField extends Field {
 
   static jsClass = 'FileField';
 
+  constructor(props) {
+    super(props);
+    Object.assign(this.state, {
+      value: ''
+    });
+  }
+
   get type() {
     return 'file';
   }
@@ -56,7 +63,30 @@ export default class FileField extends Field {
 
   onUpdate(params) {
     if (params.value) return;
-    super.onUpdate({...params});
+    super.onUpdate({ ...params });
+  }
+
+  get inputProps() {
+    const ip = super.inputProps;
+    ip.required = ip.required && !this.props.value;
+    delete ip.value;
+    return ip;
+  }
+
+  get inputNode() {
+    const { inline, value, disabled, readOnly } = this.props;
+    const inputNode = (<>
+      {!(value && (disabled || readOnly)) && <input {...this.inputProps} />}
+      {value && (disabled || readOnly) && <p className="form-control mb-1">
+        <a href={value} target="_blank">{value.split('/').pop()}</a>
+      </p>}
+      {value && !(disabled || readOnly) && <p className="text-end my-1">
+        <small><a href={value} target="_blank">{value.split('/').pop()}</a></small>
+      </p>}
+    </>);
+    return (inline ? <div className="col-auto">
+      {inputNode}
+    </div> : inputNode);
   }
 
 }
