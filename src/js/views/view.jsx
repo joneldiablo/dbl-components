@@ -9,7 +9,7 @@ import eventHandler from "../functions/event-handler";
 import Icons from "../media/icons";
 import COMPONENTS from "../components";
 
-install();
+if (!window.ResizeObserver) install();
 
 export default class View extends COMPONENTS.Component {
 
