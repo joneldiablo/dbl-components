@@ -11,7 +11,7 @@ import {
   Switch
 } from "react-router-dom";
 import { hash } from "../functions";
-import views from "../views";
+import controllers from "../controllers";
 
 const routePropTypes = {
   path: PropTypes.oneOfType([
@@ -36,12 +36,11 @@ const schemaPropTypes = {
   test: PropTypes.bool,
   theme: PropTypes.string,
   routes: routePropTypes.routes,
-  isAuth: PropTypes.func
+  redirect: PropTypes.func
 }
 
 const schemaDefaultProps = {
-  routes: [],
-  views: []
+  routes: []
 }
 
 export default class SchemaController extends React.Component {
@@ -95,7 +94,7 @@ export default class SchemaController extends React.Component {
    * permite que el schema tenga un arreglo de paths
    **/
   views = (route, i) => {
-    let View = views[route.component] || (views.View);
+    let Controller = controllers[route.component] || (controllers.Controller);
     let subroutes = false;
     if (Array.isArray(route.routes)) subroutes = [];
     else if (typeof route.routes === 'object') {
@@ -150,9 +149,9 @@ export default class SchemaController extends React.Component {
         .find(cl => cl.endsWith('-view'));
       document.body.classList.remove(viewClassName);
       document.body.classList.add(route.name + '-view');
-      return (<View {...route} {...props} test={this.props.test}>
+      return (<Controller {...route} {...props} test={this.props.test}>
         <Switch>{subroutes}</Switch>
-      </View>);
+      </Controller>);
     }
     return (<Route key={i + '-' + route.name} {...routeProps} render={RedirViewManager} />);
   }

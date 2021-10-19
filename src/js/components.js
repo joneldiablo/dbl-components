@@ -30,7 +30,8 @@ import DetailsContainer from "./containers/details-container";
 import fields from "./forms/fields";
 import Action from "./actions/action";
 import Link from "./navigation/react-router-link";
-import NavLink from "./navigation/raect-router-navlink";
+import NavLink from "./navigation/react-router-navlink";
+import { RouterSchema } from "./react-router-schema/react-router-schema";
 
 const COMPONENTS = {
   Debug,
@@ -62,7 +63,8 @@ const COMPONENTS = {
   Image,
   Action,
   ListContainer,
-  SlideContainer
+  SlideContainer,
+  RouterSchema
 }
 
 export default COMPONENTS;

@@ -11,13 +11,6 @@ export default class FileField extends Field {
 
   static jsClass = 'FileField';
 
-  constructor(props) {
-    super(props);
-    Object.assign(this.state, {
-      value: ''
-    });
-  }
-
   get type() {
     return 'file';
   }
@@ -61,27 +54,27 @@ export default class FileField extends Field {
     });
   }
 
-  onUpdate(params) {
-    if (params.value) return;
-    super.onUpdate({ ...params });
-  }
-
   get inputProps() {
     const ip = super.inputProps;
-    ip.required = ip.required && !this.props.value;
+    ip.required = ip.required && !(this.state.value);
     delete ip.value;
     return ip;
   }
 
   get inputNode() {
-    const { inline, value, disabled, readOnly } = this.props;
+    const { inline, disabled, readOnly } = this.props;
+    const { value } = this.state;
     const inputNode = (<>
       {!(value && (disabled || readOnly)) && <input {...this.inputProps} />}
       {value && (disabled || readOnly) && <p className="form-control mb-1">
-        <a href={value} target="_blank">{value.split('/').pop()}</a>
+        <a href={value} target="_blank">
+          {value.split(/[\/\\]/).pop().split('?')[0]}
+        </a>
       </p>}
       {value && !(disabled || readOnly) && <p className="text-end my-1">
-        <small><a href={value} target="_blank">{value.split('/').pop()}</a></small>
+        <small><a href={value} target="_blank">
+          {value.split(/[\/\\]/).pop().split('?')[0]}
+        </a></small>
       </p>}
     </>);
     return (inline ? <div className="col-auto">

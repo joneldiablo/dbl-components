@@ -81,28 +81,29 @@ export default class ModalContainer extends Component {
     const cg = children.reduce((reducer, child) => {
       if (!child) return reducer;
       // Se separa el contenido según tipo de container header, body, footer o ninguno
-      if (typeof child === 'string') {
-        reducer[1].push(child);
+      if (['string', 'number'].includes(typeof child)) {
+        reducer.body.push(child);
         return reducer;
       }
-      const childProps = child.props.container ? child.props : child.props.children.props;
-      const container = reducer[childProps.container] || reducer.content;
+      const childProps = child.props.container ? child.props : child.props.children?.props;
+      const container = (childProps && reducer[childProps.container]) || reducer.content;
       container.push(child);
       return reducer;
     }, { header: [], body: [], footer: [], content: [] });
-    return (showModal && <div ref={this.onModalRef} className="modal fade" id={name + '-modal'} tabIndex="-1" >
-      <div className={cnModal.join(' ')} >
-        <div className="modal-content">
-          {showClose && <button type='button'
-            className='btn-close position-absolute end-0 m-3'
-            data-bs-dismiss='modal' style={{ zIndex: 1 }}></button>}
-          {cg.content}
-          {!!cg.header.length && <div className={'modal-header ' + headerClasses}>{cg.header}</div>}
-          {!!cg.body.length && <div className={'modal-body ' + bodyClasses}>{cg.body}</div>}
-          {!!cg.footer.length && <div className={'modal-footer ' + footerClasses}>{cg.footer}</div>}
+    return (showModal &&
+      <div ref={this.onModalRef} className="modal fade" id={name + '-modal'} tabIndex="-1" >
+        <div className={cnModal.join(' ')} >
+          <div className="modal-content">
+            {showClose && <button type='button'
+              className='btn-close position-absolute end-0 m-3'
+              data-bs-dismiss='modal' style={{ zIndex: 1 }}></button>}
+            {cg.content}
+            {!!cg.header.length && <div className={'modal-header ' + headerClasses}>{cg.header}</div>}
+            {!!cg.body.length && <div className={'modal-body ' + bodyClasses}>{cg.body}</div>}
+            {!!cg.footer.length && <div className={'modal-footer ' + footerClasses}>{cg.footer}</div>}
+          </div>
         </div>
-      </div>
-    </div>);
+      </div>);
   }
 
 }
