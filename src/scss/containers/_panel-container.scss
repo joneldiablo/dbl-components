@@ -1,0 +1,23 @@
+.PanelContainer {
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-shadow: 0.125rem 0 1rem rgba($black, 0.075);
+  &.inset {
+    box-shadow: 0.125rem 0 1rem inset rgba($black, 0.075);
+  }
+  .logo-Component {
+    height: 125px;
+    object-fit: contain;
+    display: block;
+    margin: auto;
+    //funciona pero no se ve smooty
+    //transition: width 0.2s ease;
+  }
+  &.fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 200;
+  }
+}

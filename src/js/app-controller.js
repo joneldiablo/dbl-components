@@ -1,7 +1,7 @@
-import resolveRefs from "dbl-components/lib/js/functions/resolve-refs";
-import { iconSet } from "dbl-components/lib/js/media/icons";
-import { addControllers } from "dbl-components/lib/js/controllers";
-import { addComponents } from "dbl-components/lib/js/components";
+import resolveRefs from "./functions/resolve-refs";
+import { iconSet } from "./media/icons";
+import { addControllers } from "./controllers";
+import { addComponents } from "./components";
 
 const state = {};
 

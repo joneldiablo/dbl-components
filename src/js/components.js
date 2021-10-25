@@ -32,6 +32,7 @@ import Action from "./actions/action";
 import Link from "./navigation/react-router-link";
 import NavLink from "./navigation/react-router-navlink";
 import { RouterSchema } from "./react-router-schema/react-router-schema";
+import PanelContainer from "./containers/panel-container/panel-container";
 
 const COMPONENTS = {
   Debug,
@@ -64,7 +65,8 @@ const COMPONENTS = {
   Action,
   ListContainer,
   SlideContainer,
-  RouterSchema
+  RouterSchema,
+  PanelContainer
 }
 
 export default COMPONENTS;

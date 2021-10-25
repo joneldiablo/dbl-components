@@ -27,8 +27,8 @@ const routePropTypes = {
   sensitive: PropTypes.bool,
   redirect: PropTypes.string,
   routes: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape(routePropTypes)),
-    PropTypes.shape(routePropTypes)
+    PropTypes.arrayOf(PropTypes.shape(this)),
+    PropTypes.shape(this)
   ])
 };
 

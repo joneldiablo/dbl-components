@@ -1,0 +1,21 @@
+[
+  {
+    "name": "logoLink",
+    "component": "Link",
+    "to": "/",
+    "content": {
+      "name": "logo",
+      "tag": "img"
+    }
+  },
+  {
+    "name": "panelMenu",
+    "component": "ListContainer",
+    "classes": "py-2 list-unstyled",
+    "liClasses": "mb-2"
+  },
+  {
+    "name": "panelContent",
+    "classes": "py-2"
+  }
+]
