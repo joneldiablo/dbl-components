@@ -41,11 +41,11 @@ export default class JsonRender {
   buildContent(content, index) {
     if (!content) return false;
     if (typeof content === 'string') {
-      return (<React.Fragment key={index + '-' + content.name}>
+      return (<React.Fragment key={content.name || index}>
         {parseReact(content, this.parseOpts)}
       </React.Fragment>);
     } else if (React.isValidElement(content)) {
-      content.key = index + '-' + content.name;
+      content.key = content.name || index;
       return content;
     } else if (Array.isArray(content)) return content.map(this.buildContent);
     else if (typeof content === 'object' && typeof content.name !== 'string')
@@ -87,8 +87,8 @@ export default class JsonRender {
       .includes(componentName);
     const Wrapper = Component.wrapper || 'section';
     return (exclusionSec || componentProps.tag ?
-      <Component key={i + '-' + componentProps.name} {...componentProps} /> :
-      <Wrapper key={i + '-' + componentProps.name} className={cnSection.join(' ')}>
+      <Component key={componentProps.name || i} {...componentProps} /> :
+      <Wrapper key={componentProps.name || i} className={cnSection.join(' ')}>
         <Component {...componentProps} />
       </Wrapper>);
   }
