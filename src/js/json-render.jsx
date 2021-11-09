@@ -21,9 +21,20 @@ export default class JsonRender {
         case 'icons':
           C7tReplace = Icons;
           break;
+        case 'textarea':
+        case 'input':
+          domNode.defaultValue = domNode.value;
+          domNode.defaultChecked = domNode.checked;
+          delete domNode.value;
+          delete domNode.checked;
         default:
           return;
       }
+      Object.keys(domNode).forEach(k => {
+        if (k.match(/^on[A-Z]/)) {
+          domNode[k] = this.props[k];
+        }
+      });
       return <C7tReplace
         {...attributesToProps(domNode.attribs)}
         children={domToReact(domNode.children, this.parseOpts)}
@@ -40,7 +51,9 @@ export default class JsonRender {
 
   buildContent(content, index) {
     if (!content) return false;
-    if (typeof content === 'string') {
+    if (typeof content === 'number') {
+      return content;
+    } else if (typeof content === 'string') {
       return (<React.Fragment key={content.name || index}>
         {parseReact(content, this.parseOpts)}
       </React.Fragment>);

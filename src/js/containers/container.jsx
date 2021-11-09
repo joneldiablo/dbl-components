@@ -46,7 +46,7 @@ export default class Container extends Component {
         breakpoint: this.breakpoint
       });
       this.updateSize();
-    }, 300);
+    }, 200);
   }
 
   componentDidMount() {

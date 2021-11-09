@@ -30,7 +30,7 @@ export default class SwitchField extends CheckboxField {
     return <div key={i + '-' + item.value} className={cn.join(' ')} >
       {item.label && <>
         <label className="form-check-label" htmlFor={id}>{item.label}</label>
-        <br />
+        {!(this.props.inline || item.inline) && <br />}
       </>}
       {labels[0]}<input {...inputProps} />{labels[1]}
     </div>
