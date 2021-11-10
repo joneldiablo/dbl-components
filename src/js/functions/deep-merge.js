@@ -7,11 +7,13 @@ function isObject(item) {
   return (item && typeof item === 'object' && !Array.isArray(item));
 }
 
-export function mergeWithMutation(target, mutation) {
+export const mergeWithMutation = (target, mutation, ommit = [], parentKey = '') => {
   for (const key in target) {
-    if (isObject(target[key])) {
-      Object.assign(target[key], mutation(key, target) || {});
-      mergeWithMutation(target[key], mutation);
+    if (!ommit.includes(key) && typeof target[key] === 'object') {
+      const keyFixed = Array.isArray(target) ? parentKey + '.' + key : key;
+      const merge = mutation(keyFixed, target);
+      if (merge) deepMerge(target[key], merge);
+      mergeWithMutation(target[key], mutation, ommit, key);
     }
   }
   return target;
