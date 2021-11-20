@@ -64,7 +64,8 @@ export default class FormContainer extends Component {
 
   fieldsForEach(func) {
     const { fields } = this.props;
-    if (Array.isArray(fields)) fields.forEach(func);
+    if (Array.isArray(fields))
+      fields.forEach((f, i) => func(typeof f === 'string' ? { name: f } : f, i));
     else Object.keys(fields)
       .forEach((name, i) => func({ name, ...fields[name] }, i));
   }

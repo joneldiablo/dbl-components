@@ -11,7 +11,7 @@ export const mergeWithMutation = (target, mutation, ommit = [], parentKey = '') 
   for (const key in target) {
     if (!ommit.includes(key) && typeof target[key] === 'object') {
       const keyFixed = Array.isArray(target) ? parentKey + '.' + key : key;
-      const merge = mutation(keyFixed, target);
+      const merge = mutation(keyFixed, target[key]);
       if (merge) deepMerge(target[key], merge);
       mergeWithMutation(target[key], mutation, ommit, key);
     }
@@ -31,14 +31,10 @@ export default function deepMerge(target, ...sources) {
   if (isObject(target) && isObject(source)) {
     for (const key in source) {
       if (isObject(source[key])) {
-        if (!target[key]) Object.assign(target, {
-          [key]: {}
-        });
+        if (!target[key]) Object.assign(target, { [key]: {} });
         deepMerge(target[key], source[key]);
       } else if (typeof source[key] !== 'undefined') {
-        Object.assign(target, {
-          [key]: source[key]
-        });
+        Object.assign(target, { [key]: source[key] });
       }
     }
   }
