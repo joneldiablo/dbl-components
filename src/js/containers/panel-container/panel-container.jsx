@@ -33,12 +33,13 @@ export default class PanelContainer extends Container {
       onMouseEnter: this.onMouseEnter,
       onMouseLeave: this.onMouseLeave
     }
+    const contentPanel = this.props.menu?.map(this.itemBuild);
     Object.assign(this.state, {
       logo: { _props: { src: this.props.icon, width: this.props.iconSize } },
       open: false,
       panelMenu: {
         active: !!this.props.menu,
-        content: this.props.menu?.map(this.itemBuild) || undefined
+        content: contentPanel
       },
       logoLink: { to: this.props.link || '/' },
       classSet: new Set(['close']),
@@ -85,12 +86,12 @@ export default class PanelContainer extends Container {
     return this.state[sectionName];
   }
 
-  itemBuild = raw => {
+  itemBuild = (raw, i) => {
     const { label, icon, to,
       exact, activeClassName,
       content: contentExtra, menu, ...rest } = raw;
     const itemWrapper = deepMerge({}, listItem, rest);
-    const build = mergeWithMutation(itemWrapper, (sectionName, section) => {
+    const mutation = (sectionName, section) => {
       switch (sectionName) {
         case 'item':
           return { name: raw.name };
@@ -123,16 +124,6 @@ export default class PanelContainer extends Container {
             activeClassName: activeClassName,
             content: label
           }
-        case 'itemSubmenu':
-          return {
-            active: !!menu,
-            name: itemWrapper.name + 'Submenu',
-            content: menu?.map(this.itemBuild) || undefined,
-            style: {
-              paddingLeft: !!icon &&
-                `calc(${this.props.iconSize}px + .5rem)`
-            }
-          };
         case 'itemContentExtra':
           return {
             active: !!contentExtra,
@@ -147,9 +138,25 @@ export default class PanelContainer extends Container {
           break;
       }
       return false;
-    });
+    }
+    mergeWithMutation(itemWrapper, mutation, ['style', 'menu', 'itemSubmenu']);
     itemWrapper.name = raw.name + 'Wrapper';
-    return build;
+    //INFO: por alguna razón se putea con "maximun call stack" cuando mando llamar 
+    //      los submenus dentro de mutation, por eso los he tenido que sacar
+    if (menu) {
+      const subMenu = menu.map(this.itemBuild);
+      itemWrapper.content.itemSubmenu = {
+        name: itemWrapper.name + 'Submenu',
+        component: 'ListContainer',
+        classes: 'list-unstyled col w-100',
+        content: subMenu,
+        style: {
+          paddingLeft: !!icon &&
+            `calc(${this.props.iconSize}px + .5rem)`
+        }
+      }
+    } else delete itemWrapper.content.itemSubmenu;
+    return itemWrapper;
   }
 
   content(children = this.props.children) {
