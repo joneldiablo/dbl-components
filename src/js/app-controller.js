@@ -2,6 +2,7 @@ import resolveRefs from "./functions/resolve-refs";
 import { iconSet } from "./media/icons";
 import { addControllers } from "./controllers";
 import { addComponents } from "./components";
+import eventHandler from "./functions/event-handler";
 
 const state = {};
 
@@ -44,10 +45,10 @@ export default class AppController {
     this.props = props;
   }
 
-  setState(data) {
+  setState(data, dispatch = true) {
     Object.assign(state, data);
     Object.keys(data).forEach(key => {
-      eventHandler.dispatch(key, data[key]);
+      if (dispatch) eventHandler.dispatch(key, data[key]);
     });
   }
 
