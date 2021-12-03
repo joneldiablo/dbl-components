@@ -33,6 +33,8 @@ import Link from "./navigation/react-router-link";
 import NavLink from "./navigation/react-router-navlink";
 import { RouterSchema } from "./react-router-schema/react-router-schema";
 import PanelContainer from "./containers/panel-container/panel-container";
+import FetchContainer from "./containers/fetch-container";
+import Video from "./media/video";
 
 const COMPONENTS = {
   Debug,
@@ -66,7 +68,9 @@ const COMPONENTS = {
   ListContainer,
   SlideContainer,
   RouterSchema,
-  PanelContainer
+  PanelContainer,
+  FetchContainer,
+  Video
 }
 
 export default COMPONENTS;

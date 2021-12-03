@@ -92,7 +92,7 @@ export default class Navigation extends Component {
           {open &&
             <>
               <span className="label">{item.label}</span>
-              {item.menu?.length &&
+              {!!item.menu?.length &&
                 <span className="float-end caret-icon" data-bs-toggle="collapse" data-bs-target={'#' + item.name + '-collapse'} onClick={(e) => { e.stopPropagation(); e.preventDefault() }}>
                   <Icons icon={carets[item.name]} {...iconStyle} />
                 </span>}
@@ -119,7 +119,7 @@ export default class Navigation extends Component {
         >{innerNode}
         </span>
       }
-      {item.menu?.length &&
+      {!!item.menu?.length &&
         <div ref={(ref) => this.collapseRef(ref, item)} id={item.name + '-collapse'} className="collapse">
           {item.menu.map(this.link)}
         </div>}
