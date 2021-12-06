@@ -10,6 +10,7 @@ export default class ModalContainer extends Component {
   static defaultProps = {
     ...Component.defaultProps,
     modal: {},
+    modalClasses: '',
     headerClasses: '',
     bodyClasses: '',
     footerClasses: ''
