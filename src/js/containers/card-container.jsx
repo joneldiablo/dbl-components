@@ -19,6 +19,9 @@ export default class CardContainer extends Container {
     let header = [];
     let body = [];
     let footer = [];
+    let { headerClasses,
+      bodyClasses,
+      footerClasses } = this.props;
     children.forEach((child, i) => {
       if (!child) return;
       const props = child.type === 'section' ? child.props.children.props : child.props;
@@ -31,11 +34,13 @@ export default class CardContainer extends Container {
       }
     });
     return <>
-      {!!header.length && <div className="card-header">{header}</div>}
-      <div className="card-body">
+      {!!header.length &&
+        <div className={'card-header ' + headerClasses}>{header}</div>}
+      <div className={'card-body ' + bodyClasses}>
         {body}
       </div>
-      {!!footer.length && <div className="card-footer">{footer}</div>}
+      {!!footer.length &&
+        <div className={'card-footer ' + footerClasses}>{footer}</div>}
     </>;
   }
 

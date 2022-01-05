@@ -1,46 +1,7 @@
 import React from "react";
-import { NavLink, Link } from "react-router-dom";
-import parseReact, { domToReact, attributesToProps } from "html-react-parser";
-
-import Icons from "./media/icons";
-import COMPONENTS from "./components";
+import COMPONENTS from "./components-server";
 
 export default class JsonRender {
-
-  parseOpts = {
-    replace: domNode => {
-      let C7tReplace;
-      switch (domNode.name) {
-        case 'navlink':
-          C7tReplace = NavLink;
-          break;
-        case 'a':
-          if (!domNode.attribs.to && domNode.attribs.href) return;
-          C7tReplace = Link;
-          break;
-        case 'icons':
-          C7tReplace = Icons;
-          break;
-        case 'textarea':
-        case 'input':
-          domNode.defaultValue = domNode.value;
-          domNode.defaultChecked = domNode.checked;
-          delete domNode.value;
-          delete domNode.checked;
-        default:
-          return;
-      }
-      Object.keys(domNode).forEach(k => {
-        if (k.match(/^on[A-Z]/)) {
-          domNode[k] = this.props[k];
-        }
-      });
-      return <C7tReplace
-        {...attributesToProps(domNode.attribs)}
-        children={domToReact(domNode.children, this.parseOpts)}
-      />;
-    }
-  }
 
   constructor(props, mutations) {
     this.props = props;
@@ -54,9 +15,8 @@ export default class JsonRender {
     if (typeof content === 'number') {
       return content;
     } else if (typeof content === 'string') {
-      return (<React.Fragment key={content.name || index}>
-        {parseReact(content, this.parseOpts)}
-      </React.Fragment>);
+      return (<div key={content.name || index}
+        dangerouslySetInnerHTML={{ __html: content }} />);
     } else if (React.isValidElement(content)) {
       content.key = content.name || index;
       return content;
@@ -78,7 +38,7 @@ export default class JsonRender {
     let Component = COMPONENTS[componentName] || (COMPONENTS.Component);
     let componentProps = {
       ...section,
-      label: this.buildContent(label),
+      label: (typeof label === 'object' ? this.buildContent(label) : label),
       location,
       match,
       history
@@ -95,7 +55,7 @@ export default class JsonRender {
 
     const cnSection = [componentProps.name + '-section'];
     if (this.props.test) cnSection.push('test-section-wrapper');
-    const exclusionSec = ['NavLink', 'Image', 'Link', 'Icons', 'Action',
+    const exclusionSec = ['Image', 'Icons', 'Action',
       'DropdownButtonContainer', 'ModalButtonContainer']
       .includes(componentName);
     const Wrapper = Component.wrapper || 'section';

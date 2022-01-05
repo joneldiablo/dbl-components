@@ -7,14 +7,14 @@ export default class AutocompleteField extends Field {
   static jsClass = 'AutocompleteField';
   static defaultProps = {
     ...Field.defaultProps,
-    maxLength: 6
+    maxItems: 6
   }
 
   constructor(props) {
     super(props);
     this.menuDropdown = createRef();
-    this.state.options = (props.options || []).slice(0, props.maxLength);
-    this.state.more = !!(props.options || []).slice(props.maxLength).length;
+    this.state.options = (props.options || []).slice(0, props.maxItems);
+    this.state.more = !!(props.options || []).slice(props.maxItems).length;
     this.state.showDropdown = '';
   }
 
@@ -26,13 +26,13 @@ export default class AutocompleteField extends Field {
   onFilter(value = this.state.value) {
     const { options } = this.props;
     if (options?.length) {
-      const { maxLength } = this.props;
+      const { maxItems } = this.props;
       const allOpts = options.filter(opt =>
         opt.label.toLowerCase().includes(value.toLowerCase())
       );
       this.setState({
-        options: allOpts.slice(0, maxLength),
-        more: !!allOpts.slice(maxLength).length
+        options: allOpts.slice(0, maxItems),
+        more: !!allOpts.slice(maxItems).length
       });
     } else {
       clearTimeout(this.timeoutFilter);
@@ -48,9 +48,9 @@ export default class AutocompleteField extends Field {
       loading: false
     };
     if (typeof options !== 'undefined') {
-      const { maxLength } = this.props;
-      newState.options = options.slice(0, maxLength);
-      newState.more = (options.length > maxLength) || more;
+      const { maxItems } = this.props;
+      newState.options = options.slice(0, maxItems);
+      newState.more = (options.length > maxItems) || more;
     }
     this.setState(newState);
     super.onUpdate(data);

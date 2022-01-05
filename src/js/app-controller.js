@@ -42,6 +42,12 @@ export default class AppController {
     Object.assign(state, props.state || {});
     // INFO: se procesa la vista inicial para poder ser usada en react-route-schema
     this.root = resolveRefs(props.rootView.view, props.rootView);
+    if (typeof props.fetchSuccess !== 'function')
+      props.fetchSuccess = r => r;
+    if (typeof props.fetchBefore !== 'function')
+      props.fetchBefore = (url, opts) => opts;
+    if (typeof props.api !== 'string')
+      props.api = '//api';
     this.props = props;
   }
 
@@ -66,6 +72,28 @@ export default class AppController {
 
   get stateKeys() {
     return Object.keys(state);
+  }
+
+  fetch(url, options) {
+    const { query, format = 'json', ...conf } = this.props.fetchBefore(url, options);
+    const urlFinal = new URL(url, this.props.api);
+    const flattenQuery = flatten(query || {}, { safe: true });
+    Object.entries(flattenQuery).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach(v => urlFinal.searchParams.append(key, v));
+      } else if (['number', 'boolean', 'string'].includes(typeof value)) {
+        urlFinal.searchParams.set(key, value);
+      }
+    });
+    return fetch(urlFinal, conf)
+      .then(this.props.fetchSuccess.bind(this))
+      .then(r => {
+        return format === 'raw' ? r : r[format]()
+      })
+      .catch(e => {
+        console.error(e);
+        return e;
+      });
   }
 
 }
