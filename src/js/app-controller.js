@@ -1,3 +1,5 @@
+import { flatten } from "flat";
+
 import resolveRefs from "./functions/resolve-refs";
 import { iconSet } from "./media/icons";
 import { addControllers } from "./controllers";
@@ -21,6 +23,8 @@ const state = {};
 */
 export default class AppController {
 
+  fetchList = {};
+
   constructor(props) {
     if (props.icons)
       iconSet(props.icons);
@@ -42,8 +46,8 @@ export default class AppController {
     Object.assign(state, props.state || {});
     // INFO: se procesa la vista inicial para poder ser usada en react-route-schema
     this.root = resolveRefs(props.rootView.view, props.rootView);
-    if (typeof props.fetchSuccess !== 'function')
-      props.fetchSuccess = r => r;
+    if (typeof props.fetchError !== 'function')
+      props.fetchError = r => r;
     if (typeof props.fetchBefore !== 'function')
       props.fetchBefore = (url, opts) => opts;
     if (typeof props.api !== 'string')
@@ -75,7 +79,13 @@ export default class AppController {
   }
 
   fetch(url, options) {
-    const { query, format = 'json', ...conf } = this.props.fetchBefore(url, options);
+    options.method = options.method || 'GET';
+    if (this.fetchList[options.method + url]) {
+      this.fetchList[options.method + url].abort();
+    }
+    const { query, format = 'json',
+      timeout = 30000, body, ...conf } = this.props.fetchBefore(url, options);
+    if (body) conf.body = JSON.stringify(body);
     const urlFinal = new URL(url, this.props.api);
     const flattenQuery = flatten(query || {}, { safe: true });
     Object.entries(flattenQuery).forEach(([key, value]) => {
@@ -85,15 +95,38 @@ export default class AppController {
         urlFinal.searchParams.set(key, value);
       }
     });
+    const controller = new AbortController();
+    this.fetchList[options.method + url] = controller;
+    conf.signal = controller.signal;
+    const timeoutId = setTimeout(this.onTimeout, timeout, controller);
     return fetch(urlFinal, conf)
-      .then(this.props.fetchSuccess.bind(this))
-      .then(r => {
-        return format === 'raw' ? r : r[format]()
+      .then(async (r) => {
+        clearTimeout(timeoutId);
+        delete this.fetchList[options.method + url];
+        if (!r.ok) {
+          const e = new Error(r.statusText);
+          e.status = r.status;
+          const j = await r.json();
+          Object.assign(e, j);
+          throw e;
+        }
+        return format === 'raw' ? r : r[format]();
       })
       .catch(e => {
         console.error(e);
-        return e;
+        e.error = true;
+        if (e.name.includes('AbortError') && controller.timeout) {
+          const et = new Error('timeout');
+          et.error = true;
+          return this.props.fetchError(et, url);
+        }
+        return this.props.fetchError(e, url);
       });
+  }
+
+  onTimeout = (controller) => {
+    controller.timeout = true;
+    controller.abort();
   }
 
 }

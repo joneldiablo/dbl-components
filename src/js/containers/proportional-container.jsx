@@ -14,7 +14,7 @@ export default class ProportionalContainer extends Container {
   classes = 'position-relative';
 
   content(children = this.props.children) {
-    let { ratio, overflow } = this.props;
+    let { ratio, overflow, innerClasses } = this.props;
     let paddingBottom = typeof ratio === 'number' ? (ratio * 100) + '%' : ratio;
     let st = {
       overflow,
@@ -26,7 +26,7 @@ export default class ProportionalContainer extends Container {
     };
     return <>
       <div className="space" style={{ paddingBottom }} />
-      <div className="inner" style={st}>
+      <div className={['inner', innerClasses].join(' ')} style={st}>
         {children}
       </div>
     </>
