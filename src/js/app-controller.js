@@ -84,7 +84,7 @@ export default class AppController {
       this.fetchList[options.method + url].abort();
     }
     const { query, format = 'json',
-      timeout = 30000, body, ...conf } = this.props.fetchBefore(url, options);
+      timeout = 30000, body, headers, ...conf } = this.props.fetchBefore(url, options);
     if (body) conf.body = JSON.stringify(body);
     const urlFinal = new URL(url, this.props.api);
     const flattenQuery = flatten(query || {}, { safe: true });
@@ -98,6 +98,10 @@ export default class AppController {
     const controller = new AbortController();
     this.fetchList[options.method + url] = controller;
     conf.signal = controller.signal;
+    conf.headers = Object.assign({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    }, headers);
     const timeoutId = setTimeout(this.onTimeout, timeout, controller);
     return fetch(urlFinal, conf)
       .then(async (r) => {
