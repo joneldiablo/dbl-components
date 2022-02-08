@@ -27,6 +27,7 @@ import ModalButtonContainer from "./containers/modal-button-container";
 import ModalContainer from "./containers/modal-container";
 import TabsContainer from "./containers/tabs-container";
 import DetailsContainer from "./containers/details-container";
+import DndListContainer from "./containers/dnd-list-container";
 import fields from "./forms/fields";
 import Action from "./actions/action";
 import Link from "./navigation/react-router-link";
@@ -70,7 +71,8 @@ const COMPONENTS = {
   RouterSchema,
   PanelContainer,
   FetchContainer,
-  Video
+  Video,
+  DndListContainer
 }
 
 export default COMPONENTS;

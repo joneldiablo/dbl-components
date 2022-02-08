@@ -78,7 +78,7 @@ export default class AppController {
     return Object.keys(state);
   }
 
-  fetch(url, options) {
+  fetch(url, options = { method: 'GET' }) {
     options.method = options.method || 'GET';
     if (this.fetchList[options.method + url]) {
       this.fetchList[options.method + url].abort();
