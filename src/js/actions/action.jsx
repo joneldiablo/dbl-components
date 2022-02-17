@@ -28,8 +28,9 @@ export default class ActionComponent extends Component {
   }
 
   get componentProps() {
-    const { type, disabled, _props } = this.props;
-    return { type, disabled, ..._props };
+    const { type, disabled } = this.props;
+    const { form, ..._props } = this.props._props || {};
+    return { type, disabled, ..._props, form: form ? form + '-form' : undefined };
   }
 
   content(children = this.props.children) {

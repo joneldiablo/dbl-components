@@ -1,12 +1,16 @@
 import React from "react";
 import Field from "./field";
+import bytes from "bytes";
+import * as LZMAObj from 'lzma/src/lzma_worker';
+import eventHandler from "../../functions/event-handler";
 
 export default class FileField extends Field {
 
   static defaultProps = {
     ...Field.defaultProps,
     multiple: false,
-    format: 'base64'
+    format: 'base64',
+    zip: false
   }
 
   static jsClass = 'FileField';
@@ -15,14 +19,27 @@ export default class FileField extends Field {
     return 'file';
   }
 
+  isInvalid(value) {
+    if (this.props.maxSize && this.input.current?.files) {
+      const files = Array.from(this.input.current.files);
+      const error = files.some(file => file.size > bytes(this.props.maxSize, { unit: 'B' }));
+      if (error) {
+        this.input.current.setCustomValidity(this.props.errorMessage);
+        return true;
+      }
+    }
+    return super.isInvalid(value);
+  }
+
   async onChange(e) {
     let { value, files } = e.target;
     const arrayFiles = Array.from(files);
-    this.setState({
+    const newState = {
       value,
       error: this.isInvalid(value)
-    });
-    if (!arrayFiles.length) return this.returnData(null);
+    }
+    this.setState(newState);
+    if (!arrayFiles.length || newState.error) return this.returnData(null);
     const p6s = arrayFiles.map(file => this.readAs(file, this.props.format));
     const final = await Promise.all(p6s);
     if (this.props.multiple) {
@@ -46,10 +63,25 @@ export default class FileField extends Field {
         case 'binaryString':
           reader.readAsBinaryString(file);
           break;
+        case 'zip':
+          reader.readAsArrayBuffer(file);
         default:
           break;
       }
-      reader.onload = () => resolve(reader.result);
+      const onFinish = (result, error) => {
+        eventHandler.dispatch('zipping.' + this.props.name, { [this.props.name]: 'end' });
+        if (error) return reject(error);
+        resolve(result);
+      };
+      const onPercentage = (percentage) =>
+        eventHandler.dispatch('zipping.' + this.props.name, { [this.props.name]: percentage });
+      reader.onload = () => {
+        if (this.props.format !== 'zip') return resolve(reader.result);
+        eventHandler.dispatch('zipping.' + this.props.name, { [this.props.name]: 'start' });
+        const array = new Uint8Array(reader.result);
+        const mode = this.props.zip || 9;
+        LZMAObj.LZMA.compress(array, mode, onFinish, onPercentage);
+      };
       reader.onerror = error => reject(error);
     });
   }
@@ -71,11 +103,12 @@ export default class FileField extends Field {
           {value.split(/[\/\\]/).pop().split('?')[0]}
         </a>
       </p>}
-      {value && !(disabled || readOnly) && <p className="text-end my-1">
-        <small><a href={value} target="_blank">
-          {value.split(/[\/\\]/).pop().split('?')[0]}
-        </a></small>
-      </p>}
+      {value && !(disabled || readOnly) &&
+        <p className="text-end my-1">
+          <small><a href={value} target="_blank">
+            {value.split(/[\/\\]/).pop().split('?')[0]}
+          </a></small>
+        </p>}
     </>);
     return (inline ? <div className="col-auto">
       {inputNode}
