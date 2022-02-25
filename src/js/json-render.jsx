@@ -73,12 +73,14 @@ export default class JsonRender {
       Object.assign(sectionRaw, m);
     }
     if (typeof sectionRaw.active === 'boolean' && !sectionRaw.active) return false;
-    const { component: componentName, content, label, ...section } = sectionRaw;
+    const { component: componentName, content, label, message, errorMessage, ...section } = sectionRaw;
     const { location, match, history, routesIn, children } = this.props;
     let Component = COMPONENTS[componentName] || (COMPONENTS.Component);
     let componentProps = {
       ...section,
       label: this.buildContent(label),
+      message: this.buildContent(message),
+      errorMessage: this.buildContent(errorMessage),
       location,
       match,
       history
