@@ -15,7 +15,7 @@ export default class Field extends Component {
     default: PropTypes.any,
     disabled: PropTypes.bool,
     readOnly: PropTypes.bool,
-    errorMessage: PropTypes.string,
+    errorMessage: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
     first: PropTypes.oneOf(['label', 'control']),
     inline: PropTypes.bool,
     inlineLabelClasses: PropTypes.string,
@@ -37,7 +37,7 @@ export default class Field extends Component {
     type: PropTypes.string.isRequired,
     value: PropTypes.any,
     accept: PropTypes.string,
-    message: PropTypes.string,
+    message: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
     floating: PropTypes.bool
   }
   static defaultProps = {
