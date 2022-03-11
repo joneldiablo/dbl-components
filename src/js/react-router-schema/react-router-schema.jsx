@@ -100,7 +100,7 @@ export default class SchemaController extends React.Component {
     else if (typeof route.routes === 'object') {
       subroutes = [];
       route.routes = Object.keys(route.routes)
-        .map((name, i) => ({ name, ...route.routes[name] }));
+        .map(name => ({ name, ...route.routes[name] }));
     }
     if (subroutes) {
       const mapRoutes = (subRoute, i) => {
@@ -149,11 +149,16 @@ export default class SchemaController extends React.Component {
         .find(cl => cl.endsWith('-view'));
       document.body.classList.remove(viewClassName);
       document.body.classList.add(route.name + '-view');
+      const useSwitch = (typeof route.useSwitch === 'undefined' || route.useSwitch);
       return (<Controller {...route} {...props} test={this.props.test}>
-        <Switch>{subroutes}</Switch>
+        {useSwitch ?
+          <Switch>{subroutes}</Switch> :
+          subroutes
+        }
       </Controller>);
     }
-    return (<Route key={i + '-' + route.name} {...routeProps} render={RedirViewManager} />);
+    const key = i || typeof i === 'number' ? (i + '-' + route.name) : route.name;
+    return (<Route key={key} {...routeProps} render={RedirViewManager} />);
   }
 
   render() {

@@ -7,6 +7,15 @@ function isObject(item) {
   return (item && typeof item === 'object' && !Array.isArray(item));
 }
 
+
+/**
+ * 
+ * @param {Object} target Object to be merged
+ * @param {Function} mutation callback which goings to be used for the mutation
+ * @param {Array<String>} ommit object keys to ommit into the cicle
+ * @param {String} parentKey unique for recursive
+ * @returns 
+ */
 export const mergeWithMutation = (target, mutation, ommit = [], parentKey = '') => {
   for (const key in target) {
     if (!ommit.includes(key) && typeof target[key] === 'object') {

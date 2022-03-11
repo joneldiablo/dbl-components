@@ -16,31 +16,36 @@ export default class CardContainer extends Container {
   }
 
   content(children = this.props.children) {
-    let header = [];
-    let body = [];
-    let footer = [];
-    let { headerClasses,
+    const theContent = {
+      header: [],
+      body: [],
+      footer: []
+    }
+    const { headerClasses,
       bodyClasses,
       footerClasses } = this.props;
     children.forEach((child, i) => {
       if (!child) return;
       const props = child.type === 'section' ? child.props.children.props : child.props;
+
       if (props.header) {
-        header.push(child);
+        theContent.header.push(child);
       } else if (props.footer) {
-        footer.push(child);
+        theContent.footer.push(child);
+      } else if (props.container) {
+        theContent[props.container].push(child);
       } else {
-        body.push(child);
+        theContent.body.push(child);
       }
     });
     return <>
-      {!!header.length &&
-        <div className={'card-header ' + headerClasses}>{header}</div>}
+      {!!theContent.header.length &&
+        <div className={'card-header ' + headerClasses}>{theContent.header}</div>}
       <div className={'card-body ' + bodyClasses}>
-        {body}
+        {theContent.body}
       </div>
-      {!!footer.length &&
-        <div className={'card-footer ' + footerClasses}>{footer}</div>}
+      {!!theContent.footer.length &&
+        <div className={'card-footer ' + footerClasses}>{theContent.footer}</div>}
     </>;
   }
 

@@ -66,16 +66,26 @@ export default class AppController {
     return state[key];
   }
 
-  getViewDefinitions(view) {
+  getViewDefinitions(name) {
+    const viewWrap = this.props.views.find(({ view }) => view.name === name);
     const viewDefinitions = {
-      defs: this.props.views[view].definitions,
-      definitions: this.state.definitions
+      defs: viewWrap.definitions,
+      definitions: state.definitions
     };
-    return resolveRefs(viewDefinitions.defs, viewDefinitions);
+    return {
+      ...state.definitions,
+      ...resolveRefs(viewDefinitions.defs, viewDefinitions)
+    };
   }
 
   get stateKeys() {
     return Object.keys(state);
+  }
+
+  async minTimeout(promise, timeout = 300) {
+    const [r] =
+      await Promise.all([promise, new Promise((resolve) => setTimeout(resolve, timeout, true))]);
+    return r;
   }
 
   fetch(url, options = { method: 'GET' }) {
@@ -103,7 +113,7 @@ export default class AppController {
       'Accept': 'application/json'
     }, headers);
     const timeoutId = setTimeout(this.onTimeout, timeout, controller);
-    return fetch(urlFinal, conf)
+    const fetchPromise = fetch(urlFinal, conf)
       .then(async (r) => {
         clearTimeout(timeoutId);
         delete this.fetchList[options.method + url];
@@ -126,6 +136,7 @@ export default class AppController {
         }
         return this.props.fetchError(e, url);
       });
+    return this.minTimeout(fetchPromise);
   }
 
   onTimeout = (controller) => {

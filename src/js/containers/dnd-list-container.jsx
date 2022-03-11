@@ -41,6 +41,23 @@ export default class DndListContainer extends Component {
     this.onDragStart = this.onDragStart.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
     this.state.items = [...this.props.children];
+    this.events = [
+      ['update.' + props.name, this.onChangeOrder]
+    ];
+  }
+
+  componentDidMount() {
+    this.events.forEach(e => eventHandler.subscribe(...e));
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.children !== this.props.children) {
+      this.setState({ items: [...this.props.children] });
+    }
+  }
+
+  componentWillUnmount() {
+    this.events.forEach(([name]) => eventHandler.unsubscribe(name));
   }
 
   onDragStart() {
@@ -56,6 +73,11 @@ export default class DndListContainer extends Component {
     );
     this.setState({ items });
     eventHandler.dispatch(this.props.name, items.map(i => i.key));
+  }
+
+  onChangeOrder = (itemKeys) => {
+    const items = itemKeys.map(key => this.state.items.find(i => i.key === key));
+    this.setState({ items });
   }
 
   content(children = this.props.children) {
