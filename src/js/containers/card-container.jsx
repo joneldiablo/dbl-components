@@ -6,7 +6,10 @@ export default class CardContainer extends Container {
   static jsClass = 'CardContainer';
   static defaultProps = {
     ...Container.defaultProps,
-    fullWidth: true
+    fullWidth: true,
+    headerClasses: '',
+    bodyClasses: '',
+    footerClasses: ''
   }
 
   classes = 'card';

@@ -7,6 +7,7 @@ export default class Image extends Component {
   static defaultProps = {
     ...Component.defaultProps,
     objectFit: 'cover',
+    imageClasses: '',
     style: {
       overflow: 'hidden'
     }
@@ -16,7 +17,7 @@ export default class Image extends Component {
   classes = 'position-relative';
 
   content() {
-    const { src, alt, children, width, height, objectFit } = this.props;
+    const { src, alt, children, width, height, objectFit, imageClasses } = this.props;
     let imgSrc = src;
     if (!imgSrc) {
       imgSrc = '';
@@ -29,7 +30,7 @@ export default class Image extends Component {
         {src !== null && typeof src === 'object' && Object.keys(src).map(min =>
           <source srcset={src[min]} media={`(min-width: ${min}px)`} />
         )}
-        <img src={imgSrc} alt={alt} width={width} height={height} style={{ objectFit, objectPosition: 'center' }} />
+        <img src={imgSrc} alt={alt} width={width} height={height} style={{ objectFit, objectPosition: 'center' }} className={imageClasses} />
       </picture>
       <figcaption>{children}</figcaption>
     </>);

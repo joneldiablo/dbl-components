@@ -94,7 +94,7 @@ export default class SchemaController extends React.Component {
    * permite que el schema tenga un arreglo de paths
    **/
   views = (route, i) => {
-    let Controller = controllers[route.component] || (controllers.Controller);
+    const Controller = controllers[route.component] || (controllers.Controller);
     let subroutes = false;
     if (Array.isArray(route.routes)) subroutes = [];
     else if (typeof route.routes === 'object') {
