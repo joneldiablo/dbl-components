@@ -28,7 +28,7 @@ export default (object, schema) => {
         data = keys.reduce((obj, key) => obj[key], schema);
         data = JSON.parse(JSON.stringify(data));
       } catch (error) {
-        return { ref: item };
+        return item;
       }
       return loop(data);
     } else return item;

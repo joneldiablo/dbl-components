@@ -7,7 +7,7 @@ const dictionary = {
   'en_US': {}
 };
 
-const translate = (value, context, lang) => {
+const translate = (value, context, lang = localStorage.getItem('lang')) => {
   let dic = (context && dictionary[lang]['_' + context]) || dictionary[lang];
   return (dic && dic[value]) || value;
 }
@@ -36,6 +36,7 @@ class Text extends React.Component {
 
   translateEvent = (e) => {
     this.lang = e.detail;
+    localStorage.setItem('lang', this.lang);
     this.setState({
       value: this.translate()
     });
@@ -77,6 +78,15 @@ class I18n {
     location.reload();
   }
 
+  plainText(obj, context) {
+    if (typeof obj === 'string') return translate(obj, context);
+    else if (Array.isArray(obj)) {
+      return obj.map(e => this.plainText(e)).join(' ');
+    } else if (React.isValidElement(obj)) {
+      return this.plainText(obj.props.children);
+    } else return obj.toString();
+  }
+
   text(t, context) {
     return (<Text value={t} context={context} />);
   }
@@ -105,8 +115,8 @@ export const setDictionary = (d) => {
   deepMerge(dictionary, d);
 }
 export const SelectLanguage = SL;
+export const p = i18n.plainText;
 export const t = i18n.text;
 export const n = i18n.number;
 export const cur = i18n.currency;
 export const src = i18n.src;
-export const _ = i18n.src;

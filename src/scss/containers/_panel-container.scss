@@ -14,10 +14,11 @@
     //funciona pero no se ve smooty
     //transition: width 0.2s ease;
   }
-  &.fixed {
-    position: fixed;
+  &.mobile {
+    position: fixed !important;
+    width: 80%;
     top: 0;
     left: 0;
-    z-index: 200;
+    z-index: 1024;
   }
 }

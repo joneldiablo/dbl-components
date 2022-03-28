@@ -9,7 +9,7 @@
           "name": "itemIconCol",
           "component": "NavLink",
           "activeClassName": "active",
-          "classes": "col-auto",
+          "classes": "col-auto text-reset text-decoration-none",
           "content": {
             "itemIcon": {
               "name": "itemIcon",
@@ -31,6 +31,7 @@
             "itemLabel": {
               "name": "itemLabel",
               "component": "NavLink",
+              "classes": "text-reset text-decoration-none",
               "activeClassName": "active"
             }
           }

@@ -73,6 +73,15 @@ export default class Field extends Component {
     eventHandler.unsubscribe('update.' + this.props.name, this.unique);
   }
 
+  extractString(obj) {
+    if (typeof obj === 'string') return obj;
+    else if (Array.isArray(obj)) {
+      return obj.map(e => this.extractString(e)).join(' ');
+    } else if (React.isValidElement(obj)) {
+      return this.extractString(obj.props.children);
+    } else return obj.toString();
+  }
+
   returnData(value = this.state.value) {
     let { name, id, data } = this.props;
     let { error } = this.state;
@@ -104,7 +113,8 @@ export default class Field extends Component {
     else if (pattern) error = !(new RegExp(pattern, "i")).test(value);
     if (!required && !value) error = false;
     if (error) {
-      this.input.current?.setCustomValidity(this.props.errorMessage);
+      const errorMessage = this.extractString(this.props.errorMessage);
+      this.input.current?.setCustomValidity(errorMessage);
     }
     return error;
   }
@@ -135,7 +145,7 @@ export default class Field extends Component {
     if (typeof error === 'boolean') {
       newState.error = error;
       let message = '';
-      if (error) message = this.props.errorMessage;
+      if (error) message = this.extractString(this.props.errorMessage);
       this.input.current.setCustomValidity(message);
     }
     if (reset) {

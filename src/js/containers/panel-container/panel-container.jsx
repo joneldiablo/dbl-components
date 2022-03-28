@@ -16,7 +16,9 @@ export default class PanelContainer extends Container {
     ...Container.defaultProps,
     view: panelView,
     classes: 'bg-light',
+    itemClasses: '',
     routesIn: 'panelContent',
+    open: true,
     fixed: false,
     type: 'push',
     iconSize: 50,
@@ -31,21 +33,21 @@ export default class PanelContainer extends Container {
     ];
     this.eventHandlers = {
       onMouseEnter: this.onMouseEnter,
-      onMouseLeave: this.onMouseLeave
+      onMouseLeave: this.onMouseLeave,
+      onTouchStart: this.onTouchStart,
+      onTouchEnd: this.onTouchEnd
     }
-    const contentPanel = this.props.menu?.map(this.itemBuild);
+
     Object.assign(this.state, {
       logo: { _props: { src: this.props.icon, width: this.props.iconSize } },
-      open: false,
-      panelMenu: {
-        active: !!this.props.menu,
-        content: contentPanel
-      },
+      expanded: false,
       logoLink: { to: this.props.link || '/' },
       classSet: new Set(['close']),
       containersContentCol: {
         active: false
-      }
+      },
+      open: props.open,
+      fixed: props.fixed
     });
     if (this.props.type === 'reveal')
       this.state.classSet.add('inset');
@@ -53,48 +55,118 @@ export default class PanelContainer extends Container {
 
   componentDidMount() {
     super.componentDidMount();
+    const contentPanel = this.props.menu?.map(this.itemBuild);
+    this.setState({
+      panelMenu: {
+        active: !!this.props.menu,
+        content: contentPanel
+      }
+    });
     this.events.forEach(e => eventHandler.subscribe(...e));
+    this.onWindowResize({ target: window });
+    window.addEventListener('resize', this.onWindowResize);
   }
 
   componentWillUnmount() {
     super.componentWillUnmount();
     this.events.forEach(([eName]) => eventHandler.unsubscribe(eName));
+    window.removeEventListener('resize', this.onWindowResize);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    super.componentDidUpdate(prevProps, prevState);
+    if (prevProps.fixed != this.props.fixed) {
+      if (this.props.fixed) this.onMouseEnter();
+      else this.onMouseLeave();
+      this.setState({ fixed: this.props.fixed });
+    }
+    if (prevProps.open != this.props.open) {
+      if (this.props.open) this.onMouseEnter();
+      this.setState({ open: this.props.open });
+    }
   }
 
   onMouseEnter = (e) => {
-    this.state.classSet.add('open');
+    if ((this.state.mobile || this.state.fixed) && !e?.force) return;
+    this.state.classSet.add('expanded');
     this.state.classSet.delete('close');
     this.state.logo._props.src = this.props.logo;
     this.state.logo._props.width = this.props.width;
-    this.state.open = true;
+    this.state.expanded = true;
     this.forceUpdate();
   }
 
   onMouseLeave = (e) => {
-    this.state.classSet.delete('open');
+    if ((this.state.mobile || this.state.fixed) && !e?.force) return;
+    this.state.classSet.delete('expanded');
     this.state.classSet.add('close');
     this.state.logo._props.src = this.props.icon;
     this.state.logo._props.width = this.props.iconSize;
-    this.state.open = false;
+    this.state.expanded = false;
     this.forceUpdate();
+  }
+
+  onWindowResize = (e) => {
+    const mobile = e.target.innerWidth < this.props.breakpoints.sm;
+    if (mobile) {
+      this.onMouseEnter();
+      this.state.classSet.add('mobile');
+      this.state.classSet.delete('inset');
+    } else {
+      this.onMouseLeave({ force: true });
+      this.state.classSet.delete('mobile');
+      if (this.props.type === 'reveal')
+        this.state.classSet.add('inset');
+    }
+    this.setState({ mobile, open: !mobile });
+  }
+
+  onUpdate = (update) => {
+    if (typeof update.open !== 'undefined') {
+      this.setState({ open: update.open });
+    }
+    if (typeof update.fixed !== 'undefined') {
+      if (update.fixed) this.onMouseEnter();
+      else this.onMouseLeave();
+    }
+  }
+
+  onTouchStart = e => {
+    this.touchstartX = e.changedTouches[0].screenX;
+  }
+
+  onTouchEnd = e => {
+    this.touchendX = e.changedTouches[0].screenX;
+    const diff = Math.abs(this.touchendX - this.touchstartX);
+    if (diff < 18) return;
+    const action = this.state.mobile ? 'open' : 'fixed';
+    if (this.touchendX < this.touchstartX) {
+      this.onUpdate({ [action]: false });
+    }
+    if (this.touchendX > this.touchstartX) {
+      this.onUpdate({ [action]: true });
+    }
   }
 
   mutations(sectionName) {
     if (sectionName.match(/ContentCol$|Submenu$|ContentExtra$/)) {
-      return { active: this.state.open };
+      return { active: this.state.mobile || this.state.fixed || this.state.expanded };
     }
     return this.state[sectionName];
   }
 
   itemBuild = (raw, i) => {
-    const { label, icon, to,
-      exact, activeClassName,
-      content: contentExtra, menu, ...rest } = raw;
+    const { label, icon, to, classes,
+      exact, activeClassName, menu,
+      content: contentExtra, ...rest } = raw;
     const itemWrapper = deepMerge({}, listItem, rest);
     const mutation = (sectionName, section) => {
       switch (sectionName) {
         case 'item':
-          return { name: raw.name };
+          return {
+            name: raw.name,
+            classes: section.classes + ' ' + (this.props.itemClasses || classes)
+          };
         case 'itemIconCol':
           if (typeof icon === 'object')
             section.content = { itemIcon: icon };
@@ -166,6 +238,10 @@ export default class PanelContainer extends Container {
       {this.jsonRender.buildContent(view)}
       {!routesIn && children}
     </>
+  }
+
+  render() {
+    return this.state.open ? super.render() : <div ref={this.ref} />;
   }
 
 }
