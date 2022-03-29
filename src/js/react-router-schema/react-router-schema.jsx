@@ -12,6 +12,7 @@ import {
 } from "react-router-dom";
 import { hash } from "../functions";
 import controllers from "../controllers";
+import { addComponents } from "../components";
 
 const routePropTypes = {
   path: PropTypes.oneOfType([
@@ -193,3 +194,5 @@ export const HashRouterSchema = (props) => {
 }
 HashRouterSchema.propTypes = schemaPropTypes;
 HashRouterSchema.defaultProps = schemaDefaultProps;
+
+addComponents({ RoutesContainer: SchemaController });

@@ -23,6 +23,7 @@ import Form from "./forms/form";
 import Table from "./tables/table";
 import EndpointTable from "./tables/endpoint-table";
 import DropdownButtonContainer from "./containers/dropdown-button-container";
+import DropdownContainer from "./containers/dropdown-container";
 import ModalButtonContainer from "./containers/modal-button-container";
 import ModalContainer from "./containers/modal-container";
 import TabsContainer from "./containers/tabs-container";
@@ -32,7 +33,6 @@ import fields from "./forms/fields";
 import Action from "./actions/action";
 import Link from "./navigation/react-router-link";
 import NavLink from "./navigation/react-router-navlink";
-import { RouterSchema } from "./react-router-schema/react-router-schema";
 import PanelContainer from "./containers/panel-container/panel-container";
 import FetchContainer from "./containers/fetch-container";
 import Video from "./media/video";
@@ -53,6 +53,7 @@ const COMPONENTS = {
   Table,
   EndpointTable,
   DropdownButtonContainer,
+  DropdownContainer,
   ModalButtonContainer,
   ModalContainer,
   ProportionalContainer,
@@ -68,7 +69,6 @@ const COMPONENTS = {
   Action,
   ListContainer,
   SlideContainer,
-  RouterSchema,
   PanelContainer,
   FetchContainer,
   Video,

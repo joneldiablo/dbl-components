@@ -24,9 +24,10 @@ export default class DropdownButtonContainer extends Component {
 
   static jsClass = 'DropdownButtonContainer';
 
+  classes = 'dropdown';
+
   constructor(props) {
     super(props);
-    this.state.localClasses = 'dropdown';
     this.style.width = 'fit-content';
   }
 
@@ -65,8 +66,9 @@ export default class DropdownButtonContainer extends Component {
       <div className="dropdown-menu" style={{ minWidth: '100%' }}
         onClick={allowClose ? null : (e) => e.stopPropagation()}
         aria-labelledby={this.props.name + 'Btn'}>
-        {menu && menu.map(item => item !== 'divider' ?
-          <DropdownItem value={item.value} onClick={this.onClick}>{item.label}</DropdownItem> :
+        {menu && menu.map((item, i) => item !== 'divider' ?
+          <DropdownItem value={item.value} onClick={this.onClick}
+            key={item.name || i}>{item.label}</DropdownItem> :
           <div className="dropdown-divider" />
         )}
         {children}
