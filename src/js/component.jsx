@@ -50,7 +50,8 @@ export default class Component extends React.Component {
   }
 
   onEvent = (e) => {
-    eventHandler.dispatch(`${e.type}.${this.props.name}`, { state: this.state, value: e.value });
+    eventHandler.dispatch(`${e.type}.${this.props.name}`,
+      { [this.props.name]: { state: this.state, value: e.target.value } });
   }
 
   render() {

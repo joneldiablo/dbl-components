@@ -4,7 +4,7 @@ export default (object, schema) => {
   const loop = (item) => {
     if (item === null) return item;
     if (Array.isArray(item)) {
-      return item.map(a => loop(a));
+      return item.map(a => loop(a)).flat();
     } else if (typeof item === 'object') {
       let toReturn = {};
       if (item.ref) {
@@ -13,7 +13,8 @@ export default (object, schema) => {
         const unflattened = unflatten(item, { safe: true, delimiter: '/' });
         const refObj = loop(ref);
         const modify = loop(unflattened);
-        toReturn = deepMerge({}, refObj, modify);
+        if (typeof refObj === 'string') toReturn = deepMerge({ ref: refObj }, modify);
+        else toReturn = deepMerge({}, refObj, modify);
       } else {
         Object.keys(item).forEach(i => {
           toReturn[i] = loop(item[i])

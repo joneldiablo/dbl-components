@@ -87,7 +87,7 @@ export default class PanelContainer extends Container {
   }
 
   onMouseEnter = (e) => {
-    if ((this.state.mobile || this.state.fixed) && !e?.force) return;
+    if (!e?.force && (this.state.mobile || this.state.fixed)) return;
     this.state.classSet.add('expanded');
     this.state.classSet.delete('close');
     this.state.logo._props.src = this.props.logo;
@@ -97,7 +97,7 @@ export default class PanelContainer extends Container {
   }
 
   onMouseLeave = (e) => {
-    if ((this.state.mobile || this.state.fixed) && !e?.force) return;
+    if (!e?.force && (this.state.mobile || this.state.fixed)) return;
     this.state.classSet.delete('expanded');
     this.state.classSet.add('close');
     this.state.logo._props.src = this.props.icon;
@@ -127,7 +127,8 @@ export default class PanelContainer extends Container {
     }
     if (typeof update.fixed !== 'undefined') {
       if (update.fixed) this.onMouseEnter();
-      else this.onMouseLeave();
+      else this.onMouseLeave({ force: true });
+      this.setState({ fixed: update.fixed });
     }
   }
 

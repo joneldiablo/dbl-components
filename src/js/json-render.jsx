@@ -98,7 +98,7 @@ export default class JsonRender {
     const cnSection = [componentProps.name + '-section'];
     if (this.props.test) cnSection.push('test-section-wrapper');
     const exclusionSec = ['NavLink', 'Image', 'Link', 'Icons', 'Action',
-      'DropdownButtonContainer', 'ModalButtonContainer']
+      'DropdownButtonContainer', 'ModalButtonContainer', 'DropdownItem']
       .includes(componentName);
     const Wrapper = Component.wrapper || 'section';
     return (exclusionSec || componentProps.tag ?
