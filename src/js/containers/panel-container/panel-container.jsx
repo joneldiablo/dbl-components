@@ -15,7 +15,7 @@ export default class PanelContainer extends Container {
   static defaultProps = {
     ...Container.defaultProps,
     view: panelView,
-    classes: 'bg-light',
+    classes: '',
     itemClasses: '',
     routesIn: 'panelContent',
     open: true,
@@ -149,13 +149,6 @@ export default class PanelContainer extends Container {
     }
   }
 
-  mutations(sectionName) {
-    if (sectionName.match(/ContentCol$|Submenu$|ContentExtra$/)) {
-      return { active: this.state.mobile || this.state.fixed || this.state.expanded };
-    }
-    return this.state[sectionName];
-  }
-
   itemBuild = (raw, i) => {
     const { label, icon, to, classes,
       exact, activeClassName, menu,
@@ -166,17 +159,17 @@ export default class PanelContainer extends Container {
         case 'item':
           return {
             name: raw.name,
-            classes: section.classes + ' ' + (this.props.itemClasses || classes)
+            classes: (this.props.itemClasses || classes)
           };
-        case 'itemIconCol':
+        case 'itemIconRow':
           if (typeof icon === 'object')
             section.content = { itemIcon: icon };
           return {
             active: !!icon,
-            name: itemWrapper.name + 'IconCol',
+            name: itemWrapper.name + 'IconRow',
             to: to,
             exact: exact,
-            activeClassName: activeClassName
+            activeClassName
           }
         case 'itemIcon':
           return {
@@ -190,13 +183,7 @@ export default class PanelContainer extends Container {
         case 'itemContentCol':
           return { name: itemWrapper.name + 'ContentCol' }
         case 'itemLabel':
-          return {
-            name: itemWrapper.name + 'Label',
-            to: to,
-            exact: exact,
-            activeClassName: activeClassName,
-            content: label
-          }
+          return { name: itemWrapper.name + 'Label', content: label }
         case 'itemContentExtra':
           return {
             active: !!contentExtra,
@@ -230,6 +217,18 @@ export default class PanelContainer extends Container {
       }
     } else delete itemWrapper.content.itemSubmenu;
     return itemWrapper;
+  }
+
+  mutations(sectionName) {
+    if (sectionName.match(/ContentCol$|Submenu$|ContentExtra$/)) {
+      return { active: this.state.mobile || this.state.fixed || this.state.expanded };
+    }
+    if (sectionName.endsWith('IconRow')) {
+      const classes = 'row gx-2 align-items-center text-decoration-none' +
+        (this.state.expanded ? '' : ' justify-content-center');
+      return { classes }
+    }
+    return this.state[sectionName];
   }
 
   content(children = this.props.children) {

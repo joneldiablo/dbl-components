@@ -11,8 +11,7 @@
   {
     "name": "panelMenu",
     "component": "ListContainer",
-    "classes": "py-2 list-unstyled",
-    "liClasses": "mb-2"
+    "classes": "py-2 list-unstyled"
   },
   {
     "name": "panelContent",

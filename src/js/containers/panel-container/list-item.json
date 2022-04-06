@@ -1,50 +1,39 @@
 {
-  "name": "itemWrapper",
   "content": {
     "item": {
-      "name": "item",
-      "classes": "row gx-2 justify-content-center align-items-center",
       "content": {
-        "itemIconCol": {
-          "name": "itemIconCol",
+        "itemIconRow": {
           "component": "NavLink",
           "activeClassName": "active",
-          "classes": "col-auto text-reset text-decoration-none",
           "content": {
             "itemIcon": {
-              "name": "itemIcon",
               "component": "Icons",
+              "classes": "col-auto",
               "icon": "circle",
               "inline": "false",
               "style": {
                 "width": "100%",
                 "height": "100%"
               }
-            }
-          }
-        },
-        "itemContentCol": {
-          "name": "itemContentCol",
-          "tag": "div",
-          "classes": "col w-100",
-          "content": {
-            "itemLabel": {
-              "name": "itemLabel",
-              "component": "NavLink",
-              "classes": "text-reset text-decoration-none",
-              "activeClassName": "active"
+            },
+            "itemContentCol": {
+              "tag": "span",
+              "classes": "col w-100",
+              "content": {
+                "itemLabel": {
+                  "tag": "span"
+                }
+              }
             }
           }
         }
       }
     },
     "itemSubmenu": {
-      "name": "itemSubmenu",
       "component": "ListContainer",
       "classes": "list-unstyled col w-100"
     },
     "itemContentExtra": {
-      "name": "itemContentExtra",
       "tag": "div",
       "classes": "col w-100"
     }
