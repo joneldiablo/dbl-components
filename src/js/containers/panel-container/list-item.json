@@ -2,6 +2,10 @@
   "content": {
     "item": {
       "content": {
+        "badge": {
+          "tag": "small",
+          "classes": "position-absolute translate-middle bg-danger border border-light rounded-pill text-light"
+        },
         "itemIconRow": {
           "component": "NavLink",
           "activeClassName": "active",
