@@ -24,6 +24,8 @@ $panel-color: $light !default;
     object-fit: contain;
     display: block;
     margin: auto;
+    position: sticky;
+    top: 0;
     //funciona pero no se ve smooty
     //transition: width 0.2s ease;
   }
@@ -65,6 +67,12 @@ $panel-color: $light !default;
       right: -25%;
       top: 65%;
     }
+  }
+  .pin-fixed {
+    color: $panel-color;
+    width: 100%;
+    text-align: left;
+    background-color: $panel-bg;
   }
 }
 

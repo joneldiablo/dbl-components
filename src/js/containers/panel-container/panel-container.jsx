@@ -29,7 +29,8 @@ export default class PanelContainer extends Component {
     super(props);
     this.jsonRender = new JsonRender(props, this.mutations.bind(this));
     this.events = [
-      ['update.' + props.name, this.onUpdate]
+      ['update.' + props.name, this.onUpdate],
+      ['toggleFixed', this.onToggleFixed]
     ];
     this.eventHandlers = {
       onMouseEnter: this.onMouseEnter,
@@ -84,6 +85,10 @@ export default class PanelContainer extends Component {
     if (prevProps.open != this.props.open) {
       if (this.props.open) this.onMouseEnter();
       this.setState({ open: this.props.open });
+    }
+    if (prevProps.menu != this.props.menu) {
+      this.state.panelMenu.content = this.props.menu.map(this.itemBuild);
+      this.setState({ panelMenu: this.state.panelMenu });
     }
   }
 
@@ -158,17 +163,18 @@ export default class PanelContainer extends Component {
     }
   }
 
-  onNavigate = (e) => {
-    console.log(e);
-  }
-
   onChangeLocation = () => {
     if (this.state.mobile && this.state.open) {
       this.onUpdate({ open: false }, true);
     }
   }
 
+  onToggleFixed = (e) => {
+    this.onUpdate({ fixed: !this.state.fixed }, true);
+  }
+
   itemBuild = (raw, i) => {
+    if (typeof raw === 'string' || raw.type === 'divider') return raw;
     const { label, icon, to, classes,
       exact, activeClassName, menu,
       content: contentExtra, ...rest } = raw;
@@ -181,8 +187,6 @@ export default class PanelContainer extends Component {
             classes: (this.props.itemClasses || classes)
           };
         case 'itemIconRow':
-          if (typeof icon === 'object')
-            section.content = { itemIcon: icon };
           return {
             active: !!icon,
             name: itemWrapper.name + 'IconRow',
@@ -191,6 +195,17 @@ export default class PanelContainer extends Component {
             activeClassName
           }
         case 'itemIcon':
+          if (typeof icon === 'object') return {
+            ...icon,
+            name: itemWrapper.name + 'Icon',
+            classes: 'col-auto ' + (icon.classes || ''),
+            style: Object.assign(
+              icon.style || {},
+              {
+                width: this.props.iconSize,
+                height: this.props.iconSize
+              })
+          };
           return {
             icon: icon,
             name: itemWrapper.name + 'Icon',
@@ -244,16 +259,29 @@ export default class PanelContainer extends Component {
     return itemWrapper;
   }
 
-  mutations(sectionName) {
-    if (sectionName.match(/ContentCol$|Submenu$|ContentExtra$/)) {
+  mutations(sn) {
+    if (sn.match(/ContentCol$|Submenu$|ContentExtra$/)) {
       return { active: this.state.mobile || this.state.fixed || this.state.expanded };
     }
-    if (sectionName.endsWith('IconRow')) {
+    if (sn.endsWith('IconRow')) {
       const classes = 'row gx-2 align-items-center text-decoration-none' +
         (this.state.expanded ? '' : ' justify-content-center');
       return { classes };
     }
-    return this.state[sectionName];
+    // TODO:  modificar el nombre de los elementos agregando el prefijo <name>
+    switch (sn) {
+      case 'contentTop':
+        const active = !!this.props.contentTop;
+        const content = active ? this.jsonRender.buildContent(this.props.contentTop) : null;
+        return { active, content };
+      case 'iconTF':
+        return { icon: this.state.fixed ? 'expand-unlocked' : 'expand-locked' };
+      case 'toggleFixed':
+        return { active: !this.state.mobile };
+      default:
+        break;
+    }
+    return this.state[sn];
   }
 
   content(children = this.props.children) {

@@ -79,7 +79,8 @@ export default class Field extends Component {
       return obj.map(e => this.extractString(e)).join(' ');
     } else if (React.isValidElement(obj)) {
       return this.extractString(obj.props.children);
-    } else return obj.toString();
+    } else if (!obj) return '';
+    return obj.toString();
   }
 
   returnData(value = this.state.value) {
