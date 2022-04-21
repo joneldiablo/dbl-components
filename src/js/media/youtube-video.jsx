@@ -13,7 +13,7 @@ export default class YoutubeVideoComponent extends Component {
     // TODO: ajustar los proptypes según la página de propiedades
     // https://developers.google.com/youtube/player_parameters
     youtubeOpts: PropTypes.shape({
-      autoplay: PropTypes.oneOf([0, 1, '0', '1']),
+      autoPlay: PropTypes.oneOf([0, 1, '0', '1']),
       cc_load_policy: PropTypes.oneOf([1, '1']),
       color: PropTypes.string,
       controls: PropTypes.oneOf([0, 1, 2, '0', '1', '2']),
@@ -29,7 +29,7 @@ export default class YoutubeVideoComponent extends Component {
       modestbranding: PropTypes.string,
       origin: PropTypes.string,
       playlist: PropTypes.string,
-      playsinline: PropTypes.string,
+      playsInline: PropTypes.string,
       rel: PropTypes.string,
       showinfo: PropTypes.string,
       start: PropTypes.string

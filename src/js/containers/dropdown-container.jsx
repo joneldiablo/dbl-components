@@ -1,6 +1,6 @@
 import React from "react";
 
-import DropdownButtonContainer, { DropdownItem } from "./dropdown-button-container";
+import DropdownButtonContainer from "./dropdown-button-container";
 
 export default class DropdownContainer extends DropdownButtonContainer {
 
@@ -12,8 +12,8 @@ export default class DropdownContainer extends DropdownButtonContainer {
   }
 
   content(children = this.props.children) {
-    const { spanClasses, label, value, disabled } = this.props;
-    const cn = ['dropdown-toggle', spanClasses];
+    const { btnClasses, label, value, disabled } = this.props;
+    const cn = ['dropdown-toggle', btnClasses];
     return <>
       <span className={cn.join(' ')} ref={ref => this.refBtn(ref)}
         data-bs-toggle="dropdown" disabled={disabled} id={this.trigger}

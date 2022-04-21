@@ -75,6 +75,12 @@ export class DropdownItem extends Component {
 export default class DropdownButtonContainer extends Component {
 
   static jsClass = 'DropdownButtonContainer';
+  static defaultProps = {
+    ...Component.defaultProps,
+    itemClasses: '',
+    dropdownClasses: '',
+    btnClasses: ''
+  }
 
   classes = 'dropdown';
 
@@ -100,15 +106,18 @@ export default class DropdownButtonContainer extends Component {
   }
 
   dropdownRender(children) {
-    const { menu, allowClose, itemClasses } = this.props;
-    return <div className="dropdown-menu" style={{ minWidth: '100%' }}
+    const { menu, allowClose, itemClasses, dropdownClasses } = this.props;
+    const cn = ['dropdown-menu', dropdownClasses].join(' ');
+    return <div className={cn} style={{ minWidth: '100%' }}
       onClick={allowClose ? null : (e) => e.stopPropagation()} aria-labelledby={this.trigger}>
-      {menu?.map((item, i) => item === 'divider' ?
-        <div className="dropdown-divider" key={item.name || i} /> :
-        (React.isValidElement(item) ?
-          <React.Fragment key={item.name || i}>{item}</React.Fragment> :
-          <DropdownItem {...item} key={item.name || i} />)
-      )}
+      {menu?.map((item, i) => {
+        item.classes = item.classes || itemClasses;
+        return item === 'divider' ?
+          <div className="dropdown-divider" key={item.name || i} /> :
+          (React.isValidElement(item) ?
+            <React.Fragment key={item.name || i}>{item}</React.Fragment> :
+            <DropdownItem {...item} key={item.name || i} />)
+      })}
       {children}
     </div>
   }
