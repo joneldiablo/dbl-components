@@ -117,13 +117,13 @@ export default class PaginationField extends Field {
         <span className="page-link border-start-0" >{total}</span>
       </li>
       <li className={'page-item' + (isLast ? ' disabled' : '')} title={texts.next}>
-        <button type="button" className="page-link" className="page-link" disabled={isLast}
+        <button type="button" className="page-link" disabled={isLast}
           onClick={() => this.gotoPage(1)}>
           <span>›</span>
         </button>
       </li>
       <li className={'page-item' + (isLast ? ' disabled' : '')} title={texts.last}>
-        <button type="button" className="page-link" className="page-link" disabled={isLast}
+        <button type="button" className="page-link" disabled={isLast}
           onClick={() => this.gotoPage('last')}>
           <span>»</span>
         </button>

@@ -18,7 +18,6 @@ export default class Field extends Component {
     errorMessage: PropTypes.oneOfType([PropTypes.string, PropTypes.bool, PropTypes.node]),
     first: PropTypes.oneOf(['label', 'control']),
     inline: PropTypes.bool,
-    inlineLabelClasses: PropTypes.string,
     label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     labelClasses: PropTypes.string,
     max: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -191,52 +190,42 @@ export default class Field extends Component {
 
   get labelNode() {
     const { placeholder, required, name, labelClasses,
-      inline, inlineLabelClasses, label } = this.props;
+      inline, label } = this.props;
     const cn = ['form-label', labelClasses];
     if (inline) cn.shift();
     const labelNode = <label className={cn.join(' ')} htmlFor={name}>
       {label ? label : placeholder}
       {required && <b title="Este campo es indispensable" className="text-inherit"> *</b>}
     </label>
-    const cnInlineLabelClasses = ['col-auto', inlineLabelClasses];
-    return (inline ? <div className={cnInlineLabelClasses.join(' ')}>
-      {labelNode}
-    </div> : labelNode);
+    return (labelNode);
   }
 
   get inputNode() {
-    const { inline } = this.props;
     const inputNode = (<input {...this.inputProps} />);
-    return (inline ? <div className="col-auto">
-      {inputNode}
-    </div> : inputNode);
+    return inputNode;
   }
 
   get errorMessageNode() {
-    const { errorMessage, inline } = this.props;
+    const { errorMessage } = this.props;
     const { error } = this.state;
     const errorNode = (<p className="m-1 lh-1"><small className="text-danger">
       {errorMessage}
     </small></p>);
-    return (error && errorMessage && (inline ?
-      <div className="col-auto">{errorNode}</div> :
-      errorNode));
+    return (error && errorMessage && errorNode);
   }
 
   get messageNode() {
-    const { message, inline } = this.props;
+    const { message } = this.props;
     const node = (<p className="m-1 lh-1"><small>
       {message}
     </small></p>);
-    return (message && (inline ?
-      <div className="col-auto">{node}</div> :
-      node));
+    return (message && node);
   }
 
   content(children = this.props.children) {
     const { inline, first, placeholder, label, floating } = this.props;
     const cn = ['position-relative'];
-    if (inline) cn.push('row gx-2 align-items-center');
+    if (inline) cn.push('d-flex align-items-center');
     if (placeholder && !label && floating) cn.push('form-floating');
     return (<>
       <div className={cn.join(' ')}>

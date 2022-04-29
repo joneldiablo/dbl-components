@@ -20,12 +20,12 @@ export default class Container extends Component {
     }
   }
 
-  breakpoint = 'xs';
+  breakpoint = false;
 
   updateSize() {
     const { fluid, fullWidth } = this.props;
     const containerType = (!fullWidth ? (fluid ? 'container-fluid' : 'container') : '');
-    this.setState({ localClasses: [containerType, this.breakpoint].join(' ') });
+    this.setState({ localClasses: [containerType, this.breakpoint, 'animate'].join(' ') });
   }
 
   onResize = () => {
@@ -65,6 +65,10 @@ export default class Container extends Component {
     clearTimeout(this.onResizeTimeout);
     if (this.resizeSensor)
       this.resizeSensor.detach();
+  }
+
+  content(children = this.props.children) {
+    return !!this.state.localClasses && children;
   }
 
 }
