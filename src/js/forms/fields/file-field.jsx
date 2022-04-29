@@ -97,12 +97,13 @@ export default class FileField extends Field {
     const { inline, disabled, readOnly } = this.props;
     const { value } = this.state;
     const inputNode = (<>
-      {!(value && (disabled || readOnly)) && <input {...this.inputProps} />}
-      {value && (disabled || readOnly) && <p className="form-control mb-1">
-        <a href={value} target="_blank">
-          {value.split(/[\/\\]/).pop().split('?')[0]}
-        </a>
-      </p>}
+      {!(value && (disabled || readOnly)) ?
+        <input {...this.inputProps} /> :
+        <p className="form-control mb-1 disabled">
+          <a href={value} target="_blank">
+            {value.split(/[\/\\]/).pop().split('?')[0]}
+          </a>
+        </p>}
       {value && !(disabled || readOnly) &&
         <p className="text-end my-1">
           <small><a href={value} target="_blank">

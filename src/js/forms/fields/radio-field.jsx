@@ -6,7 +6,8 @@ export default class RadioField extends Field {
   static jsClass = 'RadioField';
   static defaultProps = {
     ...Field.defaultProps,
-    inline: false
+    inline: false,
+    labelInline: true,
   }
 
   onChange(e) {
@@ -72,10 +73,11 @@ export default class RadioField extends Field {
   }
 
   content() {
-    let { options, errorMessage, label } = this.props;
+    let { options, errorMessage, label, labelInline } = this.props;
     let { error } = this.state;
     return <>
       {label && this.labelNode}
+      {!labelInline && <br />}
       {options.map(this.nodeOption)}
       {error && <small className="text-danger">
         {errorMessage}
