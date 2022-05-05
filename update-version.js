@@ -1,4 +1,4 @@
-import pkg from './package.json' assert { type: `json` };
+import pkg from './package.json';
 import fs from 'fs';
 
 let vArr = pkg.version.split('.');
