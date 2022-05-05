@@ -98,7 +98,7 @@ export default class DropdownButtonContainer extends Component {
   refBtn(btn) {
     if (!btn) return;
     if (this.bsDropdown) this.bsDropdown.dispose();
-    this.bsDropdown = new Dropdown(btn);
+    this.bsDropdown = new Dropdown(btn, this.props.dropdown);
   }
 
   componentWillUnmount() {
