@@ -10,10 +10,10 @@ export default
         iterate: (keyData, itemName) => {
           const data = loop(keyData);
           if (!Array.isArray(data)) return [];
+          const itemFound = key.substring(1).split('/')
+            .reduce((obj, key) => obj[key], schema);
           const builded = data.map((item) => {
             schema[itemName] = item;
-            const itemFound = key.substring(1).split('/')
-              .reduce((obj, key) => obj[key], schema);
             return loop(itemFound);
           });
           delete schema[itemName];
@@ -24,6 +24,10 @@ export default
           if (Array.isArray(f)) return f.join(join);
           return [f, ...loop([join, next])].join('');
         },
+        ignore: (d, def) => d.substring(1).split('/')
+          .reduce((obj, key) => obj[key], schema) || def,
+        if: (d, found, def) => (d.substring(1).split('/')
+          .reduce((obj, key) => obj[key], schema) && loop(found)) || def,
         ...extraTasks
       }
       const [task, ...attrs] = rules[key];

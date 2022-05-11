@@ -36,6 +36,7 @@ import NavLink from "./navigation/react-router-navlink";
 import PanelContainer from "./containers/panel-container/panel-container";
 import FetchContainer from "./containers/fetch-container";
 import Video from "./media/video";
+import MenuItem from "./navigation/menu-item/menu-item";
 
 const COMPONENTS = {
   Debug,
@@ -72,7 +73,8 @@ const COMPONENTS = {
   PanelContainer,
   FetchContainer,
   Video,
-  DndListContainer
+  DndListContainer,
+  MenuItem
 }
 
 export default COMPONENTS;

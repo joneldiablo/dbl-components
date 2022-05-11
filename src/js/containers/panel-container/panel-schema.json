@@ -1,0 +1,76 @@
+{
+  "view": {
+    "logoLink": {
+      "name": "$nameLogoLink",
+      "component": "Link",
+      "to": "/",
+      "content": {
+        "name": "$nameLogoImg",
+        "classes": "logo",
+        "tag": "img"
+      }
+    },
+    "contentTop": {
+      "name": "$nameContentTop"
+    },
+    "panelMenu": {
+      "name": "$namePanelMenu",
+      "component": "ListContainer",
+      "classes": "py-2 list-unstyled panel-menu",
+      "content": "$definitions/contentMenu"
+    },
+    "toggleFixed": {
+      "name": "$nameToggleFixed",
+      "component": "Action",
+      "classes": "pin-fixed p-0 shadow-none border-top pt-2 rounded-0 im-toggle-fixed",
+      "style": {
+        "position": "sticky",
+        "bottom": 0
+      },
+      "content": {
+        "name": "$nameIconTF",
+        "component": "MenuItem",
+        "label": "Mantener abierto",
+        "icon": "expand-locked",
+        "classes": "$definitions/menuItemClasses"
+      }
+    }
+  },
+  "definitions": {
+    "menuItemClasses": {
+      ".": "",
+      "link": "d-block p-2",
+      "badge": "bg-danger border-light",
+      "icon": "align-middle",
+      "label": ""
+    },
+    "contentMenu": {
+      "component": "MenuItem",
+      "activeClassName": "active",
+      "badge": "$itemBadge",
+      "icon": "$item/icon",
+      "label": "$item/label",
+      "to": "$item/to",
+      "name": "$itemName",
+      "classes": "$definitions/menuItemClasses",
+      "content": "$submenu"
+    },
+    "itemContentMenu": {
+      "component": "MenuItem",
+      "activeClassName": "active",
+      "badge": "$itemBadge",
+      "icon": "$item/icon",
+      "label": "$item/label",
+      "to": "$item/to",
+      "name": "$subitemName",
+      "classes": "$definitions/menuItemClasses",
+      "content": null
+    },
+    "submenu": {
+      "name": "$nameSubmenu",
+      "component": "ListContainer",
+      "classes": "list-unstyled panel-menu panel-submenu",
+      "content": "$definitions/itemContentMenu"
+    }
+  }
+}

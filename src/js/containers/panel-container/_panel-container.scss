@@ -6,6 +6,9 @@ $panel-color: $light !default;
   overflow-y: auto;
   overflow-x: hidden;
   background: $panel-bg;
+  position: sticky;
+  top: 0;
+
   &:not(.inset) {
     box-shadow: 0.125rem 0 1rem rgba($black, 0.4);
   }
@@ -19,7 +22,7 @@ $panel-color: $light !default;
     pointer-events: none;
     box-shadow: -1rem 0 1rem -1rem inset rgba($black, 0.4);
   }
-  .logo-Component {
+  .logo {
     height: 125px;
     object-fit: contain;
     display: block;
@@ -30,16 +33,6 @@ $panel-color: $light !default;
     //transition: width 0.2s ease;
   }
   .ListContainer li {
-    position: relative;
-    small[id$="Badge"] {
-      min-width: 16px;
-      height: 16px;
-      text-align: center;
-      line-height: 16px;
-      font-size: 11px;
-      right: -2%;
-      top: 50%;
-    }
     a {
       &:hover {
         background-color: rgba($dark, 0.1);
@@ -49,10 +42,10 @@ $panel-color: $light !default;
         color: $panel-bg;
       }
       color: $panel-color;
-      margin-right: calc(-0.5 * $grid-gutter-width);
-      margin-left: calc(-0.5 * $grid-gutter-width);
-      padding: calc(0.25 * $grid-gutter-width) calc(0.5 * $grid-gutter-width);
     }
+  }
+  .im-toggle-fixed:hover {
+    background-color: rgba($dark, 0.1);
   }
   &.mobile {
     position: fixed !important;
@@ -82,6 +75,7 @@ $panel-color: $light !default;
   top: 0;
   left: 0;
   position: fixed;
+  z-index: 1024;
 }
 
 .panel-touchClose {

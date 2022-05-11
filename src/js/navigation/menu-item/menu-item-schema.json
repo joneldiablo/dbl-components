@@ -1,0 +1,40 @@
+{
+  "view": {
+    "link": {
+      "name": "$nameLink",
+      "component": "NavLink",
+      "classes": "$classesLink",
+      "to": "$data/to",
+      "exact": "$data/exact",
+      "activeClassName": "$data/activeClassName",
+      "content": {
+        "icon": {
+          "name": "$nameIcon",
+          "component": "Icons",
+          "icon": "$data/icon",
+          "classes": "$classesIcon",
+          "style": {
+            "width": "$data/iconSize",
+            "height": "$data/iconSize"
+          }
+        },
+        "label": {
+          "name": "$nameLabel",
+          "classes": "$classesLabel",
+          "tag": "span",
+          "content": "$dataLabel"
+        }
+      }
+    },
+    "badge": {
+      "name": "$nameBadge",
+      "tag": "small",
+      "classes": "$classesBadge",
+      "content": "$data/badge",
+      "style": {
+        "pointerEvents": "none"
+      }
+    }
+  },
+  "definitions": {}
+}

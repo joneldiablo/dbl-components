@@ -8,7 +8,7 @@ export default class Component extends React.Component {
   static jsClass = 'Component';
   static propTypes = {
     name: PropTypes.string.isRequired,
-    classes: PropTypes.string,
+    classes: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     style: PropTypes.object,
     active: PropTypes.bool
   }
@@ -58,7 +58,8 @@ export default class Component extends React.Component {
     const { classes, style, name, tag, active } = this.props;
     const { localClasses, localStyles } = this.state;
     const content = this.content();
-    const cn = [this.constructor.jsClass, this.name, this.classes, localClasses, classes];
+    const cn = [this.constructor.jsClass, this.name, this.classes, localClasses,
+    typeof classes === 'string' ? classes : classes['.']];
     const s = Object.assign({}, this.style, localStyles, style);
     const Tag = tag || this.tag;
     return (active ? <Tag id={name} className={cn.join(' ')} style={s} ref={this.ref} {...this.eventHandlers} {...this.componentProps}>

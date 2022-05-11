@@ -31,7 +31,10 @@ export default class View extends Container {
       content: [],
       localClasses: this.props.test ? 'test-view-wrapper' : ''
     });
-    this.jsonRender = new JsonRender(props, this.mutations.bind(this));
+    const propsJR = { ...props };
+    propsJR.childrenIn = propsJR.routesIn;
+    delete propsJR.routesIn;
+    this.jsonRender = new JsonRender(propsJR, this.mutations.bind(this));
   }
 
   componentDidMount() {
