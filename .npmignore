@@ -5,4 +5,6 @@ node_modules
 src
 stories
 build.sh
+babel.sh
 update-version.js
+tests
