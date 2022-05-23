@@ -41,6 +41,7 @@ export default class ComplexComponent extends Component {
   componentDidMount() {
     this.events.forEach(e => eventHandler.subscribe(...e));
   }
+
   componentWillUnmount() {
     this.events.forEach(([eName]) => eventHandler.unsubscribe(eName));
   }
