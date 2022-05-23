@@ -1,6 +1,7 @@
 import React from "react";
 
 import resolveRefs from "./functions/resolve-refs";
+import eventHandler from "./functions/event-handler";
 import JsonRender from "./json-render";
 import Component from "./component";
 
@@ -21,13 +22,13 @@ export default class ComplexComponent extends Component {
     schema,
     definitions: {},
     classes: {
-      '.': 'border p-4 bg-light',
-      dummy: 'text-primary'
+      '.': ''
     },
     rules: {
-      ...nameSuffixes(['Dummy'])
     }
   }
+
+  events = [];
 
   constructor(props) {
     super(props);
@@ -35,6 +36,13 @@ export default class ComplexComponent extends Component {
     Object.assign(this.state, {
       view: this.buildView()
     });
+  }
+
+  componentDidMount() {
+    this.events.forEach(e => eventHandler.subscribe(...e));
+  }
+  componentWillUnmount() {
+    this.events.forEach(([eName]) => eventHandler.unsubscribe(eName));
   }
 
   buildView() {
