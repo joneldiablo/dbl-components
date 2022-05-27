@@ -55,7 +55,6 @@ export default class PanelContainer extends Component {
       [props.name + 'LogoImg']: { _props: { src: props.icon, width: props.iconSize } },
       [props.name + 'LogoLink']: { to: props.link || '/' }
     });
-    console.log(this.state.view);
     if (props.type === 'reveal')
       this.state.classSet.add('inset');
   }

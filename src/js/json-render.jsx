@@ -20,6 +20,7 @@ export default class JsonRender {
           break;
         case 'icons':
           C7tReplace = Icons;
+          domNode.attribs.inline = domNode.attribs.inline === 'false' ? false : true;
           break;
         case 'textarea':
         case 'input':
