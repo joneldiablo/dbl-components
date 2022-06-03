@@ -50,14 +50,14 @@ export default class ModalContainer extends Component {
 
   onUpdateModal = ({ open: showModal }) => {
     if (!showModal) {
-      return this.modal.hide();
+      return this.modal?.hide();
     }
     this.setState({ showModal });
   }
 
   destroy = () => {
     if (this.modal) {
-      this.modal.dispose();
+      this.modal?.dispose();
       this.modal = null;
     }
     this.setState({ showModal: false });
