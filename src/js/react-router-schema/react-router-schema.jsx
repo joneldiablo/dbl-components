@@ -118,7 +118,7 @@ export default class SchemaController extends React.Component {
         } else if (Array.isArray(route.path)) {
           subRoute.path = route.path.map(path => urlJoin(path, subRoute.path));
         } else {
-          subRoute.path = urlJoin(route.path, subRoute.path);
+          subRoute.path = urlJoin(route.path, subRoute.path || '');
         }
         return this.views(subRoute, i);
       }

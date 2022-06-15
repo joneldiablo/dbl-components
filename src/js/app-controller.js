@@ -17,6 +17,7 @@ const state = {};
  * @param {Object} props.rootView.view - objeto donde se registra la estructura de la página
  * @param {Object} props.rootView.definitions - objeto con estructuras que se podrán reciclar
  * @param {Object[]} props.views - arreglo de vistas con la misma estructura que rootview
+ * @param {Object} props.containers - nombre de contenedores extra ej. {containers:'container'}
  * @param {Object} props.views[].view
  * @param {Object} props.views[].definitions
  * @param {Object} props.state - estado inicial de la aplicación, se puede meter cualquier cosa
@@ -34,8 +35,16 @@ export default class AppController {
     // INFO: se inicializa la rootView por si no trajera la estructura adecuada
     props.rootView.definitions = props.rootView.definitions || { views: {} };
     props.rootView.definitions.views = props.rootView.definitions.views || {};
-    // INFO: se cargan las vistas en rootView como definiciones
+    // INFO: se cargan las vistas en rootView como definiciones y otros contenedores
     props.views.forEach(vObj => {
+      props.containers = props.containers || {};
+      Object.entries(props.containers).forEach(([containerName, elementName]) => {
+        if (!vObj[elementName]) return;
+        const content = resolveRefs(vObj[elementName], vObj);
+        if (!props.rootView.definitions[containerName])
+          props.rootView.definitions[containerName] = {};
+        props.rootView.definitions[containerName][content.name] = content;
+      });
       const view = resolveRefs(vObj.view, vObj);
       props.rootView.definitions.views[view.name] = view;
     });
