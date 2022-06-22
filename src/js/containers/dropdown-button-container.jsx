@@ -19,6 +19,7 @@ export class DropdownItem extends Component {
   constructor(props) {
     super(props);
     if (typeof props.to === 'string') this.tag = NavLink;
+    else if (typeof props.href === 'string') this.tag = 'a';
     else this.tag = 'button';
     this.eventHandlers = {
       onClick: this.onClick
@@ -30,7 +31,7 @@ export class DropdownItem extends Component {
   }
 
   get componentProps() {
-    if (typeof this.props.to === 'string') {
+    if (this.tag === NavLink || this.tag === 'a') {
       const {
         activeClassName,
         activeStyle,
@@ -41,7 +42,9 @@ export class DropdownItem extends Component {
         to,
         replace,
         innerRef,
-        _component
+        _component,
+        href,
+        target
       } = this.props;
       return {
         activeClassName,
@@ -53,7 +56,9 @@ export class DropdownItem extends Component {
         to,
         replace,
         innerRef,
-        component: _component
+        component: _component,
+        href,
+        target
       }
     } else return { ...super.componentProps, type: 'button' };
   }

@@ -6,14 +6,15 @@ export default class ActionComponent extends Component {
   static jsClass = 'ActionComponent';
   static defaultProps = {
     ...Component.defaultProps,
-    type: 'button'
+    type: 'button',
+    classButton: true
   }
 
   tag = 'button';
 
   constructor(props) {
     super(props);
-    this.state.localClasses = 'btn';
+    this.state.localClasses = props.classButton ? 'btn' : '';
     this.eventHandlers.onClick = this.onClick;
   }
 
