@@ -45,7 +45,7 @@ export default class RadioField extends Field {
   }
 
   nodeOption = (item, i) => {
-    const { inline, name, format } = this.props;
+    const { inline, name, format, first } = this.props;
     const { value } = this.state;
     const cn = ['form-check', item.classes];
     if (inline) cn.push('form-check-inline');
@@ -66,9 +66,11 @@ export default class RadioField extends Field {
       checked: checked,
       'data-type': typeof item.value
     }
+    const label = <label className="form-check-label" htmlFor={id}>{item.label}</label>;
     return <div key={i + '-' + item.value} className={cn.join(' ')} >
+      {first === 'label' && label}
       <input {...inputProps} />
-      <label className="form-check-label" htmlFor={id}>{item.label}</label>
+      {first === 'control' && label}
     </div >
   }
 

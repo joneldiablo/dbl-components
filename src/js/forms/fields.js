@@ -11,6 +11,7 @@ import PaginationField from "./fields/pagination-field";
 import FileButtonField from "./fields/file-button-field";
 import DropFileField from "./fields/drop-file-field";
 import EditorField from "./fields/editor-field";
+import JsonEditorField from "./fields/json-editor-field";
 import TextareaField from "./fields/textarea-field";
 import FileField from "./fields/file-field";
 import GroupField from "./fields/group-field";
@@ -36,6 +37,7 @@ const fieldComponents = {
   TextareaField,
   FileField,
   GroupField,
+  JsonEditorField,
   ...groups
 };
 

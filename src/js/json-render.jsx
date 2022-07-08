@@ -89,14 +89,15 @@ export default class JsonRender {
       match,
       history
     }
-    if (content || (childrenIn === section.name)) {
-      componentProps.children = (childrenIn === section.name ?
-        <>
-          {this.buildContent(content)}
-          {children}
-        </> :
-        this.buildContent(content)
-      )
+    if (!Component.dontBuildContet && content && (childrenIn === section.name)) {
+      componentProps.children = <>
+        {this.buildContent(content)}
+        {children}
+      </>
+    } else if (!Component.dontBuildContet && content) {
+      componentProps.children = this.buildContent(content);
+    } else if (childrenIn === section.name) {
+      componentProps.children = children;
     }
 
     const cnSection = [componentProps.name + '-section'];
@@ -104,8 +105,9 @@ export default class JsonRender {
     const exclusionSec = ['NavLink', 'Image', 'Link', 'Icons', 'Action',
       'DropdownButtonContainer', 'ModalButtonContainer', 'DropdownItem']
       .includes(componentName);
-    const Wrapper = componentProps.wrapper || Component.wrapper || 'section';
-    return (exclusionSec || componentProps.tag ?
+    const Wrapper = componentProps.wrapper === false ? false :
+      componentProps.wrapper || Component.wrapper || 'section';
+    return (!Wrapper || exclusionSec || componentProps.tag ?
       <Component key={componentProps.name || i} {...componentProps} /> :
       <Wrapper key={componentProps.name || i} className={cnSection.join(' ')}>
         <Component {...componentProps} />

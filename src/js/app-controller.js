@@ -38,6 +38,7 @@ export default class AppController {
     // INFO: se cargan las vistas en rootView como definiciones y otros contenedores
     props.views.forEach(vObj => {
       props.containers = props.containers || {};
+      vObj.definitions = Object.assign({}, props.rootView.definitions, vObj.definitions);
       Object.entries(props.containers).forEach(([containerName, elementName]) => {
         if (!vObj[elementName]) return;
         const content = resolveRefs(vObj[elementName], vObj);
@@ -48,9 +49,6 @@ export default class AppController {
       const view = resolveRefs(vObj.view, vObj);
       props.rootView.definitions.views[view.name] = view;
     });
-    // INFO: se colocan las definiciones en el state para que se pueda 
-    //       disponer de ellas en controladores
-    state.definitions = resolveRefs(props.rootView.definitions, props.rootView);
     // INFO: se carga el estado inicial
     Object.assign(state, props.state || {});
     // INFO: se procesa la vista inicial para poder ser usada en react-route-schema
@@ -67,7 +65,7 @@ export default class AppController {
   setState(data, dispatch = true) {
     Object.assign(state, data);
     Object.keys(data).forEach(key => {
-      if (dispatch) eventHandler.dispatch(key, data[key]);
+      if (dispatch) eventHandler.dispatch('global.' + key, data[key]);
     });
   }
 

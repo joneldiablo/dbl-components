@@ -149,7 +149,7 @@ export default class Field extends Component {
       this.input.current.setCustomValidity(message);
     }
     if (reset) {
-      newState.value = this.props.default;
+      newState.value = newState.value || this.props.default;
       return this.setState(newState, this.returnData);
     }
     this.setState(newState);
