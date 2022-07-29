@@ -22,7 +22,7 @@ export default class Icons extends React.Component {
   }
 
   render() {
-    let { inline, icon, classes, className, style, width, height, title } = this.props;
+    let { inline, icon, classes, className, style, width, height, title, size } = this.props;
     // first element empty to generate an space
     let cn = [className, classes, this.constructor.jsClass];
     if (inline) {
@@ -37,7 +37,8 @@ export default class Icons extends React.Component {
       style,
       width,
       height,
-      title
+      title,
+      size
     }
     return (<IcoMoon {...props} />);
   }

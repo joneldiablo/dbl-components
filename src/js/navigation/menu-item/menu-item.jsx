@@ -14,6 +14,7 @@ export default class MenuItem extends Component {
     iconSize: 40,
     activeLabel: true,
     definitions: {},
+    iconInline: true,
     classes: {
       '.': '',
       link: 'd-block p-2',
@@ -24,8 +25,8 @@ export default class MenuItem extends Component {
     rules: {
       ...nameSuffixes(['Link', 'Icon', 'Label', 'Badge']),
       '$classesLink': ['join', ["im-link", "$data/classes/link"], ' '],
-      '$classesIcon': ['join', ["", "$data/classes/icon"], ' '],
-      '$classesLabel': ['join', ["im-label ms-2", "$data/classes/label"], ' '],
+      '$classesIcon': ['join', ["me-2", "$data/classes/icon"], ' '],
+      '$classesLabel': ['join', ["im-label", "$data/classes/label"], ' '],
       '$classesBadge': ['join',
         ["position-absolute translate-middle-y rounded-pill badge border d-flex justify-content-center align-items-center", "$data/classes/badge"], ' '],
       '$dataLabel': ['ignore', '$data/label']
@@ -59,6 +60,7 @@ export default class MenuItem extends Component {
       case name + 'Icon':
         return (typeof this.props.icon === 'string') ? {
           icon: this.props.icon,
+          inline: this.props.iconInline,
           style: {
             pointerEvents: 'none',
             width: this.props.iconSize,

@@ -25,6 +25,14 @@ export default class EditorField extends Field {
     }, () => this.returnData());
   }
 
+  onReady = (editor) => {
+    const documentView = editor.editing.view.document;
+    const controller = this;
+    documentView.on('paste', (event, data) =>
+      eventHandler.dispatch('paste.' + controller.props.name, { [this.props.name]: { event, data } })
+    );
+  }
+
   get inputNode() {
     const { config, editor } = this.props;
     const { value } = this.state;
@@ -33,9 +41,10 @@ export default class EditorField extends Field {
       editor,
       data: value,
       config: Object.assign({}, this.config, config),
+      onReady: this.onReady,
       onChange: this.onChange,
       onBlur: (event, editor) => eventHandler.dispatch('blur.' + this.props.name, editor),
-      onFocus: (event, editor) => eventHandler.dispatch('focus.' + this.props.name, editor),
+      onFocus: (event, editor) => eventHandler.dispatch('focus.' + this.props.name, editor)
     };
     return disabled ?
       <div className="form-control text-reset">

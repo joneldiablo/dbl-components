@@ -218,8 +218,13 @@ export default class Table extends Component {
   }
 
   mapRows = (row, i) => {
-    const { columns } = this.props;
-    return <tr key={i + '-' + row.id} >
+    const { columns, name, mapRows: mapRowsFunc } = this.props;
+    const cnRow = ['row-' + this.props.name, 'row-' + row.id];
+    const { classes: rowClasses, ...rowProps } =
+      (typeof mapRowsFunc === 'function' && mapRowsFunc(name, row, i)) || {};
+    if (rowClasses) cnRow.push(rowClasses);
+
+    return <tr key={i + '-' + row.id} {...rowProps} className={cnRow.join(' ')}>
       {columns.map((col, j) => this.mapCells(row, col, j))}
     </tr>
   }

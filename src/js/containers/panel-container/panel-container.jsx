@@ -52,7 +52,6 @@ export default class PanelContainer extends Component {
       expanded: false,
       fixed: false,
       open: true,
-      [props.name + 'LogoImg']: { _props: { src: props.icon, width: props.iconSize } },
       [props.name + 'LogoLink']: { to: props.link || '/' }
     });
     if (props.type === 'reveal')
@@ -101,8 +100,7 @@ export default class PanelContainer extends Component {
     if (!e?.force && (this.state.mobile || this.state.fixed)) return;
     this.state.classSet.add('expanded');
     this.state.classSet.delete('close');
-    this.state[this.props.name + 'LogoImg']._props.src = this.props.logo;
-    this.state[this.props.name + 'LogoImg']._props.width = this.props.width;
+
     this.state.expanded = true;
     this.forceUpdate();
   }
@@ -111,8 +109,6 @@ export default class PanelContainer extends Component {
     if (!e?.force && (this.state.mobile || this.state.fixed)) return;
     this.state.classSet.delete('expanded');
     this.state.classSet.add('close');
-    this.state[this.props.name + 'LogoImg']._props.src = this.props.icon;
-    this.state[this.props.name + 'LogoImg']._props.width = this.props.iconSize;
     this.state.expanded = false;
     this.forceUpdate();
   }
@@ -156,6 +152,14 @@ export default class PanelContainer extends Component {
   mutations(sn, s) {
     const { name } = this.props;
     switch (sn) {
+      case name + 'LogoImg':
+        return this.state.expanded ? {
+          classes: 'logo expanded',
+          _props: { src: this.props.logo, width: this.props.width }
+        } : {
+          classes: 'logo',
+          _props: { src: this.props.icon, width: this.props.iconSize }
+        };
       case name + 'ContentTop':
         const active = !!this.props.contentTop;
         const content = active ? this.jsonRender.buildContent(this.props.contentTop) : null;

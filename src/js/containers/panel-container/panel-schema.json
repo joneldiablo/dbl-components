@@ -6,7 +6,7 @@
       "to": "/",
       "content": {
         "name": "$nameLogoImg",
-        "classes": "logo",
+        "classes": "_classes",
         "tag": "img"
       }
     },

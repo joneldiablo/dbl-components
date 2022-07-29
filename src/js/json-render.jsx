@@ -78,7 +78,7 @@ export default class JsonRender {
     }
     if (typeof sectionRaw.active === 'boolean' && !sectionRaw.active) return false;
     const { component: componentName, content, label, message, errorMessage, ...section } = sectionRaw;
-    const { location, match, history, childrenIn, children } = this.props;
+    const { location, match, childrenIn = this.childrenIn, history, children } = this.props;
     const Component = COMPONENTS[componentName] || (COMPONENTS.Component);
     const componentProps = {
       ...section,
@@ -89,12 +89,13 @@ export default class JsonRender {
       match,
       history
     }
-    if (!Component.dontBuildContet && content && (childrenIn === section.name)) {
+    if (Component.dontBuildContent) componentProps.content = content;
+    if (!Component.dontBuildContent && content && (childrenIn === section.name)) {
       componentProps.children = <>
         {this.buildContent(content)}
         {children}
       </>
-    } else if (!Component.dontBuildContet && content) {
+    } else if (!Component.dontBuildContent && content) {
       componentProps.children = this.buildContent(content);
     } else if (childrenIn === section.name) {
       componentProps.children = children;

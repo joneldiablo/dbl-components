@@ -38,6 +38,7 @@ import FetchContainer from "./containers/fetch-container";
 import Video from "./media/video";
 import MenuItem from "./navigation/menu-item/menu-item";
 import TableContainer from "./containers/table-container";
+import AlertContainer from "./containers/alert-container/alert-container";
 
 const COMPONENTS = {
   Debug,
@@ -76,7 +77,8 @@ const COMPONENTS = {
   Video,
   DndListContainer,
   MenuItem,
-  TableContainer
+  TableContainer,
+  AlertContainer
 }
 
 export default COMPONENTS;
