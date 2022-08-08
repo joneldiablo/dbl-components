@@ -58,10 +58,8 @@ export default class Component extends React.Component {
     const { classes, style, name, tag, active } = this.props;
     const { localClasses, localStyles } = this.state;
     const content = this.content();
-    const cn = [
-      this.constructor.jsClass, this.name, this.classes, localClasses,
-      typeof classes === 'string' ? classes : (Array.isArray(classes) ? classes.join(' ') : classes['.'])
-    ];
+    const cn = [this.constructor.jsClass, this.name, this.classes, localClasses];
+    if (!!classes) cn.push(typeof classes === 'string' ? classes : (Array.isArray(classes) ? classes.join(' ') : classes['.']));
     const s = Object.assign({}, this.style, localStyles, style);
     const Tag = tag || this.tag;
     return (active ? <Tag id={name} className={cn.join(' ')} style={s} ref={this.ref} {...this.eventHandlers} {...this.componentProps}>
