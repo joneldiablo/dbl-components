@@ -9,7 +9,7 @@ export default class Field extends Component {
   static jsClass = 'Field';
   static propTypes = {
     ...Component.propTypes,
-    autoComplete: PropTypes.string,
+    autoComplete: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
     checkValidity: PropTypes.func,
     controlClasses: PropTypes.string,
     default: PropTypes.any,
@@ -166,25 +166,30 @@ export default class Field extends Component {
 
   get inputProps() {
     const { disabled, readOnly, accept, minLength,
-      required, name, controlClasses, maxLength,
-      placeholder, step, noValidate, multiple,
-      min, max, pattern, autoComplete, dir } = this.props;
+      required, name, controlClasses, maxLength, list,
+      placeholder, step, noValidate, multiple, autoComplete,
+      min, max, pattern, dir, _propsControl = {} } = this.props;
     const { value, error } = this.state;
     const cn = [
       'form-control',
       controlClasses, error ? 'is-invalid' : ''
     ];
+    if (autoComplete === false) {
+      var autocomplete = 'off';
+      var list1 = 'autocompleteOff';
+    }
     return {
-      id: name, name,
-      pattern, placeholder,
-      required, autoComplete, type: this.type,
+      id: name, name, autoComplete: autocomplete || autoComplete,
+      list: list1 || list, pattern, placeholder,
+      required, type: this.type,
       value, className: cn.join(' '),
       min, max, step, noValidate, disabled,
       readOnly, ref: this.input, dir, accept,
       multiple, maxLength, minLength,
       onChange: this.onChange,
       onInvalid: this.onInvalid,
-      onFocus: this.onFocus
+      onFocus: this.onFocus,
+      ..._propsControl
     }
   }
 

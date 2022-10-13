@@ -16,6 +16,11 @@ export default class AutocompleteField extends Field {
     this.state.options = (props.options || []).slice(0, props.maxItems);
     this.state.more = !!(props.options || []).slice(props.maxItems).length;
     this.state.showDropdown = '';
+    if (props.value || props.default) {
+      const opt = this.state.options.find(opt => opt.value == props.value || opt.value == props.default);
+      console.log(this.state.options, opt);
+      this.state.value = opt ? opt.label : '';
+    }
   }
 
   onChange(e) {
@@ -43,7 +48,7 @@ export default class AutocompleteField extends Field {
     }
   }
 
-  onUpdate({ options, more, ...data }) {
+  onUpdate({ options, more, value, ...data }) {
     const newState = {
       loading: false
     };
@@ -53,38 +58,50 @@ export default class AutocompleteField extends Field {
       newState.more = (options.length > maxItems) || more;
     }
     this.setState(newState);
+    if (typeof value !== 'undefined') {
+      const opt = (newState.options || this.state.options).find(opt => opt.value == value);
+      if (!opt) console.warn('Option not found');
+      else data.value = opt.label;
+    }
     super.onUpdate(data);
   }
 
   show = () => {
     this.setState({
-      showDropdown: 'show'
-    });
+      showDropdown: 'show',
+      value: '',
+    }, () => this.onFilter());
   }
 
   hide = () => {
+    const opt = this.state.selected;
+    const value = opt ? opt.label : '';
     this.setState({
-      showDropdown: ''
+      showDropdown: '',
+      value
     });
   }
 
   onSelectOption(opt) {
-    this.hide();
     this.setState({
       value: opt.value !== null ? opt.label : '',
+      selected: opt,
       error: this.isInvalid(opt.value)
-    }, () => this.returnData(opt.value));
+    }, () => {
+      this.hide();
+      this.returnData(opt.value);
+    });
   }
 
   mapOptions = (opt, i) => {
-    return <li key={opt.value}>
-      <span className="dropdown-item"
-        onClick={() => this.onSelectOption(opt)}
+    return <li key={opt.value} className={opt.disabled ? 'muted' : ''}>
+      <span className="dropdown-item" style={{ cursor: 'pointer' }}
+        onClick={(!opt.disabled ? () => this.onSelectOption(opt) : undefined)}
       >
         {opt.label}
       </span>
       {opt.divider && <hr className="m-0" />}
-    </li>
+    </li >
   }
 
   get type() {
@@ -95,6 +112,7 @@ export default class AutocompleteField extends Field {
     const props = super.inputProps;
     props.onFocus = () => [this.show(), super.inputProps.onFocus()];
     props.autoComplete = "off";
+    props.list = "autocompleteOff";
     return props;
   }
 
@@ -108,13 +126,14 @@ export default class AutocompleteField extends Field {
       position: 'fixed',
       width: '100%',
       height: '100vh',
-      opacity: 0
+      opacity: 0,
+      zIndex: 1000
     };
     return <>
       {showDropdown && <div onClick={this.hide} style={closeStyle}></div>}
       {super.inputNode}
       {l && loading}
-      <ul className={cn.join(' ')} ref={this.menuDropdown} style={{ minWidth: '100%', overflow: 'hidden' }}>
+      <ul className={cn.join(' ')} ref={this.menuDropdown} style={{ minWidth: '100%', overflow: 'hidden', zIndex: 1001 }}>
         {options.map(this.mapOptions)}
         {more && <li >
           <span className="dropdown-item text-wrap" >...</span>

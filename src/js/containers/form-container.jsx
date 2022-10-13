@@ -80,14 +80,18 @@ export default class FormContainer extends Component {
     this.setState({ data: dataDefault });
   }
 
-  onUpdate = ({ data, reset, default: dataDefault }) => {
+  onUpdate = ({ data, reset, default: dataDefault, update = true, clearData }) => {
+    if (clearData) {
+      this.setState({ data: {} });
+    }
     if (dataDefault) {
       this.onDefault(dataDefault);
     }
     if (data) {
-      Object.keys(data).forEach(fieldName => {
-        eventHandler.dispatch('update.' + fieldName, { value: data[fieldName] });
-      });
+      if (update)
+        Object.keys(data).forEach(fieldName => {
+          eventHandler.dispatch('update.' + fieldName, { value: data[fieldName] });
+        });
       this.setState({ data: { ...this.state.data, ...data } });
     }
     if (typeof reset === 'boolean') {

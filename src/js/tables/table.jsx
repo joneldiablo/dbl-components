@@ -1,11 +1,13 @@
 import React from "react";
 import moment from "moment";
 import parseReact from "html-react-parser";
+
+import eventHandler from "../functions/event-handler";
+import deepMerge from "../functions/deep-merge";
+import COMPONENTS from "../components";
 import Component from "../component";
 import fields from "../forms/fields";
-import COMPONENTS from "../components";
 import Icons from "../media/icons";
-import eventHandler from "../functions/event-handler";
 
 const FORMATS = {
   component: (raw, props, data) => {
@@ -54,7 +56,8 @@ const FORMATS = {
       style: 'currency',
       currency
     })).format(raw),
-  number: (raw, { locale = 'en-US' } = {}) => (new Number(raw)).toLocaleString(locale)
+  number: (raw, { locale = 'en-US' } = {}) => (new Number(raw)).toLocaleString(locale),
+  boolean: (raw, { 'true': True = 'Yes', 'false': False = 'Not' }) => (raw ? True : False)
 }
 
 export const addFormatTemplates = (newTemplates = {}) => {
@@ -232,9 +235,7 @@ export default class Table extends Component {
   mapCells = (rowData, col, i) => {
     const { colClasses } = this.props;
     const colName = col.name;
-    const style = {
-      ...col.style
-    }
+    const style = { ...col.style };
     const cn = ['cell', col.type, col.name + '-cell', col.classes, colClasses];
     const cell = (<div className={cn.join(' ')} style={style} title={rowData[colName]}>
       {this.format(col, rowData)}
@@ -249,7 +250,12 @@ export default class Table extends Component {
     const formater = FORMATS[col.format] || (raw => raw);
     const cellData = typeof rowData[col.name] !== 'undefined' ? rowData[col.name] : true;
     let formatOpts = {};
-    if (col.formatOpts) formatOpts = JSON.parse(JSON.stringify(col.formatOpts));
+    if (col.formatOpts) {
+      const { mapCells: mapCellsFunc, name } = this.props;
+      const mutation = typeof mapCellsFunc === 'function' && mapCellsFunc(name, col.name, rowData) || {};
+      formatOpts = JSON.parse(JSON.stringify(col.formatOpts));
+      deepMerge(formatOpts, mutation);
+    }
     return formater(cellData, formatOpts, rowData);
   }
 
