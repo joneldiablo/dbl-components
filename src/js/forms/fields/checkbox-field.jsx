@@ -38,9 +38,10 @@ export default class CheckboxField extends RadioField {
   content() {
     let { options, errorMessage, label, disabled, readOnly } = this.props;
     let { error } = this.state;
+    const hasOptions = Array.isArray(options);
     return <>
-      {label && this.nodeLabel}
-      {Array.isArray(options) ?
+      {!!label && hasOptions && this.labelNode}
+      {hasOptions ?
         options.map(this.nodeOption) :
         // se inserta el valor true para no modificar el algoritmo de nodeOption en el padre
         this.nodeOption({ value: true, label, disabled, readOnly })}
