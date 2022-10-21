@@ -9,7 +9,7 @@ import Component from "../component";
 import fields from "../forms/fields";
 import Icons from "../media/icons";
 
-const FORMATS = {
+export const FORMATS = {
   component: (raw, props, data) => {
     const buildContent = (content, index) => {
       if (!content) return false;
@@ -52,11 +52,13 @@ const FORMATS = {
   datetime: (raw, { format: f = 'DD/MM/YYYY HH:mm', locale = false } = {}) =>
     raw ? locale ? moment(raw).format(f) : moment.utc(raw).format(f) : '',
   currency: (raw, { locale = 'en-US', currency = 'USD' } = {}) =>
-    (new Intl.NumberFormat(locale, {
+    ['string', 'number'].includes(typeof raw) ? (new Intl.NumberFormat(locale, {
       style: 'currency',
       currency
-    })).format(raw),
-  number: (raw, { locale = 'en-US' } = {}) => (new Number(raw)).toLocaleString(locale),
+    })).format(raw) : '',
+  number: (raw, { locale = 'en-US' } = {}) =>
+    ['string', 'number'].includes(typeof raw) ?
+      (new Number(raw)).toLocaleString(locale) : '',
   boolean: (raw, { 'true': True = 'Yes', 'false': False = 'Not' }) => (raw ? True : False)
 }
 
@@ -260,8 +262,7 @@ export default class Table extends Component {
   }
 
   content(children = this.props.children) {
-    const { data } = this.props;
-    const { columns } = this.props;
+    const { data, columns, headerClasses } = this.props;
     let header, footer;
     if (Array.isArray(children))
       [header, footer] = children;
@@ -274,7 +275,7 @@ export default class Table extends Component {
             </td>
           </tr>
         }
-        <tr>
+        <tr className={headerClasses}>
           {columns.map(this.mapHeaderCell)}
         </tr>
       </thead>

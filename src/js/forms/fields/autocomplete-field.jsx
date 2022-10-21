@@ -86,7 +86,7 @@ export default class AutocompleteField extends Field {
     this.setState({
       value: opt.value !== null ? opt.label : '',
       selected: opt,
-      error: this.isInvalid(opt.value)
+      error: false
     }, () => {
       this.hide();
       this.returnData(opt.value);
