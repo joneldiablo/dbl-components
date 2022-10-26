@@ -61,7 +61,10 @@ export default class AutocompleteField extends Field {
     if (typeof value !== 'undefined') {
       const opt = (newState.options || this.state.options).find(opt => opt.value == value);
       if (!opt) console.warn('Option not found');
-      else data.value = opt.label;
+      else {
+        data.value = opt.label;
+        this.state.selected = opt;
+      }
     }
     super.onUpdate(data);
   }
@@ -89,7 +92,7 @@ export default class AutocompleteField extends Field {
       error: false
     }, () => {
       this.hide();
-      this.returnData(opt.value);
+      this.returnData(opt.value, { option: opt});
     });
   }
 
@@ -110,7 +113,7 @@ export default class AutocompleteField extends Field {
 
   get inputProps() {
     const props = super.inputProps;
-    props.onFocus = () => [this.show(), super.inputProps.onFocus()];
+    props.onFocus = !(props.disabled || props.readOnly) ? (() => [this.show(), super.inputProps.onFocus()]) : null;
     props.autoComplete = "off";
     props.list = "autocompleteOff";
     return props;

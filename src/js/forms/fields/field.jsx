@@ -82,10 +82,10 @@ export default class Field extends Component {
     return obj.toString();
   }
 
-  returnData(value = this.state.value) {
+  returnData(value = this.state.value, extra) {
     let { name, id, data } = this.props;
     let { error } = this.state;
-    const toDispatch = { [name]: value };
+    const toDispatch = { [name]: value, ...extra };
     if (id) toDispatch.id = id;
     if (data) toDispatch.data = data;
     if (!error) {
