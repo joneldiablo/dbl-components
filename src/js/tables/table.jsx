@@ -224,12 +224,14 @@ export default class Table extends Component {
 
   mapRows = (row, i) => {
     const { columns, name, mapRows: mapRowsFunc } = this.props;
-    const cnRow = ['row-' + this.props.name, 'row-' + row.id];
+    const rowId = (row.id === 0 || !!row.id) ? row.id : i;
+    const rowKey = (row.id === 0 || !!row.id) ? (i + '-' + rowId) : i;
+    const cnRow = ['row-' + this.props.name, 'row-' + rowId];
     const { classes: rowClasses, ...rowProps } =
       (typeof mapRowsFunc === 'function' && mapRowsFunc(name, row, i)) || {};
     if (rowClasses) cnRow.push(rowClasses);
 
-    return <tr key={i + '-' + row.id} {...rowProps} className={cnRow.join(' ')}>
+    return <tr key={rowKey} {...rowProps} className={cnRow.join(' ')}>
       {columns.map((col, j) => this.mapCells(row, col, j))}
     </tr>
   }
@@ -239,7 +241,8 @@ export default class Table extends Component {
     const colName = col.name;
     const style = { ...col.style };
     const cn = ['cell', col.type, col.name + '-cell', col.classes, colClasses];
-    const cell = (<div className={cn.join(' ')} style={style} title={rowData[colName]}>
+    const title = typeof rowData[colName] !== 'object' ? rowData[colName] : undefined;
+    const cell = (<div className={cn.join(' ')} style={style} title={title}>
       {this.format(col, rowData)}
     </div>);
     return (colName === 'id' ?
@@ -262,11 +265,13 @@ export default class Table extends Component {
   }
 
   content(children = this.props.children) {
-    const { data, columns, headerClasses } = this.props;
+    const { data, columns, headerClasses, hover = true } = this.props;
     let header, footer;
     if (Array.isArray(children))
       [header, footer] = children;
-    return <table className="table table-striped table-hover">
+    const cn = ['table table-striped'];
+    if (hover) cn.push('table-hover');
+    return <table className={cn.join(' ')}>
       <thead>
         {header &&
           <tr>

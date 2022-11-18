@@ -5,8 +5,19 @@ export default class SelectField extends Field {
 
   static jsClass = 'SelectField';
 
+  onChange(e) {
+    let { value } = e.target;
+    const opt = this.props.options.find(opt => opt.value == value);
+    this.setState({
+      value,
+      error: this.isInvalid(value)
+    }, () => this.returnData(opt ? opt.value : value, { option: opt }));
+  }
+
   get inputProps() {
     const props = super.inputProps;
+    delete props.placeholder;
+    delete props.type;
     props.className = props.className.replace('form-control', 'form-select');
     return props;
   }
