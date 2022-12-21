@@ -1,4 +1,6 @@
 import React from "react";
+
+import JsonRender from "../../json-render";
 import CheckboxField from "./checkbox-field";
 
 export default class SwitchField extends CheckboxField {
@@ -7,6 +9,11 @@ export default class SwitchField extends CheckboxField {
   static defaultProps = {
     ...CheckboxField.defaultProps,
     labels: []
+  }
+
+  constructor(props) {
+    super(props);
+    this.jsonRender = new JsonRender(props);
   }
 
   nodeOption = (item, i) => {
@@ -27,12 +34,20 @@ export default class SwitchField extends CheckboxField {
       disabled: item.disabled || disabled,
       'data-type': typeof item.value
     }
+    const theInput = this.props.labels.length === 2 ?
+      <>
+        {this.jsonRender.buildContent(labels[0])}
+        <input {...inputProps} />
+        {this.jsonRender.buildContent(labels[1])}
+      </> :
+      <input {...inputProps} />
+
     return <div key={i + '-' + item.value} className={cn.join(' ')} >
       {item.label && <>
         <label className="form-check-label" htmlFor={id}>{item.label}</label>
         {!(this.props.inline || item.inline) && <br />}
       </>}
-      {labels[0]}<input {...inputProps} />{labels[1]}
+      {theInput}
     </div>
   }
 
