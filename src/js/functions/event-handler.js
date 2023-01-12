@@ -2,9 +2,9 @@ export class EventHandler {
   constructor() {
     this.events = {};
   }
-  dispatch(event, data) {
+  dispatch(event, ...data) {
     if (!this.events[event]) return;
-    this.events[event].forEach(([callback, id]) => callback(data, id));
+    this.events[event].forEach(([callback, id]) => callback(...data, id));
   }
   subscribe(eventString, callback, id) {
     let events = eventString.split(/[ ,]+/);
