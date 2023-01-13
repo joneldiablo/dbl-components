@@ -43,7 +43,7 @@ export default class DateRangeField extends Field {
     const { inline } = this.props;
     const { error } = this.state;
     const inputProps = this.inputProps;
-    const cnMiddle = ['input-group-text bg-transparent p-0'];
+    const cnMiddle = ['input-group-text bg-transparent p-0', this.props.controlClasses];
     if (error) cnMiddle.push('border-danger');
     const style = {
       ...inputProps.style,
