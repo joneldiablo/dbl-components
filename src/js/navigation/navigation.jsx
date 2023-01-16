@@ -38,26 +38,20 @@ export default class Navigation extends Component {
   }
 
   componentDidMount() {
-    Object.values(this.collapses).forEach(([ref, item]) => {
-      const { caretIcons } = this.props;
-      const { carets } = this.state;
-      this.collapses[item.name][2] = new Collapse(ref);
-      ref.addEventListener('hide.bs.collapse', () => {
-        this.setState({
-          carets: Object.assign(carets, { [item.name]: caretIcons[0] })
-        });
-      });
-
-      ref.addEventListener('show.bs.collapse', () => {
-        this.setState({
-          carets: Object.assign(carets, { [item.name]: caretIcons[1] })
-        });
-      });
-    });
     eventHandler.subscribe(this.props.toggle, this.toggleText);
+    Object.values(this.collapses).forEach(([ref, item, parentName, collapse]) => {
+      ref.addEventListener('hide.bs.collapse', this.hide);
+      ref.addEventListener('show.bs.collapse', this.show);
+    });
   }
 
   componentWillUnmount() {
+    Object.values(this.collapses).forEach(([ref, item, parentName, collapse]) => {
+      collapse.dispose();
+      ref.removeEventListener('hide.bs.collapse', this.hide);
+      ref.removeEventListener('show.bs.collapse', this.show);
+    });
+    this.collapses = {};
     eventHandler.unsubscribe(this.props.toggle);
   }
 
@@ -69,13 +63,30 @@ export default class Navigation extends Component {
     }, () => eventHandler.dispatch(this.props.name, this.state.open));
   }
 
-  collapseRef = (ref, item) => {
+  hide = (e) => {
+    const itemName = e.target.id.split('-collapse')[0];
+    this.setState({ carets: Object.assign(this.state.carets, { [itemName]: this.props.caretIcons[0] }) });
+  }
+
+  show = (e) => {
+    const itemName = e.target.id.split('-collapse')[0];
+    this.setState({ carets: Object.assign(this.state.carets, { [itemName]: this.props.caretIcons[1] }) });
+  }
+
+  collapseRef = (ref, item, parentName) => {
     if (ref) {
-      this.collapses[item.name] = [ref, item];
+      const opts = { toggle: false };
+      if (!parentName) opts.parent = this.ref.current;
+      else if (this.collapses[parentName]) opts.parent = this.collapses[parentName][0];
+      this.collapses[item.name] = [ref, item, parentName, Collapse.getOrCreateInstance(ref, opts)];
     }
   }
 
-  link = (item, i) => {
+  onToggleSubmenu = (e, item) => {
+    this.collapses[item.name][3].toggle();
+  }
+
+  link = (item, i, parentName) => {
     const { caretIcons, linkClasses } = this.props;
     const { carets, open } = this.state;
     carets[item.name] = carets[item.name] || caretIcons[0];
@@ -89,14 +100,13 @@ export default class Navigation extends Component {
       {item.content ? parseReact(open ? item.content[0] : item.content[1]) :
         <>
           <Icons icon={item.icon} className="mx-2" {...iconStyle} />
-          {open &&
-            <>
-              <span className="label">{item.label}</span>
-              {!!item.menu?.length &&
-                <span className="float-end caret-icon" data-bs-toggle="collapse" data-bs-target={'#' + item.name + '-collapse'} onClick={(e) => { e.stopPropagation(); e.preventDefault() }}>
-                  <Icons icon={carets[item.name]} {...iconStyle} />
-                </span>}
-            </>}
+          {open && <>
+            <span className="label">{item.label}</span>
+            {!!item.menu?.length &&
+              <span className="float-end caret-icon">
+                <Icons icon={carets[item.name]} {...iconStyle} />
+              </span>}
+          </>}
         </>
       }
     </span>
@@ -109,19 +119,20 @@ export default class Navigation extends Component {
       exact: item.exact
     }
     return (<React.Fragment key={i + '-' + item.path}>
-      {item.path ?
-        <NavLink {...propsLink} >
-          {innerNode}
-        </NavLink> :
-        <span id={item.name + '-link'}
-          className={[propsLink.className, 'cursor-pointer'].join(' ')}
-          data-bs-toggle="collapse" data-bs-target={'#' + item.name + '-collapse'}
-        >{innerNode}
-        </span>
-      }
+      <span onClick={!!item.menu?.length ? (e) => this.onToggleSubmenu(e, item) : null}>
+        {item.path ?
+          <NavLink {...propsLink} >
+            {innerNode}
+          </NavLink> :
+          <span id={item.name + '-link'}
+            className={[propsLink.className, 'cursor-pointer'].join(' ')}
+          >{innerNode}
+          </span>
+        }
+      </span>
       {!!item.menu?.length &&
-        <div ref={(ref) => this.collapseRef(ref, item)} id={item.name + '-collapse'} className="collapse">
-          {item.menu.map(this.link)}
+        <div ref={(ref) => this.collapseRef(ref, item, parentName)} id={item.name + '-collapse'} className="collapse">
+          {item.menu.map((m, i) => this.link(m, i, item.name))}
         </div>}
     </React.Fragment>);
   }
@@ -130,7 +141,7 @@ export default class Navigation extends Component {
   //       y submenu collapsable
   content(children = this.props.children) {
     return (<>
-      {this.props.menu.map(this.link)}
+      {this.props.menu.map((m, i) => this.link(m, i))}
       {children}
     </>);
   }
