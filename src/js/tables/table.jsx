@@ -69,6 +69,9 @@ export const addFormatTemplates = (newTemplates = {}) => {
 export class HeaderCell extends React.Component {
 
   static jsClass = 'HeaderColumn';
+  static defaultProps = {
+    filterPos: 'down'
+  }
 
   state = {};
 
@@ -113,7 +116,7 @@ export class HeaderCell extends React.Component {
   }
 
   render() {
-    const { col, classes, icons, orderable } = this.props;
+    const { col, classes, icons, orderable, filterPos } = this.props;
     const { sortDir, searchActive } = this.state;
     const showOrder = typeof col.orderable !== 'undefined' ? col.orderable : orderable;
     const style = {
@@ -132,7 +135,7 @@ export class HeaderCell extends React.Component {
           <span>{col.label}</span>
         </div>
         <div className="d-flex">
-          {col.filter && <div className="ps-2 mt-1 dropstart">
+          {col.filter && <div className={"ps-2 mt-1 drop" + filterPos}>
             <span data-bs-toggle="dropdown" >
               <Icons icon={icons.search} className={cnSearch.join(' ')} />
             </span>

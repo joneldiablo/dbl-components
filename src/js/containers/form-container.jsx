@@ -27,6 +27,7 @@ export default class FormContainer extends Component {
     this.onChange = this.onChange.bind(this);
     this.state.data = {};
     this.state.invalidFields = {};
+    this.state.defaultValues = {};
     this.events = [
       ['update.' + props.name, this.onUpdate, this.unique],
       ['default.' + props.name, this.onDefault, this.unique]
@@ -34,14 +35,14 @@ export default class FormContainer extends Component {
     this.fieldsForEach(field => {
       this.events.push([field.name, this.onChange, this.unique]);
       this.events.push(['invalid.' + field.name, this.onInvalidField, this.unique]);
+      if (typeof field.default !== 'undefined') this.state.defaultValues[field.name] = field.default;
     });
     delete this.eventHandlers.onChange;
   }
 
   componentDidMount() {
     this.events.forEach(event => eventHandler.subscribe(...event));
-    // set defaults dont propagate event
-    this.reset(true);
+    this.reset();
   }
 
   componentWillUnmount() {
@@ -70,21 +71,12 @@ export default class FormContainer extends Component {
       .forEach((name, i) => func({ name, ...fields[name] }, i));
   }
 
-  reset(dontDispatch) {
-    const dataDefault = {};
-    this.fieldsForEach(field => {
-      if (typeof field.default === 'undefined') return;
-      dataDefault[field.name] = field.default;
-      if (!dontDispatch) eventHandler.dispatch('update.' + field.name, { reset: true });
-    });
-    this.setState({ data: dataDefault });
-  }
-
-  onUpdate = ({ data, reset, default: dataDefault, update = true, clearData }) => {
+  onUpdate = ({ data, reset, default: dataDefault, update = true, clearData, mergeDefault }) => {
     if (clearData) {
       this.setState({ data: {} });
     }
     if (dataDefault) {
+      this.mergeDefault = mergeDefault;
       this.onDefault(dataDefault);
     }
     if (data) {
@@ -100,9 +92,26 @@ export default class FormContainer extends Component {
   }
 
   onDefault = (data) => {
+    const defaultValues = {};
     this.fieldsForEach(field => {
-      eventHandler.dispatch('update.' + field.name, { value: data[field.name] });
+      defaultValues[field.name] = data[field.name];
     });
+    if (this.mergeDefault) {
+      Object.assign(this.state.defaultValues, defaultValues);
+    } else {
+      this.state.defaultValues = defaultValues;
+    }
+    this.mergeDefault = null;
+  }
+
+  reset() {
+    this.fieldsForEach(field => {
+      if (typeof this.state.defaultValues[field.name] !== undefined)
+        eventHandler.dispatch('update.' + field.name, { value: this.state.defaultValues[field.name] });
+      else
+        eventHandler.dispatch('update.' + field.name, { reset: true });
+    });
+    this.setState({ data: {} });
   }
 
   onInvalid = (e) => {

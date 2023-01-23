@@ -18,7 +18,6 @@ export default class AutocompleteField extends Field {
     this.state.showDropdown = '';
     if (props.value || props.default) {
       const opt = this.state.options.find(opt => opt.value == props.value || opt.value == props.default);
-      console.log(this.state.options, opt);
       this.state.value = opt ? opt.label : '';
     }
   }
@@ -59,11 +58,15 @@ export default class AutocompleteField extends Field {
     }
     this.setState(newState);
     if (typeof value !== 'undefined') {
-      const opt = (newState.options || this.state.options).find(opt => opt.value == value);
+      const opt = (newState.options || this.state.options).concat(this.props.options || [])
+        .find(opt => opt.value == value);
       if (!opt) console.warn('Option not found');
       else {
-        data.value = opt.label;
-        this.state.selected = opt;
+        this.setState({
+          value: opt.label,
+          selected: opt
+        });
+        return;
       }
     }
     super.onUpdate(data);
@@ -92,7 +95,7 @@ export default class AutocompleteField extends Field {
       error: false
     }, () => {
       this.hide();
-      this.returnData(opt.value, { option: opt});
+      this.returnData(opt.value, { option: opt });
     });
   }
 
