@@ -102,7 +102,9 @@ export class HeaderCell extends React.Component {
 
   onChangeFilter = (data) => {
     const { filter } = this.props.col;
-    this.setState({ searchActive: !!data[filter.name] });
+    const searchActive = !!(Array.isArray(data[filter.name]) ?
+      data[filter.name].length : data[filter.name]);
+    this.setState({ searchActive });
     eventHandler.dispatch(this.props.tableName, data);
   }
 
@@ -139,8 +141,7 @@ export class HeaderCell extends React.Component {
             <span data-bs-toggle="dropdown" >
               <Icons icon={icons.search} className={cnSearch.join(' ')} />
             </span>
-            <div className="dropdown-menu dropdown-menu-end p-0">
-              {/*TODO: Cambiar ícono y color cuando haya un filtro*/}
+            <div className="dropdown-menu dropdown-menu-end p-0" onClick={(e) => e.stopPropagation()} >
               {React.createElement(fields[col.filter.type] || fields.Field, col.filter)}
             </div>
           </div>}
