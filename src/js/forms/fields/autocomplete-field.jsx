@@ -48,26 +48,31 @@ export default class AutocompleteField extends Field {
   }
 
   onUpdate({ options, more, value, ...data }) {
-    const newState = {
-      loading: false
-    };
     if (typeof options !== 'undefined') {
+      const newState = {
+        loading: false
+      };
       const { maxItems } = this.props;
       newState.options = options.slice(0, maxItems);
       newState.more = (options.length > maxItems) || more;
+      this.setState(newState);
     }
-    this.setState(newState);
     if (typeof value !== 'undefined') {
-      const opt = (newState.options || this.state.options).concat(this.props.options || [])
-        .find(opt => opt.value == value);
-      if (!opt) console.warn('Option not found');
-      else {
-        this.setState({
-          value: opt.label,
-          selected: opt
-        });
-        return;
+      const newState = {
+        value: '',
+        selected: null
+      };
+      if (![null, ''].includes(value)) {
+        const opt = (newState.options || this.state.options)
+          .concat(this.props.options || [])
+          .find(opt => opt.value == value);
+        if (opt) {
+          newState.value = opt.label;
+          newState.selected = opt;
+        }
       }
+      this.setState(newState);
+      return;
     }
     super.onUpdate(data);
   }
