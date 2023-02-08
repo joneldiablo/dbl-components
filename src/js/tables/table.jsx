@@ -178,7 +178,7 @@ export default class Table extends Component {
 
   componentDidMount() {
     this.events = [];
-    this.props.columns.forEach(col => {
+    Object.entries(this.props.columns).forEach(([key, col]) => {
       // TODO: mejorar esto, filtrar el componente dropdown
       // buscar una forma de que solo los componentes field carguen evento
       if (col.format === 'component' && col.formatOpts.component !== 'DropdownButtonContainer') {
@@ -211,9 +211,10 @@ export default class Table extends Component {
   }
   //------
 
-  mapHeaderCell = (col, i) => {
+  mapHeaderCell = ([key, col], i) => {
     const { colClasses, icons, orderable, name } = this.props;
     const { orderBy } = this.state;
+    col.name = col.name || key;
     const props = {
       col,
       orderable,
@@ -236,7 +237,7 @@ export default class Table extends Component {
     if (rowClasses) cnRow.push(rowClasses);
 
     return <tr key={rowKey} {...rowProps} className={cnRow.join(' ')}>
-      {columns.map((col, j) => this.mapCells(row, col, j))}
+      {Object.entries(columns).map(([key, col], j) => this.mapCells(row, col.name ? col : { name: key, ...col }, j))}
     </tr>
   }
 
@@ -285,7 +286,7 @@ export default class Table extends Component {
           </tr>
         }
         <tr className={headerClasses}>
-          {columns.map(this.mapHeaderCell)}
+          {Object.entries(columns).map(this.mapHeaderCell)}
         </tr>
       </thead>
       <tbody>
