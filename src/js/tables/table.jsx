@@ -1,42 +1,15 @@
 import React from "react";
 import moment from "moment";
-import parseReact from "html-react-parser";
 
 import eventHandler from "../functions/event-handler";
 import deepMerge from "../functions/deep-merge";
-import COMPONENTS from "../components";
 import Component from "../component";
 import fields from "../forms/fields";
 import Icons from "../media/icons";
+import JsonRender from "../json-render";
 
 export const FORMATS = {
-  component: (raw, props, data) => {
-    const buildContent = (content, index) => {
-      if (!content) return false;
-      else if (typeof content === 'string') {
-        return (<React.Fragment key={index + '-' + content.name}>
-          {parseReact(content)}
-        </React.Fragment>);
-      } else if (React.isValidElement(content)) {
-        content.key = index + '-' + content.name;
-        return content;
-      }
-      else if (Array.isArray(content)) return content.map(buildContent);
-      else if (typeof content === 'object' && typeof content.name !== 'string')
-        return Object.keys(content)
-          .map((name, i) => buildContent({ name, ...content[name] }, i));
-
-      if (typeof content.active === 'boolean' && !content.active) return false;
-      const { component: componentName, content: subContent, ...section } = content;
-      let Component = COMPONENTS[componentName] || (COMPONENTS.Component);
-      let children = buildContent(subContent);
-      if (props.valueIn === section.name) {
-        section.value = raw;
-      }
-      return (<Component key={index + '-' + section.name} {...section}>
-        {children}
-      </Component>);
-    }
+  component: (raw, props, data, jsonRender) => {
     if (props.type === 'boolean') {
       props.value = !!raw;
     } else {
@@ -45,7 +18,7 @@ export const FORMATS = {
     props.name += '.cell';
     props.id = data.id;
     props.data = data;
-    return buildContent(props);
+    return jsonRender.buildContent(props);
   },
   date: (raw, { format: f = 'DD/MM/YYYY', locale = false } = {}) =>
     raw ? locale ? moment(raw).format(f) : moment.utc(raw).format(f) : '',
@@ -176,6 +149,11 @@ export default class Table extends Component {
     }
   }
 
+  constructor(props) {
+    super(props);
+    this.jsonRender = new JsonRender(props);
+  }
+
   componentDidMount() {
     this.events = [];
     Object.entries(this.props.columns).forEach(([key, col]) => {
@@ -215,6 +193,7 @@ export default class Table extends Component {
     const { colClasses, icons, orderable, name } = this.props;
     const { orderBy } = this.state;
     col.name = col.name || key;
+    col.label = this.jsonRender.buildContent(col.label);
     const props = {
       col,
       orderable,
@@ -242,31 +221,33 @@ export default class Table extends Component {
   }
 
   mapCells = (rowData, col, i) => {
-    const { colClasses } = this.props;
+    const { mapCells: mapCellsFunc, name, colClasses } = this.props;
     const colName = col.name;
-    const style = { ...col.style };
-    const cn = ['cell', col.type, col.name + '-cell', col.classes, colClasses];
-    const title = typeof rowData[colName] !== 'object' ? rowData[colName] : undefined;
-    const cell = (<div className={cn.join(' ')} style={style} title={title}>
-      {this.format(col, rowData)}
-    </div>);
+    const cellAttrs = {
+      className: ['cell', col.type, col.name + '-cell', col.classes, colClasses],
+      style: col.style,
+      title: typeof rowData[colName] !== 'object' ? rowData[colName] : undefined
+    }
+
+    const mutation = typeof mapCellsFunc === 'function' && mapCellsFunc(name, col.name, rowData) || {};
+    if (col.formatOpts) {
+      deepMerge(col.formatOpts, mutation);
+    } else {
+      const classes = mutation.classes;
+      delete mutation.classes;
+      if (classes) cellAttrs.className.push(classes);
+      deepMerge(cellAttrs, mutation);
+    }
+    cellAttrs.className = cellAttrs.className.join(' ');
+
+    const formater = FORMATS[col.format] || (raw => raw);
+    const cellData = typeof rowData[col.name] !== 'undefined' ? rowData[col.name] : true;
+
+    const cell = (<div {...cellAttrs}> {formater(cellData, col.formatOpts, rowData, this.jsonRender)}  </div>);
     return (colName === 'id' ?
       <th key={i + '-' + colName} scope="row">{cell}</th> :
       <td key={i + '-' + colName} >{cell}</td>
     );
-  }
-
-  format(col, rowData) {
-    const formater = FORMATS[col.format] || (raw => raw);
-    const cellData = typeof rowData[col.name] !== 'undefined' ? rowData[col.name] : true;
-    let formatOpts = {};
-    if (col.formatOpts) {
-      const { mapCells: mapCellsFunc, name } = this.props;
-      const mutation = typeof mapCellsFunc === 'function' && mapCellsFunc(name, col.name, rowData) || {};
-      formatOpts = JSON.parse(JSON.stringify(col.formatOpts));
-      deepMerge(formatOpts, mutation);
-    }
-    return formater(cellData, formatOpts, rowData);
   }
 
   content(children = this.props.children) {
