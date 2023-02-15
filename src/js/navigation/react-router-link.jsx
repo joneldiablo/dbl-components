@@ -17,6 +17,7 @@ export default class Link extends Component {
       to,
       replace,
       innerRef,
+      target,
       _component
     } = this.props;
 
@@ -24,6 +25,7 @@ export default class Link extends Component {
       to,
       replace,
       innerRef,
+      target,
       component: _component
     }
   }

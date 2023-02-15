@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createRef } from "react";
 import { Dropdown } from "bootstrap";
 import { NavLink } from "react-router-dom";
 
@@ -91,8 +91,13 @@ export default class DropdownButtonContainer extends Component {
 
   constructor(props) {
     super(props);
+    this.btn = createRef();
     this.trigger = props.name + 'Btn';
     this.style.width = 'fit-content';
+    this.onBsEvents = this.onBsEvents.bind(this);
+    Object.assign(this.state, {
+      open: false
+    });
   }
 
   toggleDropdown = (e) => {
@@ -100,14 +105,52 @@ export default class DropdownButtonContainer extends Component {
     e.stopPropagation();
   }
 
-  refBtn(btn) {
-    if (!btn) return;
-    if (this.bsDropdown) this.bsDropdown.dispose();
-    this.bsDropdown = new Dropdown(btn, this.props.dropdown);
+  componentDidMount() {
+    if (this.btn.current) {
+      const btn = this.btn.current;
+      const bsDrop = Dropdown.getInstance(btn);
+      if (bsDrop) bsDrop.dispose(btn);
+      btn.removeEventListener('hide.bs.dropdown', this.onBsEvents);
+      btn.removeEventListener('hidden.bs.dropdown', this.onBsEvents);
+      btn.removeEventListener('show.bs.dropdown', this.onBsEvents);
+      btn.removeEventListener('shown.bs.dropdown', this.onBsEvents);
+
+      this.bsDropdown = new Dropdown(btn, this.props.dropdown);
+      btn.addEventListener('hide.bs.dropdown', this.onBsEvents);
+      btn.addEventListener('hidden.bs.dropdown', this.onBsEvents);
+      btn.addEventListener('show.bs.dropdown', this.onBsEvents);
+      btn.addEventListener('shown.bs.dropdown', this.onBsEvents);
+    }
   }
 
   componentWillUnmount() {
-    if (this.bsDropdown) this.bsDropdown.dispose();
+    if (this.bsDropdown) {
+      this.bsDropdown.dispose();
+      this.bsDropdown = false;
+    }
+    if (this.btn.current) {
+      const btn = this.btn.current;
+      btn.removeEventListener('hide.bs.dropdown', this.onBsEvents);
+      btn.removeEventListener('hidden.bs.dropdown', this.onBsEvents);
+      btn.removeEventListener('show.bs.dropdown', this.onBsEvents);
+      btn.removeEventListener('shown.bs.dropdown', this.onBsEvents);
+    }
+  }
+
+  onBsEvents(evt) {
+    const evtType = evt.type.split('.')[0];
+    eventHandler.dispatch(this.props.name, {
+      [this.props.name]: {
+        open: evt.type.includes('shown'),
+        event: evtType,
+        menu: this.props.menu
+      }
+    });
+    if (evtType === 'show') {
+      this.setState({ open: true });
+    } else if (evtType === 'hidden') {
+      this.setState({ open: false });
+    }
   }
 
   dropdownRender(children) {
@@ -115,15 +158,17 @@ export default class DropdownButtonContainer extends Component {
     const cn = ['dropdown-menu', dropdownClasses].join(' ');
     return <div className={cn} style={{ minWidth: '100%' }}
       onClick={allowClose ? null : (e) => e.stopPropagation()} aria-labelledby={this.trigger}>
-      {menu?.map((item, i) => {
-        if (item === 'divider')
-          return <div className="dropdown-divider" key={item.name || i} />
-        item.classes = item.classes || itemClasses;
-        return (React.isValidElement(item) ?
-          <React.Fragment key={item.name || i}>{item}</React.Fragment> :
-          <DropdownItem {...item} key={item.name || i} />)
-      })}
-      {children}
+      {this.state.open &&
+        menu?.map((item, i) => {
+          if (item === 'divider')
+            return <div className="dropdown-divider" key={item.name || i} />
+          item.classes = item.classes || itemClasses;
+          return (React.isValidElement(item) ?
+            <React.Fragment key={item.name || i}>{item}</React.Fragment> :
+            <DropdownItem {...item} key={item.name || i} />)
+        })
+      }
+      {this.state.open && children}
     </div>
   }
 
@@ -132,7 +177,7 @@ export default class DropdownButtonContainer extends Component {
     const cn = ['btn dropdown-toggle', btnClasses];
     return <>
       <button className={cn.join(' ')} type="button"
-        ref={ref => this.refBtn(ref)}
+        ref={this.btn}
         data-bs-toggle="dropdown"
         disabled={disabled} id={this.trigger}
         onClick={this.toggleDropdown}>
