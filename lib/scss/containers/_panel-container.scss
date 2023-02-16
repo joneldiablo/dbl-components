@@ -1,0 +1,87 @@
+$panel-bg: $primary !default;
+$panel-color: $light !default;
+
+.PanelContainer {
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: $panel-bg;
+  position: sticky;
+  top: 0;
+
+  &:not(.inset) {
+    box-shadow: 0.125rem 0 1rem rgba($black, 0.4);
+  }
+  &.inset:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    box-shadow: -1rem 0 1rem -1rem inset rgba($black, 0.4);
+  }
+  .logo {
+    height: 125px;
+    object-fit: contain;
+    display: block;
+    margin: auto;
+    position: sticky;
+    top: 0;
+    //funciona pero no se ve smooty
+    //transition: width 0.2s ease;
+  }
+  .ListContainer li {
+    a {
+      &:hover {
+        background-color: rgba($dark, 0.1);
+      }
+      &.active {
+        background-color: $panel-color;
+        color: $panel-bg;
+      }
+      color: $panel-color;
+    }
+  }
+  .im-toggle-fixed:hover {
+    background-color: rgba($dark, 0.1);
+  }
+  &.mobile {
+    position: fixed !important;
+    width: 80%;
+    top: 0;
+    left: 0;
+    z-index: 1024;
+    max-width: 240px;
+  }
+  &.close {
+    .ListContainer li small[id$="Badge"] {
+      right: -25%;
+      top: 65%;
+    }
+  }
+  .pin-fixed {
+    color: $panel-color;
+    width: 100%;
+    text-align: left;
+    background-color: $panel-bg;
+  }
+}
+
+.panel-slide2open {
+  width: 50px;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  position: fixed;
+  z-index: 1024;
+}
+
+.panel-touchClose {
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  position: fixed;
+}

@@ -1,0 +1,25 @@
+@each $key,
+$br in $grid-breakpoints {
+    .row.#{$key} {
+
+        /* &.animate > * {
+           transition: width 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+        } */
+        @for $i from 1 through $grid-columns {
+
+            &.row-auto-#{$key}-#{$i}>*:not(.resize-sensor),
+            >.auto-#{$key}-#{$i} {
+                flex: 0 0 auto;
+
+                @if function-exists(divide) {
+                    width: percentage(divide($i, $grid-columns));
+                }
+
+                @else {
+                    width: percentage(($i/$grid-columns));
+                }
+            }
+
+        }
+    }
+}

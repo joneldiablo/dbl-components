@@ -119,7 +119,7 @@ export default class Navigation extends Component {
       exact: item.exact
     }
     return (<React.Fragment key={i + '-' + item.path}>
-      <span onClick={!!item.menu?.length ? (e) => this.onToggleSubmenu(e, item) : null}>
+      <div onClick={!!item.menu?.length ? (e) => this.onToggleSubmenu(e, item) : null}>
         {item.path ?
           <NavLink {...propsLink} >
             {innerNode}
@@ -129,11 +129,11 @@ export default class Navigation extends Component {
           >{innerNode}
           </span>
         }
-      </span>
-      {!!item.menu?.length &&
-        <div ref={(ref) => this.collapseRef(ref, item, parentName)} id={item.name + '-collapse'} className="collapse">
-          {item.menu.map((m, i) => this.link(m, i, item.name))}
-        </div>}
+        {!!item.menu?.length &&
+          <div ref={(ref) => this.collapseRef(ref, item, parentName)} id={item.name + '-collapse'} className="collapse">
+            {item.menu.map((m, i) => this.link(m, i, item.name))}
+          </div>}
+      </div>
     </React.Fragment>);
   }
 

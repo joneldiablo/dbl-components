@@ -1,0 +1,13 @@
+@import "../variables";
+
+.shadow-hover {
+  position: relative;
+  box-shadow: $box-shadow-sm;
+  transition: box-shadow .3s;
+  &:hover {
+    box-shadow: $box-shadow;
+  }
+  &-lg:hover {
+    box-shadow: $box-shadow-lg;
+  }
+}
