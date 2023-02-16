@@ -40,16 +40,17 @@ export default class Navigation extends Component {
   componentDidMount() {
     eventHandler.subscribe(this.props.toggle, this.toggleText);
     Object.values(this.collapses).forEach(([ref, item, parentName, collapse]) => {
-      ref.addEventListener('hide.bs.collapse', this.hide);
-      ref.addEventListener('show.bs.collapse', this.show);
+      this.state.carets[item.name] = this.props.caretIcons[0];
+      collapse.hide();
+      ref.addEventListener('hidden.bs.collapse', this.hide);
     });
   }
 
   componentWillUnmount() {
     Object.values(this.collapses).forEach(([ref, item, parentName, collapse]) => {
+      item.submenuOpen = false;
       collapse.dispose();
-      ref.removeEventListener('hide.bs.collapse', this.hide);
-      ref.removeEventListener('show.bs.collapse', this.show);
+      ref.removeEventListener('hidden.bs.collapse', this.hide);
     });
     this.collapses = {};
     eventHandler.unsubscribe(this.props.toggle);
@@ -65,25 +66,26 @@ export default class Navigation extends Component {
 
   hide = (e) => {
     const itemName = e.target.id.split('-collapse')[0];
-    this.setState({ carets: Object.assign(this.state.carets, { [itemName]: this.props.caretIcons[0] }) });
-  }
-
-  show = (e) => {
-    const itemName = e.target.id.split('-collapse')[0];
-    this.setState({ carets: Object.assign(this.state.carets, { [itemName]: this.props.caretIcons[1] }) });
+    this.collapses[itemName][1].submenuOpen = false;
+    this.state.carets[itemName] = this.props.caretIcons[0];
+    this.setState({ carets: this.state.carets });
   }
 
   collapseRef = (ref, item, parentName) => {
     if (ref) {
-      const opts = { toggle: false };
-      if (!parentName) opts.parent = this.ref.current;
-      else if (this.collapses[parentName]) opts.parent = this.collapses[parentName][0];
+      const opts = { autoClose: false };
       this.collapses[item.name] = [ref, item, parentName, Collapse.getOrCreateInstance(ref, opts)];
     }
   }
 
   onToggleSubmenu = (e, item) => {
-    this.collapses[item.name][3].toggle();
+    if (!item.submenuOpen) {
+      item.submenuOpen = true;
+      this.state.carets[item.name] = this.props.caretIcons[1];
+      this.setState({ carets: this.state.carets }, () => this.collapses[item.name][3].show());
+    } else {
+      this.collapses[item.name][3].hide();
+    }
   }
 
   link = (item, i, parentName) => {
@@ -125,13 +127,17 @@ export default class Navigation extends Component {
             {innerNode}
           </NavLink> :
           <span id={item.name + '-link'}
-            className={[propsLink.className, 'cursor-pointer'].join(' ')}
+            className={[propsLink.className, 'cursor-pointer', !!item.menu?.length ? 'has-submenu' : ''].join(' ')}
           >{innerNode}
           </span>
         }
         {!!item.menu?.length &&
           <div ref={(ref) => this.collapseRef(ref, item, parentName)} id={item.name + '-collapse'} className="collapse">
-            {item.menu.map((m, i) => this.link(m, i, item.name))}
+            {
+              //renderear solo cuando este abierto
+              this.state.carets[item.name] === this.props.caretIcons[1] &&
+              item.menu.map((m, i) => this.link(m, i, item.name + '-collapse'))
+            }
           </div>}
       </div>
     </React.Fragment>);
@@ -141,7 +147,7 @@ export default class Navigation extends Component {
   //       y submenu collapsable
   content(children = this.props.children) {
     return (<>
-      {this.props.menu.map((m, i) => this.link(m, i))}
+      {this.props.menu.map((m, i) => this.link(m, i, this.props.name))}
       {children}
     </>);
   }

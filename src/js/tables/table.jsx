@@ -230,8 +230,9 @@ export default class Table extends Component {
     }
 
     const mutation = typeof mapCellsFunc === 'function' && mapCellsFunc(name, col.name, rowData) || {};
+    let formatOptions;
     if (col.formatOpts) {
-      deepMerge(col.formatOpts, mutation);
+      formatOptions = deepMerge({ ...col.formatOpts }, mutation);
     } else {
       const classes = mutation.classes;
       delete mutation.classes;
@@ -243,7 +244,7 @@ export default class Table extends Component {
     const formater = FORMATS[col.format] || (raw => raw);
     const cellData = typeof rowData[col.name] !== 'undefined' ? rowData[col.name] : true;
 
-    const cell = (<div {...cellAttrs}> {formater(cellData, col.formatOpts, rowData, this.jsonRender)}  </div>);
+    const cell = (<div {...cellAttrs}> {formater(cellData, formatOptions, rowData, this.jsonRender)}  </div>);
     return (colName === 'id' ?
       <th key={i + '-' + colName} scope="row">{cell}</th> :
       <td key={i + '-' + colName} >{cell}</td>
