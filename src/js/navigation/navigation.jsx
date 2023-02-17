@@ -116,35 +116,47 @@ export default class Navigation extends Component {
         </>
       }
     </span>
-    const propsLink = {
+    const propsLink = item.path ? {
       to: item.path,
       id: item.name + '-link',
       className: ['nav-link', linkClasses, item.classes].join(' '),
       activeClassName: 'active',
       strict: item.strict,
-      exact: item.exact
+      exact: item.exact,
+      onClick: !!item.menu?.length ? (e) => this.onToggleSubmenu(e, item) : null
+    } : {
+      id: item.name + '-link',
+      className: (() => {
+        const r = ['nav-link', linkClasses, item.classes, 'cursor-pointer'];
+        if (!!item.menu?.length) r.push('has-submenu');
+        return r;
+      })().join(' '),
+      onClick: !!item.menu?.length ? (e) => this.onToggleSubmenu(e, item) : null
     }
+
     return (<React.Fragment key={i + '-' + item.path}>
-      <div onClick={!!item.menu?.length ? (e) => this.onToggleSubmenu(e, item) : null}>
-        {item.path ?
-          <NavLink {...propsLink} >
-            {innerNode}
-          </NavLink> :
-          <span id={item.name + '-link'}
-            className={[propsLink.className, 'cursor-pointer', !!item.menu?.length ? 'has-submenu' : ''].join(' ')}
-          >{innerNode}
-          </span>
+      <div>
+        {
+          item.path ?
+            <NavLink {...propsLink}>
+              {innerNode}
+            </NavLink>
+            : <span {...propsLink} >
+              {innerNode}
+            </span >
         }
-        {!!item.menu?.length &&
+        {
+          !!item.menu?.length &&
           <div ref={(ref) => this.collapseRef(ref, item, parentName)} id={item.name + '-collapse'} className="collapse">
             {
               //renderear solo cuando este abierto
               this.state.carets[item.name] === this.props.caretIcons[1] &&
               item.menu.map((m, i) => this.link(m, i, item.name + '-collapse'))
             }
-          </div>}
-      </div>
-    </React.Fragment>);
+          </div>
+        }
+      </div >
+    </React.Fragment >);
   }
 
   // TODO: agregar submenu dropdown 
