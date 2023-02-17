@@ -79,11 +79,15 @@ export default class Navigation extends Component {
   }
 
   onToggleSubmenu = (e, item) => {
+    console.log(e.target.id, e, item);
+    e.nativeEvent.stopPropagation();
+    e.nativeEvent.preventDefault();
     if (!item.submenuOpen) {
       item.submenuOpen = true;
       this.state.carets[item.name] = this.props.caretIcons[1];
       this.setState({ carets: this.state.carets }, () => this.collapses[item.name][3].show());
     } else {
+      console.log(item.name, this.collapses, this.collapses[item.name]);
       this.collapses[item.name][3].hide();
     }
   }

@@ -9,7 +9,7 @@ import Icons from "../media/icons";
 import JsonRender from "../json-render";
 
 export const FORMATS = {
-  component: (raw, props, data, jsonRender) => {
+  component: (raw, props, data, jsonRender, colName) => {
     if (props.type === 'boolean') {
       props.value = !!raw;
     } else {
@@ -18,6 +18,7 @@ export const FORMATS = {
     props.name += '.cell';
     props.id = data.id;
     props.data = data;
+    props.columnName = colName;
     return jsonRender.buildContent(props);
   },
   date: (raw, { format: f = 'DD/MM/YYYY', locale = false } = {}) =>
@@ -244,7 +245,7 @@ export default class Table extends Component {
     const formater = FORMATS[col.format] || (raw => raw);
     const cellData = typeof rowData[col.name] !== 'undefined' ? rowData[col.name] : true;
 
-    const cell = (<div {...cellAttrs}> {formater(cellData, formatOptions, rowData, this.jsonRender)}  </div>);
+    const cell = (<div {...cellAttrs}> {formater(cellData, formatOptions, rowData, this.jsonRender, colName)}  </div>);
     return (colName === 'id' ?
       <th key={i + '-' + colName} scope="row">{cell}</th> :
       <td key={i + '-' + colName} >{cell}</td>
