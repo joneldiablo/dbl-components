@@ -39,6 +39,7 @@ export default class Navigation extends Component {
 
   componentDidMount() {
     eventHandler.subscribe(this.props.toggle, this.toggleText);
+    this.unlisten = this.props.history.listen(this.onChangeRoute.bind(this));
     Object.values(this.collapses).forEach(([ref, item, parentName, collapse]) => {
       this.state.carets[item.name] = this.props.caretIcons[0];
       collapse.hide();
@@ -47,6 +48,7 @@ export default class Navigation extends Component {
   }
 
   componentWillUnmount() {
+    this.unlisten();
     Object.values(this.collapses).forEach(([ref, item, parentName, collapse]) => {
       item.submenuOpen = false;
       collapse.dispose();
@@ -54,6 +56,11 @@ export default class Navigation extends Component {
     });
     this.collapses = {};
     eventHandler.unsubscribe(this.props.toggle);
+  }
+
+  onChangeRoute(location, action) {
+    this.pathname = location.pathname;
+    eventHandler.dispatch(this.name, { pathname: this.pathname, item: this.activeItem });
   }
 
   toggleText = () => {
@@ -78,8 +85,7 @@ export default class Navigation extends Component {
     }
   }
 
-  onToggleSubmenu = (e, item) => {
-    console.log(e.target.id, e, item);
+  onToggleSubmenu(e, item) {
     e.nativeEvent.stopPropagation();
     e.nativeEvent.preventDefault();
     if (!item.submenuOpen) {
@@ -87,9 +93,13 @@ export default class Navigation extends Component {
       this.state.carets[item.name] = this.props.caretIcons[1];
       this.setState({ carets: this.state.carets }, () => this.collapses[item.name][3].show());
     } else {
-      console.log(item.name, this.collapses, this.collapses[item.name]);
       this.collapses[item.name][3].hide();
     }
+  }
+
+  onNavigate(e, item) {
+    this.activeItem = item;
+    item.active = true;
   }
 
   link = (item, i, parentName) => {
@@ -123,7 +133,7 @@ export default class Navigation extends Component {
       activeClassName: 'active',
       strict: item.strict,
       exact: item.exact,
-      onClick: !!item.menu?.length ? (e) => this.onToggleSubmenu(e, item) : null
+      onClick: (e) => [!!item.menu?.length && this.onToggleSubmenu(e, item), this.onNavigate(e, item)]
     } : {
       id: item.name + '-link',
       className: (() => {
