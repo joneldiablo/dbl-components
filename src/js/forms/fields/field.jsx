@@ -88,7 +88,8 @@ export default class Field extends Component {
     const toDispatch = { [name]: value };
     if (id) toDispatch.id = id;
     if (data) toDispatch.data = data;
-    if (!error) {
+    if (this._reset) this._reset = false;
+    else if (!error) {
       clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
         eventHandler.dispatch(name, toDispatch, extra);
@@ -150,6 +151,7 @@ export default class Field extends Component {
     }
     if (reset) {
       newState.value = newState.value || this.props.default;
+      this._reset = true;
       return this.setState(newState, this.returnData);
     }
     this.setState(newState);

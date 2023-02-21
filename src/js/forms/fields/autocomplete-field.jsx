@@ -47,7 +47,7 @@ export default class AutocompleteField extends Field {
     }
   }
 
-  onUpdate({ options, more, value, ...data }) {
+  onUpdate({ options, more, value, reset, ...data }) {
     if (typeof options !== 'undefined') {
       const newState = {
         loading: false
@@ -73,6 +73,23 @@ export default class AutocompleteField extends Field {
       }
       this.setState(newState);
       return;
+    }
+    if (reset) {
+      const newState = {
+        value: '',
+        selected: null
+      };
+      if (![null, '', undefined].includes(this.props.default)) {
+        const opt = (newState.options || this.state.options)
+          .concat(this.props.options || [])
+          .find(opt => opt.value == this.props.default);
+        if (opt) {
+          newState.value = opt.label;
+          newState.selected = opt;
+        }
+      }
+      this._reset = true;
+      return this.setState(newState, this.returnData);
     }
     super.onUpdate(data);
   }
