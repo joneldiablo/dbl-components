@@ -43,6 +43,7 @@ export default class Field extends Component {
     ...Component.defaultProps,
     type: 'text',
     default: '',
+    value: '',
     first: 'label',
     floating: true
   }

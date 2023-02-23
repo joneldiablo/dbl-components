@@ -28,8 +28,8 @@ export default class AutocompleteField extends Field {
   }
 
   onFilter(value = this.state.value) {
-    const { options } = this.props;
-    if (options?.length) {
+    const { options, forceUseFilter } = this.props;
+    if (options?.length && !forceUseFilter) {
       const { maxItems } = this.props;
       const allOpts = options.filter(opt =>
         opt.label.toLowerCase().includes(value.toLowerCase())
@@ -147,7 +147,7 @@ export default class AutocompleteField extends Field {
   get inputNode() {
     const { loading } = this.props;
     const { options, more, showDropdown, loading: l } = this.state;
-    const cn = ['dropdown-menu', showDropdown];
+    const cn = ['dropdown-menu shadow', showDropdown];
     const closeStyle = {
       top: 0,
       left: 0,
@@ -157,11 +157,20 @@ export default class AutocompleteField extends Field {
       opacity: 0,
       zIndex: 1000
     };
+    const inputRect = this.input.current?.getBoundingClientRect() || {};
     return <>
       {showDropdown && <div onClick={this.hide} style={closeStyle}></div>}
       {super.inputNode}
       {l && loading}
-      <ul className={cn.join(' ')} ref={this.menuDropdown} style={{ minWidth: '100%', overflow: 'hidden', zIndex: 1001 }}>
+      <ul className={cn.join(' ')} ref={this.menuDropdown}
+        style={{
+          minWidth: inputRect.width || 200,
+          left: inputRect.left,
+          top: (inputRect.top || 0) + (inputRect.height || 0),
+          overflow: 'hidden',
+          zIndex: 1001,
+          position: 'fixed',
+        }}>
         {options.map(this.mapOptions)}
         {more && <li >
           <span className="dropdown-item text-wrap" >...</span>

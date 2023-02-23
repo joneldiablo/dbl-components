@@ -105,7 +105,7 @@ export class HeaderCell extends React.Component {
     ];
     const cnSearch = ['cursor-pointer'];
     if (!searchActive) cnSearch.push('text-muted');
-    return <th className="align-middle">
+    return <th className={"align-middle " + col.name}>
       <div className="d-flex align-items-center">
         <div className={cn.join(' ')} style={style}>
           <span>{col.label}</span>
@@ -143,6 +143,8 @@ export default class Table extends Component {
   static defaultProps = {
     ...Component.defaultProps,
     data: [],
+    striped: true,
+    hover: true,
     icons: {
       caretUp: 'caret-up',
       caretDown: 'caret-down',
@@ -152,7 +154,7 @@ export default class Table extends Component {
 
   constructor(props) {
     super(props);
-    this.jsonRender = new JsonRender(props);
+    this.jsonRender = new JsonRender(props, props.mutations);
   }
 
   componentDidMount() {
@@ -208,7 +210,7 @@ export default class Table extends Component {
   }
 
   mapRows = (row, i) => {
-    const { columns, name, mapRows: mapRowsFunc } = this.props;
+    const { columns, name, mapRows: mapRowsFunc, rowContent } = this.props;
     const rowId = (row.id === 0 || !!row.id) ? row.id : i;
     const rowKey = (row.id === 0 || !!row.id) ? (i + '-' + rowId) : i;
     const cnRow = ['row-' + this.props.name, 'row-' + rowId];
@@ -216,9 +218,22 @@ export default class Table extends Component {
       (typeof mapRowsFunc === 'function' && mapRowsFunc(name, row, i)) || {};
     if (rowClasses) cnRow.push(rowClasses);
 
-    return <tr key={rowKey} {...rowProps} className={cnRow.join(' ')}>
+    const _row = <tr key={rowKey} {...rowProps} className={cnRow.join(' ')}>
       {Object.entries(columns).map(([key, col], j) => this.mapCells(row, col.name ? col : { name: key, ...col }, j))}
-    </tr>
+    </tr>;
+    if (rowContent) {
+      const clone = JSON.parse(JSON.stringify(rowContent));
+      const _theRowContent = this.jsonRender.buildContent({ ...clone, row, name: `${clone.name}.${i}` });
+      return <>
+        {_row}
+        <tr>
+          <td colSpan="1000">
+            {_theRowContent}
+          </td>
+        </tr>
+      </>
+    } else return _row;
+
   }
 
   mapCells = (rowData, col, i) => {
@@ -235,29 +250,32 @@ export default class Table extends Component {
     if (col.formatOpts) {
       formatOptions = deepMerge({ ...col.formatOpts }, mutation);
     } else {
-      const classes = mutation.classes;
-      delete mutation.classes;
-      if (classes) cellAttrs.className.push(classes);
+      if (mutation.classes) {
+        const classes = mutation.classes;
+        delete mutation.classes;
+        cellAttrs.className.push(classes);
+      }
       deepMerge(cellAttrs, mutation);
     }
-    cellAttrs.className = cellAttrs.className.join(' ');
+    cellAttrs.className = cellAttrs.className.flat().join(' ');
 
     const formater = FORMATS[col.format] || (raw => raw);
     const cellData = typeof rowData[col.name] !== 'undefined' ? rowData[col.name] : true;
 
     const cell = (<div {...cellAttrs}> {formater(cellData, formatOptions, rowData, this.jsonRender, colName)}  </div>);
     return (colName === 'id' ?
-      <th key={i + '-' + colName} scope="row">{cell}</th> :
-      <td key={i + '-' + colName} >{cell}</td>
+      <th key={i + '-' + colName} className={colName} scope="row">{cell}</th> :
+      <td key={i + '-' + colName} className={colName} >{cell}</td>
     );
   }
 
   content(children = this.props.children) {
-    const { data, columns, headerClasses, hover = true } = this.props;
+    const { data, columns, headerClasses, hover, striped } = this.props;
     let header, footer;
     if (Array.isArray(children))
       [header, footer] = children;
-    const cn = ['table table-striped'];
+    const cn = ['table'];
+    if (striped) cn.push('table-striped');
     if (hover) cn.push('table-hover');
     return <table className={cn.join(' ')}>
       <thead>
