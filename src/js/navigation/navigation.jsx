@@ -23,7 +23,8 @@ export default class Navigation extends Component {
   static defaultProps = {
     ...Component.defaultProps,
     menu: [],
-    caretIcons: ['angle-up', 'angle-down']
+    caretIcons: ['angle-up', 'angle-down'],
+    navLink: true
   }
 
   tag = 'nav';
@@ -103,7 +104,7 @@ export default class Navigation extends Component {
   }
 
   link = (item, i, parentName) => {
-    const { caretIcons, linkClasses } = this.props;
+    const { caretIcons, linkClasses, navLink } = this.props;
     const { carets, open } = this.state;
     carets[item.name] = carets[item.name] || caretIcons[0];
 
@@ -129,7 +130,12 @@ export default class Navigation extends Component {
     const propsLink = item.path ? {
       to: item.path,
       id: item.name + '-link',
-      className: ['nav-link', linkClasses, item.classes].join(' '),
+      className: (() => {
+        const r = [linkClasses, item.classes];
+        if (navLink) r.unshift('nav-link');
+        if (!!item.menu?.length) r.push('has-submenu');
+        return r;
+      })().join(' '),
       activeClassName: 'active',
       strict: item.strict,
       exact: item.exact,
@@ -137,7 +143,8 @@ export default class Navigation extends Component {
     } : {
       id: item.name + '-link',
       className: (() => {
-        const r = ['nav-link', linkClasses, item.classes, 'cursor-pointer'];
+        const r = [linkClasses, item.classes, 'cursor-pointer'];
+        if (navLink) r.unshift('nav-link');
         if (!!item.menu?.length) r.push('has-submenu');
         return r;
       })().join(' '),
