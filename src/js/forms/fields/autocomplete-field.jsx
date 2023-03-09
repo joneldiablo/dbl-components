@@ -71,7 +71,12 @@ export default class AutocompleteField extends Field {
           newState.selected = opt;
         }
       }
-      this.setState(newState);
+      this.setState(newState, () => {
+        if (this.input.current) {
+          const error = this.isInvalid(value);
+          if (this.state.error !== error) this.setState({ error });
+        }
+      });
       return;
     }
     if (reset) {

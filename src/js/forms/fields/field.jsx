@@ -155,7 +155,12 @@ export default class Field extends Component {
       this._reset = true;
       return this.setState(newState, this.returnData);
     }
-    this.setState(newState);
+    this.setState(newState, () => {
+      if (this.input.current && typeof value !== 'undefined') {
+        const error = this.isInvalid(value);
+        if (this.state.error !== error) this.setState({ error });
+      }
+    });
   }
 
   onFocus = () => {
