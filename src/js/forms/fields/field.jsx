@@ -157,8 +157,10 @@ export default class Field extends Component {
     }
     this.setState(newState, () => {
       if (this.input.current && typeof value !== 'undefined') {
-        const error = this.isInvalid(value);
-        if (this.state.error !== error) this.setState({ error });
+        setTimeout(() => {
+          const error = this.isInvalid(value);
+          if (this.state.error !== error) this.setState({ error });
+        }, 300);
       }
     });
   }
