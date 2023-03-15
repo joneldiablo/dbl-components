@@ -95,6 +95,9 @@ export default class DropdownButtonContainer extends Component {
     this.trigger = props.name + 'Btn';
     this.style.width = 'fit-content';
     this.onBsEvents = this.onBsEvents.bind(this);
+    this.events = [
+      ['update.' + props.name, this.onUpdate.bind(this)]
+    ];
     Object.assign(this.state, {
       open: false
     });
@@ -106,6 +109,7 @@ export default class DropdownButtonContainer extends Component {
   }
 
   componentDidMount() {
+    this.events.forEach(e => eventHandler.subscribe(...e));
     if (this.btn.current) {
       const btn = this.btn.current;
       const bsDrop = Dropdown.getInstance(btn);
@@ -124,6 +128,7 @@ export default class DropdownButtonContainer extends Component {
   }
 
   componentWillUnmount() {
+    this.events.forEach(e => eventHandler.unsubscribe(e[0]));
     if (this.bsDropdown) {
       this.bsDropdown.dispose();
       this.bsDropdown = false;
@@ -135,6 +140,10 @@ export default class DropdownButtonContainer extends Component {
       btn.removeEventListener('show.bs.dropdown', this.onBsEvents);
       btn.removeEventListener('shown.bs.dropdown', this.onBsEvents);
     }
+  }
+
+  onUpdate({ open }) {
+    if (open !== undefined) this.bsDropdown[open ? 'show' : 'hide']();
   }
 
   onBsEvents(evt) {

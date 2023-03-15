@@ -27,10 +27,11 @@ export default class SelectField extends Field {
     const inputNode = (<select {...this.inputProps} >
       {placeholder && (label || !floating) && <option value="" >{placeholder}</option>}
       {placeholder && (label || !floating) && <option disabled>──────────</option>}
-      {Array.isArray(options) && options.map(({ disabled, label, value }) => {
+      {Array.isArray(options) && options.map(({ disabled, label, value, title }) => {
         let propsOpt = {
           value,
-          disabled
+          disabled,
+          title
         }
         return <option key={value} {...propsOpt}>{label}</option>
       })}
