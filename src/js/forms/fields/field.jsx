@@ -133,9 +133,10 @@ export default class Field extends Component {
 
   onChange(e) {
     let { value } = e.target;
+    const error = this.isInvalid(value);
     this.setState({
       value,
-      error: this.isInvalid(value)
+      error
     }, () => this.returnData());
   }
 
