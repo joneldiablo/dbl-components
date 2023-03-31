@@ -113,8 +113,10 @@ export default class AutocompleteField extends Field {
       showDropdown: '',
       value
     }, () => {
-      const error = this.isInvalid(opt.value);
-      if (this.state.error != error) this.setState({ error });
+      if (opt) {
+        const error = this.isInvalid(opt.value);
+        if (this.state.error != error) this.setState({ error });
+      }
     });
   }
 
