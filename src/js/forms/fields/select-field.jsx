@@ -23,7 +23,7 @@ export default class SelectField extends Field {
   }
 
   get inputNode() {
-    const { inline, placeholder, options, label, floating } = this.props;
+    const { placeholder, options, label, floating } = this.props;
     const inputNode = (<select {...this.inputProps} >
       {placeholder && (label || !floating) && <option value="" >{placeholder}</option>}
       {placeholder && (label || !floating) && <option disabled>──────────</option>}
@@ -36,9 +36,7 @@ export default class SelectField extends Field {
         return <option key={value} {...propsOpt}>{label}</option>
       })}
     </select>);
-    return (inline ? <div className="col-auto">
-      {inputNode}
-    </div> : inputNode);
+    return (inputNode);
   }
 
 }
