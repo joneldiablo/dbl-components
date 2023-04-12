@@ -43,7 +43,7 @@ export default class GridContainer extends Container {
   }
 
   content(children = this.props.children) {
-    return this.grid(children);
+    return !!this.state.localClasses && this.grid(children);
   }
 
 }

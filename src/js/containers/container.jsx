@@ -25,7 +25,7 @@ export default class Container extends Component {
   updateSize() {
     const { fluid, fullWidth } = this.props;
     const containerType = (!fullWidth ? (fluid ? 'container-fluid' : 'container') : '');
-    this.setState({ localClasses: [containerType, this.breakpoint, 'animate'].join(' '), loaded: true });
+    this.setState({ localClasses: [containerType, this.breakpoint, 'animate'].join(' ') });
   }
 
   onResize = () => {
@@ -68,7 +68,7 @@ export default class Container extends Component {
   }
 
   content(children = this.props.children) {
-    return !!this.state.loaded && children;
+    return !!this.state.localClasses && children;
   }
 
 }
