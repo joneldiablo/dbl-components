@@ -147,6 +147,7 @@ export default class DropdownButtonContainer extends Component {
   }
 
   onBsEvents(evt) {
+    console.log('bs_event', evt);
     const evtType = evt.type.split('.')[0];
     eventHandler.dispatch(this.props.name, {
       [this.props.name]: {
