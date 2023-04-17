@@ -106,9 +106,9 @@ export default class DropdownButtonContainer extends Component {
   toggleDropdown = (e) => {
     console.log('EVENT', e, this.state.open);
     if (this.state.open) {
-      this.dropdown.hide();
+      this.bsDropdown.hide();
     } else {
-      this.dropdown.show();
+      this.bsDropdown.show();
     }
     e.preventDefault();
     e.stopPropagation();
