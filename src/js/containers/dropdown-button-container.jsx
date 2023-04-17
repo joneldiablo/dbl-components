@@ -104,7 +104,12 @@ export default class DropdownButtonContainer extends Component {
   }
 
   toggleDropdown = (e) => {
-    console.log('EVENT', e);
+    console.log('EVENT', e, this.state.open);
+    if (this.state.open) {
+      this.dropdown.hide();
+    } else {
+      this.dropdown.show();
+    }
     e.preventDefault();
     e.stopPropagation();
   }
@@ -148,7 +153,6 @@ export default class DropdownButtonContainer extends Component {
   }
 
   onBsEvents(evt) {
-    console.log('bs_event', evt);
     const evtType = evt.type.split('.')[0];
     eventHandler.dispatch(this.props.name, {
       [this.props.name]: {
@@ -189,7 +193,6 @@ export default class DropdownButtonContainer extends Component {
     return <>
       <button className={cn.join(' ')} type="button"
         ref={this.btn}
-        data-bs-toggle="dropdown"
         disabled={disabled} id={this.trigger}
         onClick={this.toggleDropdown}>
         {label || value}
