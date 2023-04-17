@@ -104,6 +104,7 @@ export default class DropdownButtonContainer extends Component {
   }
 
   toggleDropdown = (e) => {
+    console.log('EVENT', e);
     e.preventDefault();
     e.stopPropagation();
   }
