@@ -17,7 +17,7 @@ export default class DropdownContainer extends DropdownButtonContainer {
     return <>
       <span className={cn.join(' ')} ref={ref => this.refBtn(ref)}
         data-bs-toggle="dropdown" disabled={disabled} id={this.trigger}
-        onClick={this.toggleDropdown} style={{ cursor: 'pointer' }}>
+        style={{ cursor: 'pointer' }}>
         {label || value}
       </span>
       {this.dropdownRender(children)}
