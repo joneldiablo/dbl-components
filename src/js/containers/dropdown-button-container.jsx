@@ -155,10 +155,19 @@ export default class DropdownButtonContainer extends Component {
         menu: this.props.menu
       }
     });
-    if (evtType === 'show') {
-      this.setState({ open: true });
-    } else if (evtType === 'hidden') {
+    if (evtType === 'hidden') {
       this.setState({ open: false });
+    }
+  }
+
+  onToggleDrop(evt) {
+    evt.stopPropagation();
+    if (this.state.open) {
+      this.bsDropdown.hide();
+    } else {
+      this.setState({ open: true }, () => {
+        this.bsDropdown.show();
+      });
     }
   }
 
@@ -187,6 +196,7 @@ export default class DropdownButtonContainer extends Component {
     return <>
       <button className={cn.join(' ')} type="button"
         ref={this.btn}
+        onClick={this.onToggleDrop.bind(this)}
         data-bs-toggle="dropdown"
         disabled={disabled} id={this.trigger}
       >
