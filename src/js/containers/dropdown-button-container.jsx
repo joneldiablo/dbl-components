@@ -103,29 +103,16 @@ export default class DropdownButtonContainer extends Component {
     });
   }
 
-  toggleDropdown = (e) => {
-    console.log('EVENT', e, this.state.open);
-    if (this.state.open) {
-      this.bsDropdown.hide();
-    } else {
-      this.bsDropdown.show();
-    }
-    e.preventDefault();
-    e.stopPropagation();
-  }
-
   componentDidMount() {
     this.events.forEach(e => eventHandler.subscribe(...e));
     if (this.btn.current) {
       const btn = this.btn.current;
-      const bsDrop = Dropdown.getInstance(btn);
-      if (bsDrop) bsDrop.dispose(btn);
+      this.bsDropdown = Dropdown.getOrCreateInstance(btn, this.props.dropdown);
       btn.removeEventListener('hide.bs.dropdown', this.onBsEvents);
       btn.removeEventListener('hidden.bs.dropdown', this.onBsEvents);
       btn.removeEventListener('show.bs.dropdown', this.onBsEvents);
       btn.removeEventListener('shown.bs.dropdown', this.onBsEvents);
 
-      this.bsDropdown = new Dropdown(btn, this.props.dropdown);
       btn.addEventListener('hide.bs.dropdown', this.onBsEvents);
       btn.addEventListener('hidden.bs.dropdown', this.onBsEvents);
       btn.addEventListener('show.bs.dropdown', this.onBsEvents);
@@ -153,6 +140,7 @@ export default class DropdownButtonContainer extends Component {
   }
 
   onBsEvents(evt) {
+    console.log('bs_event', evt);
     const evtType = evt.type.split('.')[0];
     eventHandler.dispatch(this.props.name, {
       [this.props.name]: {
@@ -193,8 +181,9 @@ export default class DropdownButtonContainer extends Component {
     return <>
       <button className={cn.join(' ')} type="button"
         ref={this.btn}
+        data-bs-toggle="dropdown"
         disabled={disabled} id={this.trigger}
-        onClick={this.toggleDropdown}>
+      >
         {label || value}
       </button>
       {this.dropdownRender(children)}
