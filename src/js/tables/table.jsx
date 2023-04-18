@@ -116,7 +116,8 @@ export class HeaderCell extends React.Component {
             <DropdownContainer
               name={col.name + 'DropdownFilter'}
               label={<Icons icon={icons.search} className={cnSearch.join(' ')} />}
-              dropDownClasses="dropdown-menu-end p-0"
+              dropdownClasses="dropdown-menu-end p-0"
+              dropdownClass={false}
             >
               {React.createElement(fields[col.filter.type] || fields.Field, col.filter)}
             </DropdownContainer>

@@ -13,7 +13,8 @@ export default class DropdownContainer extends DropdownButtonContainer {
 
   content(children = this.props.children) {
     const { btnClasses, label, value, disabled } = this.props;
-    const cn = ['dropdown-toggle', btnClasses];
+    const cn = [btnClasses];
+    if (this.props.dropdownClass !== false) cn.unshift('dropdown-toggle');
     return <>
       <span
         className={cn.join(' ')}

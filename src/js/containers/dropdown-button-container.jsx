@@ -96,8 +96,6 @@ export default class DropdownButtonContainer extends Component {
     this.trigger = props.name + 'Btn';
     this.style.width = 'fit-content';
     this.onBsEvents = this.onBsEvents.bind(this);
-    if (props.dropdownClass === false) this.classes = '';
-    this.classes
     this.events = [
       ['update.' + props.name, this.onUpdate.bind(this)]
     ];
@@ -194,7 +192,8 @@ export default class DropdownButtonContainer extends Component {
 
   content(children = this.props.children) {
     const { btnClasses, label, value, disabled } = this.props;
-    const cn = ['btn dropdown-toggle', btnClasses];
+    const cn = ['btn', btnClasses];
+    if (this.props.dropdownClass !== false) cn.push('dropdown-toggle');
     return <>
       <button
         className={cn.join(' ')}
