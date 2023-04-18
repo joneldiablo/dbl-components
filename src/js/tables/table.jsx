@@ -7,6 +7,7 @@ import Component from "../component";
 import fields from "../forms/fields";
 import Icons from "../media/icons";
 import JsonRender from "../json-render";
+import DropdownContainer from "../containers/dropdown-container";
 
 export const FORMATS = {
   component: (raw, props, data, jsonRender, colName) => {
@@ -112,12 +113,13 @@ export class HeaderCell extends React.Component {
         </div>
         <div className="d-flex">
           {col.filter && <div className={"ps-2 mt-1 drop" + filterPos}>
-            <span data-bs-toggle="dropdown" >
-              <Icons icon={icons.search} className={cnSearch.join(' ')} />
-            </span>
-            <div className="dropdown-menu dropdown-menu-end p-0" onClick={(e) => e.stopPropagation()} >
+            <DropdownContainer
+              name={col.name + 'DropdownFilter'}
+              label={<Icons icon={icons.search} className={cnSearch.join(' ')} />}
+              dropDownClasses="dropdown-menu-end p-0"
+            >
               {React.createElement(fields[col.filter.type] || fields.Field, col.filter)}
-            </div>
+            </DropdownContainer>
           </div>}
           {showOrder && <div className="ps-2 text-muted" style={{ fontSize: 10 }}>
             <span onClick={(e) => this.sort('DESC', e)}>

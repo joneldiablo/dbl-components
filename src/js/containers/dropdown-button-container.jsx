@@ -96,6 +96,8 @@ export default class DropdownButtonContainer extends Component {
     this.trigger = props.name + 'Btn';
     this.style.width = 'fit-content';
     this.onBsEvents = this.onBsEvents.bind(this);
+    if (props.dropdownClass === false) this.classes = '';
+    this.classes
     this.events = [
       ['update.' + props.name, this.onUpdate.bind(this)]
     ];
