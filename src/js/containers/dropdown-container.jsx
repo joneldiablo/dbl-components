@@ -15,9 +15,15 @@ export default class DropdownContainer extends DropdownButtonContainer {
     const { btnClasses, label, value, disabled } = this.props;
     const cn = ['dropdown-toggle', btnClasses];
     return <>
-      <span className={cn.join(' ')} ref={ref => this.refBtn(ref)}
-        data-bs-toggle="dropdown" disabled={disabled} id={this.trigger}
-        style={{ cursor: 'pointer' }}>
+      <span
+        className={cn.join(' ')}
+        data-bs-toggle="dropdown"
+        disabled={disabled}
+        id={this.trigger}
+        onClick={this.onToggleDrop.bind(this)}
+        ref={this.btn}
+        style={{ cursor: 'pointer' }}
+      >
         {label || value}
       </span>
       {this.dropdownRender(children)}

@@ -194,11 +194,14 @@ export default class DropdownButtonContainer extends Component {
     const { btnClasses, label, value, disabled } = this.props;
     const cn = ['btn dropdown-toggle', btnClasses];
     return <>
-      <button className={cn.join(' ')} type="button"
-        ref={this.btn}
-        onClick={this.onToggleDrop.bind(this)}
+      <button
+        className={cn.join(' ')}
         data-bs-toggle="dropdown"
-        disabled={disabled} id={this.trigger}
+        disabled={disabled}
+        id={this.trigger}
+        onClick={this.onToggleDrop.bind(this)}
+        ref={this.btn}
+        type="button"
       >
         {label || value}
       </button>
