@@ -84,7 +84,8 @@ export default class DropdownButtonContainer extends Component {
     ...Component.defaultProps,
     itemClasses: '',
     dropdownClasses: '',
-    btnClasses: ''
+    btnClasses: '',
+    dropdown: {}
   }
 
   classes = 'dropdown';
@@ -107,7 +108,13 @@ export default class DropdownButtonContainer extends Component {
     this.events.forEach(e => eventHandler.subscribe(...e));
     if (this.btn.current) {
       const btn = this.btn.current;
-      this.bsDropdown = Dropdown.getOrCreateInstance(btn, this.props.dropdown);
+      const last = Dropdown.getInstance(btn);
+      if (last) last.dispose();
+      this.bsDropdown = new Dropdown(btn, {
+        autoClose: true,
+        reference: 'toggle',
+        ...this.props.dropdown,
+      });
       btn.removeEventListener('hide.bs.dropdown', this.onBsEvents);
       btn.removeEventListener('hidden.bs.dropdown', this.onBsEvents);
       btn.removeEventListener('show.bs.dropdown', this.onBsEvents);
