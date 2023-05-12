@@ -19,9 +19,9 @@ export default class GroupField extends Field {
     children.forEach(ch => {
       const c = ch.type === 'section' ? ch.props.children : ch;
       if (c.props.position === 'start')
-        start.push(<div className="input-group-text" key={c.props.name}>{c}</div>);
-      else
-        end.push(<div className="input-group-text" key={c.props.name}>{c}</div>);
+        start.push(ch);
+      else if (c.props.position === 'end')
+        end.push(ch);
     });
     const cn = ['input-group', groupClasses];
     const inputNode = (<div className={cn.join(' ')}>
