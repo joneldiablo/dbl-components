@@ -1,3 +1,4 @@
+import React from "react";
 import ResizeSensor from "css-element-queries/src/ResizeSensor";
 
 import Component from "../component";
