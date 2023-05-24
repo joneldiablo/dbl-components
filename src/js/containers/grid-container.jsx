@@ -43,7 +43,7 @@ export default class GridContainer extends Container {
   }
 
   content(children = this.props.children) {
-    return !!this.breakpoint && this.grid(children);
+    return !!this.breakpoint ? this.grid(children) : this.waitBreakpoint;
   }
 
 }

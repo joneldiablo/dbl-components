@@ -19,7 +19,7 @@ export default class CardContainer extends Container {
   }
 
   content(children = this.props.children) {
-    if (!this.breakpoint) return false;
+    if (!this.breakpoint) return this.waitBreakpoint;
     const theContent = {
       header: [],
       body: [],

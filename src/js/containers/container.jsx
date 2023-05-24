@@ -21,6 +21,7 @@ export default class Container extends Component {
   }
 
   breakpoint = false;
+  waitBreakpoint = <Icons icon="spinner" classes="spinner" />;
 
   updateSize() {
     const { fluid, fullWidth } = this.props;
@@ -68,7 +69,7 @@ export default class Container extends Component {
   }
 
   content(children = this.props.children) {
-    return !!this.breakpoint && children;
+    return !!this.breakpoint ? children : this.waitBreakpoint;
   }
 
 }

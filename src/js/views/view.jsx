@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import eventHandler from "../functions/event-handler";
+import Icons from "../media/icons";
 import Container from "../containers/container";
 import JsonRender from "../json-render";
 
@@ -71,10 +72,10 @@ export default class View extends Container {
 
   content(children = this.props.children) {
     const { routesIn, content } = this.props;
-    return !!this.breakpoint && <>
+    return !!this.breakpoint ? <>
       {this.jsonRender.buildContent(content)}
       {!routesIn && children}
-    </>
+    </> : this.waitBreakpoint
   }
 
 }
