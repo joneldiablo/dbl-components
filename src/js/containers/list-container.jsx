@@ -34,7 +34,7 @@ export default class ListContainer extends Container {
   }
 
   content(children = this.props.children) {
-    return this.li(children);
+    return !!this.breakpoint && this.li(children);
   }
 
 }

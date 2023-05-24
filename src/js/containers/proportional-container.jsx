@@ -14,6 +14,7 @@ export default class ProportionalContainer extends Container {
   classes = 'position-relative';
 
   content(children = this.props.children) {
+    if (!this.breakpoint) return false;
     let { ratio, overflow, innerClasses } = this.props;
     let paddingBottom = typeof ratio === 'number' ? (ratio * 100) + '%' : ratio;
     let st = {

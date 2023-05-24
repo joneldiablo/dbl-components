@@ -57,6 +57,7 @@ export default class TabsContainer extends Container {
   }
 
   content() {
+    if (!this.breakpoint) return false;
     return (<>
       {this.tabNode}
       {this.activeTabNode}

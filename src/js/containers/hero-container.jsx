@@ -22,6 +22,7 @@ export default class HeroContainer extends Container {
   }
 
   content(children = this.props.children) {
+    if (!this.breakpoint) return false;
     const { spaceBetween, slidesPerView } = this.props;
     let propsSwiper = {
       spaceBetween,

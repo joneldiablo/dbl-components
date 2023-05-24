@@ -9,6 +9,7 @@ export default class GridSwitchContainer extends GridContainer {
   }
 
   content(children = this.props.children) {
+    if (!this.breakpoint) return false;
     let original = [...children];
     let arrChildren = [];
     while (original.length) {
