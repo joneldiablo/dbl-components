@@ -68,7 +68,7 @@ export default class Container extends Component {
   }
 
   content(children = this.props.children) {
-    return !!this.state.localClasses && children;
+    return !!this.breakpoint && children;
   }
 
 }

@@ -71,7 +71,7 @@ export default class View extends Container {
 
   content(children = this.props.children) {
     const { routesIn, content } = this.props;
-    return <>
+    return !!this.breakpoint && <>
       {this.jsonRender.buildContent(content)}
       {!routesIn && children}
     </>
