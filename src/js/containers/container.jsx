@@ -3,6 +3,7 @@ import ResizeSensor from "css-element-queries/src/ResizeSensor";
 
 import Component from "../component";
 import eventHandler from "../functions/event-handler";
+import Icons from "../media/icons";
 
 export default class Container extends Component {
 
