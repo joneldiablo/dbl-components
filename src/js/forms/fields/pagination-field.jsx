@@ -13,6 +13,7 @@ export default class PaginationField extends Field {
     ...Field.defaultProps,
     total: 1,
     default: 1,
+    first: true, previus: true, next: true, last: true,
     texts: {
       first: 'Primer página',
       previus: 'Página Anterior',
@@ -89,24 +90,24 @@ export default class PaginationField extends Field {
   }
 
   content() {
-    const { paginationClasses, texts } = this.props;
+    const { paginationClasses, texts, first, previus, next, last } = this.props;
     const { total } = this.state;
     const cn = ['pagination', paginationClasses];
     const isFirst = this.isFirst();
     const isLast = this.isLast();
     return <ul className={cn.join(' ')}>
-      <li className={'page-item' + (isFirst ? ' disabled' : '')} title={texts.first}>
+      {first && <li className={'page-item' + (isFirst ? ' disabled' : '')} title={texts.first}>
         <button type="button" className="page-link" disabled={isFirst}
           onClick={() => this.gotoPage('first')}>
           <span>«</span>
         </button>
-      </li>
-      <li className={'page-item' + (isFirst ? ' disabled' : '')} title={texts.previus}>
+      </li>}
+      {previus && <li className={'page-item' + (isFirst ? ' disabled' : '')} title={texts.previus}>
         <button type="button" className="page-link" disabled={isFirst}
           onClick={() => this.gotoPage(-1)}>
           <span>‹</span>
         </button>
-      </li>
+      </li>}
       <li className="page-item" title={texts.goto}>
         {this.inputNode}
       </li>
@@ -116,18 +117,18 @@ export default class PaginationField extends Field {
       <li className="page-item disabled" title={total + ' ' + texts.pages} style={{ width: 58 }}>
         <span className="page-link border-start-0" >{total}</span>
       </li>
-      <li className={'page-item' + (isLast ? ' disabled' : '')} title={texts.next}>
+      {next && <li className={'page-item' + (isLast ? ' disabled' : '')} title={texts.next}>
         <button type="button" className="page-link" disabled={isLast}
           onClick={() => this.gotoPage(1)}>
           <span>›</span>
         </button>
-      </li>
-      <li className={'page-item' + (isLast ? ' disabled' : '')} title={texts.last}>
+      </li>}
+      {last && <li className={'page-item' + (isLast ? ' disabled' : '')} title={texts.last}>
         <button type="button" className="page-link" disabled={isLast}
           onClick={() => this.gotoPage('last')}>
           <span>»</span>
         </button>
-      </li>
+      </li>}
     </ul>
   }
 
