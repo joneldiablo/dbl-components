@@ -12,7 +12,8 @@
     "production": {
       "presets": [
         "minify"
-      ]
+      ],
+      "sourceMaps": true
     }
   }
 }
