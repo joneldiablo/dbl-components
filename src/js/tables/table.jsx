@@ -212,7 +212,7 @@ export class HeaderCell extends React.Component {
    * @returns {React.Component} El componente renderizado.
    */
   render() {
-    const { col, classes, icons, orderable, filterPos } = this.props;
+    const { col, classes, icons, orderable, filterPos, headerClasses } = this.props;
     const { sortDir, searchActive } = this.state;
     const showOrder = typeof col.orderable !== 'undefined' ? col.orderable : orderable;
     const style = {
@@ -225,7 +225,9 @@ export class HeaderCell extends React.Component {
     ];
     const cnSearch = ['cursor-pointer'];
     if (!searchActive) cnSearch.push('text-muted');
-    return <th className={"align-middle " + col.name} scope="col">
+    const hClasses = ["align-middle", col.name];
+    if (headerClasses) hClasses.push(headerClasses);
+    return <th className={hClasses} scope="col">
       <div className="d-flex align-items-center">
         <div className={cn.join(' ')} style={style}>
           <span>{col.label}</span>
@@ -361,7 +363,7 @@ export default class Table extends Component {
    * @memberof Table
    */
   mapHeaderCell = ([key, col], i) => {
-    const { colClasses, icons, orderable, name, headerClasses } = this.props;
+    const { colClasses, headerClasses, icons, orderable, name } = this.props;
     const { orderBy } = this.state;
     col.name = col.name || key;
     col.label = this.jsonRender.buildContent(col.label);
@@ -369,12 +371,13 @@ export default class Table extends Component {
       col,
       orderable,
       classes: colClasses,
+      headerClasses,
       icons,
       onSort: this.onSort,
       sort: orderBy === col.name,
       tableName: name
     };
-    if (headerClasses) props.classes += ' ' + headerClasses;
+
     return <HeaderCell key={i + '-' + col.name} {...props} />
   }
 
