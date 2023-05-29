@@ -361,7 +361,7 @@ export default class Table extends Component {
    * @memberof Table
    */
   mapHeaderCell = ([key, col], i) => {
-    const { colClasses, icons, orderable, name, vertical, headerClasses } = this.props;
+    const { colClasses, icons, orderable, name, headerClasses } = this.props;
     const { orderBy } = this.state;
     col.name = col.name || key;
     col.label = this.jsonRender.buildContent(col.label);
@@ -374,7 +374,7 @@ export default class Table extends Component {
       sort: orderBy === col.name,
       tableName: name
     };
-    if (vertical && headerClasses) props.colClasses += ' ' + headerClasses;
+    if (headerClasses) props.classes += ' ' + headerClasses;
     return <HeaderCell key={i + '-' + col.name} {...props} />
   }
 
@@ -455,7 +455,7 @@ export default class Table extends Component {
    * @memberof Table
    */
   content(children = this.props.children) {
-    const { data, columns, headerClasses, tableClasses, hover, striped, vertical } = this.props;
+    const { data, columns, tableClasses, hover, striped, vertical } = this.props;
 
     // Definir encabezado y pie de página si están presentes
     let header, footer;
@@ -514,7 +514,7 @@ export default class Table extends Component {
             </tr>
           )}
           {!vertical && (
-            <tr className={headerClasses}>
+            <tr >
               {Object.entries(columns).map(this.mapHeaderCell)}
             </tr>
           )}
