@@ -227,7 +227,7 @@ export class HeaderCell extends React.Component {
     if (!searchActive) cnSearch.push('text-muted');
     const hClasses = ["align-middle", col.name];
     if (headerClasses) hClasses.push(headerClasses);
-    return <th className={hClasses} scope="col">
+    return <th className={hClasses.join(' ')} scope="col">
       <div className="d-flex align-items-center">
         <div className={cn.join(' ')} style={style}>
           <span>{col.label}</span>
