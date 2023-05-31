@@ -8,6 +8,7 @@ import fields from "../forms/fields";
 import Icons from "../media/icons";
 import JsonRender from "../json-render";
 import DropdownContainer from "../containers/dropdown-container";
+import Action from "../actions/action";
 
 /**
  * @typedef {Object} FormatOptions
@@ -240,6 +241,13 @@ export class HeaderCell extends React.Component {
               dropdownClasses="dropdown-menu-end p-0"
               dropdownClass={false}
             >
+              {searchActive && <Action
+                name={col.name + 'Clear'}
+                classes="btn-link btn-sm p-0"
+                style={{ top: 5, position: 'absolute', right: 8, zIndex: 4 }}
+              >
+                <Icons icon={icons.clear} classes="text-danger" />
+              </Action>}
               {React.createElement(fields[col.filter.type] || fields.Field, col.filter)}
             </DropdownContainer>
           </div>}
@@ -282,7 +290,8 @@ export default class Table extends Component {
     icons: {
       caretUp: 'caret-up',
       caretDown: 'caret-down',
-      search: 'search'
+      search: 'search',
+      clear: 'close'
     },
     vertical: false
   }
