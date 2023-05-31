@@ -65,6 +65,7 @@ export default class FileField extends Field {
           break;
         case 'zip':
           reader.readAsArrayBuffer(file);
+          break;
         default:
           break;
       }
