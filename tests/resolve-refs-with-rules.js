@@ -70,5 +70,3 @@ const rules = {
 }
 
 const r = resolveRefs(schema.template, schema, rules);
-
-console.log(JSON.stringify(r, null, 2));

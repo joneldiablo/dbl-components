@@ -5,6 +5,7 @@ import Component from "../component";
 import eventHandler from "../functions/event-handler";
 import Icons from "../media/icons";
 
+
 export default class Container extends Component {
 
   static jsClass = 'Container';
@@ -36,11 +37,14 @@ export default class Container extends Component {
     this.setState({ localClasses: [containerType, this.breakpoint, 'animate'].join(' ') });
   }
 
-  onResize() {
-    clearTimeout(this.onResizeTimeout);
-    this.onResizeTimeout = setTimeout(() => {
+  onResize(firstTime) {
+    const resizingFunc = () => {
       if (!this.ref.current) return;
-      let { offsetWidth: width, offsetHeight: height } = this.ref.current;
+
+      let width, height;
+      if (firstTime === true) ({ offsetWidth: width, offsetHeight: height } = this.ref.current);
+      else ({ width, height } = firstTime);
+
       // TODO: no se toma en cuenta el ordenamiento de los breakpoints, ordenarlos
       //       y buscar la manera de empatar automagicamente con sass $container-max-widths
       this.breakpoint = Object.keys(this.props.breakpoints)
@@ -52,18 +56,30 @@ export default class Container extends Component {
         breakpoint: this.breakpoint,
         orientation: this.orientation
       };
+
       if (typeof this.props.onResize === 'function') {
         this.props.onResize(resp);
       }
       eventHandler.dispatch('resize.' + this.props.name, resp);
       this.updateSize();
-    }, 200);
+
+    }
+
+    if (firstTime === true) {
+      resizingFunc();
+      eventHandler.dispatch('ready.' + this.props.name);
+    } else {
+      clearTimeout(this.onResizeTimeout);
+      this.onResizeTimeout = setTimeout(resizingFunc, 200);
+    }
+
   }
 
   componentDidMount() {
     if (this.ref)
       this.resizeSensor = new ResizeSensor(this.ref.current, this.onResize);
-    this.updateSize();
+    this.onResize(true);
+
   }
 
   componentDidUpdate(prevProps) {

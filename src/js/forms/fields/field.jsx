@@ -66,6 +66,7 @@ export default class Field extends Component {
 
   componentDidMount() {
     eventHandler.subscribe('update.' + this.props.name, this.onUpdate, this.unique);
+    eventHandler.dispatch('ready.' + this.props.name);
   }
 
   componentWillUnmount() {

@@ -19,7 +19,6 @@ export default class Table extends Component {
   content() {
     const { columns } = this.props;
     const { data } = this.state;
-    console.log(data);
     return <div style={{ overflowX: 'auto' }}>
       <div className="table-wrapper">
         <div className="table-header container-fluid">

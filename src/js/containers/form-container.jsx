@@ -32,9 +32,11 @@ export default class FormContainer extends Component {
       ['update.' + props.name, this.onUpdate, this.unique],
       ['default.' + props.name, this.onDefault, this.unique]
     ];
+    this.readyEvents = [];
     this.fieldsForEach(field => {
       this.events.push([field.name, this.onChange, this.unique]);
       this.events.push(['invalid.' + field.name, this.onInvalidField, this.unique]);
+      this.readyEvents.push(['ready.' + field.name, this.onReadyOnce.bind(this), this.unique]);
       if (typeof field.default !== 'undefined') this.state.defaultValues[field.name] = field.default;
     });
     delete this.eventHandlers.onChange;
@@ -42,6 +44,7 @@ export default class FormContainer extends Component {
 
   componentDidMount() {
     this.events.forEach(event => eventHandler.subscribe(...event));
+    this.readyEvents.forEach(event => eventHandler.subscribe(...event));
     this.reset();
   }
 
@@ -61,6 +64,11 @@ export default class FormContainer extends Component {
       };
     }
     return props;
+  }
+
+  onReadyOnce() {
+    this.readyEvents.forEach(([eventName]) => eventHandler.unsubscribe(eventName, this.unique));
+    eventHandler.dispatch('ready.' + this.props.name);
   }
 
   fieldsForEach(func) {
