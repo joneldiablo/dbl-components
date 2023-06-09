@@ -426,11 +426,16 @@ export default class Table extends Component {
    * @memberof Table
    */
   mapCell = (rowData, col, i) => {
-    const { mapCells: mapCellsFunc, name, colClasses } = this.props;
+    const { mapCells: mapCellsFunc, name, colClasses, vertical } = this.props;
     const colName = col.name;
     const cellAttrs = {
       className: ['cell', col.type, col.name + '-cell', col.classes, colClasses],
-      style: col.style,
+      style: vertical
+        ? {
+          minWidth: col.width,
+          ...col.style
+        }
+        : col.style,
       title: typeof rowData[colName] !== 'object' ? rowData[colName] : undefined
     }
 
