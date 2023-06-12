@@ -20,6 +20,7 @@ export default class ActionComponent extends Component {
 
   onClick = (e) => {
     e.stopPropagation();
+    if (this.props.type === 'link') return this.props.history.push(this.props.to);
     const { value, name, id } = this.props;
     let dispatch = name;
     if (value || id) {
@@ -29,7 +30,8 @@ export default class ActionComponent extends Component {
   }
 
   get componentProps() {
-    const { type, disabled, form, _props = {} } = this.props;
+    const { type: prevType, disabled, form, _props = {} } = this.props;
+    const type = prevType === 'link' ? 'button' : prevType;
     return { type, disabled, ..._props, form: form ? form + '-form' : undefined };
   }
 
