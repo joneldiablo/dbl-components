@@ -72,8 +72,8 @@ export const FORMATS = {
    * @param {Object} options - Opciones de formato del datetime.
    * @returns {String} El datetime formateado.
    */
-  datetime: (raw, { format: f = 'DD/MM/YYYY HH:mm', locale = false } = {}) =>
-    raw ? locale ? moment(raw).format(f) : moment.utc(raw).format(f) : '',
+  datetime: (raw, { format: f = 'DD/MM/YYYY HH:mm', locale = false, options } = {}) =>
+    raw ? locale ? moment(raw, options).format(f) : moment.utc(raw, options).format(f) : '',
   /**
    * Formatea los datos en crudo a una moneda.
    *
