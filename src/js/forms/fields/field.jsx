@@ -209,7 +209,7 @@ export default class Field extends Component {
     const { placeholder, required, name, labelClasses,
       inline, label } = this.props;
     const cn = ['form-label', labelClasses];
-    if (inline) cn.shift();
+    if (inline) { cn.shift(); cn.push('py-2') }
     const labelNode = <label className={cn.join(' ')} htmlFor={name}>
       {label ? label : placeholder}
       {required && <b title="Este campo es indispensable" className="text-inherit"> *</b>}
@@ -240,17 +240,23 @@ export default class Field extends Component {
   }
 
   content(children = this.props.children) {
-    const { inline, first, placeholder, label, floating } = this.props;
+    const { inline, first, placeholder, label, floating, inlineControlClasses } = this.props;
     const cn = ['position-relative'];
-    if (inline) cn.push('d-flex align-items-center');
+    if (inline) cn.push('d-flex');
     if (placeholder && !label && floating) cn.push('form-floating');
     return (<>
       <div className={cn.join(' ')}>
         {floating && (first === 'label' && label) && this.labelNode}
-        {this.inputNode}
+        {inline ? <div className={inlineControlClasses}>
+          {this.inputNode}
+          {this.errorMessageNode}
+          {this.messageNode}
+        </div> : this.inputNode}
         {floating && (first !== 'label' || (placeholder && !label)) && this.labelNode}
-        {this.errorMessageNode}
-        {this.messageNode}
+        {!inline && <>
+          {this.errorMessageNode}
+          {this.messageNode}
+        </>}
       </div>
       {children}
     </>);
