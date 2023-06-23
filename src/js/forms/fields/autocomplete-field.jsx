@@ -47,60 +47,54 @@ export default class AutocompleteField extends Field {
     }
   }
 
-  onUpdate({ options, more, value, reset, open, ...data }) {
+  onUpdate({ options, more, value, reset, open, ...update }) {
     if (typeof options !== 'undefined') {
-      const newState = {
-        loading: false
-      };
+      this.state.loading = false;
       const { maxItems } = this.props;
-      newState.options = options.slice(0, maxItems);
-      newState.more = (options.length > maxItems) || more;
-      this.setState(newState);
+      this.state.options = options.slice(0, maxItems);
+      this.state.more = (options.length > maxItems) || more;
     }
     if (typeof value !== 'undefined') {
-      const newState = {
-        value: '',
-        selected: null
-      };
+
+      this.state.value = '';
+      this.state.selected = null;
+
       if (![null, ''].includes(value)) {
         const opt = (options || this.state.options)
           .concat(this.props.options || [])
           .find(opt => opt.value == value);
         if (opt) {
-          newState.value = opt.label;
-          newState.selected = opt;
+          this.state.value = opt.label;
+          this.state.selected = opt;
         }
       }
 
-      this.setState(newState, () => {
-        if (this.input.current) {
-          const error = this.isInvalid(value);
-          if (this.state.error !== error) this.setState({ error });
-        }
-      });
+      if (this.input.current) {
+        const error = this.isInvalid(value);
+        if (this.state.error !== error) this.state.error = error;
+      }
     }
     if (reset) {
-      const newState = {
-        value: '',
-        selected: null
-      };
+      this.state.value = '';
+      this.state.selected = null;
+
       if (![null, '', undefined].includes(this.props.default)) {
-        const opt = (newState.options || this.state.options)
+        const opt = (options || this.state.options)
           .concat(this.props.options || [])
           .find(opt => opt.value == this.props.default);
         if (opt) {
-          newState.value = opt.label;
-          newState.selected = opt;
+          this.state.value = opt.label;
+          this.state.selected = opt;
         }
       }
       this._reset = true;
-      return this.setState(newState, this.returnData);
+      this.returnData();
     }
     if (typeof open !== 'undefined') {
-      if (open) this.show();
-      else this.hide();
+      if (open) this.state.showDropdown = 'show';
+      else this.state.showDropdown = '';
     }
-    super.onUpdate(data);
+    return super.onUpdate(update);
   }
 
   show = () => {
