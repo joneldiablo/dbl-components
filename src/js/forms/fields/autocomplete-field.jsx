@@ -47,7 +47,7 @@ export default class AutocompleteField extends Field {
     }
   }
 
-  onUpdate({ options, more, value, reset, ...data }) {
+  onUpdate({ options, more, value, reset, open, ...data }) {
     if (typeof options !== 'undefined') {
       const newState = {
         loading: false
@@ -63,7 +63,7 @@ export default class AutocompleteField extends Field {
         selected: null
       };
       if (![null, ''].includes(value)) {
-        const opt = (newState.options || this.state.options)
+        const opt = (options || this.state.options)
           .concat(this.props.options || [])
           .find(opt => opt.value == value);
         if (opt) {
@@ -71,13 +71,13 @@ export default class AutocompleteField extends Field {
           newState.selected = opt;
         }
       }
+
       this.setState(newState, () => {
         if (this.input.current) {
           const error = this.isInvalid(value);
           if (this.state.error !== error) this.setState({ error });
         }
       });
-      return;
     }
     if (reset) {
       const newState = {
@@ -95,6 +95,10 @@ export default class AutocompleteField extends Field {
       }
       this._reset = true;
       return this.setState(newState, this.returnData);
+    }
+    if (typeof open !== 'undefined') {
+      if (open) this.show();
+      else this.hide();
     }
     super.onUpdate(data);
   }
