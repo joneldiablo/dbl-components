@@ -29,7 +29,6 @@ export default class AutocompleteField extends Field {
 
   onFilter(value = this.state.value) {
     const { options, forceUseFilter } = this.props;
-    this.state.showDropdown === 'show';
     if (options?.length && !forceUseFilter) {
       const { maxItems } = this.props;
       const allOpts = options.filter(opt =>
@@ -92,8 +91,11 @@ export default class AutocompleteField extends Field {
       this.returnData();
     }
     if (typeof open !== 'undefined') {
-      if (open) this.state.showDropdown = 'show';
-      else this.state.showDropdown = '';
+      setTimeout(() => {
+        this.setState({
+          showDropdown: open ? 'show' : ''
+        });
+      }, 200);
     }
     return super.onUpdate(update);
   }
