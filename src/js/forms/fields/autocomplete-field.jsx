@@ -29,6 +29,7 @@ export default class AutocompleteField extends Field {
 
   onFilter(value = this.state.value) {
     const { options, forceUseFilter } = this.props;
+    this.state.showDropdown === 'show';
     if (options?.length && !forceUseFilter) {
       const { maxItems } = this.props;
       const allOpts = options.filter(opt =>
