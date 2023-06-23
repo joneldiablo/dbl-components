@@ -24,6 +24,7 @@ export default class AutocompleteField extends Field {
 
   onChange(e) {
     let { value } = e.target;
+    if (value) this.state.showDropdown = 'show';
     this.setState({ value }, () => this.onFilter());
   }
 
@@ -47,13 +48,14 @@ export default class AutocompleteField extends Field {
     }
   }
 
-  onUpdate({ options, more, value, reset, open, ...update }) {
+  onUpdate({ options, more, value, reset, ...update }) {
     if (typeof options !== 'undefined') {
       this.state.loading = false;
       const { maxItems } = this.props;
       this.state.options = options.slice(0, maxItems);
       this.state.more = (options.length > maxItems) || more;
     }
+
     if (typeof value !== 'undefined') {
 
       this.state.value = '';
@@ -63,10 +65,7 @@ export default class AutocompleteField extends Field {
         const opt = (options || this.state.options)
           .concat(this.props.options || [])
           .find(opt => opt.value == value);
-        if (opt) {
-          this.state.value = opt.label;
-          this.state.selected = opt;
-        }
+        this.onSelectOption(opt);
       }
 
       if (this.input.current) {
@@ -74,6 +73,7 @@ export default class AutocompleteField extends Field {
         if (this.state.error !== error) this.state.error = error;
       }
     }
+
     if (reset) {
       this.state.value = '';
       this.state.selected = null;
@@ -89,13 +89,6 @@ export default class AutocompleteField extends Field {
       }
       this._reset = true;
       this.returnData();
-    }
-    if (typeof open !== 'undefined') {
-      setTimeout(() => {
-        this.setState({
-          showDropdown: open ? 'show' : ''
-        });
-      }, 200);
     }
     return super.onUpdate(update);
   }
@@ -123,7 +116,7 @@ export default class AutocompleteField extends Field {
 
   onSelectOption(opt) {
     this.setState({
-      value: opt.value !== null ? opt.label : '',
+      value: opt && opt.value !== null ? opt.label : '',
       selected: opt,
       error: false
     }, () => {
