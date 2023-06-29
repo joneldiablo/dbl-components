@@ -63,7 +63,7 @@ export const FORMATS = {
    * @returns {String} La fecha formateada.
    */
   date: (raw, { format: f = 'DD/MM/YYYY', locale = false } = {}) =>
-    raw ? locale ? moment(raw).format(f) : moment.utc(raw).format(f) : '',
+    raw ? locale ? moment(raw).format(f) : moment(raw).format(f) : '',
   /**
    * Formatea los datos en crudo a un datetime.
    *
@@ -73,7 +73,7 @@ export const FORMATS = {
    * @returns {String} El datetime formateado.
    */
   datetime: (raw, { format: f = 'DD/MM/YYYY HH:mm', locale = false, options } = {}) =>
-    raw ? locale ? moment(raw, options).format(f) : moment.utc(raw, options).format(f) : '',
+    raw ? locale ? moment(raw, options).format(f) : moment(raw, options).format(f) : '',
   /**
    * Formatea los datos en crudo a una moneda.
    *
