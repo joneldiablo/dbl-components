@@ -120,6 +120,7 @@ export default class AutocompleteField extends Field {
       selected: opt,
       error: false
     }, () => {
+      if (!opt) return;
       this.hide();
       this.returnData(opt.value, { option: opt });
     });
