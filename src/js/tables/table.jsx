@@ -459,7 +459,7 @@ export default class Table extends Component {
     const cell = (<div {...cellAttrs}> {formater(cellData, formatOptions, rowData, this.jsonRender, colName)}  </div>);
     return (colName === 'id' ?
       <th key={i + '-' + colName} className={colName} scope="row">{cell}</th> :
-      <td key={i + '-' + colName} className={colName} >{cell}</td>
+      <td key={i + '-' + colName} className={vertical ? [colName, 'row-' + (i - 1)].join(' ') : colName} >{cell}</td>
     );
   }
 

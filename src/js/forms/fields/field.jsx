@@ -232,8 +232,10 @@ export default class Field extends Component {
   }
 
   get messageNode() {
-    const { message } = this.props;
-    const node = (<p className="m-1 lh-1"><small>
+    const { message, messageClasses } = this.props;
+    const cnm = ['m-1 lh-1'];
+    if (messageClasses) cnm.push(messageClasses);
+    const node = (<p className={cnm.flat().join(' ')}><small>
       {message}
     </small></p>);
     return (message && node);
