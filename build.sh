@@ -11,5 +11,6 @@ cd ./dbl-components
 #-------
 git add .
 git commit -m "$1"
-git push origin master
+git push origin --all
+git push backup --all
 npm publish
