@@ -4,6 +4,7 @@ import Collapse from "bootstrap/js/dist/collapse";
 import parseReact from "html-react-parser";
 
 import eventHandler from "../functions/event-handler";
+import JsonRender from "../json-render";
 import Component from "../component";
 import Icons from "../media/icons";
 import Action from "../actions/action";
@@ -36,6 +37,7 @@ export default class Navigation extends Component {
     this.state.open = true;
     this.state.localClasses = 'label-show';
     this.collapses = {};
+    this.jsonRender = new JsonRender(props);
   }
 
   componentDidMount() {
@@ -114,11 +116,15 @@ export default class Navigation extends Component {
       }
     };
     const innerNode = <span>
-      {item.content ? parseReact(open ? item.content[0] : item.content[1]) :
-        <>
+      {item.content
+        ? (open
+          ? this.jsonRender.buildContent(item.content[0])
+          : this.jsonRender.buildContent(item.content[1])
+        )
+        : <>
           <Icons icon={item.icon} className="mx-2" {...iconStyle} />
           {open && <>
-            <span className="label">{item.label}</span>
+            <span className="label">{this.jsonRender.buildContent(item.label)}</span>
             {!!item.menu?.length &&
               <span className="float-end caret-icon">
                 <Icons icon={carets[item.name]} {...iconStyle} />
