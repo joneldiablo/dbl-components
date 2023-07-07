@@ -158,7 +158,7 @@ export default class Navigation extends Component {
     }
 
     return (<React.Fragment key={i + '-' + item.path}>
-      <div>
+      <div {...(item.itemProps || {})}>
         {
           item.path ?
             <NavLink {...propsLink}>
