@@ -122,7 +122,7 @@ export default class Navigation extends Component {
           : this.jsonRender.buildContent(item.content[1])
         )
         : <>
-          <Icons icon={item.icon} className="mx-2" {...iconStyle} />
+          <Icons icon={item.icon} className="mx-2" {...iconStyle} {...(item.iconProps || {})} />
           {open && <>
             <span className="label">{this.jsonRender.buildContent(item.label)}</span>
             {!!item.menu?.length &&
