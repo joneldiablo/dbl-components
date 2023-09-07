@@ -103,7 +103,7 @@ export default class JsonRender {
       Object.assign(sectionRaw, m);
     }
     if (typeof sectionRaw.active === 'boolean' && !sectionRaw.active) return false;
-    const { component: componentName, content,
+    const { component: componentName, content, placeholder,
       label, message, errorMessage, managerName, ...section } = sectionRaw;
     const { location, match, childrenIn = this.childrenIn, history, children } = this.props;
     const Component = COMPONENTS[componentName] || (COMPONENTS.Component);
@@ -111,6 +111,7 @@ export default class JsonRender {
       ...section,
       managerName: managerName || this.props.name,
       label: this.buildContent(label),
+      placeholder: this.buildContent(placeholder),
       message: this.buildContent(message),
       errorMessage: this.buildContent(errorMessage),
       location,
