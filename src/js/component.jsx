@@ -57,6 +57,9 @@ export default class Component extends React.Component {
   render() {
     const { classes, style, name, tag, active } = this.props;
     const { localClasses, localStyles } = this.state;
+    if (!this.ready) {
+      this.ready = setTimeout(() => eventHandler.dispatch(`ready.${name}`), 50);
+    }
     const content = this.content();
     const cn = [this.constructor.jsClass, this.name, this.classes, localClasses];
     if (!!classes) cn.push(typeof classes === 'string' ? classes : (Array.isArray(classes) ? classes.join(' ') : classes['.']));
