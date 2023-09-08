@@ -24,13 +24,13 @@ export default class Field extends Component {
     min: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     noValidate: PropTypes.bool,
     options: PropTypes.arrayOf(PropTypes.shape({
-      label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+      label: PropTypes.oneOfType([PropTypes.string, PropTypes.node, PropTypes.bool]),
       value: PropTypes.any,
       disabled: PropTypes.bool,
       divider: PropTypes.bool
     })),
     pattern: PropTypes.string,
-    placeholder: PropTypes.string,
+    placeholder: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     required: PropTypes.bool,
     step: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     type: PropTypes.string.isRequired,
@@ -179,7 +179,7 @@ export default class Field extends Component {
   get inputProps() {
     const { disabled, readOnly, accept, minLength,
       required, name, controlClasses, maxLength, list,
-      placeholder, step, noValidate, multiple, autoComplete,
+      placeholder: prePlaceholder, step, noValidate, multiple, autoComplete,
       min, max, pattern, dir, _propsControl = {} } = this.props;
     const { value, error } = this.state;
     const cn = [
@@ -190,6 +190,7 @@ export default class Field extends Component {
       var autocomplete = 'off';
       var list1 = 'autocompleteOff';
     }
+    const placeholder = !!prePlaceholder ? this.extractString(prePlaceholder) : null;
     return {
       id: name, name, autoComplete: autocomplete || autoComplete,
       list: list1 || list, pattern, placeholder,
