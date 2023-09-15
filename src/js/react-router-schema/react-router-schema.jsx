@@ -37,7 +37,8 @@ const schemaPropTypes = {
   test: PropTypes.bool,
   theme: PropTypes.string,
   routes: routePropTypes.routes,
-  redirect: PropTypes.func
+  redirect: PropTypes.func,
+  defaultController: PropTypes.func,
 }
 
 const schemaDefaultProps = {
@@ -95,7 +96,7 @@ export default class SchemaController extends React.Component {
    * permite que el schema tenga un arreglo de paths
    **/
   views = (route, i) => {
-    const Controller = controllers[route.component] || (controllers.Controller);
+    const Controller = controllers[route.component] || this.props.defaultController || controllers.Controller;
     let subroutes = false;
     if (Array.isArray(route.routes)) subroutes = [];
     else if (typeof route.routes === 'object') {

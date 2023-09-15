@@ -104,7 +104,7 @@ export default class JsonRender {
     }
     if (typeof sectionRaw.active === 'boolean' && !sectionRaw.active) return false;
     const { component: componentName, content, placeholder,
-      label, message, errorMessage, managerName, ...section } = sectionRaw;
+      label, message, errorMessage, managerName, wrapperClasses, ...section } = sectionRaw;
     const { location, match, childrenIn = this.childrenIn, history, children } = this.props;
     const Component = COMPONENTS[componentName] || (COMPONENTS.Component);
     const componentProps = {
@@ -132,16 +132,25 @@ export default class JsonRender {
 
     const cnSection = [componentProps.name + '-section'];
     if (this.props.test) cnSection.push('test-section-wrapper');
+    if (this.props.wrapperClasses) cnSection.push(this.props.wrapperClasses);
+    if (wrapperClasses) cnSection.push(wrapperClasses);
     const exclusionSec = ['NavLink', 'Image', 'Link', 'Icons', 'Action',
       'DropdownButtonContainer', 'ModalButtonContainer', 'DropdownItem']
       .includes(componentName);
     const Wrapper = componentProps.wrapper === false ? false :
       componentProps.wrapper || Component.wrapper || 'section';
-    return (!Wrapper || exclusionSec || componentProps.tag ?
-      <Component key={componentProps.name || i} {...componentProps} /> :
-      <Wrapper key={componentProps.name || i} className={cnSection.join(' ')}>
-        <Component {...componentProps} />
-      </Wrapper>);
+
+    if (!Wrapper || exclusionSec || componentProps.tag) {
+      if (this.props.test) {
+        if (!componentProps.style) componentProps.style = {};
+        componentProps.style.border = '1px solid yellow';
+      }
+      return <Component key={componentProps.name || i} {...componentProps} />
+    }
+
+    return (<Wrapper key={componentProps.name || i} className={cnSection.flat().join(' ')}>
+      <Component {...componentProps} />
+    </Wrapper>);
   }
 
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createRef } from "react";
 import { NavLink } from "react-router-dom";
 import Collapse from "bootstrap/js/dist/collapse";
 import parseReact from "html-react-parser";
@@ -32,33 +32,40 @@ export default class Navigation extends Component {
 
   constructor(props) {
     super(props);
-    this.state.localClasses = 'nav';
-    this.state.carets = {};
-    this.state.open = true;
-    this.state.localClasses = 'label-show';
-    this.collapses = {};
+    Object.assign(this.state, {
+      carets: {},
+      open: typeof this.props.open !== 'boolean' || this.props.open,
+      localClasses: 'nav label-show'
+    })
+    this.collapses = createRef({});
     this.jsonRender = new JsonRender(props);
   }
 
   componentDidMount() {
-    eventHandler.subscribe(this.props.toggle, this.toggleText);
+    if (this.props.toggle)
+      eventHandler.subscribe(this.props.toggle, this.onToggleBtn.bind(this));
     this.unlisten = this.props.history.listen(this.onChangeRoute.bind(this));
-    Object.values(this.collapses).forEach(([ref, item, parentName, collapse]) => {
-      this.state.carets[item.name] = this.props.caretIcons[0];
-      collapse.hide();
-      ref.addEventListener('hidden.bs.collapse', this.hide);
-    });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (typeof this.props.open === 'boolean' && prevProps.open !== this.props.open) {
+      this.toggleText(this.props.open);
+    }
   }
 
   componentWillUnmount() {
+    console.log('ELIMINANDO!!!!!!');
     this.unlisten();
-    Object.values(this.collapses).forEach(([ref, item, parentName, collapse]) => {
-      item.submenuOpen = false;
-      collapse.dispose();
-      ref.removeEventListener('hidden.bs.collapse', this.hide);
-    });
-    this.collapses = {};
-    eventHandler.unsubscribe(this.props.toggle);
+    if (this.collapses.current)
+      Object.values(this.collapses.current).forEach(([ref, item, parentName, collapse]) => {
+        console.log(ref, ref?.parentNode);
+        item.submenuOpen = false;
+        collapse.dispose();
+        ref.removeEventListener('hidden.bs.collapse', this.hide);
+      });
+    this.collapses.current = {};
+    if (this.props.toggle)
+      eventHandler.unsubscribe(this.props.toggle);
   }
 
   onChangeRoute(location, action) {
@@ -66,25 +73,40 @@ export default class Navigation extends Component {
     eventHandler.dispatch(this.name, { pathname: this.pathname, item: this.activeItem });
   }
 
-  toggleText = () => {
+  onToggleBtn() {
+    this.toggleText();
+  }
+
+  toggleText(open = !this.state.open) {
     this.setState({
-      open: !this.state.open,
-      // INFO: invertido, el nuevo estado será false
-      localClasses: this.state.open ? 'label-collapsed' : 'label-show'
+      open,
+      localClasses: open ? 'label-show' : 'label-collapsed'
     }, () => eventHandler.dispatch(this.props.name, this.state.open));
   }
 
-  hide = (e) => {
+  hide(e) {
+    console.log('ESCONDIENDO', e.target, e.target.id);
     const itemName = e.target.id.split('-collapse')[0];
-    this.collapses[itemName][1].submenuOpen = false;
+    this.collapses.current[itemName][1].submenuOpen = false;
     this.state.carets[itemName] = this.props.caretIcons[0];
     this.setState({ carets: this.state.carets });
+    console.log('ESCONDIENDO');
   }
 
-  collapseRef = (ref, item, parentName) => {
+  collapseRef(ref, item, parentName) {
+    console.log('___ENCONTRANDO REF', ref, item, parentName);
     if (ref) {
       const opts = { autoClose: false };
-      this.collapses[item.name] = [ref, item, parentName, Collapse.getOrCreateInstance(ref, opts)];
+      const collapse = new Collapse(ref, opts);
+      console.log('AGREGAR!!!!', collapse);
+      if (!this.collapses.current) this.collapses.current = {};
+      this.collapses.current[item.name] = [ref, item, parentName, collapse];
+      this.state.carets[item.name] = this.props.caretIcons[0];
+      ref.addEventListener('hidden.bs.collapse', this.hide.bind(this));
+    } else if (this.collapses.current[item.name]) {
+      const [ref, item, parentName, collapse] = this.collapses.current[item.name];
+      collapse.dispose();
+      delete this.collapses.current[item.name];
     }
   }
 
@@ -94,9 +116,9 @@ export default class Navigation extends Component {
     if (!item.submenuOpen) {
       item.submenuOpen = true;
       this.state.carets[item.name] = this.props.caretIcons[1];
-      this.setState({ carets: this.state.carets }, () => this.collapses[item.name][3].show());
+      this.setState({ carets: this.state.carets }, () => this.collapses.current[item.name][3].show());
     } else {
-      this.collapses[item.name][3].hide();
+      this.collapses.current[item.name][3].hide();
     }
   }
 
@@ -106,6 +128,7 @@ export default class Navigation extends Component {
   }
 
   link = (item, i, parentName) => {
+    console.log('ITEMS!!!!', item);
     const { caretIcons, linkClasses, navLink } = this.props;
     const { carets, open } = this.state;
     carets[item.name] = carets[item.name] || caretIcons[0];

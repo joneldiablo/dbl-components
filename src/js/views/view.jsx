@@ -40,7 +40,7 @@ export default class View extends Container {
 
   componentDidMount() {
     super.componentDidMount();
-    this.events.forEach(e => eventHandler.subscribe(...e));
+    this.events.forEach(([evtName, callback]) => eventHandler.subscribe(evtName, callback, this.name));
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -63,7 +63,7 @@ export default class View extends Container {
 
   componentWillUnmount() {
     super.componentWillUnmount();
-    this.events.forEach(([eName]) => eventHandler.unsubscribe(eName));
+    this.events.forEach(([eName]) => eventHandler.unsubscribe(eName, this.name));
   }
 
   mutations(sectionName, section) {
