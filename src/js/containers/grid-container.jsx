@@ -7,6 +7,7 @@ export default class GridContainer extends Container {
   static defaultProps = {
     ...Container.defaultProps,
     colClasses: [],
+    colTag: 'div',
     fullWidth: true,
     row: 'height-auto',
     breakpoints: {
@@ -22,7 +23,7 @@ export default class GridContainer extends Container {
   classes = 'row';
 
   grid(children = this.props.children) {
-    const { colClasses } = this.props;
+    const { colClasses, colTag } = this.props;
     return Array.isArray(children) && children.map((child, i) => {
       if (!child) return false;
       const childColClasses =
@@ -36,9 +37,10 @@ export default class GridContainer extends Container {
         colcn.push(colClasses[i]);
       else if (Array.isArray(colClasses) && colClasses.length > 0)
         colcn.push(colClasses[colClasses.length - 1]);
-      return <div className={colcn.join(' ')} key={i}>
+      const ColTag = colTag;
+      return <ColTag className={colcn.join(' ')} key={i}>
         {child}
-      </div>
+      </ColTag>
     });
   }
 

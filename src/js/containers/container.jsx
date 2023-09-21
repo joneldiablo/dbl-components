@@ -35,6 +35,7 @@ export default class Container extends Component {
     const { fluid, fullWidth } = this.props;
     const containerType = (!fullWidth ? (fluid ? 'container-fluid' : 'container') : '');
     const localClasses = new Set(this.state.localClasses.split(' '));
+    Object.keys(this.props.breakpoints).forEach(br => localClasses.delete(br));
     [containerType, this.breakpoint, 'animate'].forEach(c => localClasses.add(c));
     this.setState({ localClasses: Array.from(localClasses).flat().join(' ') });
   }
