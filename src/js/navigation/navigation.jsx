@@ -25,7 +25,8 @@ export default class Navigation extends Component {
     ...Component.defaultProps,
     menu: [],
     caretIcons: ['angle-up', 'angle-down'],
-    navLink: true
+    navLink: true,
+    activeClassName: 'active'
   }
 
   tag = 'nav';
@@ -39,12 +40,14 @@ export default class Navigation extends Component {
     })
     this.collapses = createRef({});
     this.jsonRender = new JsonRender(props);
+    this.hide = this.hide.bind(this);
   }
 
   componentDidMount() {
     if (this.props.toggle)
       eventHandler.subscribe(this.props.toggle, this.onToggleBtn.bind(this));
     this.unlisten = this.props.history.listen(this.onChangeRoute.bind(this));
+    this.findFirstActive(this.props.menu);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -54,18 +57,36 @@ export default class Navigation extends Component {
   }
 
   componentWillUnmount() {
-    console.log('ELIMINANDO!!!!!!');
-    this.unlisten();
-    if (this.collapses.current)
-      Object.values(this.collapses.current).forEach(([ref, item, parentName, collapse]) => {
-        console.log(ref, ref?.parentNode);
-        item.submenuOpen = false;
-        collapse.dispose();
-        ref.removeEventListener('hidden.bs.collapse', this.hide);
-      });
-    this.collapses.current = {};
     if (this.props.toggle)
       eventHandler.unsubscribe(this.props.toggle);
+    this.unlisten();
+    if (this.collapses.current)
+      Object.entries(this.collapses.current).forEach(([key, itemControl]) => {
+        itemControl.submenuOpen = false;
+        itemControl.collapse?.dispose();
+        itemControl.ref.removeEventListener('hidden.bs.collapse', this.hide);
+        delete this.collapses.current[key];
+      });
+    this.collapses.current = {};
+
+  }
+
+  findFirstActive(menu, parent) {
+    let founded;
+    menu.find(item => {
+      item.parent = parent;
+      if (this.props.location.pathname === item.path) {
+        this.onNavigate(null, item);
+        this.onChangeRoute(this.props.location);
+        founded = item;
+        return true;
+      } else if (item.menu) {
+        founded = this.findFirstActive(item.menu, item);
+        return !!founded;
+      }
+      return false;
+    });
+    return founded;
   }
 
   onChangeRoute(location, action) {
@@ -80,58 +101,71 @@ export default class Navigation extends Component {
   toggleText(open = !this.state.open) {
     this.setState({
       open,
-      localClasses: open ? 'label-show' : 'label-collapsed'
-    }, () => eventHandler.dispatch(this.props.name, this.state.open));
+      localClasses: open ? 'nav label-show' : 'nav label-collapsed'
+    }, () => eventHandler.dispatch(this.name, { pathname: this.pathname, item: this.activeItem, open: this.state.open }));
   }
 
-  hide(e) {
-    console.log('ESCONDIENDO', e.target, e.target.id);
-    const itemName = e.target.id.split('-collapse')[0];
-    this.collapses.current[itemName][1].submenuOpen = false;
-    this.state.carets[itemName] = this.props.caretIcons[0];
-    this.setState({ carets: this.state.carets });
-    console.log('ESCONDIENDO');
-  }
-
-  collapseRef(ref, item, parentName) {
-    console.log('___ENCONTRANDO REF', ref, item, parentName);
-    if (ref) {
-      const opts = { autoClose: false };
-      const collapse = new Collapse(ref, opts);
-      console.log('AGREGAR!!!!', collapse);
-      if (!this.collapses.current) this.collapses.current = {};
-      this.collapses.current[item.name] = [ref, item, parentName, collapse];
-      this.state.carets[item.name] = this.props.caretIcons[0];
-      ref.addEventListener('hidden.bs.collapse', this.hide.bind(this));
-    } else if (this.collapses.current[item.name]) {
-      const [ref, item, parentName, collapse] = this.collapses.current[item.name];
-      collapse.dispose();
-      delete this.collapses.current[item.name];
+  collapseRef(ref, item) {
+    if (!ref) return;
+    if (!this.collapses.current) this.collapses.current = {};
+    if (this.collapses.current[item.name]) return;
+    this.collapses.current[item.name] = {
+      ref,
+      item,
+      submenuOpen: false
     }
+
   }
 
   onToggleSubmenu(e, item) {
     e.nativeEvent.stopPropagation();
     e.nativeEvent.preventDefault();
-    if (!item.submenuOpen) {
-      item.submenuOpen = true;
-      this.state.carets[item.name] = this.props.caretIcons[1];
-      this.setState({ carets: this.state.carets }, () => this.collapses.current[item.name][3].show());
+    const itemControl = this.collapses.current[item.name];
+    if (!itemControl.collapse) {
+      itemControl.ref.removeEventListener('hidden.bs.collapse', this.hide);
+      itemControl.collapse = Collapse.getOrCreateInstance(itemControl.ref, { autoClose: false });
+      itemControl.ref.addEventListener('hidden.bs.collapse', this.hide);
+    }
+    if (!itemControl.submenuOpen) {
+      itemControl.submenuOpen = true;
+      this.state.carets[item.name] = this.props.caretIcons[0];
+      this.setState({ carets: this.state.carets }, () => itemControl.collapse.show());
     } else {
-      this.collapses.current[item.name][3].hide();
+      //Se oculta todo en el evento de ocultar
+      itemControl.collapse.hide();
     }
   }
 
-  onNavigate(e, item) {
-    this.activeItem = item;
-    item.active = true;
+  hide(e) {
+    const itemName = e.target.id.split('-collapse')[0];
+    const itemControl = this.collapses.current[itemName];
+    itemControl.submenuOpen = false;
+    this.state.carets[itemName] = this.props.caretIcons[1];
+    this.setState({ carets: this.state.carets });
   }
 
-  link = (item, i, parentName) => {
-    console.log('ITEMS!!!!', item);
-    const { caretIcons, linkClasses, navLink } = this.props;
+  hasAnActive(menuItem) {
+    if (!menuItem.parent) return menuItem.name;
+    menuItem.parent.hasAnActive = true;
+    return this.hasAnActive(menuItem.parent);
+  }
+
+  onNavigate(e, activeItem) {
+    this.activeItem = activeItem;
+    this.flatItems.forEach(i => {
+      i.active = false;
+      i.hasAnActive = false;
+    });
+    activeItem.active = true;
+    this.hasAnActive(activeItem);
+  }
+
+  link = (item, i, parent) => {
+    const { caretIcons, linkClasses, navLink, activeClassName } = this.props;
     const { carets, open } = this.state;
-    carets[item.name] = carets[item.name] || caretIcons[0];
+    carets[item.name] = carets[item.name] || caretIcons[1];
+    this.flatItems.push(item);
+    item.parent = parent;
 
     const iconStyle = {
       style: {
@@ -149,34 +183,30 @@ export default class Navigation extends Component {
           {open && <>
             <span className="label">{this.jsonRender.buildContent(item.label)}</span>
             {!!item.menu?.length &&
-              <span className="float-end caret-icon">
+              <span className="float-end caret-icon ms-2">
                 <Icons icon={carets[item.name]} {...iconStyle} />
               </span>}
           </>}
         </>
       }
     </span>
+    const className = (() => {
+      const r = [linkClasses, item.classes];
+      if (!item.path) r.push('cursor-pointer');
+      if (item.hasAnActive) r.push('has-an-active');
+      if (navLink) r.unshift('nav-link');
+      if (!!item.menu?.length) r.push('has-submenu');
+      return r;
+    })().join(' ');
     const propsLink = item.path ? {
+      id: item.name + '-link', className,
       to: item.path,
-      id: item.name + '-link',
-      className: (() => {
-        const r = [linkClasses, item.classes];
-        if (navLink) r.unshift('nav-link');
-        if (!!item.menu?.length) r.push('has-submenu');
-        return r;
-      })().join(' '),
-      activeClassName: 'active',
+      activeClassName,
       strict: item.strict,
       exact: item.exact,
       onClick: (e) => [!!item.menu?.length && this.onToggleSubmenu(e, item), this.onNavigate(e, item)]
     } : {
-      id: item.name + '-link',
-      className: (() => {
-        const r = [linkClasses, item.classes, 'cursor-pointer'];
-        if (navLink) r.unshift('nav-link');
-        if (!!item.menu?.length) r.push('has-submenu');
-        return r;
-      })().join(' '),
+      id: item.name + '-link', className,
       onClick: !!item.menu?.length ? (e) => this.onToggleSubmenu(e, item) : null
     }
 
@@ -193,21 +223,22 @@ export default class Navigation extends Component {
         }
         {
           !!item.menu?.length &&
-          <div ref={(ref) => this.collapseRef(ref, item, parentName)} id={item.name + '-collapse'} className="collapse">
+          <div ref={(ref) => this.collapseRef(ref, item)} id={item.name + '-collapse'} className="collapse">
             {
               //renderear solo cuando este abierto
-              this.state.carets[item.name] === this.props.caretIcons[1] &&
-              item.menu.map((m, i) => this.link(m, i, item.name + '-collapse'))
+              this.state.carets[item.name] === this.props.caretIcons[0] &&
+              item.menu.map((m, i) => this.link(m, i, item))
             }
           </div>
         }
-      </div >
-    </React.Fragment >);
+      </div>
+    </React.Fragment>);
   }
 
   // TODO: agregar submenu dropdown 
   //       y submenu collapsable
   content(children = this.props.children) {
+    this.flatItems = [];
     return (<>
       {this.props.menu.map((m, i) => this.link(m, i, this.props.name))}
       {children}
