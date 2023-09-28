@@ -20,7 +20,23 @@ export default class ActionComponent extends Component {
 
   onClick = (e) => {
     e.stopPropagation();
-    if (this.props.type === 'link') return this.props.history.push(this.props.to);
+    if (this.props.type === 'link') {
+      const { history, location, to } = this.props;
+      let path = to;
+      //FIX: react router tiene un error al navegar de forma relativa
+      if (!path.startsWith('/')) {
+        const tmp = location.pathname.replace(/\/$/, '').split('/');
+        const actual = tmp.pop();
+        if (path.startsWith('..')) {
+          path = `../${tmp.pop()}/${path.replace(/\.\.\/?/, '')}`;
+        } else if (path.startsWith('.')) {
+          path = path.replace('.', actual);
+        } else {
+          path = `./${actual}/${path}`;
+        }
+      }
+      return history.push(path);
+    }
     const { value, name, id } = this.props;
     let dispatch = name;
     if (value || id) {
