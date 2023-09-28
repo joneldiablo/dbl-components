@@ -118,6 +118,7 @@ export default class Navigation extends Component {
   }
 
   onToggleSubmenu(e, item) {
+    e.stopPropagation();
     e.nativeEvent.stopPropagation();
     e.nativeEvent.preventDefault();
     const itemControl = this.collapses.current[item.name];
@@ -180,13 +181,7 @@ export default class Navigation extends Component {
         )
         : <>
           <Icons icon={item.icon} className="mx-2" {...iconStyle} {...(item.iconProps || {})} />
-          {open && <>
-            <span className="label">{this.jsonRender.buildContent(item.label)}</span>
-            {!!item.menu?.length &&
-              <span className="float-end caret-icon ms-2">
-                <Icons icon={carets[item.name]} {...iconStyle} />
-              </span>}
-          </>}
+          {open && <span className="label">{this.jsonRender.buildContent(item.label)}</span>}
         </>
       }
     </span>
@@ -200,27 +195,48 @@ export default class Navigation extends Component {
     })().join(' ');
     const propsLink = item.path ? {
       id: item.name + '-link', className,
+      onClick: (e) => [!!item.menu?.length && this.onToggleSubmenu(e, item), this.onNavigate(e, item)],
       to: item.path,
       activeClassName,
       strict: item.strict,
       exact: item.exact,
-      onClick: (e) => [!!item.menu?.length && this.onToggleSubmenu(e, item), this.onNavigate(e, item)]
+      style: {}
     } : {
       id: item.name + '-link', className,
-      onClick: !!item.menu?.length ? (e) => this.onToggleSubmenu(e, item) : null
+      onClick: !!item.menu?.length ? (e) => this.onToggleSubmenu(e, item) : null,
+      style: {}
+    }
+
+    styleWrapCaret = {
+    }
+    if (!!item.menu?.length && open) {
+      styleWrapCaret.position = "relative";
+      propsLink.style.paddingRight = "2.3rem";
     }
 
     return (<React.Fragment key={i + '-' + item.path}>
-      <div {...(item.itemProps || {})}>
-        {
-          item.path ?
-            <NavLink {...propsLink}>
-              {innerNode}
-            </NavLink>
-            : <span {...propsLink} >
-              {innerNode}
-            </span >
-        }
+      <div {...(item.itemProps || {})} >
+        <div style={styleWrapCaret}>
+          {
+            item.path ?
+              <NavLink {...propsLink}>
+                {innerNode}
+              </NavLink>
+              : <span {...propsLink} >
+                {innerNode}
+              </span >
+          }
+          {
+            !!item.menu?.length && open &&
+            <span
+              className="position-absolute top-50 end-0 translate-middle-y caret-icon p-1 cursor-pointer"
+              onClick={e => this.onToggleSubmenu(e, item)}>
+              <Icons icon={carets[item.name]} {...iconStyle} inline={false} style={{
+                width: "1.8rem", padding: '.5rem'
+              }} className="rounded-circle" />
+            </span>
+          }
+        </div>
         {
           !!item.menu?.length &&
           <div ref={(ref) => this.collapseRef(ref, item)} id={item.name + '-collapse'} className="collapse">

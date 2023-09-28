@@ -151,6 +151,10 @@ export default class SchemaController extends React.Component {
         .find(cl => cl.endsWith('-view'));
       document.body.classList.remove(viewClassName);
       document.body.classList.add(route.name + '-view');
+      document.body.classList.forEach(cls => {
+        if (cls.startsWith('location-')) document.body.classList.remove(cls);
+      });
+      document.body.classList.add('location' + props.location.pathname.replace(/\//g, '-'));
       const useSwitch = (typeof route.useSwitch === 'undefined' || route.useSwitch);
       return (<Controller {...route} {...props} test={this.props.test}>
         {useSwitch ?
