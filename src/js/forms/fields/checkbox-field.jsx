@@ -35,7 +35,7 @@ export default class CheckboxField extends RadioField {
     return props;
   }
 
-  content() {
+  content(children = this.props.children) {
     let { options, errorMessage, label, disabled, readOnly } = this.props;
     let { error } = this.state;
     const hasOptions = Array.isArray(options);
@@ -45,6 +45,7 @@ export default class CheckboxField extends RadioField {
         options.map(this.nodeOption) :
         // se inserta el valor true para no modificar el algoritmo de nodeOption en el padre
         this.nodeOption({ value: true, label, disabled, readOnly })}
+      {children}
       {error && <small className="text-danger">
         {errorMessage}
       </small>}

@@ -7,7 +7,7 @@ cp -r src/scss lib
 # hay pedos si se está trabajando con la librería linkada (yarn link)
 cd ..
 yarn babel
-cd ./dbl-components
+cd ./framework-entersol
 #-------
 git add .
 git commit -m "$1"
