@@ -74,13 +74,14 @@ export default class RadioField extends Field {
     </div >
   }
 
-  content() {
+  content(children = this.props.children) {
     let { options, errorMessage, label, labelInline } = this.props;
     let { error } = this.state;
     return <>
       {label && this.labelNode}
       {!labelInline && <br />}
       {options.map(this.nodeOption)}
+      {children}
       {error && <small className="text-danger">
         {errorMessage}
       </small>}
