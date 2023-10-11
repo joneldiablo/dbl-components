@@ -207,7 +207,7 @@ export default class Navigation extends Component {
       style: {}
     }
 
-    styleWrapCaret = {
+    const styleWrapCaret = {
     }
     if (!!item.menu?.length && open) {
       styleWrapCaret.position = "relative";
@@ -256,7 +256,7 @@ export default class Navigation extends Component {
   content(children = this.props.children) {
     this.flatItems = [];
     return (<>
-      {this.props.menu.map((m, i) => this.link(m, i, this.props.name))}
+      {this.props.menu.map((m, i) => this.link(m, i))}
       {children}
     </>);
   }
