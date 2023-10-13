@@ -91,7 +91,7 @@ export default class Navigation extends Component {
 
   onChangeRoute(location, action) {
     this.pathname = location.pathname;
-    eventHandler.dispatch(this.name, { pathname: this.pathname, item: this.activeItem });
+    eventHandler.dispatch(this.props.name, { pathname: this.pathname, item: this.activeItem });
   }
 
   onToggleBtn() {
@@ -102,7 +102,7 @@ export default class Navigation extends Component {
     this.setState({
       open,
       localClasses: open ? 'nav label-show' : 'nav label-collapsed'
-    }, () => eventHandler.dispatch(this.name, { pathname: this.pathname, item: this.activeItem, open: this.state.open }));
+    }, () => eventHandler.dispatch(this.props.name, { pathname: this.pathname, item: this.activeItem, open: this.state.open }));
   }
 
   collapseRef(ref, item) {
