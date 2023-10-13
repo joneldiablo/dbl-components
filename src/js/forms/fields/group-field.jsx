@@ -15,12 +15,12 @@ export default class GroupField extends Field {
   get inputNode() {
     const { children, groupClasses } = this.props;
     const start = [], end = [];
-
-    children.forEach(ch => {
+    Object.values(children||[]).forEach(ch => {
+      if(!ch)return;
       const c = ch.type === 'section' ? ch.props.children : ch;
-      if (c.props.position === 'start')
+      if (c.props?.position === 'start')
         start.push(ch);
-      else if (c.props.position === 'end')
+      else if (c.props?.position === 'end')
         end.push(ch);
     });
     const cn = ['input-group', groupClasses];
