@@ -24,8 +24,9 @@ export default class SelectField extends Field {
 
   get inputNode() {
     const { placeholder, options, label, floating } = this.props;
+    console.log(this.props)
     const inputNode = (<select {...this.inputProps} >
-      {placeholder && (label || !floating) && <option value="" >{placeholder}</option>}
+      {placeholder && (label || !floating) && <option value="" >{this.extractString(placeholder)}</option>}
       {placeholder && (label || !floating) && <option disabled>──────────</option>}
       {Array.isArray(options) && options.map(({ disabled, label, value, title }) => {
         let propsOpt = {
