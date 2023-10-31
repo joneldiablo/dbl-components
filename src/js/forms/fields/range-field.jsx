@@ -15,11 +15,10 @@ const schemaInput = {
     content: {
       from: {
         name: ['$definitions/name', 'fromControl'],
-        tag: 'input',
+        wrapper: false,
+        component: 'NoWrapField',
         classes: 'form-control  border-end-0',
-        _props: {
-          type: '$definitions/type'
-        },
+        type: '$definitions/type',
         style: {
           minWidth: 50
         }
@@ -32,11 +31,10 @@ const schemaInput = {
       },
       to: {
         name: ['$definitions/name', 'toControl'],
-        tag: 'input',
+        wrapper: false,
+        component: 'NoWrapField',
         classes: 'form-control border-start-0',
-        _props: {
-          type: '$definitions/type'
-        },
+        type: '$definitions/type',
         style: {
           minWidth: 50
         }
