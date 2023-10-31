@@ -10,8 +10,10 @@ import GroupField from "./fields/group-field";
 import HiddenField from "./fields/hidden-field";
 import JsonEditorField from "./fields/json-editor-field";
 import NewPasswordField from "./fields/new-password-field";
+import NoWrapField from "./fields/no-wrap-field";
 import PaginationField from "./fields/pagination-field";
 import RadioField from "./fields/radio-field";
+import RangeField from "./fields/range-field";
 import SelectField from "./fields/select-field";
 import SwitchField from "./fields/switch-field";
 import TextareaField from "./fields/textarea-field";
@@ -31,9 +33,11 @@ const fieldComponents = {
   hidden: HiddenField,
   JsonEditorField,
   NewPasswordField,
+  NoWrapField,
   PaginationField,
   radio: RadioField,
   RadioField,
+  RangeField,
   select: SelectField,
   SelectField,
   SwitchField,
