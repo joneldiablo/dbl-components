@@ -42,7 +42,8 @@ const schemaPropTypes = {
 }
 
 const schemaDefaultProps = {
-  routes: []
+  routes: [],
+  defaultController: controllers.Controller
 }
 
 export default class SchemaController extends React.Component {

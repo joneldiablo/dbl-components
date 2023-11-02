@@ -1,4 +1,4 @@
-import React, { createRef } from "react";
+import React, { Fragment, createRef } from "react";
 import PropTypes from "prop-types";
 import { randomS4 } from "../../functions";
 import eventHandler from "../../functions/event-handler";
@@ -55,6 +55,7 @@ export default class Field extends Component {
     options: this.props.options,
     error: false
   }
+  ContentWrap = 'div';
 
   constructor(props) {
     super(props);
@@ -144,7 +145,7 @@ export default class Field extends Component {
   onUpdate({ value, options, error, reset }) {
     const newState = {};
     if (typeof value !== 'undefined')
-      newState.value = (value !== null ? value : '');
+      newState.value = (value !== null ? value : this.props.default);
     if (options) newState.options = options;
     if (typeof error === 'boolean') {
       newState.error = error;
@@ -247,8 +248,11 @@ export default class Field extends Component {
     const cn = ['position-relative'];
     if (inline) cn.push('d-flex');
     if (placeholder && !label && floating) cn.push('form-floating');
+    const wrapProps = {};
+    const className = cn.join(' ');
+    if (this.ContentWrap !== Fragment) wrapProps.className = className;
     return (<>
-      <div className={cn.join(' ')}>
+      <this.ContentWrap {...wrapProps}>
         {floating && (first === 'label' && label) && this.labelNode}
         {inline ? <div className={inlineControlClasses}>
           {this.inputNode}
@@ -260,7 +264,7 @@ export default class Field extends Component {
           {this.errorMessageNode}
           {this.messageNode}
         </>}
-      </div>
+      </this.ContentWrap>
       {children}
     </>);
   }

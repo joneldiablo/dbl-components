@@ -2,6 +2,7 @@ import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import parseReact, { domToReact, attributesToProps } from "html-react-parser";
 
+import deepMerge from "./functions/deep-merge";
 import Icons from "./media/icons";
 import COMPONENTS from "./components";
 
@@ -102,7 +103,7 @@ export default class JsonRender {
   sections(sectionRaw, i) {
     if (typeof this.mutations === 'function') {
       const m = this.mutations(sectionRaw.name, sectionRaw) || {};
-      Object.assign(sectionRaw, m);
+      deepMerge(sectionRaw, m);
     }
     if (typeof sectionRaw.active === 'boolean' && !sectionRaw.active) return false;
     const { component: componentName, content, placeholder,
