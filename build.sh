@@ -6,7 +6,7 @@ cp -r src/scss lib
 # construir desde "arriba" para no instalar las dependencias aquí
 # hay pedos si se está trabajando con la librería linkada (yarn link)
 cd ..
-yarn babel
+yarn framework-entersol:babel
 cd ./framework-entersol
 #-------
 git add .

@@ -55,19 +55,27 @@ export default class RadioField extends Field {
       value.includes(item.value));
     if (item.hidden && !checked) cn.push('visually-hidden-focusable');
     if (format === 'switch') cn.push('form-switch');
+    const disabled = typeof item.disabled !== 'undefined'
+      ? item.disabled : this.inputProps.disabled;
+    const readOnly = typeof item.readOnly !== 'undefined'
+      ? item.readOnly : this.inputProps.readOnly;
     const inputProps = {
       ...this.inputProps,
-      disabled: typeof item.disabled !== 'undefined' ? item.disabled :
-        this.inputProps.disabled,
-      readOnly: typeof item.readOnly !== 'undefined' ? item.readOnly :
-        this.inputProps.readOnly,
+      disabled,
+      readOnly,
       id,
       value: item.value === null ? "" : item.value,
       checked: checked,
-      'data-type': typeof item.value
+      'data-type': typeof item.value,
+      style: {
+        pointerEvents: readOnly ? 'none' : null,
+        backgroundColor: readOnly ? 'transparent' : null
+      }
     }
-    const label = <label className="form-check-label" htmlFor={id}>{item.label}</label>;
-    return <div key={i + '-' + item.value} className={cn.join(' ')} >
+    const style = {};
+    if (disabled) style['opacity'] = .5;
+    const label = <label className="form-check-label" htmlFor={id} style={style}>{item.label}</label>;
+    return <div key={i + '-' + item.value} className={cn.join(' ')} style={{ pointerEvents: readOnly ? 'none' : null }}>
       {first === 'label' && label}
       <input {...inputProps} />
       {first === 'control' && label}

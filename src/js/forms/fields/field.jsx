@@ -209,10 +209,12 @@ export default class Field extends Component {
 
   get labelNode() {
     const { placeholder, required, name, labelClasses,
-      inline, label } = this.props;
+      inline, label, disabled } = this.props;
     const cn = ['form-label', labelClasses];
     if (inline) { cn.shift(); cn.push('py-2') }
-    const labelNode = <label className={cn.join(' ')} htmlFor={name}>
+    const style = {};
+    if (disabled) style['opacity'] = .9;
+    const labelNode = <label className={cn.join(' ')} htmlFor={name} style={style}>
       {label ? label : placeholder}
       {required && <b title="Este campo es indispensable" className="text-inherit"> *</b>}
     </label>
