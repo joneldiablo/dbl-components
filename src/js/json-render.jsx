@@ -103,7 +103,8 @@ export default class JsonRender {
   sections(sectionRaw, i) {
     if (typeof this.mutations === 'function') {
       const m = this.mutations(sectionRaw.name, sectionRaw) || {};
-      deepMerge(sectionRaw, m);
+      //Si la mutacion contiene elementos react, hacer un deepMerge truena con loop infinito
+      Object.assign(sectionRaw, m);
     }
     if (typeof sectionRaw.active === 'boolean' && !sectionRaw.active) return false;
     const { component: componentName, content, placeholder,
