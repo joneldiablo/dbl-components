@@ -2,5 +2,5 @@
 # hay pedos si se está trabajando con la librería linkada (yarn link)
 cd ..
 yarn babel
-cd ./framework-entersol
+cd ./dbl-components
 #-------

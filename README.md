@@ -1,6 +1,6 @@
 # DBL Components
 
-My own components https://joneldiablo.github.io/framework-entersol/
+My own components https://joneldiablo.github.io/dbl-components/
 
 finalidad: framework de componenentes react con bootstrap 5, todos los componentes han de funcionar exactamente igual para poder ser procesados por un componente específico llamado View, este componente tiene la propiedad de recorrer un objeto JSON de forma recursiva encontrando todos los componentes anidados, tomando como referencia el atributo name, con el cual sabrá que ese objeto es un componente. La estructura mínima JSON es entonces: `{"name":""}` la cual tomará el componente default para mostrar su contenido.
 Estructura JSON básica.
