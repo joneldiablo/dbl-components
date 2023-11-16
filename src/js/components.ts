@@ -14,7 +14,6 @@ import AspectRatioContainer from "./containers/proportional-container";
 import GridSwitchContainer from "./containers/grid-switch-container";
 import CardContainer from "./containers/card-container";
 import ProportionalContainer from "./containers/proportional-container";
-import Debug from "./debug-component";
 import Navigation, { ToggleTextNavigation } from "./navigation/navigation";
 import BrandNavigation from "./navigation/brand-navigation";
 import YoutubeVideoComponent from "./media/youtube-video";
@@ -40,8 +39,7 @@ import MenuItem from "./navigation/menu-item/menu-item";
 import TableContainer from "./containers/table-container";
 import AlertContainer from "./containers/alert-container/alert-container";
 
-const COMPONENTS = {
-  Debug,
+const COMPONENTS: any = {
   Component,
   Container,
   GridContainer,
@@ -83,6 +81,6 @@ const COMPONENTS = {
 
 export default COMPONENTS;
 
-export const addComponents = (newComponents) => {
+export const addComponents = (newComponents: any) => {
   Object.assign(COMPONENTS, newComponents);
 }

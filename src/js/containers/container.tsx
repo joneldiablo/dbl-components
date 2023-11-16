@@ -23,8 +23,11 @@ export default class Container extends Component {
     }
   }
 
-  breakpoint = false;
-  waitBreakpoint = <Icons icon="spinner" classes="spinner" />;
+  breakpoint: any = false;
+  waitBreakpoint = React.createElement(Icons, { icon: "spinner", classes: "spinner" } as any);
+  resizeSensor;
+  orientation: string;
+  onResizeTimeout;
 
   constructor(props) {
     super(props);
@@ -85,7 +88,7 @@ export default class Container extends Component {
 
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState?) {
     if (prevProps.fluid != this.props.fluid || prevProps.fullWidth != this.props.fullWidth) {
       this.updateSize();
     }

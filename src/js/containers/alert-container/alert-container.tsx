@@ -37,6 +37,8 @@ export default class extends Component {
   static wrapper = false;
   classes = 'alert fade show shadow-sm';
 
+  setClasses: Set<string>;
+
   constructor(props) {
     super(props);
     this.setClasses = new Set();
@@ -90,7 +92,7 @@ export default class extends Component {
       default:
         break;
     }
-    return super.mutations();
+    return super.mutations(sn, section);
   }
 
 }

@@ -2,10 +2,14 @@ import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import parseReact, { domToReact, attributesToProps } from "html-react-parser";
 
-import deepMerge from "./functions/deep-merge";
+import { randomS4, slugify } from "./functions";
 import Icons from "./media/icons";
-import COMPONENTS from "./components";
 
+const COMPONENTS: any = {};
+
+export const setComponents = (components: any) => {
+  Object.assign(COMPONENTS, components);
+}
 /**
  * Clase utilizada para generar contenido dinámico en React a partir de una estructura de datos JSON.
  *
@@ -13,13 +17,17 @@ import COMPONENTS from "./components";
  */
 export default class JsonRender {
 
+
+  props: any;
+  mutations: any;
+  childrenIn: any;
   /**
    * Opciones para el análisis del contenido HTML.
    * @type {Object}
    */
   parseOpts = {
-    replace: domNode => {
-      let C7tReplace;
+    replace: (domNode: any) => {
+      let C7tReplace: any;
       switch (domNode.name) {
         case 'navlink':
           C7tReplace = NavLink;
@@ -46,10 +54,10 @@ export default class JsonRender {
           domNode[k] = this.props[k];
         }
       });
-      return <C7tReplace
-        {...attributesToProps(domNode.attribs)}
-        children={domToReact(domNode.children, this.parseOpts)}
-      />;
+      return React.createElement(C7tReplace,
+        attributesToProps(domNode.attribs),
+        domToReact(domNode.children, this.parseOpts)
+      );
     }
   }
 
@@ -58,7 +66,7 @@ export default class JsonRender {
    * @param {Object} props - Las propiedades del componente.
    * @param {Object} mutations - Las mutaciones para las secciones.
    */
-  constructor(props, mutations) {
+  constructor(props: any, mutations: any) {
     this.props = props;
     this.mutations = mutations;
     this.sections = this.sections.bind(this);
@@ -71,18 +79,21 @@ export default class JsonRender {
    * @param {number} index - El índice del contenido.
    * @returns {React.Component|React.Fragment|boolean} - El componente construido.
    */
-  buildContent(content, index) {
+  buildContent(content: any, index: number = 0): any {
     if (!content) return false;
     if (typeof content === 'number') {
       return content;
     } else if (typeof content === 'string') {
-      return (<React.Fragment key={content.name || index}>
-        {parseReact(content, this.parseOpts)}
-      </React.Fragment>);
+      return React.createElement(
+        React.Fragment,
+        { key: slugify(content).substring(0, 20) || index },
+        parseReact(content, this.parseOpts)
+      );
     } else if (React.isValidElement(content)) {
       try {
-        content.key = content.name || index;
+        content.key = content.key || index;
       } catch (error) {
+        content.key = randomS4();
       }
       return content;
     } else if (Array.isArray(content)) return content.map(this.buildContent);
@@ -100,7 +111,7 @@ export default class JsonRender {
    * @param {number} i - El índice de la sección.
    * @returns {React.Component|boolean} - El componente de la sección construido.
    */
-  sections(sectionRaw, i) {
+  sections(sectionRaw: any, i: number) {
     if (typeof this.mutations === 'function') {
       const m = this.mutations(sectionRaw.name, sectionRaw) || {};
       //Si la mutacion contiene elementos react, hacer un deepMerge truena con loop infinito
@@ -114,22 +125,22 @@ export default class JsonRender {
     const componentProps = {
       ...section,
       managerName: managerName || this.props.name,
-      label: this.buildContent(label),
-      placeholder: this.buildContent(placeholder),
-      message: this.buildContent(message),
-      errorMessage: this.buildContent(errorMessage),
+      label: this.buildContent(label, 0),
+      placeholder: this.buildContent(placeholder, 0),
+      message: this.buildContent(message, 0),
+      errorMessage: this.buildContent(errorMessage, 0),
       location,
       match,
       history
     }
     if (Component.dontBuildContent) componentProps.content = content;
     if (!Component.dontBuildContent && content && (childrenIn === section.name)) {
-      componentProps.children = <>
-        {this.buildContent(content)}
-        {children}
-      </>
+      componentProps.children = React.createElement(React.Fragment, {},
+        this.buildContent(content, 0),
+        children
+      );
     } else if (!Component.dontBuildContent && content) {
-      componentProps.children = this.buildContent(content);
+      componentProps.children = this.buildContent(content, 0);
     } else if (childrenIn === section.name) {
       componentProps.children = children;
     }
@@ -149,12 +160,14 @@ export default class JsonRender {
         if (!componentProps.style) componentProps.style = {};
         componentProps.style.border = '1px solid yellow';
       }
-      return <Component key={componentProps.name || i} {...componentProps} />
+      return React.createElement(Component, { key: componentProps.name || i, ...componentProps });
     }
 
-    return (<Wrapper key={componentProps.name || i} className={cnSection.flat().join(' ')}>
-      <Component {...componentProps} />
-    </Wrapper>);
+    return React.createElement(
+      Wrapper,
+      { key: componentProps.name || i, className: cnSection.flat().join(' ') },
+      React.createElement(Component, componentProps)
+    );
   }
 
 }

@@ -36,6 +36,8 @@ export default class DndListContainer extends Component {
     getItemStyle
   }
 
+  events: [string, Function, any?][];
+
   constructor(props) {
     super(props);
     this.onDragStart = this.onDragStart.bind(this);
@@ -72,7 +74,7 @@ export default class DndListContainer extends Component {
       result.destination.index,
     );
     this.setState({ items });
-    eventHandler.dispatch(this.props.name, items.map(i => i.key));
+    eventHandler.dispatch(this.props.name, items.map((i: any) => i.key));
   }
 
   onChangeOrder = (itemKeys) => {

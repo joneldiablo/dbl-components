@@ -13,7 +13,7 @@ export class EventHandler {
       this.events[e].push([callback, id]);
     });
   }
-  unsubscribe(eventString, id) {
+  unsubscribe(eventString, id?) {
     let events = eventString.split(/[ ,]+/);
     events.forEach(e => {
       if (!this.events[e]) return;

@@ -17,6 +17,9 @@ export default class extends ComplexComponent {
       xxl: 1320
     }
   }
+  breakpoint: any;
+  resizeSensor: any;
+  onResizeTimeout;
 
   componentDidMount() {
     super.componentDidMount();

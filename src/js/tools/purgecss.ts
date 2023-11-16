@@ -1,5 +1,5 @@
-const PurgeCSS = require('purgecss').default;
-const fs = require('fs');
+import PurgeCSS from 'purgecss';
+import fs from 'fs';
 
 const purgeCSSReq = new PurgeCSS().purge({
   content: ['../assets/*.html', '../assets/js/*.js', '../*.php'],

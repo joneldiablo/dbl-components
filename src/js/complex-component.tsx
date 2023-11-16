@@ -5,14 +5,15 @@ import eventHandler from "./functions/event-handler";
 import JsonRender from "./json-render";
 import Component from "./component";
 
-export const nameSuffixes = (sfxs = []) => {
-  return sfxs.reduce((acum, item) => {
+export const nameSuffixes = (sfxs: string[] = []) => {
+  return sfxs.reduce((acum, item: string) => {
     acum['$name' + item] = ['join', ['$data/name', item], ''];
     return acum;
   }, {});
 }
 
-const schema = { view: { name: '$nameDummy', content: 'Remplazar esto' }, definitions: {} };
+const schema: { view: any, definitions: any } =
+  { view: { name: '$nameDummy', content: 'Remplazar esto' }, definitions: {} };
 
 export default class ComplexComponent extends Component {
 
@@ -28,7 +29,8 @@ export default class ComplexComponent extends Component {
     }
   }
 
-  events = [];
+  jsonRender: JsonRender;
+  events: [string, Function, any][] = [];
 
   constructor(props) {
     super(props);
@@ -53,7 +55,7 @@ export default class ComplexComponent extends Component {
     return resolveRefs(schema.view, schema, rules);
   }
 
-  mutations(sn) {
+  mutations(sn, section) {
     return this.state[sn];
   }
 

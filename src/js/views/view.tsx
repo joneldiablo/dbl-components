@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import eventHandler from "../functions/event-handler";
-import Icons from "../media/icons";
 import Container from "../containers/container";
 import JsonRender from "../json-render";
 
@@ -26,6 +25,8 @@ export default class View extends Container {
 
   events = [];
 
+  jsonRender: JsonRender;
+
   constructor(props) {
     super(props);
     Object.assign(this.state, {
@@ -40,7 +41,7 @@ export default class View extends Container {
 
   componentDidMount() {
     super.componentDidMount();
-    this.events.forEach(([evtName, callback]) => eventHandler.subscribe(evtName, callback, this.name));
+    this.events.forEach(([evtName, callback]: any) => eventHandler.subscribe(evtName, callback, this.name));
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -63,7 +64,7 @@ export default class View extends Container {
 
   componentWillUnmount() {
     super.componentWillUnmount();
-    this.events.forEach(([eName]) => eventHandler.unsubscribe(eName, this.name));
+    this.events.forEach(([eName]: any) => eventHandler.unsubscribe(eName, this.name));
   }
 
   mutations(sectionName, section) {
