@@ -1,6 +1,6 @@
 {
   "name": "dbl-components",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Framework based on bootstrap 5",
   "main": "lib/js/index.js",
   "scripts": {
