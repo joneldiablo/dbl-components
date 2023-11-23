@@ -16,9 +16,10 @@ export default class FullscreenContainer extends React.Component {
       overflow,
       height: gutter ? `calc(100vh - ${gutter}px)` : '100vh'
     }, style);
-    return (<div className={cn} style={st}>
-      {children}
-    </div>);
+    return (React.createElement('div',
+      { className: cn, style: st },
+      children
+    ));
   }
 
 }

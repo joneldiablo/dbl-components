@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "babel": "babel src/js -d lib/js --minified --source-maps",
+    "babelReact":"babel --config-file ./.babelrc2 src/js -d src/js",
     "clear:js": "rm -rf lib/js/* && mkdir -p lib/js",
     "clear:css": "rm -rf lib/css/* && mkdir -p lib/css",
     "clear:scss": "rm -rf lib/scss/* && mkdir -p lib/scss",
@@ -35,10 +36,11 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.12.1",
-    "@babel/core": "^7.12.3",
+    "@babel/core": "^7.23.3",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@babel/preset-env": "^7.12.1",
-    "@babel/preset-react": "^7.12.5",
+    "@babel/preset-modules": "^0.1.6",
+    "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.12.1",
     "autoprefixer": "^10.0.1",
     "babel-loader": "^8.1.0",

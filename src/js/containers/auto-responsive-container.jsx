@@ -42,8 +42,9 @@ export default class AutoResponsiveContainer extends React.Component {
     let { className, style } = this.props;
     let { id } = this.state;
     let cn = [this.constructor.jsClass, className].join(' ');
-    return <div id={id} ref={this.wrapper} className={cn} style={style}>
-      {this.props.children}
-    </div>
+    return React.createElement('div',
+      { id: id, ref: this.wrapper, className: cn, style: style },
+      this.props.children
+    );
   }
 }

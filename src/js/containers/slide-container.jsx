@@ -17,9 +17,12 @@ export default class SlideContainer extends Component {
 
   content(children = this.props.children) {
     const attrs = this.props.slider;
-    return <Splide {...attrs}>
-      {children.map((c, i) => <SplideSlide key={i}>{c}</SplideSlide>)}
-    </Splide>;
+    return React.createElement(Splide,
+      { ...attrs },
+      children.map((c, i) =>
+        React.createElement(SplideSlide, { key: i }, c)
+      )
+    );
   }
 
 }

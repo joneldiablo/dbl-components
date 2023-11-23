@@ -25,14 +25,21 @@ export default class Image extends Component {
       imgSrc = src.default;
       delete src.default;
     }
-    return (<>
-      <picture>
-        {src !== null && typeof src === 'object' && Object.keys(src).map(min =>
-          <source srcset={src[min]} media={`(min-width: ${min}px)`} />
-        )}
-        <img src={imgSrc} alt={alt} width={width} height={height} style={{ objectFit, objectPosition: 'center' }} className={imageClasses} />
-      </picture>
-      <figcaption>{children}</figcaption>
-    </>);
+    return (React.createElement(React.Fragment, {},
+      React.createElement('picture', {},
+        src !== null && typeof src === 'object' &&
+        Object.keys(src).map(min =>
+          React.createElement('source', { srcset: src[min], media: `(min-width: ${min}px)` })
+        ),
+        React.createElement('img',
+          {
+            src: imgSrc, alt, width, height,
+            style: { objectFit, objectPosition: 'center' },
+            className: imageClasses
+          }
+        )
+      ),
+      React.createElement('figcaption', {}, children)
+    ));
   }
 }

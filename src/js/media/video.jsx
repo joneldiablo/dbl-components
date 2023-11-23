@@ -39,6 +39,7 @@ export default class Video extends Component {
   content(children = this.props.children) {
     if (this.props.src) return false;
     return this.props.sources.map((s, i) =>
-      <source src={s.src} type={s.type} key={i} />);
+      React.createElement('source', { src: s.src, type: s.type, key: i })
+    );
   }
 }

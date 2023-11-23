@@ -37,19 +37,22 @@ export default class HeroContainer extends Container {
         resistanceRatio: 0
       });
     }
-    return (<Swiper {...propsSwiper}>
-      {children.map((slide, i) => {
+    return (React.createElement(Swiper, { ...propsSwiper },
+      children.map((slide, i) => {
         const props = slide.type === 'section' && slide.props.className.includes('-section') ?
           slide.props.children.props : slide.props;
-        return <SwiperSlide key={i} virtualIndex={i}
-          style={{
-            backgroundImage: `url("${props.image}")`,
-            backgroundAttachment: props.imageAttachment
-          }} >
-          {slide}
-        </SwiperSlide>
-      })}
-    </Swiper>);
+        return React.createElement(SwiperSlide,
+          {
+            key: i, virtualIndex: i,
+            style: {
+              backgroundImage: `url("${props.image}")`,
+              backgroundAttachment: props.imageAttachment
+            }
+          },
+          slide
+        )
+      })
+    ));
   }
 
 }

@@ -18,18 +18,18 @@ export default class FileButtonField extends DropFileField {
 
   content(children = this.props.children) {
     const { value } = this.state;
-    return <>
-      {this.labelNode}
-      {children && (!value ? children[0] : children[1])}
-      {this.inputNode}
-    </>
+    return React.createElement(React.Fragment, {},
+      this.labelNode,
+      children && (!value ? children[0] : children[1]),
+      this.inputNode
+    );
   }
 
   render() {
-    return <>
-      {super.render()}
-      {this.errorMessageNode}
-    </>
+    return React.createElement(React.Fragment, {},
+      super.render(),
+      this.errorMessageNode
+    );
   }
 
 }

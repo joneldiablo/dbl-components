@@ -15,8 +15,8 @@ export default class GroupField extends Field {
   get inputNode() {
     const { children, groupClasses } = this.props;
     const start = [], end = [];
-    Object.values(children||[]).forEach(ch => {
-      if(!ch)return;
+    Object.values(children || []).forEach(ch => {
+      if (!ch) return;
       const c = ch.type === 'section' ? ch.props.children : ch;
       if (c.props?.position === 'start')
         start.push(ch);
@@ -24,11 +24,12 @@ export default class GroupField extends Field {
         end.push(ch);
     });
     const cn = ['input-group', groupClasses];
-    const inputNode = (<div className={cn.join(' ')}>
-      {start}
-      <input {...this.inputProps} />
-      {end}
-    </div>);
+    const inputNode = (React.createElement('div',
+      { className: cn.join(' ') },
+      start,
+      React.createElement('input', { ...this.inputProps }),
+      end
+    ));
     return inputNode;
   }
 

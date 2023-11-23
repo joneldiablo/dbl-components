@@ -10,11 +10,13 @@ export default class CardsNavigation extends React.Component {
     menu: []
   }
 
-  state = {
-    rowCols: ' row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5'
+  constructor(props) {
+    super(props);
+    this.state = {
+      rowCols: ' row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5'
+    };
+    this.id = randomS4();
   }
-
-  id = randomS4();
 
   onResize = ({ target, width }) => {
     if (target.id !== this.props.closestId) return;
@@ -25,8 +27,6 @@ export default class CardsNavigation extends React.Component {
       rowCols = ' row-cols-4';
     else if (width >= 768)//lg
       rowCols = ' row-cols-3';
-    //else if (width >= 992)//md
-    //  rowCols = ' row-cols-3';
     else if (width >= 576)//sm
       rowCols = ' row-cols-2';
     else//xs
@@ -46,34 +46,34 @@ export default class CardsNavigation extends React.Component {
   render() {
     let { menu } = this.props;
     let rowClassName = 'row g-3 ' + this.state.rowCols;
-    return <div className="container-fluid p-4 nav-cards">
-      <div className={rowClassName}>
-        {menu.map((item, i) =>
-          <div className="" key={i}>
-            <div className="card h-100 shadow-hover">
-              {item.image ? <img src={item.image} className="card-img" style={{
+    return React.createElement('div', { className: "container-fluid p-4 nav-cards" },
+      React.createElement('div', { className: rowClassName },
+        menu.map((item, i) =>
+          React.createElement('div', { className: "", key: i },
+            React.createElement('div', { className: "card h-100 shadow-hover" },
+              item.image ? React.createElement('img', { src: item.image, className: "card-img", style: {
                 opacity: .3,
                 objectFit: 'cover',
                 minHeight: 150
-              }} /> : <div className="card-img" style={{ minHeight: 150 }}></div>}
-              <div className="card-img-overlay">
-                <div className="card-body nav-card-body">
-                  <h5 className="card-title nav-item">
-                    <Icons icon={item.icon} className="mr-2" />
-                    {item.label}
-                    <Icons icon="chevron-right" className="small float-right" />
-                    <hr className="my-1" />
-                  </h5>
-                  <p className="card-subtitle mb-2 text-muted">
-                    {item.description}
-                  </p>
-                  <Link to={item.path} className="stretched-link"></Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>;
+              } }) : React.createElement('div', { className: "card-img", style: { minHeight: 150 } }),
+              React.createElement('div', { className: "card-img-overlay" },
+                React.createElement('div', { className: "card-body nav-card-body" },
+                  React.createElement('h5', { className: "card-title nav-item" },
+                    React.createElement(Icons, { icon: item.icon, className: "mr-2" }),
+                    item.label,
+                    React.createElement(Icons, { icon: "chevron-right", className: "small float-right" }),
+                    React.createElement('hr', { className: "my-1" })
+                  ),
+                  React.createElement('p', { className: "card-subtitle mb-2 text-muted" },
+                    item.description
+                  ),
+                  React.createElement(Link, { to: item.path, className: "stretched-link" })
+                )
+              )
+            )
+          )
+        )
+      )
+    );
   }
 }

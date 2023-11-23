@@ -112,26 +112,28 @@ export default class Trapezoid extends React.Component {
       closed: true,
     };
 
-    return <Stage {...propsStage}>
-      <Layer>
-        <Line {...propsLine} />
-      </Layer>
-    </Stage>;
+    return React.createElement(Stage, { ...propsStage },
+      React.createElement(Layer,
+        React.createElement(Line, { ...propsLine })
+      )
+    );
   }
 
   render() {
     let { className, style } = this.props;
     let content = [
-      <Form key="0" {...this.propsForm} />,
-      <div key="1" className="pl-3 h-100" ref={this.setContainer}>
-        {this.drawSvg()}
-      </div>
+      React.createElement(Form, { key: "0", ...this.propsForm }),
+      React.createElement('div', { key: "1", className: "pl-3 h-100", ref: this.setContainer },
+        this.drawSvg()
+      )
     ];
     let cn = [this.constructor.jsClass, className].join(' ');
-    return (<div className={cn} style={style}>
-      <FlexContainer colClassNames={['w-auto', 'w-100']}>
-        {content}
-      </FlexContainer>
-    </div>);
+    return (React.createElement('div',
+      { className: cn, style: style },
+      React.createElement(FlexContainer,
+        { colClassNames: ['w-auto', 'w-100'] },
+        content
+      )
+    ));
   }
 }

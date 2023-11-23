@@ -20,12 +20,10 @@ export default class DetailsContainer extends Component {
 
   content(children = this.props.children) {
     const { containerClasses, labelClasses } = this.props;
-    return <>
-      <summary className={labelClasses}>{this.props.label}</summary>
-      <div className={containerClasses}>
-        {children}
-      </div>
-    </>
+    return React.createElement(React.Fragment, {},
+      React.createElement('summary', { className: labelClasses }, this.props.label),
+      React.createElement('div', { className: containerClasses }, children)
+    );
   }
 
 }

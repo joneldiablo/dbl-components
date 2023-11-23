@@ -36,25 +36,29 @@ export default class SelectField extends Field {
       displayEmpty: true,
       disabled,
       onChange: this.onChange,
-      renderValue: selected => selected ?
-        <ValueTemplate value={selected}>
-          {options.find(e => e.value === selected)?.label}
-        </ValueTemplate> :
-        <span style={{ opacity: .5 }}>{placeholder}</span>
+      renderValue: selected => selected
+        ? React.createElement(ValueTemplate, { value: selected },
+          options.find(e => e.value === selected)?.label
+        )
+        : React.createElement('span', { style: { opacity: .5 } }, placeholder)
     }
 
-    return <FormControl {...fcProps} >
-      <InputLabel htmlFor={name} id={name + '-label'} required={required}>
-        {label}
-      </InputLabel>
-      <Select {...inputProps}>
-        {options.map(opt =>
-          <MenuItem key={opt.value} value={opt.value} disabled={opt.disabled}>
-            <ValueTemplate value={opt.value}>{opt.label}</ValueTemplate>
-          </MenuItem>
-        )}
-      </Select>
-      {error && <FormHelperText>{errorMessage}</FormHelperText>}
-    </FormControl>
+    return React.createElement(FormControl,
+      { ...fcProps },
+      React.createElement(InputLabel,
+        { htmlFor: name, id: name + '-label', required },
+        label
+      ),
+      React.createElement(Select,
+        { ...inputProps },
+        options.map(opt =>
+          React.createElement(MenuItem,
+            { key: opt.value, value: opt.value, disabled: opt.disabled },
+            React.createElement(ValueTemplate, { value: opt.value }, opt.label)
+          )
+        )
+      ),
+      error && React.createElement(FormHelperText, {}, errorMessage)
+    )
   }
 }

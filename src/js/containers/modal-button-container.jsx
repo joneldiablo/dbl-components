@@ -54,23 +54,36 @@ export default class ModalButtonContainer extends Component {
     const cn = ['btn', btnClasses];
     const cnModal = ['modal-dialog', modalClasses];
     // TODO: no crear el modal hasta que se hace click!!!!
-    return <>
-      <button className={cn.join(' ')} type="button" disabled={disabled} onClick={this.onToggleModal}>
-        {label || value}
-      </button>
-      {showModal && <div ref={this.onModalRef} className="modal fade" id={name + '-modal'} tabIndex="-1" >
-        <div className="backdrop" onClick={this.onClickClose} style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100vh',
-          background: 'rgb(0 0 0 / 0.5)',
-          zIndex: 1040
-        }}></div>
-        <div className={cnModal.join(' ')} style={{ zIndex: 1040 }}>
-          <div className="modal-content">
-            {children.reduce((childs, child) => {
+    return React.createElement(React.Fragment, {},
+      React.createElement('button',
+        { className: cn.join(' '), type: "button", disabled, onClick: this.onToggleModal },
+        label || value
+      ),
+      showModal && React.createElement('div',
+        {
+          ref: this.onModalRef, className: "modal fade",
+          id: name + '-modal', tabIndex: "-1"
+        },
+        React.createElement('div',
+          {
+            className: "backdrop",
+            onClick: this.onClickClose,
+            style: {
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100vh',
+              background: 'rgb(0 0 0 / 0.5)',
+              zIndex: 1040
+            }
+          }
+        ),
+        React.createElement('div',
+          { className: cnModal.join(' '), style: { zIndex: 1040 } },
+          React.createElement('div',
+            { className: "modal-content" },
+            children.reduce((childs, child) => {
               if (typeof child === 'string') {
                 childs[1].push(child);
                 return childs;
@@ -92,14 +105,17 @@ export default class ModalButtonContainer extends Component {
                 ''
               ];
               if (classParser[i] && content.length) {
-                return <div key={i} className={classParser[i]}>{content}</div>
+                return React.createElement('div',
+                  { key: i, className: classParser[i] },
+                  content
+                );
               } else {
-                return content
+                return content;
               }
-            })}
-          </div>
-        </div>
-      </div>
-      }    </>
+            })
+          )
+        )
+      )
+    );
   }
 }

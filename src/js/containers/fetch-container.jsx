@@ -22,9 +22,9 @@ export default class FetchContainer extends Component {
   }
 
   content(children = this.props.children) {
-    return <>
-      <div dangerouslySetInnerHTML={{ __html: this.state.fetchContent }} />
-      {children}
-    </>;
+    return React.createElement(React.Fragment, {},
+      React.createElement('div', { dangerouslySetInnerHTML: { __html: this.state.fetchContent } }),
+      children
+    );
   }
 }

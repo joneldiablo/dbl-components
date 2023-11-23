@@ -88,15 +88,15 @@ class I18n {
   }
 
   text(t, context) {
-    return (<Text value={t} context={context} />);
+    return React.createElement(Text, { value: t, context: context });
   }
 
   number(n) {
-    return (<Number value={n} />);
+    return React.createElement(Number, { value: n });
   }
 
   currency(c, code) {
-    return (<Currency value={c} code={code} />);
+    return React.createElement(Currency, { value: c, code: code });
   }
 
   src = (s, context) => {

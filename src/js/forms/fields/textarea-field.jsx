@@ -14,10 +14,10 @@ export default class TextareaField extends Field {
 
   get inputNode() {
     const { inline } = this.props;
-    const inputNode = (<textarea {...this.inputProps} />);
-    return (inline ? <div className="col-auto">
-      {inputNode}
-    </div> : inputNode);
+    const inputNode = React.createElement('textarea', { ...this.inputProps });
+    return inline
+      ? React.createElement('div', { className: "col-auto" }, inputNode)
+      : inputNode;
   }
 
 }

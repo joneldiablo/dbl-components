@@ -22,34 +22,36 @@ export default class HelpInputComponent extends React.Component {
     const open = ((this.state.element != null) && !!this.props.message);
 
     return (
-      <>
-        <HelpOutline
-          style={{ cursor: 'pointer' }}
-          color="secondary"
-          aria-owns={this.state.open ? 'mouse-over-popover' : undefined}
-          onClick={this.showPopup}
-          aria-haspopup="true" />
-        <Popover
-
-          id="mouse-over-popover"
-          anchorEl={this.state.element}
-          open={open}
-          onClose={this.hidePopup}
-          disableRestoreFocus
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }}
-        >
-          <Box p={2}>
-            <Typography>{this.props.message}</Typography>
-          </Box>
-        </Popover>
-      </>
+      React.createElement(React.Fragment, {},
+        React.createElement(HelpOutline,
+          {
+            style: { cursor: 'pointer' },
+            color: "secondary",
+            'aria-owns': this.state.open ? 'mouse-over-popover' : undefined,
+            onClick: this.showPopup,
+            'aria-haspopup': "true"
+          }),
+        React.createElement(Popover,
+          {
+            id: "mouse-over-popover",
+            anchorEl: this.state.element,
+            open: open,
+            onClose: this.hidePopup,
+            disableRestoreFocus: true,
+            anchorOrigin: {
+              vertical: 'bottom',
+              horizontal: 'center',
+            },
+            transformOrigin: {
+              vertical: 'top',
+              horizontal: 'center',
+            }
+          },
+          React.createElement(Box, { p: 2 },
+            React.createElement(Typography, {}, this.props.message)
+          )
+        )
+      )
     )
   }
 }

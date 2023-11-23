@@ -60,10 +60,10 @@ export default class ComplexComponent extends Component {
   content(children = this.props.children) {
     const { childrenIn } = this.props;
     const content = this.jsonRender.buildContent(this.state.view);
-    return <>
-      {content}
-      {!childrenIn && children}
-    </>
+    return React.createElement(React.Fragment, {},
+      content,
+      !childrenIn && children
+    );
   }
 
 }

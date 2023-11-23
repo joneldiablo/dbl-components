@@ -2,9 +2,9 @@ import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import parseReact, { domToReact, attributesToProps } from "html-react-parser";
 
-import deepMerge from "./functions/deep-merge";
 import Icons from "./media/icons";
 import COMPONENTS from "./components";
+import { hash } from "./functions";
 
 /**
  * Clase utilizada para generar contenido dinámico en React a partir de una estructura de datos JSON.
@@ -46,10 +46,10 @@ export default class JsonRender {
           domNode[k] = this.props[k];
         }
       });
-      return <C7tReplace
-        {...attributesToProps(domNode.attribs)}
-        children={domToReact(domNode.children, this.parseOpts)}
-      />;
+      return React.createElement(C7tReplace,
+        { ...attributesToProps(domNode.attribs) },
+        domToReact(domNode.children, this.parseOpts)
+      );
     }
   }
 
@@ -76,12 +76,13 @@ export default class JsonRender {
     if (typeof content === 'number') {
       return content;
     } else if (typeof content === 'string') {
-      return (<React.Fragment key={content.name || index}>
-        {parseReact(content, this.parseOpts)}
-      </React.Fragment>);
+      return React.createElement(React.Fragment,
+        { key: hash(content) },
+        parseReact(content, this.parseOpts)
+      );
     } else if (React.isValidElement(content)) {
       try {
-        content.key = content.name || index;
+        content.key = content.key || content.props.name || index;
       } catch (error) {
       }
       return content;
@@ -124,10 +125,10 @@ export default class JsonRender {
     }
     if (Component.dontBuildContent) componentProps.content = content;
     if (!Component.dontBuildContent && content && (childrenIn === section.name)) {
-      componentProps.children = <>
-        {this.buildContent(content)}
-        {children}
-      </>
+      componentProps.children = React.createElement(React.Fragment, {},
+        this.buildContent(content),
+        children
+      );
     } else if (!Component.dontBuildContent && content) {
       componentProps.children = this.buildContent(content);
     } else if (childrenIn === section.name) {
@@ -149,12 +150,13 @@ export default class JsonRender {
         if (!componentProps.style) componentProps.style = {};
         componentProps.style.border = '1px solid yellow';
       }
-      return <Component key={componentProps.name || i} {...componentProps} />
+      return React.createElement(Component, { key: componentProps.name || i, ...componentProps })
     }
 
-    return (<Wrapper key={componentProps.name || i} className={cnSection.flat().join(' ')}>
-      <Component {...componentProps} />
-    </Wrapper>);
+    return (React.createElement(Wrapper,
+      { key: componentProps.name || i, className: cnSection.flat().join(' ') },
+      React.createElement(Component, { ...componentProps })
+    ));
   }
 
 }

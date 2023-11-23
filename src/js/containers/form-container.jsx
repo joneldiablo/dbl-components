@@ -157,9 +157,10 @@ export default class FormContainer extends Component {
 
   content(children = this.props.children) {
     const { label, labelClasses, name } = this.props;
-    return (<form onSubmit={this.onSubmit} onInvalid={this.onInvalid} ref={this.form} id={name + '-form'} >
-      {label && <label className={labelClasses}>{label}</label>}
-      {children}
-    </form>);
+    return React.createElement('form',
+      { onSubmit: this.onSubmit, onInvalid: this.onInvalid, ref: this.form, id: name + '-form' },
+      label && React.createElement('label', { className: labelClasses }, label),
+      children
+    );
   }
 }

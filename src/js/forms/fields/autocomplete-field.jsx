@@ -127,14 +127,17 @@ export default class AutocompleteField extends Field {
   }
 
   mapOptions = (opt, i) => {
-    return <li key={opt.value} className={opt.disabled ? 'muted' : ''}>
-      <span className="dropdown-item" style={{ cursor: 'pointer' }}
-        onClick={(!opt.disabled ? () => this.onSelectOption(opt) : undefined)}
-      >
-        {opt.label}
-      </span>
-      {opt.divider && <hr className="m-0" />}
-    </li >
+    return React.createElement('li',
+      { key: opt.value, className: opt.disabled ? 'muted' : '' },
+      React.createElement('span',
+        {
+          className: "dropdown-item", style: { cursor: 'pointer' },
+          onClick: (!opt.disabled ? () => this.onSelectOption(opt) : undefined)
+        },
+        opt.label
+      ),
+      opt.divider && React.createElement('hr', className = "m-0")
+    )
   }
 
   get type() {
@@ -163,24 +166,27 @@ export default class AutocompleteField extends Field {
       zIndex: 1000
     };
     const inputRect = this.input.current?.getBoundingClientRect() || {};
-    return <>
-      {showDropdown && <div onClick={this.hide} style={closeStyle}></div>}
-      {super.inputNode}
-      {l && loading}
-      <ul className={cn.join(' ')} ref={this.menuDropdown}
-        style={{
-          minWidth: inputRect.width || 200,
-          left: inputRect.left,
-          top: (inputRect.top || 0) + (inputRect.height || 0),
-          overflow: 'hidden',
-          zIndex: 1001,
-          position: 'fixed',
-        }}>
-        {options.map(this.mapOptions)}
-        {more && <li >
-          <span className="dropdown-item text-wrap" >...</span>
-        </li>}
-      </ul>
-    </>
+    return React.createElement(React.Fragment, {},
+      showDropdown && React.createElement('div', { onClick: this.hide, style: closeStyle }),
+      super.inputNode,
+      l && loading,
+      React.createElement('ul',
+        {
+          className: cn.join(' '), ref: this.menuDropdown,
+          style: {
+            minWidth: inputRect.width || 200,
+            left: inputRect.left,
+            top: (inputRect.top || 0) + (inputRect.height || 0),
+            overflow: 'hidden',
+            zIndex: 1001,
+            position: 'fixed',
+          }
+        },
+        options.map(this.mapOptions),
+        more && React.createElement('li', {},
+          React.createElement('span', { className: "dropdown-item text-wrap" }, '...')
+        )
+      )
+    );
   }
 }

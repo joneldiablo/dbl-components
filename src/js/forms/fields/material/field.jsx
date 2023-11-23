@@ -61,9 +61,9 @@ export default class Field extends React.Component {
 
   // Renders
   nodeInfo(info) {
-    return <InputAdornment position="start">
-      <Info message={info} />
-    </InputAdornment>
+    return React.createElement(InputAdornment, { position: "start" },
+      React.createElement(Info, { message: info })
+    )
   }
 
   render() {
@@ -89,11 +89,11 @@ export default class Field extends React.Component {
       fullWidth,
       ref: r => this.ref = r
     }
-    return (<>
-      <TextField {...inputProps} />
-      <br />
-      <br />
-    </>);
+    return (React.createElement(React.Fragment, {},
+      React.createElement(TextField, { ...inputProps }),
+      React.createElement('br'),
+      React.createElement('br')
+    ));
   }
 
 }

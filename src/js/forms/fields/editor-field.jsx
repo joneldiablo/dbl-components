@@ -46,10 +46,11 @@ export default class EditorField extends Field {
       onBlur: (event, editor) => eventHandler.dispatch('blur.' + this.props.name, editor),
       onFocus: (event, editor) => eventHandler.dispatch('focus.' + this.props.name, editor)
     };
-    return disabled ?
-      <div className="form-control text-reset">
-        {parseReact(value)}
-      </div> :
-      !!editor ? <CKEditor {...attrs} /> : 'No editor found'
+    return disabled
+      ? React.createElement('div',
+        { className: "form-control text-reset" },
+        parseReact(value)
+      )
+      : !!editor ? React.createElement(CKEditor, { ...attrs }) : 'No editor found'
   }
 }

@@ -65,24 +65,24 @@ export default class NewPasswordField extends Field {
       errorMessage: errorMessageRepeat,
       required: true
     };
-    return inlineFields ?
-      <div className="row">
-        <div className="col">
-          {super.content(false)}
-        </div>
-        <div className="col">
-          <NoWrapField {...cloneFieldProps} />
-        </div>
-        <div className="col-12">
-          {children}
-        </div>
-      </div> :
-      <>
-        {super.content(false)}
-        <div className={dividerClasses}></div>
-        <NoWrapField {...cloneFieldProps} />
-        {children}
-      </>
+    return inlineFields
+      ? React.createElement('div', { className: "row" },
+        React.createElement('div', { className: "col" },
+          super.content(false)
+        ),
+        React.createElement('div', { className: "col" },
+          React.createElement(NoWrapField, { ...cloneFieldProps })
+        ),
+        React.createElement('div', { className: "col-12" },
+          children
+        )
+      )
+      : React.createElement(React.Fragment, {},
+        super.content(false),
+        React.createElement('div', { className: dividerClasses }),
+        React.createElement(NoWrapField, { ...cloneFieldProps }),
+        children
+      );
   }
 
 };

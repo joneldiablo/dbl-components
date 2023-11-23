@@ -13,11 +13,12 @@ export default class CardGroup extends Group {
 
   content(children = this.props.children) {
     const { label, fields, labelClasses } = this.props;
-    return <div className="card-body">
-      {label && <label className={labelClasses}>{label}</label>}
-      {fields && fields.map(this.mapFields)}
-      {children}
-    </div>
+    return React.createElement('div',
+      { className: "card-body" },
+      label && React.createElement('label', { className: labelClasses }, label),
+      fields && fields.map(this.mapFields),
+      children
+    )
   }
 
 }

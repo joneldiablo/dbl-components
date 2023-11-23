@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 
 export default class Footer extends React.Component {
-  
+
   static jsClass = 'Footer';
   static defaultProps = {
     textOverColor: 'light',//light|dark
@@ -14,28 +14,31 @@ export default class Footer extends React.Component {
       'navbar',
       'navbar-' + textOverColor,
     ].filter(c => c).join(' ');
-    return <footer>
-      {menu ? <>
-        <nav className={className}>
-          <div className="container-fluid">
-            <div className="navbar-nav">
-              {menu.map((item, i) =>
-                item && <NavLink key={i} to={item.path} className="nav-link" exact={item.exact} activeClassName='active'>{item.label}</NavLink>
-              )}
-            </div>
-          </div>
-        </nav>
-        <hr />
-      </> : <br />}
-      <div className="container-fluid text-muted">
-        {copyright || <>
-          <small className="text-muted">
-            copyright
-          </small>
-          <small className="float-right">Desarrollado por El Diablo</small>
-        </>}
-      </div>
-      <br />
-    </footer>
+    return React.createElement('footer', {},
+      menu
+        ? React.createElement(React.Fragment, {},
+          React.createElement('nav', { className },
+            React.createElement('div', { className: "container-fluid" },
+              React.createElement('div', { className: "navbar-nav" },
+                menu.map((item, i) =>
+                  item && React.createElement(NavLink,
+                    { key: i, to: item.path, className: "nav-link", exact: item.exact, activeClassName: 'active' }, item.label
+                  )
+                )
+              )
+            )
+          ),
+          React.createElement('hr')
+        )
+        : React.createElement('br'),
+
+      React.createElement('div', { className: "container-fluid text-muted" },
+        copyright || React.createElement(React.Fragment, {},
+          React.createElement('small', { className: "text-muted" }, copyright),
+          React.createElement('small', { className: "float-right" }, 'Desarrollado por El Diablo')
+        )
+      ),
+      React.createElement('br')
+    )
   }
 }

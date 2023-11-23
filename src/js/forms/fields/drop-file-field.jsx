@@ -115,12 +115,13 @@ export default class DropFileField extends Field {
   content(children = this.props.children) {
     const { label } = this.props;
     const { value } = this.state;
-    return <div className="card-body">
-      {(!value && label) && this.labelNode}
-      {children && (!value ? children[0] : (children[1] || value))}
-      {this.inputNode}
-      <div>{this.errorMessageNode}</div>
-      {(!children && value) && <p>{value}</p>}
-    </div>
+    return React.createElement('div',
+      { className: "card-body" },
+      (!value && label) && this.labelNode,
+      children && (!value ? children[0] : (children[1] || value)),
+      this.inputNode,
+      React.createElement('div', {}, this.errorMessageNode),
+      (!children && value) && React.createElement('p', {}, value)
+    )
   }
 }

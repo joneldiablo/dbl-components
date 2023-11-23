@@ -10,7 +10,10 @@ export default class HeaderNavigation extends Navigation {
 
   static jsClass = 'HeaderNavigation';
 
-  dropdowns = [];
+  constructor(props) {
+    super(props);
+    this.dropdowns = [];
+  }
 
   componentWillUnmount() {
     this.dropdowns.forEach(d => d.dispose());
@@ -22,57 +25,61 @@ export default class HeaderNavigation extends Navigation {
 
   menuItem = item => {
     if (item === 'divider') {
-      return (<li key={item.name}><hr class="dropdown-divider" /></li>);
+      return (React.createElement('li', { key: item.name },
+        React.createElement('hr', { className: "dropdown-divider" })
+      ));
     }
     if (item.component) {
       let Component = components[item.component];
-      return Component && <li><Component {...item.attributes} /></li>;
+      return Component && React.createElement('li', null,
+        React.createElement(Component, { ...item.attributes })
+      );
     }
     let cn = [item.dropdown ? 'dropdown-item' : 'nav-item'];
     if (item.menu?.length) cn.push('dropdown');
 
-    let content = <>
-      {item.icon && <Icons icon={item.icon} className="mr-1" />}
-      {(item.svg || item.image) &&
-        <ProportionalContainer className="rounded-circle mr-1">
-          {item.svg && <Svg {...item.svg} className="w-100 h-100" />}
-          {item.image && <img {...item.image} className="w-100 h-100 img-cover" />}
-        </ProportionalContainer>}
-      <span className={item.icon && !item.dropdown ? 'd-none d-sm-inline' : ''}>{item.label}</span>
-    </>;
-    return <li key={item.name} className={cn.join(' ')}>
-      {item.menu ?
-        <a ref={this.dropdownInit} className="nav-link dropdown-toggle" href="#" id={item.name} role="button" data-toggle="dropdown" aria-expanded="false">
-          {content}
-        </a> :
-        <NavLink to={item.path} exact={item.exact} className="nav-link">
-          {content}
-        </NavLink>}
-      {item.menu?.length &&
-        <ul className="dropdown-menu dropdown-menu-right" aria-labelledby={item.name}>
-          {item.menu.map(e => this.menuItem({ dropdown: true, ...e }))}
-        </ul>}
-    </li>
+    let content = React.createElement(React.Fragment, {},
+      item.icon && React.createElement(Icons, { icon: item.icon, className: "mr-1" }),
+      (item.svg || item.image) &&
+      React.createElement(ProportionalContainer, { className: "rounded-circle mr-1" },
+        item.svg && React.createElement(Svg, { ...item.svg, className: "w-100 h-100" }),
+        item.image && React.createElement('img', { ...item.image, className: "w-100 h-100 img-cover" })
+      ),
+      React.createElement('span', { className: item.icon && !item.dropdown ? 'd-none d-sm-inline' : '' }, item.label)
+    );
+    return React.createElement('li', { key: item.name, className: cn.join(' ') },
+      item.menu ?
+        React.createElement('a', { ref: this.dropdownInit, className: "nav-link dropdown-toggle", href: "#", id: item.name, role: "button", "data-toggle": "dropdown", "aria-expanded": "false" },
+          content
+        ) :
+        React.createElement(NavLink, { to: item.path, exact: item.exact, className: "nav-link" },
+          content
+        ),
+      item.menu?.length &&
+      React.createElement('ul', { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": item.name },
+        item.menu.map(e => this.menuItem({ dropdown: true, ...e }))
+      )
+    );
   }
 
   render() {
     let { className, style, menu, label, icon, svg, img } = this.props;
     let cn = [HeaderNavigation, 'shadow-sm sticky-top', className].join(' ');
-    return <nav className={cn} style={style}>
-      <div className="py-2 position-relative">
-        <div className="position-absolute left-50 left-sm-0 top-50 translate-middle translatey-sm-middle mx-auto mx-sm-3" >
-          {icon && <Icons icon={icon} inline={false} />}
-          {svg && <Svg {...svg} />}
-          {img && <img src={img} />}
-          {label && <span >{label}</span>}
-        </div>
-        <div className="ml-auto mr-3" style={{ width: 'fit-content' }}>
-          {menu?.length &&
-            <ul className="navbar-nav">
-              {menu.map(this.menuItem)}
-            </ul>}
-        </div>
-      </div>
-    </nav>
+    return React.createElement('nav', { className: cn, style: style },
+      React.createElement('div', { className: "py-2 position-relative" },
+        React.createElement('div', { className: "position-absolute left-50 left-sm-0 top-50 translate-middle translatey-sm-middle mx-auto mx-sm-3" },
+          icon && React.createElement(Icons, { icon: icon, inline: false }),
+          svg && React.createElement(Svg, { ...svg }),
+          img && React.createElement('img', { src: img }),
+          label && React.createElement('span', null, label)
+        ),
+        React.createElement('div', { className: "ml-auto mr-3", style: { width: 'fit-content' } },
+          menu?.length &&
+          React.createElement('ul', { className: "navbar-nav" },
+            menu.map(this.menuItem)
+          )
+        )
+      )
+    );
   }
 }

@@ -42,16 +42,16 @@ export default class Group extends Component {
       fieldProps.children = field.fields.map(this.mapFields);
       delete fieldProps.fields;
     }
-    return (<Field {...fieldProps} />);
+    return React.createElement(Field, { ...fieldProps });
   }
 
   content(children = this.props.children) {
     const { label, fields, labelClasses } = this.props;
-    return <>
-      {label && <label className={labelClasses}>{label}</label>}
-      {fields && fields.map(this.mapFields)}
-      {children}
-    </>
+    return React.createElement(React.Fragment, {},
+      label && React.createElement('label', { className: labelClasses }, label),
+      fields && fields.map(this.mapFields),
+      children
+    );
   }
 
 }

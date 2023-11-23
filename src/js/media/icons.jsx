@@ -40,7 +40,7 @@ export default class Icons extends React.Component {
       title,
       size
     }
-    return (<IcoMoon {...props} />);
+    return React.createElement(IcoMoon, { ...props });
   }
 }
 

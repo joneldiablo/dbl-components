@@ -95,41 +95,66 @@ export default class PaginationField extends Field {
     const cn = ['pagination', paginationClasses];
     const isFirst = this.isFirst();
     const isLast = this.isLast();
-    return <ul className={cn.join(' ')}>
-      {firstBtn && <li className={'page-item' + (isFirst ? ' disabled' : '')} title={texts.first}>
-        <button type="button" className="page-link" disabled={isFirst}
-          onClick={() => this.gotoPage('first')}>
-          <span>«</span>
-        </button>
-      </li>}
-      {previusBtn && <li className={'page-item' + (isFirst ? ' disabled' : '')} title={texts.previus}>
-        <button type="button" className="page-link" disabled={isFirst}
-          onClick={() => this.gotoPage(-1)}>
-          <span>‹</span>
-        </button>
-      </li>}
-      <li className="page-item" title={texts.goto}>
-        {this.inputNode}
-      </li>
-      <li className="page-item disabled">
-        <span className="page-link border-start-0 border-end-0 px-1">/</span>
-      </li>
-      <li className="page-item disabled" title={total + ' ' + texts.pages} style={{ width: 58 }}>
-        <span className="page-link border-start-0" >{total}</span>
-      </li>
-      {nextBtn && <li className={'page-item' + (isLast ? ' disabled' : '')} title={texts.next}>
-        <button type="button" className="page-link" disabled={isLast}
-          onClick={() => this.gotoPage(1)}>
-          <span>›</span>
-        </button>
-      </li>}
-      {lastBtn && <li className={'page-item' + (isLast ? ' disabled' : '')} title={texts.last}>
-        <button type="button" className="page-link" disabled={isLast}
-          onClick={() => this.gotoPage('last')}>
-          <span>»</span>
-        </button>
-      </li>}
-    </ul>
+    return React.createElement('ul',
+      { className: cn.join(' ') },
+      firstBtn && React.createElement('li',
+        { className: 'page-item' + (isFirst ? ' disabled' : ''), title: texts.first },
+        React.createElement('button',
+          {
+            type: "button", className: "page-link",
+            disabled: isFirst,
+            onClick: () => this.gotoPage('first')
+          },
+          React.createElement('span', {}, '«')
+        )
+      ),
+      previusBtn && React.createElement('li',
+        { className: 'page-item' + (isFirst ? ' disabled' : ''), title: texts.previus },
+        React.createElement('button',
+          {
+            type: "button", className: "page-link", disabled: isFirst,
+            onClick: () => this.gotoPage(-1)
+          },
+          React.createElement('span', {}, '‹')
+        )
+      ),
+      React.createElement('li',
+        { className: "page-item", title: texts.goto },
+        this.inputNode
+      ),
+      React.createElement('li',
+        { className: "page-item disabled" },
+        React.createElement('span',
+          { className: "page-link border-start-0 border-end-0 px-1" }, ' /')
+      ),
+      React.createElement('li',
+        { className: "page-item disabled", title: total + ' ' + texts.pages, style: { width: 58 } },
+        React.createElement('span', { className: "page-link border-start-0" }, total)
+      ),
+      nextBtn && React.createElement('li',
+        {
+          className: 'page-item' + (isLast ? ' disabled' : ''),
+          title: texts.next
+        },
+        React.createElement('button',
+          {
+            type: "button", className: "page-link", disabled: isLast,
+            onClick: () => this.gotoPage(1)
+          },
+          React.createElement('span', {}, '›')
+        )
+      ),
+      lastBtn && React.createElement('li',
+        { className: 'page-item' + (isLast ? ' disabled' : ''), title: texts.last },
+        React.createElement('button',
+          {
+            type: "button", className: "page-link", disabled: isLast,
+            onClick: () => this.gotoPage('last')
+          },
+          React.createElement('span', {}, '»')
+        )
+      )
+    )
   }
 
 };

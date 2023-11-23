@@ -15,8 +15,9 @@ export default class Svg extends React.Component {
     // first element empty to generate an space
     const cn = [this.constructor.jsClass, className];
     if (inline) cn.push('icon-inline');
-    return (<svg className={cn.join(' ')} style={style} {...props} >
-      <use href={href} />
-    </svg>);
+    return React.createElement('svg',
+      { className: cn.join(' '), style, ...props },
+      React.createElement('use', { href })
+    );
   }
 }

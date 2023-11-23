@@ -25,11 +25,11 @@ export default class ProportionalContainer extends Container {
       width: '100%',
       height: '100%'
     };
-    return <>
-      <div className="space" style={{ paddingBottom }} />
-      <div className={['inner', innerClasses].join(' ')} style={st}>
-        {children}
-      </div>
-    </>
+    return React.createElement(React.Fragment, {},
+      React.createElement('div', { className: "space", style: { paddingBottom } }),
+      React.createElement('div', { className: ['inner', innerClasses].join(' '), style: st },
+        children
+      )
+    );
   }
 };

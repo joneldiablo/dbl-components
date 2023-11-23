@@ -27,9 +27,10 @@ export default class ListContainer extends Container {
         licn.push(liClasses[i]);
       else if (Array.isArray(liClasses) && liClasses.length > 0)
         licn.push(liClasses[liClasses.length - 1]);
-      return <li className={licn.join(' ')} key={i}>
-        {child}
-      </li>
+      return React.createElement('li',
+        { className: licn.join(' '), key: i },
+        child
+      )
     });
   }
 

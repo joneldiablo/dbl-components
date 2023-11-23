@@ -38,9 +38,10 @@ export default class GridContainer extends Container {
       else if (Array.isArray(colClasses) && colClasses.length > 0)
         colcn.push(colClasses[colClasses.length - 1]);
       const ColTag = colTag;
-      return <ColTag className={colcn.join(' ')} key={i}>
-        {child}
-      </ColTag>
+      return React.createElement(ColTag,
+        { className: colcn.join(' '), key: i },
+        child
+      );
     });
   }
 

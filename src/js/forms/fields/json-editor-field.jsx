@@ -30,7 +30,7 @@ export default class extends Field {
   }
 
   get inputNode() {
-    const inputNode = (<div>SIN TERMINAR XP</div>);
+    const inputNode = (React.createElement('div', {}, 'SIN TERMINAR XP'));
     return inputNode;
   }
 

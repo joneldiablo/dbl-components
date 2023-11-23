@@ -53,15 +53,22 @@ export default class DateRangeField extends Field {
       ...inputProps.style,
       borderLeft: 'none',
     }
-    const inputNode = (<div className="input-group">
-      <input {...inputProps} style={style} value={inputProps.value[0]} />
-      <span className={cnMiddle.join(' ')} >-</span>
-      <input {...inputProps} name={inputProps.name + '-end'} ref={this.inputEnd}
-        id={inputProps.name + '-end'} style={style2} value={inputProps.value[1]} />
-    </div>);
-    return (inline ? <div className="col-auto">
-      {inputNode}
-    </div> : inputNode);
+    const inputNode = (React.createElement('div',
+      { className: "input-group" },
+      React.createElement('input', { ...inputProps, style, value: inputProps.value[0] }),
+      React.createElement('span', { className: cnMiddle.join(' ') }, '-'),
+      React.createElement('input',
+        {
+          ...inputProps,
+          name: inputProps.name + '-end',
+          ref: this.inputEnd,
+          id: inputProps.name + '-end',
+          style: style2, value: inputProps.value[1]
+        })
+    ));
+    return (inline
+      ? React.createElement('div', { className: "col-auto" }, inputNode)
+      : inputNode);
   }
 
 }

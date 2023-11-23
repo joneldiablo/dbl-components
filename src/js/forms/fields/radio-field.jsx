@@ -74,26 +74,34 @@ export default class RadioField extends Field {
     }
     const style = {};
     if (disabled) style['opacity'] = .5;
-    const label = <label className="form-check-label" htmlFor={id} style={style}>{item.label}</label>;
-    return <div key={i + '-' + item.value} className={cn.join(' ')} style={{ pointerEvents: readOnly ? 'none' : null }}>
-      {first === 'label' && label}
-      <input {...inputProps} />
-      {first === 'control' && label}
-    </div >
+    const label = React.createElement('label',
+      { className: "form-check-label", htmlFor: id, style },
+      item.label);
+    return React.createElement('div',
+      {
+        key: i + '-' + item.value,
+        className: cn.join(' '),
+        style: { pointerEvents: readOnly ? 'none' : null }
+      },
+      first === 'label' && label,
+      React.createElement('input', { ...inputProps }),
+      first === 'control' && label
+    )
   }
 
   content(children = this.props.children) {
     let { options, errorMessage, label, labelInline } = this.props;
     let { error } = this.state;
-    return <>
-      {label && this.labelNode}
-      {!labelInline && <br />}
-      {options.map(this.nodeOption)}
-      {children}
-      {error && <small className="text-danger">
-        {errorMessage}
-      </small>}
-    </>
+    return React.createElement(React.Fragment, {},
+      label && this.labelNode,
+      !labelInline && React.createElement('br'),
+      options.map(this.nodeOption),
+      children,
+      error && React.createElement('small',
+        { className: "text-danger" },
+        errorMessage
+      )
+    );
   }
 
 }

@@ -228,44 +228,55 @@ export class HeaderCell extends React.Component {
     if (!searchActive) cnSearch.push('text-muted');
     const hClasses = ["align-middle", col.name];
     if (headerClasses) hClasses.push(headerClasses);
-    return <th className={hClasses.join(' ')} scope="col">
-      <div className="d-flex align-items-center">
-        <div className={cn.join(' ')} style={style}>
-          <span>{col.label}</span>
-        </div>
-        <div className="d-flex">
-          {col.filter && <div className={"ps-2 mt-1 drop" + filterPos}>
-            <DropdownContainer
-              name={col.name + 'DropdownFilter'}
-              label={<Icons icon={icons.search} className={cnSearch.join(' ')} />}
-              dropdownClasses="dropdown-menu-end p-0"
-              dropdownClass={false}
-            >
-              {searchActive && <Action
-                name={col.name + 'Clear'}
-                classes="btn-link btn-sm p-0"
-                style={{ top: 5, position: 'absolute', right: 8, zIndex: 4 }}
-              >
-                <Icons icon={icons.clear} classes="text-danger" />
-              </Action>}
-              {React.createElement(fields[col.filter.type] || fields.Field, col.filter)}
-            </DropdownContainer>
-          </div>}
-          {showOrder && <div className="ps-2 text-muted" style={{ fontSize: 10 }}>
-            <span onClick={(e) => this.sort('DESC', e)}>
-              <Icons icon={icons.caretUp}
-                className={'cursor-pointer ' + (sortDir === 'DESC' ? 'text-body' : '')}
-              />
-            </span>
-            <span onClick={(e) => this.sort('ASC', e)}>
-              <Icons icon={icons.caretDown}
-                className={'cursor-pointer ' + (sortDir === 'ASC' ? 'text-body' : '')}
-              />
-            </span>
-          </div>}
-        </div>
-      </div>
-    </th>
+    return React.createElement('th',
+      { className: hClasses.join(' '), scope: "col" },
+      React.createElement('div', { className: "d-flex align-items-center" },
+        React.createElement('div', { className: cn.join(' '), style },
+          React.createElement('span', {}, col.label)
+        ),
+        React.createElement('div', { className: "d-flex" },
+          col.filter && React.createElement('div', { className: "ps-2 mt-1 drop" + filterPos },
+            React.createElement(DropdownContainer,
+              {
+                name: col.name + 'DropdownFilter',
+                label: React.createElement(Icons,
+                  { icon: icons.search, className: cnSearch.join(' ') }
+                ),
+                dropdownClasses: "dropdown-menu-end p-0",
+                dropdownClass: false
+              }
+            ),
+            searchActive && React.createElement(Action,
+              {
+                name: col.name + 'Clear',
+                classes: "btn-link btn-sm p-0",
+                style: { top: 5, position: 'absolute', right: 8, zIndex: 4 }
+              },
+              React.createElement(Icons,
+                { icon: icons.clear, classes: "text-danger" })
+            ),
+            React.createElement(fields[col.filter.type] || fields.Field, col.filter)
+          )
+        ),
+        showOrder && React.createElement('div',
+          { className: "ps-2 text-muted", style: { fontSize: 10 } },
+          React.createElement('span',
+            { onClick: (e) => this.sort('DESC', e) },
+            React.createElement(Icons, {
+              icon: icons.caretUp,
+              className: 'cursor-pointer ' + (sortDir === 'DESC' ? 'text-body' : '')
+            })
+          ),
+          React.createElement('span',
+            { onClick: (e) => this.sort('ASC', e) },
+            React.createElement(Icons, {
+              icon: icons.caretDown,
+              className: 'cursor-pointer ' + (sortDir === 'ASC' ? 'text-body' : '')
+            })
+          )
+        )
+      )
+    )
   }
 
 }
@@ -387,7 +398,7 @@ export default class Table extends Component {
       tableName: name
     };
 
-    return <HeaderCell key={i + '-' + col.name} {...props} />
+    return React.createElement(HeaderCell, { key: i + '-' + col.name, ...props });
   }
 
   /**
@@ -456,10 +467,21 @@ export default class Table extends Component {
     const formater = FORMATS[col.format] || (raw => raw);
     const cellData = typeof rowData[col.name] !== 'undefined' ? rowData[col.name] : true;
 
-    const cell = (<div {...cellAttrs}> {formater(cellData, formatOptions, rowData, this.jsonRender, colName)}  </div>);
-    return (colName === 'id' ?
-      <th key={i + '-' + colName} className={colName} scope="row">{cell}</th> :
-      <td key={i + '-' + colName} className={vertical ? [colName, 'row-' + (i - 1)].join(' ') : colName} >{cell}</td>
+    const cell = React.createElement('div',
+      { ...cellAttrs },
+      formater(cellData, formatOptions, rowData, this.jsonRender, colName));
+    return (colName === 'id'
+      ? React.createElement('th',
+        { key: i + '-' + colName, className: colName, scope: "row" },
+        cell
+      )
+      : React.createElement('td',
+        {
+          key: i + '-' + colName,
+          className: vertical ? [colName, 'row-' + (i - 1)].join(' ') : colName
+        },
+        cell
+      )
     );
   }
 
@@ -521,34 +543,36 @@ export default class Table extends Component {
 
     // Renderización de la tabla con las estructuras de encabezado, cuerpo y pie de página
     return (
-      <table className={cn.join(' ')}>
-        <thead>
-          {header && (
-            <tr>
-              <td colSpan="1000">
-                <div>{header}</div>
-              </td>
-            </tr>
-          )}
-          {!vertical && (
-            <tr >
-              {Object.entries(columns).map(this.mapHeaderCell)}
-            </tr>
-          )}
-        </thead>
-        <tbody>
-          {tableData.map(({ cells, data }, i) => <tr {...this.rowProps(data, i)}>{cells}</tr>)}
-        </tbody>
-        {footer && (
-          <tfoot>
-            <tr>
-              <td colSpan="1000">
-                <div>{footer}</div>
-              </td>
-            </tr>
-          </tfoot>
-        )}
-      </table>
+      React.createElement('table', { className: cn.join(' ') },
+        React.createElement('thead', {},
+          header && (
+            React.createElement('tr', {},
+              React.createElement('td', { colSpan: "1000" },
+                React.createElement('div', {}, header)
+              )
+            )
+          ),
+          !vertical && (
+            React.createElement('tr', {},
+              Object.entries(columns).map(this.mapHeaderCell)
+            )
+          )
+        ),
+        React.createElement('tbody', {},
+          tableData.map(({ cells, data }, i) =>
+            React.createElement('tr', { ...this.rowProps(data, i) } > { cells })
+          )
+        ),
+        footer && (
+          React.createElement('tfoot', {},
+            React.createElement('tr', {},
+              React.createElement('td', { colSpan: "1000" },
+                React.createElement('div', {}, footer)
+              )
+            )
+          )
+        )
+      )
     );
   }
 

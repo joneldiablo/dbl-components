@@ -97,24 +97,32 @@ export default class FileField extends Field {
   get inputNode() {
     const { inline, disabled, readOnly } = this.props;
     const { value } = this.state;
-    const inputNode = (<>
-      {!(value && (disabled || readOnly)) ?
-        <input {...this.inputProps} /> :
-        <p className="form-control mb-1 disabled">
-          <a href={value} target="_blank">
-            {value.split(/[\/\\]/).pop().split('?')[0]}
-          </a>
-        </p>}
-      {value && !(disabled || readOnly) &&
-        <p className="text-end my-1">
-          <small><a href={value} target="_blank">
-            {value.split(/[\/\\]/).pop().split('?')[0]}
-          </a></small>
-        </p>}
-    </>);
-    return (inline ? <div className="col-auto">
-      {inputNode}
-    </div> : inputNode);
+    const inputNode = React.createElement(React.Fragment, {},
+      !(value && (disabled || readOnly))
+        ? React.createElement('input', { ...this.inputProps })
+        : React.createElement('p',
+          { className: "form-control mb-1 disabled" },
+          React.createElement('a',
+            {
+              href: value, target: "_blank"
+            },
+            value.split(/[\/\\]/).pop().split('?')[0]
+          )
+        ),
+      value && !(disabled || readOnly) &&
+      React.createElement('p',
+        { className: "text-end my-1" },
+        React.createElement('small', {},
+          React.createElement('a',
+            { href: value, target: "_blank" },
+            value.split(/[\/\\]/).pop().split('?')[0]
+          )
+        )
+      )
+    );
+    return (inline
+      ? React.createElement('div', { className: "col-auto" }, inputNode)
+      : inputNode);
   }
 
 }

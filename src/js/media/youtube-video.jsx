@@ -76,10 +76,11 @@ export default class YoutubeVideoComponent extends Component {
         playerVars: youtubeOpts,
       }
     }
-    return <AspectRatioContainer ratio={ratio} overflow={overflow} fullWidth>
-      {videoId && <YouTube {...propsYoutube} />}
-      {children}
-    </AspectRatioContainer>;
+    return React.createElement(AspectRatioContainer,
+      { ratio: ratio, overflow: overflow, fullWidth: true },
+      videoId && React.createElement(YouTube, { ...propsYoutube }),
+      children
+    );
   }
 
 }

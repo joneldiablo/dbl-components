@@ -203,16 +203,23 @@ export default class PanelContainer extends Component {
   }
 
   render() {
-    return this.state.open ?
-      <>
-        {this.state.mobile && <div className="panel-touchClose"
-          onClick={() => this.onUpdate({ open: false }, true)} />}
-        {super.render()}
-      </> :
-      <div className="panel-slide2open" ref={this.ref}
-        onTouchStart={this.onTouchStart}
-        onTouchEnd={this.onTouchEnd}
-      />;
+    return this.state.open
+      ? React.createElement(React.Fragment, {},
+        this.state.mobile && React.createElement('div',
+          {
+            className: "panel-touchClose",
+            onClick: () => this.onUpdate({ open: false }, true)
+          }
+        ),
+        super.render()
+      )
+      : React.createElement('div',
+        {
+          className: "panel-slide2open", ref: this.ref,
+          onTouchStart: this.onTouchStart,
+          onTouchEnd: this.onTouchEnd
+        }
+      );
   }
 
 }

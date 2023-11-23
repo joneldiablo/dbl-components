@@ -34,33 +34,37 @@ export default class TabsContainer extends Container {
     const { children, navClasses, tabClasses } = this.props;
     const { i: index } = this.state;
     const cn = ['nav', navClasses];
-    return (<nav>
-      <div className={cn.join(' ')}>
-        {children.map((tab, i) => {
+    return (React.createElement('nav', {},
+      React.createElement('div',
+        { className: cn.join(' ') },
+        children.map((tab, i) => {
           const { label, name, tabClasses: tabC } = (tab.type !== 'section' ? tab :
             tab.props.children).props;
           const cnTab = ['nav-link', tabClasses, tabC];
           if (index == i) cnTab.push('active');
-          return <span key={i} className={cnTab.join(' ')}
-            index={i} name={name} onClick={this.onClickTab} style={{ cursor: 'pointer' }}>
-            {label}
-          </span>
-        })}
-      </div>
-    </nav>);
+          return React.createElement('span',
+            {
+              key: i, className: cnTab.join(' '),
+              index: i, name: name, onClick: this.onClickTab, style: { cursor: 'pointer' }
+            },
+            label
+          )
+        })
+      )
+    ));
   }
 
   get activeTabNode() {
     const { children, containerClasses } = this.props;
     const { i } = this.state;
-    return (<div className={containerClasses}>{children[i]}</div>);
+    return (React.createElement('div', { className: containerClasses }, children[i]));
   }
 
   content() {
     if (!this.breakpoint) return this.waitBreakpoint;
-    return (<>
-      {this.tabNode}
-      {this.activeTabNode}
-    </>);
+    return (React.createElement(React.Fragment, {},
+      this.tabNode,
+      this.activeTabNode
+    ));
   }
 }

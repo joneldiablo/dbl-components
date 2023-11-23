@@ -36,7 +36,7 @@ export default class SelectBadgesField extends Field {
       label: this.props.options.find(e => e.value === item).label,
       onDelete: this.remove(item)
     }
-    return (<Chip {...props} />);
+    return React.createElement(Chip, { ...props });
   }
 
   render() {
@@ -60,24 +60,30 @@ export default class SelectBadgesField extends Field {
       multiple: true,
       disabled,
       onChange: this.onChange,
-      renderValue: selected => <>{
-        selected.length === 0 ?
-          <span style={{ opacity: .5 }}>{placeholder}</span> :
-          <span> {selected.length} {label}</span>
-      }</>
+      renderValue: selected => React.createElement(React.Fragment, {},
+        selected.length === 0
+          ? React.createElement('span', { style: { opacity: .5 } }, placeholder)
+          : React.createElement('span', {}, selected.length, label)
+      )
     }
 
-    return <FormControl {...fcProps} >
-      <InputLabel htmlFor={name} id={name + '-label'} required={required}>{label}</InputLabel>
-      <Select {...inputProps}>
-        {this.props.options.map(opt =>
-          <MenuItem key={opt.value} value={opt.value} disabled={opt.disabled}>{opt.label}</MenuItem>
-        )}
-      </Select>
-      {error && <FormHelperText>{errorMessage}</FormHelperText>}
-      <div style={{ padding: '12px 0px' }}>
-        {value.map(this.badge)}
-      </div>
-    </FormControl>
+    return React.createElement(FormControl, { ...fcProps },
+      React.createElement(InputLabel,
+        { htmlFor: name, id: name + '-label', required },
+        label
+      ),
+      React.createElement(Select, { ...inputProps },
+        this.props.options.map(opt =>
+          React.createElement(MenuItem,
+            { key: opt.value, value: opt.value, disabled: opt.disabled },
+            opt.label
+          )
+        )
+      ),
+      error && React.createElement(FormHelperText, {}, errorMessage),
+      React.createElement('div', { style: { padding: '12px 0px' } },
+        value.map(this.badge)
+      )
+    )
   }
 }

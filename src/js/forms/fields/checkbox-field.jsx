@@ -39,17 +39,18 @@ export default class CheckboxField extends RadioField {
     let { options, errorMessage, label, disabled, readOnly } = this.props;
     let { error } = this.state;
     const hasOptions = Array.isArray(options);
-    return <>
-      {!!label && hasOptions && this.labelNode}
-      {hasOptions ?
+    return React.createElement(React.Fragment, {},
+      !!label && hasOptions && this.labelNode,
+      hasOptions ?
         options.map(this.nodeOption) :
         // se inserta el valor true para no modificar el algoritmo de nodeOption en el padre
-        this.nodeOption({ value: true, label, disabled, readOnly })}
-      {children}
-      {error && <small className="text-danger">
-        {errorMessage}
-      </small>}
-    </>
+        this.nodeOption({ value: true, label, disabled, readOnly }),
+      children,
+      error && React.createElement('small',
+        { className: "text-danger" },
+        errorMessage
+      )
+    );
   }
 
 }

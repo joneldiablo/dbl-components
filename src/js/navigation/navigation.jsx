@@ -14,7 +14,7 @@ export class ToggleTextNavigation extends Action {
   static jsClass = 'ToggleTextNavigation';
 
   content() {
-    return <Icons icon={this.props.icon} />
+    return React.createElement(Icons, { icon: this.props.icon });
   }
 }
 
@@ -173,18 +173,21 @@ export default class Navigation extends Component {
         fill: 'currentColor'
       }
     };
-    const innerNode = <span>
-      {item.content
+    const innerNode = React.createElement('span', {},
+      item.content
         ? (open
           ? this.jsonRender.buildContent(item.content[0])
           : this.jsonRender.buildContent(item.content[1])
         )
-        : <>
-          <Icons icon={item.icon} className="mx-2" {...iconStyle} {...(item.iconProps || {})} />
-          {open && <span className="label">{this.jsonRender.buildContent(item.label)}</span>}
-        </>
-      }
-    </span>
+        : React.createElement(React.Fragment, {},
+          React.createElement(Icons,
+            { icon: item.icon, className: "mx-2", ...iconStyle, ...(item.iconProps || {}) }),
+          open && React.createElement('span',
+            { className: "label" },
+            this.jsonRender.buildContent(item.label)
+          )
+        )
+    )
     const className = (() => {
       const r = [linkClasses, item.classes];
       if (!item.path) r.push('cursor-pointer');
@@ -214,51 +217,55 @@ export default class Navigation extends Component {
       propsLink.style.paddingRight = "2.3rem";
     }
 
-    return (<React.Fragment key={i + '-' + item.path}>
-      <div {...(item.itemProps || {})} >
-        <div style={styleWrapCaret}>
-          {
-            item.path ?
-              <NavLink {...propsLink}>
-                {innerNode}
-              </NavLink>
-              : <span {...propsLink} >
-                {innerNode}
-              </span >
-          }
-          {
-            !!item.menu?.length && open &&
-            <span
-              className="position-absolute top-50 end-0 translate-middle-y caret-icon p-1 cursor-pointer"
-              onClick={e => this.onToggleSubmenu(e, item)}>
-              <Icons icon={carets[item.name]} {...iconStyle} inline={false} style={{
-                width: "1.8rem", padding: '.5rem'
-              }} className="rounded-circle" />
-            </span>
-          }
-        </div>
-        {
-          !!item.menu?.length &&
-          <div ref={(ref) => this.collapseRef(ref, item)} id={item.name + '-collapse'} className="collapse">
+    return (React.createElement(React.Fragment,
+      { key: i + '-' + item.path },
+      React.createElement('div', { ...(item.itemProps || {}) },
+        React.createElement('div', { style: styleWrapCaret },
+          item.path
+            ? React.createElement(NavLink, { ...propsLink },
+              innerNode
+            )
+            : React.createElement('span', { ...propsLink },
+              innerNode
+            ),
+          !!item.menu?.length && open &&
+          React.createElement('span',
             {
-              //renderear solo cuando este abierto
-              this.state.carets[item.name] === this.props.caretIcons[0] &&
-              item.menu.map((m, i) => this.link(m, i, item))
-            }
-          </div>
-        }
-      </div>
-    </React.Fragment>);
+              className: "position-absolute top-50 end-0 translate-middle-y caret-icon p-1 cursor-pointer",
+              onClick: e => this.onToggleSubmenu(e, item)
+            },
+            React.createElement(Icons,
+              {
+                icon: carets[item.name], ...iconStyle, inline: false,
+                style: {
+                  width: "1.8rem", padding: '.5rem'
+                }, className: "rounded-circle"
+              }
+            )
+          )
+        ),
+        !!item.menu?.length &&
+        React.createElement('div',
+          {
+            ref: (ref) => this.collapseRef(ref, item),
+            id: item.name + '-collapse', className: "collapse"
+          },
+          //renderear solo cuando este abierto
+          this.state.carets[item.name] === this.props.caretIcons[0] &&
+          item.menu.map((m, i) => this.link(m, i, item))
+        )
+      )
+    ));
   }
 
   // TODO: agregar submenu dropdown 
   //       y submenu collapsable
   content(children = this.props.children) {
     this.flatItems = [];
-    return (<>
-      {this.props.menu.map((m, i) => this.link(m, i))}
-      {children}
-    </>);
+    return (React.createElement(React.Fragment, {},
+      this.props.menu.map((m, i) => this.link(m, i)),
+      children
+    ));
   }
 
 }

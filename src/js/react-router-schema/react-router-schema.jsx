@@ -142,12 +142,14 @@ export default class SchemaController extends React.Component {
       let redirTo = typeof this.props.redirect === 'function' &&
         this.props.redirect(props.location);
       if (redirTo)
-        return <Redirect
-          to={{
-            pathname: redirTo,
-            state: { from: props.location }
-          }}
-        />
+        return React.createElement(Redirect,
+          {
+            to: {
+              pathname: redirTo,
+              state: { from: props.location }
+            }
+          }
+        )
       const viewClassName = Array.from(document.body.classList)
         .find(cl => cl.endsWith('-view'));
       document.body.classList.remove(viewClassName);
@@ -157,46 +159,45 @@ export default class SchemaController extends React.Component {
       });
       document.body.classList.add('location' + props.location.pathname.replace(/\//g, '-'));
       const useSwitch = (typeof route.useSwitch === 'undefined' || route.useSwitch);
-      return (<Controller {...route} {...props} test={this.props.test}>
-        {useSwitch ?
-          <Switch>{subroutes}</Switch> :
-          subroutes
-        }
-      </Controller>);
+      return (React.createElement(Controller,
+        { ...route, ...props, test: this.props.test },
+        useSwitch
+          ? React.createElement(Switch, {}, subroutes)
+          : subroutes
+      ));
     }
     const key = i || typeof i === 'number' ? (i + '-' + route.name) : route.name;
-    return (<Route key={key} {...routeProps} render={RedirViewManager} />);
+    return React.createElement(Route, { key, ...routeProps, render: RedirViewManager });
   }
 
   render() {
     let { history, theme } = this.props;
     let { routeNodes } = this.state;
-    return (<Router history={history}>
-      {theme && <link rel="stylesheet" type="text/css" href={theme} />}
-      <Switch>
-        {routeNodes}
-      </Switch>
-    </Router>);
+    return (React.createElement(Router,
+      { history },
+      theme && React.createElement('link', { rel: "stylesheet", type: "text/css", href: theme }),
+      React.createElement(Switch, {}, routeNodes)
+    ));
   }
 }
 
 export const RouterSchema = (props) => {
   let RController = withRouter(SchemaController);
-  return (<RController {...props} />);
+  return React.createElement(RController, { ...props });
 }
 RouterSchema.propTypes = schemaPropTypes;
 RouterSchema.defaultProps = schemaDefaultProps;
 
 export const BrowserRouterSchema = (props) => {
   let RController = withRouter(SchemaController);
-  return (<BrowserRouter><RController {...props} /></BrowserRouter>);
+  return React.createElement(BrowserRouter, {}, React.createElement(RController, { ...props }));
 }
 BrowserRouterSchema.propTypes = schemaPropTypes;
 BrowserRouterSchema.defaultProps = schemaDefaultProps;
 
 export const HashRouterSchema = (props) => {
   let RController = withRouter(SchemaController);
-  return (<HashRouter><RController {...props} /></HashRouter>);
+  return React.createElement(HashRouter, {}, React.createElement(RController, { ...props }));
 }
 HashRouterSchema.propTypes = schemaPropTypes;
 HashRouterSchema.defaultProps = schemaDefaultProps;

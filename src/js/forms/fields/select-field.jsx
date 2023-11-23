@@ -24,18 +24,25 @@ export default class SelectField extends Field {
 
   get inputNode() {
     const { placeholder, options, label, floating } = this.props;
-    const inputNode = (<select {...this.inputProps} >
-      {placeholder && (label || !floating) && <option value="" >{this.extractString(placeholder)}</option>}
-      {placeholder && (label || !floating) && <option disabled>──────────</option>}
-      {Array.isArray(options) && options.map(({ disabled, label, value, title }) => {
+    const inputNode = (React.createElement('select',
+      { ...this.inputProps },
+      placeholder && (label || !floating) && React.createElement('option',
+        { value: "" },
+        this.extractString(placeholder)
+      ),
+      placeholder && (label || !floating) && React.createElement('option',
+        { disabled: true },
+        '──────────'
+      ),
+      Array.isArray(options) && options.map(({ disabled, label, value, title }) => {
         let propsOpt = {
           value,
           disabled,
           title
         }
-        return <option key={value} {...propsOpt}>{label}</option>
-      })}
-    </select>);
+        return React.createElement('option', { key: value, ...propsOpt }, label)
+      })
+    ));
     return (inputNode);
   }
 

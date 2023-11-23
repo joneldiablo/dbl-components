@@ -7,10 +7,15 @@ export default class TitleView extends View {
 
   content(children = this.props.children) {
     const { label, labelClasses } = this.props;
-    return (<>
-      <h1 className={labelClasses}>{label}</h1>
-      {super.content(children)}
-    </>);
+    return (
+      React.createElement(React.Fragment, {},
+        React.createElement('h1',
+          { className: labelClasses },
+          label
+        ),
+        super.content(children)
+      )
+    );
   }
 
 }

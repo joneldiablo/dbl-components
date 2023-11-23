@@ -35,20 +35,24 @@ export default class SwitchField extends CheckboxField {
       'data-type': typeof item.value
     }
     const theInput = this.props.labels.length === 2 ?
-      <>
-        {this.jsonRender.buildContent(labels[0])}
-        <input {...inputProps} />
-        {this.jsonRender.buildContent(labels[1])}
-      </> :
-      <input {...inputProps} />
+      React.createElement(React.Fragment, {},
+        this.jsonRender.buildContent(labels[0]),
+        React.createElement('input', { ...inputProps }),
+        this.jsonRender.buildContent(labels[1])
+      ) :
+      React.createElement('input', { ...inputProps })
 
-    return <div key={i + '-' + item.value} className={cn.join(' ')} >
-      {item.label && <>
-        <label className="form-check-label" htmlFor={id}>{item.label}</label>
-        {!(this.props.inline || item.inline) && <br />}
-      </>}
-      {theInput}
-    </div>
+    return React.createElement('div',
+      { key: i + '-' + item.value, className: cn.join(' ') },
+      item.label && React.createElement(React.Fragment, {},
+        React.createElement('label',
+          { className: "form-check-label", htmlFor: id },
+          item.label
+        ),
+        !(this.props.inline || item.inline) && React.createElement('br')
+      ),
+      theInput
+    )
   }
 
 }

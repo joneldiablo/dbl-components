@@ -24,7 +24,7 @@ export default class Container extends Component {
   }
 
   breakpoint = false;
-  waitBreakpoint = <Icons icon="spinner" classes="spinner" />;
+  waitBreakpoint = React.createElement(Icons, { icon: "spinner", classes: "spinner" });
 
   constructor(props) {
     super(props);

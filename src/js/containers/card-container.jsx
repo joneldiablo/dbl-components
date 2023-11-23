@@ -42,15 +42,13 @@ export default class CardContainer extends Container {
         theContent.body.push(child);
       }
     });
-    return <>
-      {!!theContent.header.length &&
-        <div className={'card-header ' + headerClasses}>{theContent.header}</div>}
-      <div className={'card-body ' + bodyClasses}>
-        {theContent.body}
-      </div>
-      {!!theContent.footer.length &&
-        <div className={'card-footer ' + footerClasses}>{theContent.footer}</div>}
-    </>;
+    return React.createElement(React.Fragment, {},
+      !!theContent.header.length &&
+      React.createElement('div', { className: 'card-header ' + headerClasses }, theContent.header),
+      React.createElement('div', { className: 'card-body ' + bodyClasses }, theContent.body),
+      !!theContent.footer.length &&
+      React.createElement('div', { className: 'card-footer ' + footerClasses }, theContent.footer)
+    );
   }
 
 }

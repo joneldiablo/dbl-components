@@ -65,8 +65,15 @@ export default class Component extends React.Component {
     if (!!classes) cn.push(typeof classes === 'string' ? classes : (Array.isArray(classes) ? classes.flat().join(' ') : classes['.']));
     const s = Object.assign({}, this.style, localStyles, style);
     const Tag = tag || this.tag;
-    return (active ? <Tag id={name} className={cn.join(' ')} style={s} ref={this.ref} {...this.eventHandlers} {...this.componentProps}>
-      {content}
-    </Tag> : <React.Fragment />);
+    return (active
+      ? React.createElement(Tag, {
+        id: name, className: cn.join(' '),
+        style: s, ref: this.ref,
+        ...this.eventHandlers,
+        ...this.componentProps
+      },
+        content
+      )
+      : React.createElement(React.Fragment));
   }
 }

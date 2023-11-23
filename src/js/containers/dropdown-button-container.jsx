@@ -66,15 +66,18 @@ export class DropdownItem extends Component {
   content(children = this.props.children) {
     const { label, icon, value, badgeClasses } = this.props;
 
-    return <>
-      {icon && <><Icons icon={icon} />&nbsp;</>}
-      {label}
-      {typeof value === 'number' &&
-        <>&nbsp;<small className={['badge ms-auto', badgeClasses].join(' ')}>{value}</small></>}
-      {children}
-    </>
+    return React.createElement(React.Fragment, {},
+      icon && React.createElement(React.Fragment, {}, React.createElement(Icons, { icon: icon }), '&nbsp;'),
+      label,
+      typeof value === 'number' && React.createElement(React.Fragment, {},
+        '&nbsp;',
+        React.createElement('small', { className: ['badge ms-auto', badgeClasses].join(' ') },
+          value
+        ),
+        children
+      )
+    )
   }
-
 }
 
 export default class DropdownButtonContainer extends Component {
@@ -174,39 +177,42 @@ export default class DropdownButtonContainer extends Component {
   dropdownRender(children) {
     const { menu, allowClose, itemClasses, dropdownClasses } = this.props;
     const cn = ['dropdown-menu', dropdownClasses].join(' ');
-    return <div className={cn} style={{ minWidth: '100%' }}
-      onClick={allowClose ? null : (e) => e.stopPropagation()} aria-labelledby={this.trigger}>
-      {this.state.open &&
-        menu?.map((item, i) => {
-          if (item === 'divider')
-            return <div className="dropdown-divider" key={item.name || i} />
-          item.classes = item.classes || itemClasses;
-          return (React.isValidElement(item) ?
-            <React.Fragment key={item.name || i}>{item}</React.Fragment> :
-            <DropdownItem {...item} key={item.name || i} />)
-        })
-      }
-      {this.state.open && children}
-    </div>
+    return React.createElement('div',
+      {
+        className: cn, style: { minWidth: '100%' },
+        onClick: allowClose ? null : (e) => e.stopPropagation(), 'aria-labelledby': this.trigger
+      },
+      this.state.open &&
+      menu?.map((item, i) => {
+        if (item === 'divider')
+          return React.createElement('div', { className: "dropdown-divider", key: item.name || i });
+        item.classes = item.classes || itemClasses;
+        return (React.isValidElement(item)
+          ? React.createElement(React.Fragment, { key: item.name || i }, item)
+          : React.createElement(DropdownItem, { ...item, key: item.name || i }))
+      }),
+      this.state.open && children
+    );
   }
 
   content(children = this.props.children) {
     const { btnClasses, label, value, disabled } = this.props;
     const cn = ['btn', btnClasses];
     if (this.props.dropdownClass !== false) cn.push('dropdown-toggle');
-    return <>
-      <button
-        className={cn.join(' ')}
-        data-bs-toggle="dropdown"
-        disabled={disabled}
-        id={this.trigger}
-        onClick={this.onToggleDrop.bind(this)}
-        ref={this.btn}
-        type="button"
-      >
-        {label || value}
-      </button>
-      {this.dropdownRender(children)}
-    </>
+    return React.createElement(React.Fragment, {},
+      React.createElement('button',
+        {
+          className: cn.join(' '),
+          'data-bs-toggle': "dropdown",
+          disabled,
+          id: this.trigger,
+          onClick: this.onToggleDrop.bind(this),
+          ref: this.btn,
+          type: "button"
+        },
+        label || value,
+      ),
+      this.dropdownRender(children)
+    );
   }
 }

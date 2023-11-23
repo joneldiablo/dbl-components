@@ -214,24 +214,33 @@ export default class Field extends Component {
     if (inline) { cn.shift(); cn.push('py-2') }
     const style = {};
     if (disabled) style['opacity'] = .9;
-    const labelNode = <label className={cn.join(' ')} htmlFor={name} style={style}>
-      {label ? label : placeholder}
-      {required && <b title="Este campo es indispensable" className="text-inherit"> *</b>}
-    </label>
+    const labelNode = React.createElement('label',
+      { className: cn.join(' '), htmlFor: name, style },
+      label ? label : placeholder,
+      required && React.createElement('b',
+        {
+          title: "Este campo es indispensable",
+          className: "text-inherit"
+        },
+        ' *'
+      )
+    );
     return (labelNode);
   }
 
   get inputNode() {
-    const inputNode = (<input {...this.inputProps} />);
+    const inputNode = (react.createElement('input', { ...this.inputProps }));
     return inputNode;
   }
 
   get errorMessageNode() {
     const { errorMessage } = this.props;
     const { error } = this.state;
-    const errorNode = (<p className="m-1 lh-1"><small className="text-danger">
-      {errorMessage}
-    </small></p>);
+    const errorNode = React.createElement('p', { className: "m-1 lh-1" },
+      React.createElement('small', { className: "text-danger" },
+        errorMessage
+      )
+    );
     return (error && errorMessage && errorNode);
   }
 
@@ -239,9 +248,11 @@ export default class Field extends Component {
     const { message, messageClasses } = this.props;
     const cnm = ['m-1 lh-1'];
     if (messageClasses) cnm.push(messageClasses);
-    const node = (<p className={cnm.flat().join(' ')}><small>
-      {message}
-    </small></p>);
+    const node = React.createElement('p',
+      { className: cnm.flat().join(' ') },
+      React.createElement('small', {},
+        message
+      ));
     return (message && node);
   }
 
@@ -253,21 +264,24 @@ export default class Field extends Component {
     const wrapProps = {};
     const className = cn.join(' ');
     if (this.ContentWrap !== Fragment) wrapProps.className = className;
-    return (<>
-      <this.ContentWrap {...wrapProps}>
-        {floating && (first === 'label' && label) && this.labelNode}
-        {inline ? <div className={inlineControlClasses}>
-          {this.inputNode}
-          {this.errorMessageNode}
-          {this.messageNode}
-        </div> : this.inputNode}
-        {floating && (first !== 'label' || (placeholder && !label)) && this.labelNode}
-        {!inline && <>
-          {this.errorMessageNode}
-          {this.messageNode}
-        </>}
-      </this.ContentWrap>
-      {children}
-    </>);
+    return (React.createElement(React.Fragment, {},
+      React.createElement(this.ContentWrap,
+        { ...wrapProps },
+        floating && (first === 'label' && label) && this.labelNode,
+        inline
+          ? React.createElement('div', { className: inlineControlClasses },
+            this.inputNode,
+            this.errorMessageNode,
+            this.messageNode
+          )
+          : this.inputNode,
+        floating && (first !== 'label' || (placeholder && !label)) && this.labelNode,
+        !inline && React.createElement(React.Fragment, {},
+          this.errorMessageNode,
+          this.messageNode,
+        )
+      ),
+      children
+    ));
   }
 };

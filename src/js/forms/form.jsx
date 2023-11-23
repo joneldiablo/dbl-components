@@ -155,15 +155,17 @@ export default class Form extends Component {
       fieldProps.children = field.fields.map(this.mapFields);
       delete fieldProps.fields;
     }
-    return (<Field {...fieldProps} />);
+    return React.createElement(Field, { ...fieldProps });
   }
 
   content(children = this.props.children) {
     const { label, fields, labelClasses } = this.props;
-    return (<form onSubmit={this.onSubmit} onInvalid={this.onInvalid} ref={this.form} >
-      {label && <label className={labelClasses}>{label}</label>}
-      {fields && fields.map(this.mapFields)}
-      {children}
-    </form>);
+    return React.createElement('form',
+      { onSubmit: this.onSubmit, onInvalid: this.onInvalid, ref: this.form },
+      label && React.createElement('label',
+        { className: labelClasses }, label),
+      fields && fields.map(this.mapFields),
+      children
+    );
   }
 }

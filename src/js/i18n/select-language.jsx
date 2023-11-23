@@ -10,10 +10,16 @@ const flags = {
 };
 
 const Flag = ({ value, children: label, flag }) => {
-  return <div>
-    <img src={flags[value] || flag} width="30" style={{ marginRight: 5, verticalAlign: 'text-top' }} />
-    {label}
-  </div>
+  return React.createElement('div', {},
+    React.createElement('img',
+      {
+        src: flags[value] || flag,
+        width: "30",
+        style: { marginRight: 5, verticalAlign: 'text-top' }
+      },
+      label
+    )
+  );
 }
 
 export default class SelectLanguage extends SelectField {

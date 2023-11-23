@@ -24,22 +24,21 @@ export default class BrandNavigation extends Navigation {
       className: ['mr-2', logoClasses].join(' '),
       style: logoStyle
     }
-    return (<>
-      <NavLink className="navbar-brand" to={path} exact={exact}>
-        <div className="d-flex align-items-center">
-          {logoSrc && <img {...propsLogo} />}
-          <div className="brand-content" style={{ lineHeight: 1 }}>
-            <p className="m-0">
-              <b className="brandName">{brandName}</b>
-            </p>
-            <p className="m-0">
-              <small className="slogan">{slogan}</small>
-            </p>
-          </div>
-        </div>
-      </NavLink>
-      {children}
-    </>);
+    return React.createElement(React.Fragment, {},
+      React.createElement(NavLink, { className: "navbar-brand", to: path, exact: exact },
+        React.createElement('div', { className: "d-flex align-items-center" },
+          logoSrc && React.createElement('img', { ...propsLogo }),
+          React.createElement('div', { className: "brand-content", style: { lineHeight: 1 } },
+            React.createElement('p', { className: "m-0" },
+              React.createElement('b', { className: "brandName" }, brandName)
+            ),
+            React.createElement('p', { className: "m-0" },
+              React.createElement('small', { className: "slogan" }, slogan)
+            )
+          )
+        )
+      ),
+      children
+    );
   }
-
 }

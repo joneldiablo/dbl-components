@@ -83,35 +83,38 @@ export default class DndListContainer extends Component {
   content(children = this.props.children) {
     const { droppableId } = this.props;
     return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
-        <Droppable droppableId={droppableId}>
-          {(droppableProvided, droppableSnapshot) => (
-            <div
-              ref={droppableProvided.innerRef}
-              style={this.props.getListStyle(droppableSnapshot.isDraggingOver)}
-            >
-              {this.state.items.map((item, index) => (
-                <Draggable key={item.key} draggableId={item.key} index={index}>
-                  {(draggableProvided, draggableSnapshot) => (
-                    <div
-                      ref={draggableProvided.innerRef}
-                      {...draggableProvided.draggableProps}
-                      {...draggableProvided.dragHandleProps}
-                      style={this.props.getItemStyle(
-                        draggableSnapshot.isDragging,
-                        draggableProvided.draggableProps.style,
-                      )}
-                    >
-                      {item}
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {droppableProvided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+      React.createElement(DragDropContext, { onDragEnd: this.onDragEnd },
+        React.createElement(Droppable, { droppableId: droppableId },
+          (droppableProvided, droppableSnapshot) => (
+            React.createElement('div',
+              {
+                ref: droppableProvided.innerRef,
+                style: this.props.getListStyle(droppableSnapshot.isDraggingOver)
+              },
+              this.state.items.map((item, index) => (
+                React.createElement(Draggable,
+                  { key: item.key, draggableId: item.key, index: index },
+                  (draggableProvided, draggableSnapshot) => (
+                    React.createElement('div',
+                      {
+                        ref: draggableProvided.innerRef,
+                        ...draggableProvided.draggableProps,
+                        ...draggableProvided.dragHandleProps,
+                        style: this.props.getItemStyle(
+                          draggableSnapshot.isDragging,
+                          draggableProvided.draggableProps.style,
+                        )
+                      },
+                      item
+                    )
+                  )
+                )
+              )),
+              droppableProvided.placeholder
+            )
+          )
+        )
+      )
     );
   }
 }

@@ -91,20 +91,40 @@ export default class ModalContainer extends Component {
       container.push(child);
       return reducer;
     }, { header: [], body: [], footer: [], content: [] });
-    return (showModal &&
-      <div ref={this.onModalRef} className="modal fade" id={name + '-modal'} tabIndex="-1" >
-        <div className={cnModal.join(' ')} >
-          <div className="modal-content">
-            {showClose && <button type='button'
-              className='btn-close position-absolute end-0 m-3'
-              data-bs-dismiss='modal' style={{ zIndex: 1 }}></button>}
-            {cg.content}
-            {!!cg.header.length && <div className={'modal-header ' + headerClasses}>{cg.header}</div>}
-            {!!cg.body.length && <div className={'modal-body ' + bodyClasses}>{cg.body}</div>}
-            {!!cg.footer.length && <div className={'modal-footer ' + footerClasses}>{cg.footer}</div>}
-          </div>
-        </div>
-      </div>);
+    return showModal && React.createElement('div',
+      {
+        ref: this.onModalRef,
+        className: "modal fade",
+        id: name + '-modal',
+        tabIndex: "-1"
+      },
+      React.createElement('div',
+        { className: cnModal.join(' ') },
+        React.createElement('div',
+          { className: "modal-content" },
+          showClose && React.createElement('button',
+            {
+              type: 'button',
+              className: 'btn-close position-absolute end-0 m-3',
+              'data-bs-dismiss': 'modal', style: { zIndex: 1 }
+            }
+          ),
+          cg.content,
+          !!cg.header.length && React.createElement('div',
+            { className: 'modal-header ' + headerClasses },
+            cg.header
+          ),
+          !!cg.body.length && React.createElement('div',
+            { className: 'modal-body ' + bodyClasses },
+            cg.body
+          ),
+          !!cg.footer.length && React.createElement('div',
+            { className: 'modal-footer ' + footerClasses },
+            cg.footer
+          )
+        )
+      )
+    );
   }
 
 }
