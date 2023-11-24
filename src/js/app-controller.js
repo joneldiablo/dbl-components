@@ -1,92 +1,140 @@
 import { flatten } from "flat";
 
 import resolveRefs from "./functions/resolve-refs";
-import { setIconSet } from "./media/icons";
+import deepMerge from "./functions/deep-merge";
+import eventHandler from "./functions/event-handler";
+import { addIcons, setIconSet } from "./media/icons";
 import { addControllers } from "./controllers";
 import { addComponents } from "./components";
-import eventHandler from "./functions/event-handler";
+import { addFields } from "./forms/fields";
+import defaultIcons from "../app-icons-v1.0/selection.json";
+import { randomS4 } from "./functions";
 
-const state = {};
+const GLOBAL_STATE = {};
 
 /**
  * @param {Object} props - Propiedades de la aplicación
  * @param {Object} props.icons - Archivo IcoMoon que registra todos los íconos
  * @param {Object} props.controllers - listado de los controladores personalizados
  * @param {Object} props.components - listado de componentes personalizados
- * @param {Object} props.rootView - vista inicial (archivo json), debe tener path:"/"
- * @param {Object} props.rootView.view - objeto donde se registra la estructura de la página
- * @param {Object} props.rootView.definitions - objeto con estructuras que se podrán reciclar
- * @param {Object[]} props.views - arreglo de vistas con la misma estructura que rootview
- * @param {Object} props.containers - nombre de contenedores extra ej. {containers:'container'}
- * @param {Object} props.views[].view
- * @param {Object} props.views[].definitions
- * @param {Object} props.state - estado inicial de la aplicación, se puede meter cualquier cosa
+ * @param {Array|Object} props.definitions - global definitions 
+ * @param {Object[]} props.routes - array of routes
+ * @param {Object} props.schema - initial schema, the app root
 */
 export default class AppController {
 
   fetchList = {};
+  globalDefinitions = [];
+  routes = {};
+  tmpRoutesFound = 0;
+  rootSchema;
+  random = randomS4();
 
-  constructor(props) {
-    if (props.icons)
-      setIconSet(props.icons);
-    // INFO: se cargan los componentes y controladores
-    addControllers(props.controllers || {});
-    addComponents(props.components || {});
-    // INFO: se inicializa la rootView por si no trajera la estructura adecuada
-    props.rootView.definitions = props.rootView.definitions || { views: {} };
-    props.rootView.definitions.views = props.rootView.definitions.views || {};
-    // INFO: se cargan las vistas en rootView como definiciones y otros contenedores
-    props.views.forEach(vObj => {
-      props.containers = props.containers || {};
-      vObj.definitions = Object.assign({}, props.rootView.definitions, vObj.definitions);
-      Object.entries(props.containers).forEach(([containerName, elementName]) => {
-        if (!vObj[elementName]) return;
-        const content = resolveRefs(vObj[elementName], vObj);
-        if (!props.rootView.definitions[containerName])
-          props.rootView.definitions[containerName] = {};
-        props.rootView.definitions[containerName][content.name] = content;
+
+  constructor(props = {}) {
+    const {
+      definitions = [],
+      routes = [{ name: 'addRoutes', content: 'Please add routes', path: '/' }],
+      fields = {},
+      components = {},
+      controllers = {},
+      icons = false,
+      schema = { name: 'appEmpty', content: 'Hello world' }
+    } = props;
+
+    const copyIcons = JSON.parse(JSON.stringify(defaultIcons));
+    setIconSet(copyIcons);
+    if (icons) addIcons(icons);
+
+    this.globalDefinitions.push(...(Array.isArray(definitions) ? definitions : [definitions]));
+    this.routes = routes.reduce((rdx, route) => {
+      if (rdx[route.view.name]) console.warn(`Route was ${route.view.name} overwrited`);
+      rdx[route.view.name] = route;
+      return rdx;
+    }, {});
+
+    addFields(fields);
+    addComponents(components);
+    addControllers(controllers);
+
+    this.rootSchema = this.buildRootSchema(schema);
+
+    console.info('Total Routes:', this.tmpRoutesFound);
+  }
+
+  findingRoutesRecursive(schema) {
+    this.tmpRoutesFound++;
+    const newDefs = deepMerge({}, ...this.globalDefinitions, schema.definitions || {});
+    const view = resolveRefs(schema.view, { definitions: newDefs });
+    if (schema.routes?.length)
+      view.routes = Object.entries(resolveRefs(schema.routes, { routes: this.routes })).map(([key, route]) => {
+        if (!(route && route.view)) {
+          console.error('ROUTE VIEW (route.view) NOT FOUND', route);
+          return {
+            name: view.name + '.' + key,
+            path: `/${view.name}-${key}`,
+            tag: 'error',
+            content: `
+        <p class='text-danger'>NOT FOUND</p>
+        <p class='bg-dark text-light'><pre>${JSON.stringify(schema, null, 2)}}</pre></p>
+        `
+          };
+        }
+        return this.findingRoutesRecursive(route);
       });
-      const view = resolveRefs(vObj.view, vObj);
-      props.rootView.definitions.views[view.name] = view;
-    });
-    // INFO: se carga el estado inicial
-    Object.assign(state, props.state || {});
-    // INFO: se procesa la vista inicial para poder ser usada en react-route-schema
-    this.root = resolveRefs(props.rootView.view, props.rootView);
-    if (typeof props.fetchError !== 'function')
-      props.fetchError = r => r;
-    if (typeof props.fetchBefore !== 'function')
-      props.fetchBefore = (url, opts) => opts;
-    if (typeof props.api !== 'string')
-      props.api = '//api';
-    this.props = props;
+    return view;
+  };
+
+  buildRootSchema(schema) {
+    this.tmpRoutesFound = 0;
+    const root = this.findingRoutesRecursive(schema);
+    console.info('Total Routes:', this.tmpRoutesFound);
+    return root;
   }
 
-  setState(data, dispatch = true) {
-    Object.assign(state, data);
-    Object.keys(data).forEach(key => {
-      if (dispatch) eventHandler.dispatch('global.' + key, data[key]);
-    });
+  stringify(data, encrypt) {
+    //TODO: encrypt data y agregar un uno (1::) al principio, para saber que es una cadena encriptada
+    return JSON.stringify(data);
   }
 
-  getState(key) {
-    return state[key];
+  parse(data) {
+    //TODO: revisar que sea una string que inicia con un uno (1::) si sí desencriptar, sino, solo devolver
+    return JSON.parse(data);
+  }
+
+  set(key, data, { dispatch = true, storage = 'local', encrypt = false } = {}) {
+    if (storage === 'local') localStorage.setItem(key, this.stringify(data, encrypt));
+    else if (storage === 'session') sessionStorage.setItem(key, this.stringify(data, encrypt));
+    GLOBAL_STATE[key] = data;
+    if (dispatch) eventHandler.dispatch('global.' + key, data);
+  }
+
+  get(key) {
+    if (GLOBAL_STATE[key] === undefined) {
+      let value = sessionStorage.getItem(key);
+      if (value === undefined)
+        value = localStorage.getItem(key);
+      if (value !== undefined) GLOBAL_STATE[key] = this.parse(value);
+    }
+    return GLOBAL_STATE[key];
+  }
+
+  remove(key, { storage = 'local' }) {
+    if (storage === 'local') localStorage.removeItem(key);
+    else if (storage === 'session') sessionStorage.removeItem(key);
+    delete GLOBAL_STATE[key];
   }
 
   getViewDefinitions(name) {
-    const viewWrap = this.props.views.find(({ view }) => view.name === name);
-    const viewDefinitions = {
-      defs: viewWrap.definitions,
-      definitions: state.definitions
-    };
-    return {
-      ...state.definitions,
-      ...resolveRefs(viewDefinitions.defs, viewDefinitions)
-    };
+    return this.routes[name].definitions;
   }
 
-  get stateKeys() {
-    return Object.keys(state);
+  getGlobalDefinitions() {
+    return this.globalDefinitions;
+  }
+
+  getGlobalKeys() {
+    return Object.keys(GLOBAL_STATE);
   }
 
   async minTimeout(promise, timeout = 300) {
@@ -119,7 +167,7 @@ export default class AppController {
       'Content-Type': 'application/json',
       'Accept': 'application/json'
     }, headers);
-    const timeoutId = setTimeout(this.onTimeout, timeout, controller);
+    const timeoutId = setTimeout(this.onTimeout.bind(this), timeout, controller);
     const fetchPromise = fetch(urlFinal, conf)
       .then(async (r) => {
         clearTimeout(timeoutId);
@@ -146,7 +194,7 @@ export default class AppController {
     return this.minTimeout(fetchPromise);
   }
 
-  onTimeout = (controller) => {
+  onTimeout(controller) {
     controller.timeout = true;
     controller.abort();
   }

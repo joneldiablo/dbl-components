@@ -154,7 +154,13 @@ export default class JsonRender {
     }
 
     return (React.createElement(Wrapper,
-      { key: componentProps.name || i, className: cnSection.flat().join(' ') },
+      {
+        key: componentProps.name || i,
+        className: cnSection.flat().join(' '),
+        style: {
+          "--component-name": `"${componentProps.name}"`
+        }
+      },
       React.createElement(Component, { ...componentProps })
     ));
   }

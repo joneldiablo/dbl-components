@@ -6,11 +6,24 @@
   overflow: auto;
   display: flex;
   flex-direction: column;
+
+  &::before {
+    content: var(--component-name, "");
+    opacity: .6;
+    font-size: .6rem;
+  }
 }
 
 .test-section-wrapper {
   border: 1px solid blue;
   padding: 1px;
   margin: 1px;
+
+  &::before {
+    content: var(--component-name, "");
+    opacity: .6;
+    font-size: .6rem;
+  }
 }
+
 //----------

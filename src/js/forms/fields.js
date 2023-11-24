@@ -45,7 +45,8 @@ const fieldComponents = {
   ...groups
 };
 
-export default fieldComponents;
 export const addFields = (_components) => {
   Object.assign(fieldComponents, _components);
 }
+
+export default fieldComponents;
