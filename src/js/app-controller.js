@@ -1,7 +1,7 @@
 import { flatten } from "flat";
 
 import resolveRefs from "./functions/resolve-refs";
-import { iconSet } from "./media/icons";
+import { setIconSet } from "./media/icons";
 import { addControllers } from "./controllers";
 import { addComponents } from "./components";
 import eventHandler from "./functions/event-handler";
@@ -28,7 +28,7 @@ export default class AppController {
 
   constructor(props) {
     if (props.icons)
-      iconSet(props.icons);
+      setIconSet(props.icons);
     // INFO: se cargan los componentes y controladores
     addControllers(props.controllers || {});
     addComponents(props.components || {});

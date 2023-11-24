@@ -13,14 +13,6 @@ export default class Icons extends React.Component {
     style: {}
   }
 
-  searchIcon(icon) {
-    let list = iconList(is);
-    let final = list.find(iconName =>
-      iconName.split(/[, ]+/).find(i => i === icon)
-    );
-    return final;
-  }
-
   render() {
     let { inline, icon, classes, className, style, width, height, title, size } = this.props;
     // first element empty to generate an space
@@ -44,6 +36,18 @@ export default class Icons extends React.Component {
   }
 }
 
-export const iconSet = (isIn) => {
+export const setIconSet = (isIn) => {
   is = isIn;
+}
+
+export const addIcons = (newSet) => {
+  is.icons.push(...newSet.icons);
+}
+
+export const searchIcon = (icon) => {
+  let list = iconList(is);
+  let final = list.find(iconName =>
+    iconName.split(/[, ]+/).find(i => i === icon)
+  );
+  return final;
 }

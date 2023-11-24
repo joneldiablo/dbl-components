@@ -14,14 +14,12 @@ import AspectRatioContainer from "./containers/proportional-container";
 import GridSwitchContainer from "./containers/grid-switch-container";
 import CardContainer from "./containers/card-container";
 import ProportionalContainer from "./containers/proportional-container";
-import Debug from "./debug-component";
 import Navigation, { ToggleTextNavigation } from "./navigation/navigation";
 import BrandNavigation from "./navigation/brand-navigation";
 import YoutubeVideoComponent from "./media/youtube-video";
 import FormContainer from "./containers/form-container";
 import Form from "./forms/form";
 import Table from "./tables/table";
-import EndpointTable from "./tables/endpoint-table";
 import DropdownButtonContainer from "./containers/dropdown-button-container";
 import DropdownContainer from "./containers/dropdown-container";
 import ModalButtonContainer from "./containers/modal-button-container";
@@ -39,9 +37,9 @@ import Video from "./media/video";
 import MenuItem from "./navigation/menu-item/menu-item";
 import TableContainer from "./containers/table-container";
 import AlertContainer from "./containers/alert-container/alert-container";
+import SchemaContainer from "./react-router-schema/react-router-schema";
 
 const COMPONENTS = {
-  Debug,
   Component,
   Container,
   GridContainer,
@@ -78,7 +76,8 @@ const COMPONENTS = {
   DndListContainer,
   MenuItem,
   TableContainer,
-  AlertContainer
+  AlertContainer,
+  SchemaContainer
 }
 
 export default COMPONENTS;

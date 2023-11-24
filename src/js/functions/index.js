@@ -48,4 +48,17 @@ export const hash = (string) => {
 }
 
 // TODO: configurar esta función, por el momento solo devuelve el mismo texto que se ingrese
-export const i18n = t => t
+export const i18n = t => t;
+
+export default {
+  normalize,
+  slugify,
+  number,
+  pluralize,
+  price,
+  sanitizedTags,
+  sanitizedAttributes,
+  randomS4,
+  hash,
+  i18n,
+};
