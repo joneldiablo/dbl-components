@@ -229,7 +229,7 @@ export default class Field extends Component {
   }
 
   get inputNode() {
-    const inputNode = (react.createElement('input', { ...this.inputProps }));
+    const inputNode = (React.createElement('input', { ...this.inputProps }));
     return inputNode;
   }
 

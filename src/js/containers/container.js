@@ -31,6 +31,13 @@ export default class Container extends Component {
     this.onResize = this.onResize.bind(this);
   }
 
+  get componentProps() {
+    return {
+      id: this.props.name,
+      ...this.props._props
+    };
+  }
+
   updateSize() {
     const { fluid, fullWidth } = this.props;
     const containerType = (!fullWidth ? (fluid ? 'container-fluid' : 'container') : '');

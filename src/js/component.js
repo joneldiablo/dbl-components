@@ -67,7 +67,7 @@ export default class Component extends React.Component {
     const Tag = tag || this.tag;
     return (active
       ? React.createElement(Tag, {
-        id: name, className: cn.join(' '),
+        className: cn.join(' '),
         style: s, ref: this.ref,
         ...this.eventHandlers,
         ...this.componentProps

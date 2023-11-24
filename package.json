@@ -1,13 +1,13 @@
 {
   "name": "dbl-components",
-  "version": "1.4.4",
+  "version": "2.0.2",
   "description": "Framework based on bootstrap 5",
   "main": "src/js/index.js",
   "types": "@types/dbl-components.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "babel": "babel src/js -d lib/js --minified --source-maps",
-    "babelReact":"babel --config-file ./.babelrc2 src/js -d src/js",
+    "babelReact": "babel --config-file ./.babelrc2 src/js -d src/js",
     "clear:js": "rm -rf lib/js/* && mkdir -p lib/js",
     "clear:css": "rm -rf lib/css/* && mkdir -p lib/css",
     "clear:scss": "rm -rf lib/scss/* && mkdir -p lib/scss",

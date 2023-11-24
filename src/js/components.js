@@ -52,7 +52,6 @@ const COMPONENTS = {
   YoutubeVideoComponent,
   ToggleTextNavigation,
   Table,
-  EndpointTable,
   DropdownButtonContainer,
   DropdownContainer,
   ModalButtonContainer,
