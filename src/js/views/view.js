@@ -24,6 +24,7 @@ export default class View extends Container {
     fullWidth: true
   }
 
+  tag = 'article';
   events = [];
 
   constructor(props) {

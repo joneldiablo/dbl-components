@@ -16,13 +16,13 @@ function isObject(item) {
  * @param {String} parentKey unique for recursive
  * @returns 
  */
-export const mergeWithMutation = (target, mutation, ommit = [], parentKey = '') => {
+export const mergeWithMutation = (target, { mutation, ommit = [], data }, parentKey = '') => {
   for (const key in target) {
     if (!ommit.includes(key) && typeof target[key] === 'object') {
       const keyFixed = Array.isArray(target) ? parentKey + '.' + key : key;
-      const merge = mutation(keyFixed, target[key]);
+      const merge = mutation(keyFixed, target[key], data);
       if (merge) deepMerge(target[key], merge);
-      mergeWithMutation(target[key], mutation, ommit, key);
+      mergeWithMutation(target[key], { mutation, ommit, data }, key);
     }
   }
   return target;

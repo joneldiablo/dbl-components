@@ -141,6 +141,7 @@ export default class SchemaController extends React.Component {
     const RedirViewManager = (props) => {
       let redirTo = typeof this.props.redirect === 'function' &&
         this.props.redirect(props.location);
+
       if (redirTo)
         return React.createElement(Redirect,
           {
@@ -159,6 +160,8 @@ export default class SchemaController extends React.Component {
       });
       document.body.classList.add('location' + props.location.pathname.replace(/\//g, '-'));
       const useSwitch = (typeof route.useSwitch === 'undefined' || route.useSwitch);
+      if (!route.style) route.style = {};
+      route.style['--component-name'] = `"${route.name}"`;
       return (React.createElement(Controller,
         { ...route, ...props, test: this.props.test },
         useSwitch

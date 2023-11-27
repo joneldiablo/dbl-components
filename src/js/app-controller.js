@@ -29,6 +29,7 @@ export default class AppController {
   tmpRoutesFound = 0;
   rootSchema;
   random = randomS4();
+  props;
 
 
   constructor(props = {}) {
@@ -39,8 +40,24 @@ export default class AppController {
       components = {},
       controllers = {},
       icons = false,
-      schema = { name: 'appEmpty', content: 'Hello world' }
+      schema = { name: 'appEmpty', content: 'Hello world' },
+      api = "http://localhost:3000/",
+      fetchBefore = (url, options) => options,
+      fetchError = (error, url) => error,
     } = props;
+
+    this.props = {
+      definitions,
+      routes,
+      fields,
+      components,
+      controllers,
+      icons,
+      schema,
+      api,
+      fetchBefore,
+      fetchError
+    };
 
     const copyIcons = JSON.parse(JSON.stringify(defaultIcons));
     setIconSet(copyIcons);
@@ -126,7 +143,10 @@ export default class AppController {
   }
 
   getViewDefinitions(name) {
-    return this.routes[name].definitions;
+    if (!this.routes[name]?.definitions) return {};
+    return resolveRefs(this.routes[name].definitions, {
+      definitions: deepMerge({}, ...this.globalDefinitions, this.routes[name].definitions || {})
+    });
   }
 
   getGlobalDefinitions() {
