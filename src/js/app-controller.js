@@ -44,6 +44,8 @@ export default class AppController {
       api = "http://localhost:3000/",
       fetchBefore = (url, options) => options,
       fetchError = (error, url) => error,
+      maxTimeout = 30000,
+      minTimeout = 300
     } = props;
 
     this.props = {
@@ -56,7 +58,9 @@ export default class AppController {
       schema,
       api,
       fetchBefore,
-      fetchError
+      fetchError,
+      maxTimeout,
+      minTimeout
     };
 
     const copyIcons = JSON.parse(JSON.stringify(defaultIcons));
@@ -157,7 +161,7 @@ export default class AppController {
     return Object.keys(GLOBAL_STATE);
   }
 
-  async minTimeout(promise, timeout = 300) {
+  async minTimeout(promise, timeout = this.props.minTimeout) {
     const [r] =
       await Promise.all([promise, new Promise((resolve) => setTimeout(resolve, timeout, true))]);
     return r;
@@ -169,7 +173,7 @@ export default class AppController {
       this.fetchList[options.method + url].abort();
     }
     const { query, format = 'json',
-      timeout = 30000, body, headers, ...conf } = this.props.fetchBefore(url, options);
+      timeout = this.props.maxTimeout, body, headers, ...conf } = this.props.fetchBefore(url, options);
     if (body) conf.body = JSON.stringify(body);
     const urlFinal = new URL(url, this.props.api);
     const flattenQuery = flatten(query || {}, { safe: true });
