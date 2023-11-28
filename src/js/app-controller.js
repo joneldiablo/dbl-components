@@ -170,7 +170,7 @@ export default class AppController {
   fetch(url, options = { method: 'GET' }) {
     options.method = options.method || 'GET';
     if (this.fetchList[options.method + url]) {
-      this.fetchList[options.method + url].abort();
+      //this.fetchList[options.method + url].abort();
     }
     const { query, format = 'json',
       timeout = this.props.maxTimeout, body, headers, ...conf } = this.props.fetchBefore(url, options);
