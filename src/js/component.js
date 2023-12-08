@@ -31,6 +31,7 @@ export default class Component extends React.Component {
   constructor(props) {
     super(props);
     this.ref = createRef();
+    this.onEvent = this.onEvent.bind(this);
     this.eventHandlers = {
       onClick: this.onEvent,
       onChange: this.onEvent,
@@ -41,6 +42,45 @@ export default class Component extends React.Component {
     }
   }
 
+  setClasses(classes) {
+    const localClasses = this.state.localClasses && (Array.isArray(this.state.localClasses)
+      ? this.state.localClasses
+      : this.state.localClasses.split(' '));
+    const setLocalClasses = new Set(localClasses);
+    const setClasses = new Set(
+      classes && (Array.isArray(classes) ? classes
+        : classes.split(' '))
+    );
+    return [setLocalClasses, setClasses];
+  }
+
+  toggleClasses(classes) {
+    const [localClasses, setClasses] = this.setClasses(classes);
+    setClasses.forEach(c => {
+      if (localClasses.has(c)) localClasses.delete(c);
+      else localClasses.add(c);
+    });
+    this.setState({
+      localClasses: Array.from(localClasses).join(' ')
+    });
+  }
+
+  addClasses(classes) {
+    const [localClasses, setClasses] = this.setClasses(classes);
+    setClasses.forEach(localClasses.add.bind(localClasses));
+    this.setState({
+      localClasses: Array.from(localClasses).join(' ')
+    });
+  }
+
+  deleteClasses(classes) {
+    const [localClasses, setClasses] = this.setClasses(classes);
+    setClasses.forEach(localClasses.delete.bind(localClasses));
+    this.setState({
+      localClasses: Array.from(localClasses).join(' ')
+    });
+  }
+
   get componentProps() {
     return this.props._props;
   }
@@ -49,7 +89,7 @@ export default class Component extends React.Component {
     return children;
   }
 
-  onEvent = (e) => {
+  onEvent(e) {
     eventHandler.dispatch(`${e.type}.${this.props.name}`,
       { [this.props.name]: { state: this.state, value: e.target.value } });
   }

@@ -2,6 +2,7 @@ import React from "react";
 import Field from "./field";
 import bytes from "bytes";
 import * as LZMAObj from 'lzma/src/lzma_worker';
+
 import eventHandler from "../../functions/event-handler";
 
 export default class FileField extends Field {
@@ -14,6 +15,57 @@ export default class FileField extends Field {
   }
 
   static jsClass = 'FileField';
+
+  constructor(props) {
+    super(props);
+    this.onDragEnter = this.onDragEnter.bind(this);
+    this.onDragLeave = this.onDragLeave.bind(this);
+    this.onDrop = this.onDrop.bind(this);
+    this.onDragOver = this.onDragOver.bind(this);
+    if (props.hidden)
+      this.state.localClasses = 'cursor-pointer';
+  }
+
+  get componentProps() {
+    const _props = this.props._props;
+    return {
+      onDragEnter: this.onDragEnter,
+      onDragLeave: this.onDragLeave,
+      onDrop: this.onDrop,
+      onDragOver: this.onDragOver,
+      ..._props
+    }
+  }
+
+  onDragOver(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.deleteClasses('drag-over');
+  }
+
+  onDragEnter(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.addClasses('drag-over');
+  }
+
+  onDragLeave(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.deleteClasses('drag-over');
+  }
+
+  onDrop(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.deleteClasses('drag-over');
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    this.input.current.files = files;
+    this.onChange({
+      target: this.input.current
+    });
+  }
 
   get type() {
     return 'file';
@@ -35,12 +87,20 @@ export default class FileField extends Field {
     let { value, files } = e.target;
     const arrayFiles = Array.from(files);
     const newState = {
-      value,
+      value: [],
       error: this.isInvalid(value)
     }
     this.setState(newState);
     if (!arrayFiles.length || newState.error) return this.returnData(null);
-    const p6s = arrayFiles.map(file => this.readAs(file, this.props.format));
+
+    const p6s = arrayFiles.map(async file => {
+      const readFile = await this.readAs(file, this.props.format);
+      newState.value.push({
+        name: file.name,
+        file: readFile
+      });
+      return readFile;
+    });
     const final = await Promise.all(p6s);
     if (this.props.multiple) {
       this.returnData(final);
@@ -97,26 +157,33 @@ export default class FileField extends Field {
   get inputNode() {
     const { inline, disabled, readOnly } = this.props;
     const { value } = this.state;
+    const links = (Array.isArray(value) ? value : [value])
+      .map(l => {
+        if (typeof l === 'string') {
+          return React.createElement('a',
+            { href: l, target: "_blank", className: '' },
+            l.split(/[\/\\]/).pop().split('?')[0]
+          )
+        } else {
+          return React.createElement('span',
+            { name: l.name, classes: '' },
+            l.name
+          )
+        }
+      });
+
     const inputNode = React.createElement(React.Fragment, {},
       !(value && (disabled || readOnly))
         ? React.createElement('input', { ...this.inputProps })
         : React.createElement('p',
           { className: "form-control mb-1 disabled" },
-          React.createElement('a',
-            {
-              href: value, target: "_blank"
-            },
-            value.split(/[\/\\]/).pop().split('?')[0]
-          )
+          ...links
         ),
       value && !(disabled || readOnly) &&
       React.createElement('p',
         { className: "text-end my-1" },
         React.createElement('small', {},
-          React.createElement('a',
-            { href: value, target: "_blank" },
-            value.split(/[\/\\]/).pop().split('?')[0]
-          )
+          ...links
         )
       )
     );

@@ -37,7 +37,8 @@ export default class Field extends Component {
     value: PropTypes.any,
     accept: PropTypes.string,
     message: PropTypes.oneOfType([PropTypes.string, PropTypes.bool, PropTypes.node]),
-    floating: PropTypes.bool
+    floating: PropTypes.bool,
+    hidden: PropTypes.bool
   }
   static defaultProps = {
     ...Component.defaultProps,
@@ -181,7 +182,7 @@ export default class Field extends Component {
     const { disabled, readOnly, accept, minLength,
       required, name, controlClasses, maxLength, list,
       placeholder: prePlaceholder, step, noValidate, multiple, autoComplete,
-      min, max, pattern, dir, _propsControl = {} } = this.props;
+      min, max, pattern, dir, _propsControl = {}, hidden } = this.props;
     const { value, error } = this.state;
     const cn = [
       'form-control',
@@ -194,7 +195,7 @@ export default class Field extends Component {
     const placeholder = !!prePlaceholder ? this.extractString(prePlaceholder) : null;
     return {
       id: name, name, autoComplete: autocomplete || autoComplete,
-      list: list1 || list, pattern, placeholder,
+      list: list1 || list, pattern, placeholder, hidden,
       required, type: this.type,
       value, className: cn.join(' '),
       min, max, step, noValidate, disabled,
