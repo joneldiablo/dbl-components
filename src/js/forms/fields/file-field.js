@@ -126,6 +126,11 @@ export default class FileField extends Field {
         case 'zip':
           reader.readAsArrayBuffer(file);
           break;
+        case 'arrayBuffer':
+          reader.readAsArrayBuffer(file);
+          break;
+        case 'blob':
+          return resolve(file);
         default:
           break;
       }
