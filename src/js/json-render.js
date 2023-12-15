@@ -109,7 +109,7 @@ export default class JsonRender {
     }
     if (typeof sectionRaw.active === 'boolean' && !sectionRaw.active) return false;
     const { component: componentName, content, placeholder,
-      label, message, errorMessage, managerName, wrapperClasses, ...section } = sectionRaw;
+      label, message, errorMessage, managerName, wrapperClasses, wrapperStyles = {}, ...section } = sectionRaw;
     const { location, match, childrenIn = this.childrenIn, history, children } = this.props;
     const Component = COMPONENTS[componentName] || (COMPONENTS.Component);
     const componentProps = {
@@ -139,11 +139,13 @@ export default class JsonRender {
     if (this.props.test) cnSection.push('test-section-wrapper');
     if (this.props.wrapperClasses) cnSection.push(this.props.wrapperClasses);
     if (wrapperClasses) cnSection.push(wrapperClasses);
+
     const exclusionSec = ['NavLink', 'Image', 'Link', 'Icons', 'Action',
       'DropdownButtonContainer', 'ModalButtonContainer', 'DropdownItem']
       .includes(componentName);
-    const Wrapper = componentProps.wrapper === false ? false :
-      componentProps.wrapper || Component.wrapper || 'section';
+
+    const Wrapper = (componentProps.wrapper === false || Component.wrapper === false)
+      ? false : componentProps.wrapper || Component.wrapper || 'section';
 
     if (!Wrapper || exclusionSec || componentProps.tag) {
       if (this.props.test) {
@@ -158,7 +160,8 @@ export default class JsonRender {
         key: componentProps.name || i,
         className: cnSection.flat().join(' '),
         style: {
-          "--component-name": `"${componentProps.name}"`
+          "--component-name": `"${componentProps.name}"`,
+          ...wrapperStyles
         }
       },
       React.createElement(Component, { ...componentProps })
