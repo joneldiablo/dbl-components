@@ -9,6 +9,11 @@ import { addComponents } from "./components";
 import { addFields } from "./forms/fields";
 import defaultIcons from "../app-icons-v1.0/selection.json";
 import { randomS4 } from "./functions";
+import {
+  addDictionary, addFormatDate,
+  addFormatNumber, addFormatTime,
+  getLang, setLang,
+} from "./functions/i18n";
 
 const GLOBAL_STATE = {};
 
@@ -45,7 +50,12 @@ export default class AppController {
       fetchBefore = (url, options) => options,
       fetchError = (error, url) => error,
       maxTimeout = 30000,
-      minTimeout = 300
+      minTimeout = 300,
+      dictionary = {},
+      formatDate = {},
+      formatNumber = {},
+      formatTime = {},
+      lang = 'default'
     } = props;
 
     this.props = {
@@ -60,7 +70,12 @@ export default class AppController {
       fetchBefore,
       fetchError,
       maxTimeout,
-      minTimeout
+      minTimeout,
+      dictionary,
+      formatDate,
+      formatNumber,
+      formatTime,
+      lang
     };
 
     const copyIcons = JSON.parse(JSON.stringify(defaultIcons));
@@ -74,9 +89,14 @@ export default class AppController {
       return rdx;
     }, {});
 
-    addFields(fields);
-    addComponents(components);
-    addControllers(controllers);
+    if (fields) addFields(fields);
+    if (components) addComponents(components);
+    if (controllers) addControllers(controllers);
+    if (dictionary) addDictionary(dictionary);
+    if (formatDate) addFormatDate(formatDate);
+    if (formatNumber) addFormatNumber(formatNumber);
+    if (formatTime) addFormatTime(formatTime);
+    if (lang) setLang(lang);
 
     this.rootSchema = this.buildRootSchema(schema);
 
@@ -221,6 +241,20 @@ export default class AppController {
   onTimeout(controller) {
     controller.timeout = true;
     controller.abort();
+  }
+
+  getLang() {
+    return getLang();
+  }
+
+  setLang = (lang) => {
+    this.props.lang = lang;
+    setLang(lang);
+    if (typeof this.update === 'function') this.update(randomS4());
+  }
+
+  setUpdate(update) {
+    this.update = update;
   }
 
 }

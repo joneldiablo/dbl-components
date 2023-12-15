@@ -5,6 +5,7 @@ import parseReact, { domToReact, attributesToProps } from "html-react-parser";
 import Icons from "./media/icons";
 import COMPONENTS from "./components";
 import { hash } from "./functions";
+import t from "./functions/i18n";
 
 /**
  * Clase utilizada para generar contenido dinámico en React a partir de una estructura de datos JSON.
@@ -73,13 +74,16 @@ export default class JsonRender {
    */
   buildContent(content, index) {
     if (!content) return false;
-    if (typeof content === 'number') {
-      return content;
-    } else if (typeof content === 'string') {
-      return React.createElement(React.Fragment,
-        { key: hash(content) },
-        parseReact(content, this.parseOpts)
-      );
+    if (typeof content !== 'object') {
+      const translate = t(content, this.props.context);
+      if (typeof translate === 'number' || typeof translate === 'boolean') {
+        return translate;
+      } else if (typeof translate === 'string') {
+        return React.createElement(React.Fragment,
+          { key: hash(translate) },
+          parseReact(translate, this.parseOpts)
+        );
+      }
     } else if (React.isValidElement(content)) {
       try {
         content.key = content.key || content.props.name || index;
