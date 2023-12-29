@@ -90,7 +90,7 @@ export default class extends Component {
       default:
         break;
     }
-    return super.mutations();
+    return super.mutations(sn, section);
   }
 
 }

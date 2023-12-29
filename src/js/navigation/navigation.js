@@ -1,7 +1,6 @@
 import React, { createRef } from "react";
 import { NavLink } from "react-router-dom";
 import Collapse from "bootstrap/js/dist/collapse";
-import parseReact from "html-react-parser";
 
 import eventHandler from "../functions/event-handler";
 import JsonRender from "../json-render";
@@ -161,9 +160,13 @@ export default class Navigation extends Component {
     this.hasAnActive(activeItem);
   }
 
-  link = (item, i, parent) => {
+  link = (itemRaw, i, parent) => {
     const { caretIcons, linkClasses, navLink, activeClassName } = this.props;
     const { carets, open } = this.state;
+    const modify = typeof this.props.mutations === 'function'
+      && this.props.mutations(`${this.props.name}.${itemRaw.value}`, item);
+    const item = Object.assign({}, itemRaw, modify || {});
+    if (!item.active) return false;
     carets[item.name] = carets[item.name] || caretIcons[1];
     this.flatItems.push(item);
     item.parent = parent;
@@ -188,25 +191,32 @@ export default class Navigation extends Component {
           )
         )
     )
+    const disabled = item.disabled || this.props.disabled;
     const className = (() => {
       const r = [linkClasses, item.classes];
       if (!item.path) r.push('cursor-pointer');
       if (item.hasAnActive) r.push('has-an-active');
       if (navLink) r.unshift('nav-link');
       if (!!item.menu?.length) r.push('has-submenu');
+      if (disabled) r.push('disabled');
       return r;
     })().join(' ');
     const propsLink = item.path ? {
       id: item.name + '-link', className,
-      onClick: (e) => [!!item.menu?.length && this.onToggleSubmenu(e, item), this.onNavigate(e, item)],
+      onClick: !disabled ? ((e) => [
+        !!item.menu?.length && this.onToggleSubmenu(e, item),
+        this.onNavigate(e, item)
+      ]) : null,
       to: item.path,
       activeClassName,
       strict: item.strict,
       exact: item.exact,
+      disabled,
       style: {}
     } : {
       id: item.name + '-link', className,
-      onClick: !!item.menu?.length ? (e) => this.onToggleSubmenu(e, item) : null,
+      onClick: !disabled && !!item.menu?.length ? (e) => this.onToggleSubmenu(e, item) : null,
+      disabled,
       style: {}
     }
 

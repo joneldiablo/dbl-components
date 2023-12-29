@@ -123,12 +123,12 @@ export default class PaginationField extends Field {
         this.inputNode
       ),
       React.createElement('li',
-        { className: "page-item disabled" },
+        { className: "page-item read-only" },
         React.createElement('span',
           { className: "page-link border-start-0 border-end-0 px-1" }, ' /')
       ),
       React.createElement('li',
-        { className: "page-item disabled", title: total + ' ' + texts.pages, style: { width: 58 } },
+        { className: "page-item read-only", title: total + ' ' + texts.pages, style: { width: 58 } },
         React.createElement('span', { className: "page-link border-start-0" }, total)
       ),
       nextBtn && React.createElement('li',

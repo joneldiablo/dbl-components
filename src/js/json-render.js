@@ -107,12 +107,10 @@ export default class JsonRender {
    * @param {number} i - El índice de la sección.
    * @returns {React.Component|boolean} - El componente de la sección construido.
    */
-  sections(sectionRaw, i) {
-    if (typeof this.mutations === 'function') {
-      const m = this.mutations(sectionRaw.name, sectionRaw) || {};
-      //Si la mutacion contiene elementos react, hacer un deepMerge truena con loop infinito
-      Object.assign(sectionRaw, m);
-    }
+  sections(sr, i) {
+    const m = typeof this.mutations === 'function' && this.mutations(sr.name, sr);
+    const sectionRaw = Object.assign({}, sr, m || {});
+
     if (typeof sectionRaw.active === 'boolean' && !sectionRaw.active) return false;
     const { component: componentName, content, placeholder,
       label, message, errorMessage, managerName, wrapperClasses, wrapperStyles = {}, ...section } = sectionRaw;

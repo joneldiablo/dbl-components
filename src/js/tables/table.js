@@ -309,7 +309,8 @@ export default class Table extends Component {
 
   constructor(props) {
     super(props);
-    this.jsonRender = new JsonRender(props, props.mutations);
+    const { mutations, ...propsJ } = props;
+    this.jsonRender = new JsonRender(propsJ, mutations);
   }
 
   /**

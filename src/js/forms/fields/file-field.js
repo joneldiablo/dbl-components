@@ -4,6 +4,7 @@ import bytes from "bytes";
 import * as LZMAObj from 'lzma/src/lzma_worker';
 
 import eventHandler from "../../functions/event-handler";
+import JsonRender from "../../json-render";
 
 export default class FileField extends Field {
 
@@ -24,6 +25,10 @@ export default class FileField extends Field {
     this.onDragOver = this.onDragOver.bind(this);
     if (props.hidden)
       this.state.localClasses = 'cursor-pointer';
+    if (props.mutations) {
+      const { mutations, ...propsSub } = props;
+      this.josnRender = new JsonRender(propsSub, mutations);
+    }
   }
 
   get componentProps() {
@@ -163,16 +168,23 @@ export default class FileField extends Field {
     const { inline, disabled, readOnly } = this.props;
     const { value } = this.state;
     const links = (Array.isArray(value) ? value : [value])
-      .map(l => {
+      .map((l, i) => {
+        const nameFile = typeof l === 'string' ? l.split(/[\/\\]/).pop().split('?')[0] : l.name;
+        if (this.jsonRender)
+          return this.jsonRender.buildContent({
+            name: `${this.props.name}.file.${i}`,
+            tag: 'span', value: l,
+            content: nameFile
+          });
         if (typeof l === 'string') {
           return React.createElement('a',
             { href: l, target: "_blank", className: '' },
-            l.split(/[\/\\]/).pop().split('?')[0]
+            nameFile
           )
         } else {
           return React.createElement('span',
             { name: l.name, classes: '' },
-            l.name
+            nameFile
           )
         }
       });

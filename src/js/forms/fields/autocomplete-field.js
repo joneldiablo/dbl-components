@@ -1,4 +1,5 @@
 import React, { createRef } from "react";
+
 import eventHandler from "../../functions/event-handler";
 import Field from "./field";
 
@@ -126,7 +127,11 @@ export default class AutocompleteField extends Field {
     });
   }
 
-  mapOptions = (opt, i) => {
+  mapOptions = (optRaw, i) => {
+    const modify = typeof this.props.mutations === 'function'
+      && this.props.mutations(`${this.props.name}.${optRaw.value}`, optRaw);
+    const opt = Object.assign({}, optRaw, modify || {});
+    if (!opt.active) return false;
     return React.createElement('li',
       { key: opt.value, className: opt.disabled ? 'muted' : '' },
       React.createElement('span',

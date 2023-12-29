@@ -1,4 +1,5 @@
 import React from "react";
+
 import Field from "./field";
 
 export default class SelectField extends Field {
@@ -34,7 +35,11 @@ export default class SelectField extends Field {
         { disabled: true },
         '──────────'
       ),
-      Array.isArray(options) && options.map(({ disabled, label, value, title }) => {
+      Array.isArray(options) && options.map((opt) => {
+        const modify = typeof this.props.mutations === 'function'
+          && this.props.mutations(`${this.props.name}.${opt.value}`, opt);
+        const { active, disabled, label, value, title } = Object.assign({}, opt, modify || {});
+        if (!active) return false;
         let propsOpt = {
           value,
           disabled,
