@@ -94,7 +94,9 @@ export default class JsonRender {
     if (Array.isArray(content.name)) content.name = content.name.join('-');
     if (typeof content === 'object' && typeof content.name !== 'string')
       return Object.keys(content)
-        .map((name, i) => this.buildContent({ name, ...content[name] }, i));
+        .map((name, i) => this.buildContent(typeof content[name] !== 'object'
+          ? content[name] : { name, ...content[name] }, i)
+        );
 
     return this.sections(content, index);
   }
