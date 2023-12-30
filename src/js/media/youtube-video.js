@@ -61,7 +61,7 @@ export default class YoutubeVideoComponent extends Component {
       videoId,
       id: videoId,
       className: ytbClasses,
-      containerClassName: ['h-100 w-100', ytbContainerClasses].join(' '),
+      containerClassName: ['h-100 w-100', ytbContainerClasses].flat().join(' '),
       onReady,
       onPlay,
       onPause,

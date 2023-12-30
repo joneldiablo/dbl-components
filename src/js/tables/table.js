@@ -229,9 +229,9 @@ export class HeaderCell extends React.Component {
     const hClasses = ["align-middle", col.name];
     if (headerClasses) hClasses.push(headerClasses);
     return React.createElement('th',
-      { className: hClasses.join(' '), scope: "col" },
+      { className: hClasses.flat().join(' '), scope: "col" },
       React.createElement('div', { className: "d-flex align-items-center" },
-        React.createElement('div', { className: cn.join(' '), style },
+        React.createElement('div', { className: cn.flat().join(' '), style },
           React.createElement('span', {}, col.label)
         ),
         React.createElement('div', { className: "d-flex" },
@@ -240,7 +240,7 @@ export class HeaderCell extends React.Component {
               {
                 name: col.name + 'DropdownFilter',
                 label: React.createElement(Icons,
-                  { icon: icons.search, className: cnSearch.join(' ') }
+                  { icon: icons.search, className: cnSearch.flat().join(' ') }
                 ),
                 dropdownClasses: "dropdown-menu-end p-0",
                 dropdownClass: false
@@ -423,7 +423,7 @@ export default class Table extends Component {
     return {
       key: rowKey,
       ...rowProps,
-      className: cnRow.join(' ')
+      className: cnRow.flat().join(' ')
     };
   };
 
@@ -479,7 +479,7 @@ export default class Table extends Component {
       : React.createElement('td',
         {
           key: i + '-' + colName,
-          className: vertical ? [colName, 'row-' + (i - 1)].join(' ') : colName
+          className: vertical ? [colName, 'row-' + (i - 1)].flat().join(' ') : colName
         },
         cell
       )
@@ -544,7 +544,7 @@ export default class Table extends Component {
 
     // Renderización de la tabla con las estructuras de encabezado, cuerpo y pie de página
     return (
-      React.createElement('table', { className: cn.join(' ') },
+      React.createElement('table', { className: cn.flat().join(' ') },
         React.createElement('thead', {},
           header && (
             React.createElement('tr', {},

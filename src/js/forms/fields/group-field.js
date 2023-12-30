@@ -25,7 +25,7 @@ export default class GroupField extends Field {
     });
     const cn = ['input-group', groupClasses];
     const inputNode = (React.createElement('div',
-      { className: cn.join(' ') },
+      { className: cn.flat().join(' ') },
       start,
       React.createElement('input', { ...this.inputProps }),
       end

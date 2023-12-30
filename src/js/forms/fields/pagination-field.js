@@ -96,7 +96,7 @@ export default class PaginationField extends Field {
     const isFirst = this.isFirst();
     const isLast = this.isLast();
     return React.createElement('ul',
-      { className: cn.join(' ') },
+      { className: cn.flat().join(' ') },
       firstBtn && React.createElement('li',
         { className: 'page-item' + (isFirst ? ' disabled' : ''), title: texts.first },
         React.createElement('button',

@@ -56,7 +56,7 @@ export default class ModalButtonContainer extends Component {
     // TODO: no crear el modal hasta que se hace click!!!!
     return React.createElement(React.Fragment, {},
       React.createElement('button',
-        { className: cn.join(' '), type: "button", disabled, onClick: this.onToggleModal },
+        { className: cn.flat().join(' '), type: "button", disabled, onClick: this.onToggleModal },
         label || value
       ),
       showModal && React.createElement('div',
@@ -80,7 +80,7 @@ export default class ModalButtonContainer extends Component {
           }
         ),
         React.createElement('div',
-          { className: cnModal.join(' '), style: { zIndex: 1040 } },
+          { className: cnModal.flat().join(' '), style: { zIndex: 1040 } },
           React.createElement('div',
             { className: "modal-content" },
             children.reduce((childs, child) => {

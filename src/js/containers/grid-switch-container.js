@@ -16,11 +16,12 @@ export default class GridSwitchContainer extends GridContainer {
       arrChildren.push(original.splice(0, 2));
     }
     return arrChildren.map((pair, i) =>
+      !!pair &&
       React.createElement(React.Fragment,
         { key: i },
         this.grid(pair, (i % 2) && ['', 'order-sm-first'])
       )
-    );
+    ).filter(p => !!p);
   }
 
 }

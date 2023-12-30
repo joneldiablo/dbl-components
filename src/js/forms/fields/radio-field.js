@@ -53,12 +53,14 @@ export default class RadioField extends Field {
   }
 
   nodeOption = (itemRaw, i) => {
+    if (!itemRaw) return false;
+
     const { inline, name, labels: las, optionClasses, format, first } = this.props;
     const { value } = this.state;
     const modify = typeof this.props.mutations === 'function'
       && this.props.mutations(`${name}.${itemRaw.value}`, itemRaw);
     const item = Object.assign({}, itemRaw, modify || {});
-    if (!item.active) return false;
+    if (item.active === false) return false;
 
     const id = name + '-' + item.value;
     const labels = item.labels || las;
@@ -106,7 +108,7 @@ export default class RadioField extends Field {
     return React.createElement('div',
       {
         key: i + '-' + item.value,
-        className: cn.join(' '),
+        className: cn.flat().join(' '),
         style: { pointerEvents: readOnly ? 'none' : null }
       },
       first === 'label' && label(item.label),
@@ -120,7 +122,7 @@ export default class RadioField extends Field {
     return React.createElement(React.Fragment, {},
       label && this.labelNode,
       !labelInline && React.createElement('br'),
-      options.map(this.nodeOption),
+      options.map(this.nodeOption).filter(o => !!o),
       React.createElement(React.Fragment, {},
         this.errorMessageNode,
         this.messageNode,

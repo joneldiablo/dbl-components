@@ -127,7 +127,7 @@ export default class Trapezoid extends React.Component {
         this.drawSvg()
       )
     ];
-    let cn = [this.constructor.jsClass, className].join(' ');
+    let cn = [this.constructor.jsClass, className].flat().join(' ');
     return (React.createElement('div',
       { className: cn, style: style },
       React.createElement(FlexContainer,

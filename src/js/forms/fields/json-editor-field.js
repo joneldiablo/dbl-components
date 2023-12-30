@@ -19,7 +19,7 @@ export default class extends Field {
       id: name, name,
       /* pattern, placeholder,
       required, autoComplete, type: this.type,*/
-      value, className: cn.join(' '),
+      value, className: cn.flat().join(' '),
       /* min, max, step, noValidate, disabled,
       readOnly, */ ref: this.input,/*  dir, accept,
       multiple, maxLength, minLength,

@@ -128,10 +128,13 @@ export default class AutocompleteField extends Field {
   }
 
   mapOptions = (optRaw, i) => {
+    if (optRaw) return false;
+
     const modify = typeof this.props.mutations === 'function'
       && this.props.mutations(`${this.props.name}.${optRaw.value}`, optRaw);
     const opt = Object.assign({}, optRaw, modify || {});
-    if (!opt.active) return false;
+    if (opt.active === false) return false;
+
     return React.createElement('li',
       { key: opt.value, className: opt.disabled ? 'muted' : '' },
       React.createElement('span',
@@ -177,7 +180,7 @@ export default class AutocompleteField extends Field {
       l && loading,
       React.createElement('ul',
         {
-          className: cn.join(' '), ref: this.menuDropdown,
+          className: cn.flat().join(' '), ref: this.menuDropdown,
           style: {
             minWidth: inputRect.width || 200,
             left: inputRect.left,
@@ -187,7 +190,7 @@ export default class AutocompleteField extends Field {
             position: 'fixed',
           }
         },
-        options.map(this.mapOptions),
+        options.map(this.mapOptions).filter(o => !!o),
         more && React.createElement('li', {},
           React.createElement('span', { className: "dropdown-item text-wrap" }, '...')
         )

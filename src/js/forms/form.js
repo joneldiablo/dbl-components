@@ -149,7 +149,7 @@ export default class Form extends Component {
     const fieldProps = {
       key: i + '-' + field.name,
       ...field,
-      classes: cn.join(' ')
+      classes: cn.flat().join(' ')
     }
     if (field.fields && field.type !== 'Form') {
       fieldProps.children = field.fields.map(this.mapFields);

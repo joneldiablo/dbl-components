@@ -11,7 +11,7 @@ export default class FullscreenContainer extends React.Component {
 
   render() {
     let { className, style, overflow, children, gutter } = this.props;
-    let cn = [this.constructor.jsClass, className].join(' ');
+    let cn = [this.constructor.jsClass, className].flat().join(' ');
     let st = Object.assign({
       overflow,
       height: gutter ? `calc(100vh - ${gutter}px)` : '100vh'

@@ -11,14 +11,15 @@ export default class ListContainer extends Container {
     tag: 'ul'
   }
 
-  li(children = this.props.children) {
+  li(children = this.props.children, extraClasses) {
     const { liClasses } = this.props;
     return Array.isArray(children) && children.map((child, i) => {
       if (!child) return false;
-      const theChild =
-        (child.type === 'section' ? child.props.children.props : child.props);
-      const childLiClasses = theChild?.liClasses;
-      let licn = [i % 2 ? 'even' : 'odd', 'li-num-' + i, childLiClasses];
+      let licn = [i % 2 ? 'even' : 'odd', 'li-num-' + i];
+      const theChildConf = (!(child.props.style && child.props.style['--component-name'])
+      ? child : child.props.children).props;
+      const childLiClasses = theChildConf?.liClasses;
+      if (childLiClasses) licn.push(childLiClasses);
       // unir clases generales, si es un string se une  todas las columnas
       // si es un arreglo se une en su debido lugar y se repite la ultima clase 
       // si no coincide el número de columnas y clases
@@ -27,11 +28,18 @@ export default class ListContainer extends Container {
         licn.push(liClasses[i]);
       else if (Array.isArray(liClasses) && liClasses.length > 0)
         licn.push(liClasses[liClasses.length - 1]);
+
+      if (typeof extraClasses === 'string') licn.push(extraClasses);
+      else if (Array.isArray(extraClasses) && extraClasses[i])
+        licn.push(extraClasses[i]);
+      else if (Array.isArray(extraClasses) && extraClasses.length > 0)
+        licn.push(extraClasses[extraClasses.length - 1]);
+
       return React.createElement('li',
-        { className: licn.join(' '), key: i },
+        { className: licn.flat().join(' '), key: i },
         child
       )
-    });
+    }).filter(c => !!c);
   }
 
   content(children = this.props.children) {

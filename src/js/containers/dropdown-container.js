@@ -18,7 +18,7 @@ export default class DropdownContainer extends DropdownButtonContainer {
     return React.createElement(React.Fragment, {},
       React.createElement('span',
         {
-          className: cn.join(' '),
+          className: cn.flat().join(' '),
           'data-bs-toggle': "dropdown",
           disabled: disabled,
           id: this.trigger,

@@ -25,7 +25,7 @@ export default class Icons extends React.Component {
     const props = {
       icon,
       iconSet: is,
-      className: cn.join(' '),
+      className: cn.flat().join(' '),
       style,
       width,
       height,

@@ -79,7 +79,7 @@ export default class Field extends Component {
   extractString(obj) {
     if (typeof obj === 'string') return obj;
     else if (Array.isArray(obj)) {
-      return obj.map(e => this.extractString(e)).join(' ');
+      return obj.map(e => this.extractString(e)).flat().join(' ');
     } else if (React.isValidElement(obj)) {
       return this.extractString(obj.props.children);
     } else if (!obj) return '';
@@ -197,7 +197,7 @@ export default class Field extends Component {
       id: name, name, autoComplete: autocomplete || autoComplete,
       list: list1 || list, pattern, placeholder, hidden,
       required, type: this.type,
-      value, className: cn.join(' '),
+      value, className: cn.flat().join(' '),
       min, max, step, noValidate, disabled,
       readOnly, ref: this.input, dir, accept,
       multiple, maxLength, minLength,
@@ -216,7 +216,7 @@ export default class Field extends Component {
     const style = {};
     if (disabled) style['opacity'] = .9;
     const labelNode = React.createElement('label',
-      { className: cn.join(' '), htmlFor: name, style },
+      { className: cn.flat().join(' '), htmlFor: name, style },
       label ? label : placeholder,
       required && React.createElement('b',
         {
@@ -263,7 +263,7 @@ export default class Field extends Component {
     if (inline) cn.push('d-flex');
     if (placeholder && !label && floating) cn.push('form-floating');
     const wrapProps = {};
-    const className = cn.join(' ');
+    const className = cn.flat().join(' ');
     if (this.ContentWrap !== Fragment) wrapProps.className = className;
     return (React.createElement(React.Fragment, {},
       React.createElement(this.ContentWrap,

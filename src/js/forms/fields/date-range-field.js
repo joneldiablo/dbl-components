@@ -56,7 +56,7 @@ export default class DateRangeField extends Field {
     const inputNode = (React.createElement('div',
       { className: "input-group" },
       React.createElement('input', { ...inputProps, style, value: inputProps.value[0] }),
-      React.createElement('span', { className: cnMiddle.join(' ') }, '-'),
+      React.createElement('span', { className: cnMiddle.flat().join(' ') }, '-'),
       React.createElement('input',
         {
           ...inputProps,

@@ -57,7 +57,7 @@ export default class View extends Container {
         setClasses.delete('test-view-wrapper');
       }
       this.setState({
-        localClasses: [...setClasses].join(' ')
+        localClasses: [...setClasses].flat().join(' ')
       });
     }
   }

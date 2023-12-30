@@ -169,6 +169,7 @@ export default class FileField extends Field {
     const { value } = this.state;
     const links = (Array.isArray(value) ? value : [value])
       .map((l, i) => {
+        if (!l) return false;
         const nameFile = typeof l === 'string' ? l.split(/[\/\\]/).pop().split('?')[0] : l.name;
         if (this.jsonRender)
           return this.jsonRender.buildContent({
@@ -187,7 +188,7 @@ export default class FileField extends Field {
             nameFile
           )
         }
-      });
+      }).filter(l => !!l);
 
     const inputNode = React.createElement(React.Fragment, {},
       !(value && (disabled || readOnly))

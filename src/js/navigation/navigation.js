@@ -161,12 +161,16 @@ export default class Navigation extends Component {
   }
 
   link = (itemRaw, i, parent) => {
+    if (!itemRaw) return false;
+
     const { caretIcons, linkClasses, navLink, activeClassName } = this.props;
     const { carets, open } = this.state;
+
     const modify = typeof this.props.mutations === 'function'
       && this.props.mutations(`${this.props.name}.${itemRaw.value}`, item);
     const item = Object.assign({}, itemRaw, modify || {});
-    if (!item.active) return false;
+    if (item.active === false) return false;
+
     carets[item.name] = carets[item.name] || caretIcons[1];
     this.flatItems.push(item);
     item.parent = parent;
@@ -200,7 +204,7 @@ export default class Navigation extends Component {
       if (!!item.menu?.length) r.push('has-submenu');
       if (disabled) r.push('disabled');
       return r;
-    })().join(' ');
+    })().flat().join(' ');
     const propsLink = item.path ? {
       id: item.name + '-link', className,
       onClick: !disabled ? ((e) => [
@@ -262,7 +266,7 @@ export default class Navigation extends Component {
           },
           //renderear solo cuando este abierto
           this.state.carets[item.name] === this.props.caretIcons[0] &&
-          item.menu.map((m, i) => this.link(m, i, item))
+          item.menu.map((m, i) => this.link(m, i, item)).filter(m => !!m)
         )
       )
     ));
@@ -273,7 +277,7 @@ export default class Navigation extends Component {
   content(children = this.props.children) {
     this.flatItems = [];
     return (React.createElement(React.Fragment, {},
-      this.props.menu.map((m, i) => this.link(m, i)),
+      this.props.menu.map((m, i) => this.link(m, i)).filter(m => !!m),
       children
     ));
   }

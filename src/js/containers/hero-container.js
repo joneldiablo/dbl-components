@@ -39,8 +39,10 @@ export default class HeroContainer extends Container {
     }
     return (React.createElement(Swiper, { ...propsSwiper },
       children.map((slide, i) => {
-        const props = slide.type === 'section' && slide.props.className.includes('-section') ?
-          slide.props.children.props : slide.props;
+        if (!slide) return false;
+
+        const props = (!(slide.props.style && slide.props.style['--component-name'])
+          ? slide : slide.props.children).props;
         return React.createElement(SwiperSlide,
           {
             key: i, virtualIndex: i,
@@ -51,7 +53,7 @@ export default class HeroContainer extends Container {
           },
           slide
         )
-      })
+      }).filter(s => !!s)
     ));
   }
 

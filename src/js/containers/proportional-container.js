@@ -27,7 +27,7 @@ export default class ProportionalContainer extends Container {
     };
     return React.createElement(React.Fragment, {},
       React.createElement('div', { className: "space", style: { paddingBottom } }),
-      React.createElement('div', { className: ['inner', innerClasses].join(' '), style: st },
+      React.createElement('div', { className: ['inner', innerClasses].flat().join(' '), style: st },
         children
       )
     );

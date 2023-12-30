@@ -21,7 +21,7 @@ export default class BrandNavigation extends Navigation {
       alt: brandName,
       width: logoWidth,
       height: logoHeight,
-      className: ['mr-2', logoClasses].join(' '),
+      className: ['mr-2', logoClasses].flat().join(' '),
       style: logoStyle
     }
     return React.createElement(React.Fragment, {},

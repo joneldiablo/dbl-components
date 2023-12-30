@@ -36,20 +36,27 @@ export default class TabsContainer extends Container {
     const cn = ['nav', navClasses];
     return (React.createElement('nav', {},
       React.createElement('div',
-        { className: cn.join(' ') },
-        children.map((tab, i) => {
-          const { label, name, tabClasses: tabC } = (tab.type !== 'section' ? tab :
-            tab.props.children).props;
-          const cnTab = ['nav-link', tabClasses, tabC];
+        { className: cn.flat().join(' ') },
+        ...children.map((tab, i) => {
+          if (!tab) return false;
+
+          const { label, name, tabClasses: tabC } =
+            (!(tab.props.style && tab.props.style['--component-name'])
+              ? tab : tab.props.children).props;
+
+          const cnTab = ['nav-link'];
+          if (tabClasses) cnTab.push(tabClasses);
+          if (tabC) cnTab.push(tabC);
           if (index == i) cnTab.push('active');
+
           return React.createElement('span',
             {
-              key: i, className: cnTab.join(' '),
+              key: i, className: cnTab.flat().join(' '),
               index: i, name: name, onClick: this.onClickTab, style: { cursor: 'pointer' }
             },
             label
           )
-        })
+        }).filter(t => !!t)
       )
     ));
   }

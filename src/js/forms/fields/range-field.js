@@ -183,7 +183,7 @@ export default class RangeField extends Field {
           {
             type: this.props.type,
             [minMax]: this.state[minMax],
-            controlClasses: Array.from(controlClasses).join(' ')
+            controlClasses: Array.from(controlClasses).flat().join(' ')
           });
       }
       case `${this.props.name}-divisor`: {
@@ -193,7 +193,7 @@ export default class RangeField extends Field {
         else addDelete = 'delete';
         classes[addDelete]('border-0');
         return {
-          classes: Array.from(classes).join(' '),
+          classes: Array.from(classes).flat().join(' '),
           style: {
             backgroundColor: this.props.disabled ? 'var(--bs-secondary-bg)' : 'var(--bs-transparent-bg)'
           },

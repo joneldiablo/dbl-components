@@ -47,7 +47,7 @@ export default class HeaderNavigation extends Navigation {
       ),
       React.createElement('span', { className: item.icon && !item.dropdown ? 'd-none d-sm-inline' : '' }, item.label)
     );
-    return React.createElement('li', { key: item.name, className: cn.join(' ') },
+    return React.createElement('li', { key: item.name, className: cn.flat().join(' ') },
       item.menu ?
         React.createElement('a', { ref: this.dropdownInit, className: "nav-link dropdown-toggle", href: "#", id: item.name, role: "button", "data-toggle": "dropdown", "aria-expanded": "false" },
           content
@@ -64,7 +64,7 @@ export default class HeaderNavigation extends Navigation {
 
   render() {
     let { className, style, menu, label, icon, svg, img } = this.props;
-    let cn = [HeaderNavigation, 'shadow-sm sticky-top', className].join(' ');
+    let cn = [HeaderNavigation, 'shadow-sm sticky-top', className].flat().join(' ');
     return React.createElement('nav', { className: cn, style: style },
       React.createElement('div', { className: "py-2 position-relative" },
         React.createElement('div', { className: "position-absolute left-50 left-sm-0 top-50 translate-middle translatey-sm-middle mx-auto mx-sm-3" },

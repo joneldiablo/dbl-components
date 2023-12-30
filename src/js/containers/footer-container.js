@@ -12,8 +12,8 @@ export default class Footer extends React.Component {
     let { menu, copyright, textOverColor } = this.props;
     let className = [
       'navbar',
-      'navbar-' + textOverColor,
-    ].filter(c => c).join(' ');
+      !!textOverColor && 'navbar-' + textOverColor,
+    ].filter(c => !!c).flat().join(' ');
     return React.createElement('footer', {},
       menu
         ? React.createElement(React.Fragment, {},

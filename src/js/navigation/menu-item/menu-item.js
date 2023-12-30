@@ -41,7 +41,7 @@ export default class MenuItem extends Component {
       case name + 'Badge':
         const classes =
           [this.props.rules.$classesBadge[1][0], this.props.classes.badge,
-          (this.props.activeLabel ? ' top-0 end-0' : ' top-0 start-0')].join(' ');
+          (this.props.activeLabel ? ' top-0 end-0' : ' top-0 start-0')].flat().join(' ');
         const badgeSize = !this.props.activeLabel ? (.6 * this.props.iconSize) : 22;
         return {
           active: !!this.props.badge,

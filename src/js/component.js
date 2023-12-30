@@ -61,7 +61,7 @@ export default class Component extends React.Component {
       else localClasses.add(c);
     });
     this.setState({
-      localClasses: Array.from(localClasses).join(' ')
+      localClasses: Array.from(localClasses).flat().join(' ')
     });
   }
 
@@ -69,7 +69,7 @@ export default class Component extends React.Component {
     const [localClasses, setClasses] = this.setClasses(classes);
     setClasses.forEach(localClasses.add.bind(localClasses));
     this.setState({
-      localClasses: Array.from(localClasses).join(' ')
+      localClasses: Array.from(localClasses).flat().join(' ')
     });
   }
 
@@ -77,7 +77,7 @@ export default class Component extends React.Component {
     const [localClasses, setClasses] = this.setClasses(classes);
     setClasses.forEach(localClasses.delete.bind(localClasses));
     this.setState({
-      localClasses: Array.from(localClasses).join(' ')
+      localClasses: Array.from(localClasses).flat().join(' ')
     });
   }
 
@@ -107,7 +107,7 @@ export default class Component extends React.Component {
     const Tag = tag || this.tag;
     return (active
       ? React.createElement(Tag, {
-        className: cn.join(' '),
+        className: cn.flat().join(' '),
         style: s, ref: this.ref,
         ...this.eventHandlers,
         ...this.componentProps

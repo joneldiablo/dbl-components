@@ -29,7 +29,7 @@ export default class DropFileField extends Field {
       valueInput: value,
       files: filesArr,
       error,
-      localClasses: Array.from(lc).join(' ')
+      localClasses: Array.from(lc).flat().join(' ')
     }, () => this.returnData(filesArr));
   }
 
@@ -41,7 +41,7 @@ export default class DropFileField extends Field {
     lc.add('border-danger');
     this.setState({
       error: true,
-      localClasses: Array.from(lc).join(' ')
+      localClasses: Array.from(lc).flat().join(' ')
     });
   }
 
@@ -51,14 +51,14 @@ export default class DropFileField extends Field {
     lc.add('active');
     lc.delete('filled');
     lc.delete('border-danger');
-    this.setState({ localClasses: Array.from(lc).join(' ') });
+    this.setState({ localClasses: Array.from(lc).flat().join(' ') });
   }
 
   onDragleave = () => {
     const { localClasses } = this.state;
     const lc = new Set(localClasses.split(' '));
     lc.delete('active');
-    this.setState({ localClasses: Array.from(lc).join(' ') });
+    this.setState({ localClasses: Array.from(lc).flat().join(' ') });
   }
 
   onUpdate(update) {
@@ -82,7 +82,7 @@ export default class DropFileField extends Field {
       }
       newState.files = this.props.default || [];
     }
-    newState.localClasses = Array.from(lc).join(' ');
+    newState.localClasses = Array.from(lc).flat().join(' ');
     this.setState(newState);
     super.onUpdate(update);
   }

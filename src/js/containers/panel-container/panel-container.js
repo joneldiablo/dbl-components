@@ -198,7 +198,7 @@ export default class PanelContainer extends Component {
   }
 
   content(children = this.props.children) {
-    this.classes = Array.from(this.state.classSet).join(' ');
+    this.classes = Array.from(this.state.classSet).flat().join(' ');
     return super.content(children);
   }
 

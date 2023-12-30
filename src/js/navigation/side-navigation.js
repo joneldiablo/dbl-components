@@ -27,9 +27,10 @@ export default class SideNavigation extends React.Component {
   render() {
     let { menu, iconSize, className, style } = this.props;
     let { stick, icon } = this.state;
-    let cn = [this.constructor.jsClass, (stick ? 'stick' : ''), className].join(' ');
+    let cn = [this.constructor.jsClass, className];
+    if (stick) cn.push('stick');
     return (React.createElement('div',
-      { className: cn, style },
+      { className: cn.flat().join(' '), style },
       React.createElement('ul',
         { className: "nav flex-column" },
         React.createElement('li', { className: "nav-item" },

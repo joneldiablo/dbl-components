@@ -48,9 +48,10 @@ export default class ServiceListNavigation extends React.Component {
   render() {
     let { iconDefault, iconSize, iconFrom, labelFrom, pathFrom, className, style } = this.props;
     let { menu, stick, icon } = this.state;
-    let cn = [this.constructor.jsClass, (stick ? 'stick' : ''), className].join(' ');
+    let cn = [this.constructor.jsClass, className];
+    if (stick) cn.push('stick');
     return React.createElement('div',
-      { className: cn, style },
+      { className: cn.flat().join(' '), style },
       React.createElement('ul',
         { className: "nav flex-column" },
         React.createElement('li', { className: "nav-item" },

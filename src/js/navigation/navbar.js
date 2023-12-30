@@ -30,7 +30,7 @@ export default class Navbar extends React.Component {
       background && 'bg-' + background,
       'navbar-expand-' + expand,
       shadow && (typeof shadow === 'string' ? 'shadow-' + shadow : 'shadow')
-    ].filter(c => c).join(' ');
+    ].filter(c => !!c).flat().join(' ');
 
     const menuItemFunc = (item, i) =>
       item && React.createElement(NavLink,
@@ -46,7 +46,7 @@ export default class Navbar extends React.Component {
       if (!logo && !site) return null;
       let className = ['navbar-brand',
         visible && `m-0 d-none d-${visible}-block`,
-        hidden && `d-${hidden}-none`].filter(c => c).join(' ');
+        hidden && `d-${hidden}-none`].filter(c => c).flat().join(' ');
       return React.createElement(NavLink,
         { className, to: "/" },
         React.createElement('img', { src: logo, alt: site, height: logoHeight }),

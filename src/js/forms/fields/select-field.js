@@ -36,17 +36,20 @@ export default class SelectField extends Field {
         '──────────'
       ),
       Array.isArray(options) && options.map((opt) => {
+        if (!opt) return false;
+
         const modify = typeof this.props.mutations === 'function'
           && this.props.mutations(`${this.props.name}.${opt.value}`, opt);
         const { active, disabled, label, value, title } = Object.assign({}, opt, modify || {});
-        if (!active) return false;
+        if (active === false) return false;
+
         let propsOpt = {
           value,
           disabled,
           title
         }
         return React.createElement('option', { key: value, ...propsOpt }, label)
-      })
+      }).filter(o => !!o)
     ));
     return (inputNode);
   }

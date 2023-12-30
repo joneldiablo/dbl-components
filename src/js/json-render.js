@@ -110,8 +110,8 @@ export default class JsonRender {
   sections(sr, i) {
     const m = typeof this.mutations === 'function' && this.mutations(sr.name, sr);
     const sectionRaw = Object.assign({}, sr, m || {});
+    if (sectionRaw.active === false) return false;
 
-    if (typeof sectionRaw.active === 'boolean' && !sectionRaw.active) return false;
     const { component: componentName, content, placeholder,
       label, message, errorMessage, managerName, wrapperClasses, wrapperStyles = {}, ...section } = sectionRaw;
     const { location, match, childrenIn = this.childrenIn, history, children } = this.props;

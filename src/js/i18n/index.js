@@ -81,7 +81,7 @@ class I18n {
   plainText(obj, context) {
     if (typeof obj === 'string') return translate(obj, context);
     else if (Array.isArray(obj)) {
-      return obj.map(e => this.plainText(e)).join(' ');
+      return obj.map(e => this.plainText(e)).flat().join(' ');
     } else if (React.isValidElement(obj)) {
       return this.plainText(obj.props.children);
     } else return obj.toString();

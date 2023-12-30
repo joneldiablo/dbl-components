@@ -36,7 +36,7 @@ export default class Group extends Component {
     const fieldProps = {
       key: i + '-' + field.name,
       ...field,
-      classes: cn.join(' ')
+      classes: cn.flat().join(' ')
     }
     if (field.fields) {
       fieldProps.children = field.fields.map(this.mapFields);

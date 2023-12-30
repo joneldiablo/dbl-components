@@ -16,7 +16,7 @@ export default class Svg extends React.Component {
     const cn = [this.constructor.jsClass, className];
     if (inline) cn.push('icon-inline');
     return React.createElement('svg',
-      { className: cn.join(' '), style, ...props },
+      { className: cn.flat().join(' '), style, ...props },
       React.createElement('use', { href })
     );
   }

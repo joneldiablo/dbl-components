@@ -47,7 +47,7 @@ export default class extends ComplexComponent {
         width, height,
         breakpoint: this.breakpoint
       });
-      this.setState({ localClasses: [this.breakpoint, 'animate'].join(' ') });
+      this.setState({ localClasses: [this.breakpoint, 'animate'].flat().join(' ') });
     }, 200);
   }
 

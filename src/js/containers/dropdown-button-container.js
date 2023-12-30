@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom";
 import eventHandler from "../functions/event-handler";
 import Component from "../component";
 import Icons from "../media/icons";
+import JsonRender from "../json-render";
 
 export class DropdownItem extends Component {
 
@@ -64,18 +65,18 @@ export class DropdownItem extends Component {
   }
 
   content(children = this.props.children) {
-    const { label, icon, value, badgeClasses } = this.props;
+    const { label, icon, badge, badgeClasses } = this.props;
 
     return React.createElement(React.Fragment, {},
       icon && React.createElement(React.Fragment, {}, React.createElement(Icons, { icon: icon }), '&nbsp;'),
       label,
-      typeof value === 'number' && React.createElement(React.Fragment, {},
+      badge && React.createElement(React.Fragment, {},
         '&nbsp;',
-        React.createElement('small', { className: ['badge ms-auto', badgeClasses].join(' ') },
-          value
-        ),
-        children
-      )
+        React.createElement('small', { className: ['badge ms-auto', badgeClasses].flat().join(' ') },
+          badge
+        )
+      ),
+      children
     )
   }
 }
@@ -105,6 +106,8 @@ export default class DropdownButtonContainer extends Component {
     Object.assign(this.state, {
       open: false
     });
+    const { mutations, ...propsJ } = props;
+    this.jsonRender = new JsonRender(propsJ, mutations);
   }
 
   componentDidMount() {
@@ -176,21 +179,33 @@ export default class DropdownButtonContainer extends Component {
 
   dropdownRender(children) {
     const { menu, allowClose, itemClasses, dropdownClasses } = this.props;
-    const cn = ['dropdown-menu', dropdownClasses].join(' ');
+    const cn = ['dropdown-menu', dropdownClasses].flat().join(' ');
+    const menuBuilded = this.state.open && Array.isArray(menu)
+      ? Object.entries(menu).map(([key, item]) => {
+        if (React.isValidElement(item)) return item;
+        item.name = item.name || `${this.props.name}.${key}`;
+
+        if (item === 'divider') item = {
+          name: 'divider.' + key,
+          tag: 'div',
+          divider: true,
+          classes: "dropdown-divider"
+        };
+
+        return this.jsonRender.buildContent({
+          classes: itemClasses,//si item trae classes que se sobreescriban
+          tag: 'div',
+          ...item,
+          badge: this.jsonRender.buildContent(item.badge),
+          component: 'DropdownItem',
+        });
+      }) : [];
     return React.createElement('div',
       {
         className: cn, style: { minWidth: '100%' },
         onClick: allowClose ? null : (e) => e.stopPropagation(), 'aria-labelledby': this.trigger
       },
-      this.state.open &&
-      menu?.map((item, i) => {
-        if (item === 'divider')
-          return React.createElement('div', { className: "dropdown-divider", key: item.name || i });
-        item.classes = item.classes || itemClasses;
-        return (React.isValidElement(item)
-          ? React.createElement(React.Fragment, { key: item.name || i }, item)
-          : React.createElement(DropdownItem, { ...item, key: item.name || i }))
-      }),
+      ...menuBuilded,
       this.state.open && children
     );
   }
@@ -202,7 +217,7 @@ export default class DropdownButtonContainer extends Component {
     return React.createElement(React.Fragment, {},
       React.createElement('button',
         {
-          className: cn.join(' '),
+          className: cn.flat().join(' '),
           'data-bs-toggle': "dropdown",
           disabled,
           id: this.trigger,

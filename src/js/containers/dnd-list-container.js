@@ -91,22 +91,20 @@ export default class DndListContainer extends Component {
                 ref: droppableProvided.innerRef,
                 style: this.props.getListStyle(droppableSnapshot.isDraggingOver)
               },
-              this.state.items.map((item, index) => (
-                React.createElement(Draggable,
-                  { key: item.key, draggableId: item.key, index: index },
-                  (draggableProvided, draggableSnapshot) => (
-                    React.createElement('div',
-                      {
-                        ref: draggableProvided.innerRef,
-                        ...draggableProvided.draggableProps,
-                        ...draggableProvided.dragHandleProps,
-                        style: this.props.getItemStyle(
-                          draggableSnapshot.isDragging,
-                          draggableProvided.draggableProps.style,
-                        )
-                      },
-                      item
-                    )
+              this.state.items.map((item, index) => React.createElement(Draggable,
+                { key: item.key, draggableId: item.key, index: index },
+                (draggableProvided, draggableSnapshot) => (
+                  React.createElement('div',
+                    {
+                      ref: draggableProvided.innerRef,
+                      ...draggableProvided.draggableProps,
+                      ...draggableProvided.dragHandleProps,
+                      style: this.props.getItemStyle(
+                        draggableSnapshot.isDragging,
+                        draggableProvided.draggableProps.style,
+                      )
+                    },
+                    item
                   )
                 )
               )),

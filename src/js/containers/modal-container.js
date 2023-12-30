@@ -99,7 +99,7 @@ export default class ModalContainer extends Component {
         tabIndex: "-1"
       },
       React.createElement('div',
-        { className: cnModal.join(' ') },
+        { className: cnModal.flat().join(' ') },
         React.createElement('div',
           { className: "modal-content" },
           showClose && React.createElement('button',

@@ -62,7 +62,7 @@ export default class extends Component {
     if (prevProps.showClose !== this.props.showClose) {
       this.setClasses[this.props.showClose ? 'add' : 'delete']('alert-dismissible');
     }
-    return Array.from(this.setClasses).join(' ');
+    return Array.from(this.setClasses).flat().join(' ');
   }
 
   mutations(sn, section) {

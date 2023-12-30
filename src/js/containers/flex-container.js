@@ -18,14 +18,14 @@ export default class FlexContainer extends React.Component {
     else if (Array.isArray(colClassNames) && colClassNames.length > 0)
       colcn.push(colClassNames[colClassNames.length - 1]);
 
-    return React.createElement('div', { className: colcn.join(' '), key: i },
+    return React.createElement('div', { className: colcn.flat().join(' '), key: i },
       child
     );
   }
 
   render() {
     let { className, style, children } = this.props;
-    let cn = [this.constructor.jsClass, className, 'd-flex'].join(' ');
+    let cn = [this.constructor.jsClass, className, 'd-flex'].flat().join(' ');
     return React.createElement('div', { className: cn, style },
       Array.isArray(children) && children.map(this.column)
     );

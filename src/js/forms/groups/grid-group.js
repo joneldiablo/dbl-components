@@ -15,7 +15,7 @@ export default class GridGroup extends Group {
       colcn.push(colClasses[i]);
     else if (Array.isArray(colClasses) && colClasses.length > 0)
       colcn.push(colClasses[colClasses.length - 1]);
-    return colcn.join(' ');
+    return colcn.flat().join(' ');
   }
 
   mapFields(field, i) {
@@ -24,7 +24,7 @@ export default class GridGroup extends Group {
       this.columnClasses(colClasses, i),
       field.colClasses
     ];
-    return React.createElement('div', { key: i, className: cnc.join(' ') },
+    return React.createElement('div', { key: i, className: cnc.flat().join(' ') },
       super.mapFields(field, i)
     );
   }
@@ -36,7 +36,7 @@ export default class GridGroup extends Group {
       fieldNode.props.colClasses
     ];
     return React.createElement('div',
-      { key: i, className: cnc.join(' ') },
+      { key: i, className: cnc.flat().join(' ') },
       fieldNode
     );
   }
@@ -47,7 +47,7 @@ export default class GridGroup extends Group {
     return React.createElement(React.Fragment, {},
       label && React.createElement('label',
         { className: labelClasses }, label),
-      React.createElement('div', { className: rcn.join(' ') },
+      React.createElement('div', { className: rcn.flat().join(' ') },
         fields && fields.map(this.mapFields),
         children && children.map(this.mapChildren)
       )
