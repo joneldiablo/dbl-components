@@ -11,12 +11,12 @@ export default class Component extends React.Component {
     classes: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.array]),
     style: PropTypes.object,
     active: PropTypes.bool
-  }
+  };
   static defaultProps = {
     classes: '',
     style: {},
     active: true
-  }
+  };
 
   tag = 'div';
   classes = '';

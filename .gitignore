@@ -3,3 +3,4 @@ lib
 yarn-error.log
 .fuse_hidden*
 dist
+tmp/*

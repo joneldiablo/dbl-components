@@ -27,7 +27,7 @@ export default class FileField extends Field {
       this.state.localClasses = 'cursor-pointer';
     if (props.mutations) {
       const { mutations, ...propsSub } = props;
-      this.josnRender = new JsonRender(propsSub, mutations);
+      this.jsonRender = new JsonRender(propsSub, mutations);
     }
   }
 
