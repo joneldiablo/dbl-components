@@ -1,86 +1,76 @@
+#!/usr/bin/env node
 const fs = require('fs');
-const parser = require('@babel/parser');
-const traverse = require('@babel/traverse').default;
-const generate = require('@babel/generator').default;
+const yargs = require('yargs');
+const { addProptypes } = require('../utils/add-proptypes'); // Reemplaza con la ruta correcta a tu módulo
 
-// Ruta del archivo que deseas modificar
-const filePath = 'src/js/component.js';
+// Define los argumentos de la línea de comandos utilizando yargs
+const argv = yargs
+  .usage('Usage: $0 --file <file> --class <class> --props <props>')
+  .option('file', {
+    alias: 'f',
+    describe: 'Ruta del archivo que deseas modificar',
+    demandOption: false,
+  })
+  .option('className', {
+    alias: 'c',
+    describe: 'Nombre de la clase en la que deseas agregar propTypes',
+    demandOption: false,
+  })
+  .option('props', {
+    alias: 'p',
+    describe: 'Lista de props separadas por comas',
+    demandOption: false,
+  })
+  .option('componentList', {
+    alias: 'l',
+    describe: 'Listado de componentes en archivo json',
+    demandOption: false,
+  })
+  .help()
+  .argv;
 
-let code = fs.readFileSync(filePath, 'utf-8');
+const one = (className, { filePath, props }) => {
 
-const ast = parser.parse(code, {
-  sourceType: 'module',
-  plugins: ['jsx'],
-});
+  // Lee el contenido del archivo
+  let code = fs.readFileSync(filePath, 'utf-8');
 
-// Utiliza babel-traverse para buscar la declaración de propTypes
-const prevs = [];
-let propTypesNode = null;
-let lineSet;
+  // Llama a la función addProptypes para modificar el código
+  code = addProptypes(className, code, props);
 
-traverse(ast, {
-  ClassProperty(path) {
-    const node = path.node;
-    if (
-      node.static &&
-      node.key.type === 'Identifier' &&
-      node.key.name === 'propTypes'
-    ) {
-      propTypesNode = node;
-      lineSet = node.loc.end.line - 1;
-      path.traverse({
-        VariableDeclarator(innerPath) {
-          const { node } = innerPath;
-          console.log(node);
-          prevs.push(node.key.name);
-        }
-      });
-    }
-  },
-});
-
-if (!propTypesNode) {
-
-  const newPropTypes = `
-  static propTypes = {
-  }`;
-  let linePropTypes;
-  // Encuentra la clase y agrega la declaración de propTypes debajo de ella
-  traverse(ast, {
-    ClassDeclaration(path) {
-      const { node } = path;
-      linePropTypes = node.loc.start.line;
-      lineSet = node.loc.start.line + 2;
-    },
-  });
-
-  const codeArr = code.split('\n');
-  codeArr.splice(linePropTypes, 0, newPropTypes);
-  code = codeArr.join('\n');
+  // Sobrescribe el archivo con el código modificado
   fs.writeFileSync(filePath, code, 'utf-8');
+
+  return true;
 }
 
+// Función principal
+const main = async ({ file, className, props, componentList }) => {
+  if (componentList) {
+    const list = JSON.parse(fs.readFileSync(componentList, 'utf-8'));
+    return Object.entries(list.components)
+      .reduce((redux, [className, componentData]) => {
+        try {
+          redux[className] = one(className, componentData);
+        } catch (error) {
+          redux[className] = error;
+        }
+        return redux;
+      }, {});
+  } else {
+    return one(className, {
+      filePath: file,
+      props: props.split(',').map(p => p.trim())
+    });
+  }
+};
 
-const data = {
-  "filePath": "src/js/component.js",
-  "props": [
-    "active",
-    "classes",
-    "name",
-    "style",
-    "tag"
-  ]
-}
-
-const newProps = data.props
-  .filter(p => !prevs.includes(p))
-  .map(p => `    ${p}: PropTypes.any`).join(',\n');
-
-const codeArr = code.split('\n');
-codeArr.splice(lineSet, 0, newProps);
-if (!(codeArr[lineSet - 1].match(/(^|[\{,])\s*$/)))
-  codeArr[lineSet - 1] += ',';
-code = codeArr.join('\n');
-fs.writeFileSync(filePath, code, 'utf-8');
-
-console.log('LINE AT', prevs, newProps);
+// Ejecuta la función principal
+main(argv).then(r => {
+  console.log('done');
+  console.log(r);
+  process.exit();
+}).catch((error) => {
+  console.error('error');
+  console.error('Ocurrió un error inesperado:', error.message);
+  process.exit(1);
+});
