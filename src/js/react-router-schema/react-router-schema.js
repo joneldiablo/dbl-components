@@ -39,6 +39,7 @@ const schemaPropTypes = {
   routes: routePropTypes.routes,
   redirect: PropTypes.func,
   defaultController: PropTypes.func,
+  history: PropTypes.any
 }
 
 const schemaDefaultProps = {

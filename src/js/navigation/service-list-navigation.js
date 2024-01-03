@@ -1,9 +1,22 @@
+import PropTypes from 'prop-types';
 import React from "react";
 import { NavLink } from "react-router-dom";
 import urlJoin from "url-join";
 import Icons from "../media/icons";
 
 export default class ServiceListNavigation extends React.Component {
+
+  static propTypes = {
+    className: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
+    classes: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
+    iconDefault: PropTypes.string,
+    iconFrom: PropTypes.string,
+    iconSize: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    labelFrom: PropTypes.string,
+    pathFrom: PropTypes.string,
+    style: PropTypes.object,
+    url: PropTypes.string,
+  }
 
   static jsClass = 'ServiceListNavigation';
   static defaultProps = {
@@ -72,7 +85,7 @@ export default class ServiceListNavigation extends React.Component {
             )
           )
         ),
-        Array.isArray(menu) && menu.map((item, i) =>
+        Object.entries(menu).map(([i, item]) =>
           React.createElement('li',
             { className: "nav-item", key: i },
             React.createElement(NavLink,

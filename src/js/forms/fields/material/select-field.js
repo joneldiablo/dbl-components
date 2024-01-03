@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from "react";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -7,6 +8,19 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import Field from "./field";
 
 export default class SelectField extends Field {
+
+  static propTypes = {
+    ValueTemplate: PropTypes.any,
+    disabled: PropTypes.any,
+    fullWidth: PropTypes.any,
+    info: PropTypes.any,
+    label: PropTypes.any,
+    name: PropTypes.any,
+    options: PropTypes.any,
+    placeholder: PropTypes.any,
+    required: PropTypes.any,
+    variant: PropTypes.any
+  }
 
   static defaultProps = {
     ...Field.defaultProps,

@@ -1,8 +1,17 @@
 import React from "react";
+
+
 import Field from "./field";
+
 export default class DropFileField extends Field {
 
   static jsClass = 'DropFileField';
+  static propTypes = {
+    ...Field.propTypes,
+    onDragOver: PropTypes.func,
+    onDragLeave: PropTypes.func,
+    onDrop: PropTypes.func
+  }
 
   constructor(props) {
     super(props);

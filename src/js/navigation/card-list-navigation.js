@@ -1,9 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+
 import { assets } from "../functions";
 import Icons from "../media/icons";
 
 export default class NavListCards extends React.Component {
+
+  static propTypes = {
+    menu: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
+  }
 
   static jsClass = 'NavListCards';
   static defaultProps = {
@@ -26,7 +32,7 @@ export default class NavListCards extends React.Component {
     return (
       React.createElement('div', { className: "container-fluid p-4" },
         React.createElement('div', { className: "row gx-3" },
-          menu.map((item, i) =>
+          Object.entries(menu).map(([i, item]) =>
             React.createElement('div', { className: "col-12 col-sm-auto", key: i },
               React.createElement('div', { className: "card", style: { backgroundImage: `url(${assets('images', item.image)})` } },
                 React.createElement('div', { className: "card-body" },
@@ -52,7 +58,7 @@ export default class NavListCards extends React.Component {
     let { menu } = this.props;
     return (
       React.createElement('ul', { className: "list-group list-group-flush" },
-        menu.map((item, i) => React.createElement('li', { key: i, className: "list-group-item" },
+        Object.entries(menu).map(([i, item]) => React.createElement('li', { key: i, className: "list-group-item" },
           React.createElement(Link, { to: item.path, className: "list-group-item-action text-decoration-none" },
             React.createElement(Icons, { icon: item.icon, className: "mr-2" }),
             item.label,

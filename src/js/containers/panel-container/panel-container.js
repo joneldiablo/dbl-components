@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 import eventHandler from "../../functions/event-handler";
 import Component, { nameSuffixes } from "../../complex-component";
@@ -6,6 +7,18 @@ import Component, { nameSuffixes } from "../../complex-component";
 import schema from "./panel-schema.json";
 
 export default class PanelContainer extends Component {
+
+  static propTypes = {
+    ...Component.propTypes,
+    breakpoint: PropTypes.string,
+    contentTop: PropTypes.object,
+    icon: PropTypes.string,
+    iconSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    link: PropTypes.string,
+    logo: PropTypes.string,
+    type: PropTypes.oneOf(['push', 'reveal']),
+    width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  }
 
   static jsClass = 'PanelContainer';
   static defaultProps = {

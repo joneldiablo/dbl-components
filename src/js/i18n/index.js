@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from "prop-types";
+
 import deepMerge from "../functions/deep-merge";
 import SL from "./select-language";
 
@@ -13,6 +15,13 @@ const translate = (value, context, lang = localStorage.getItem('lang')) => {
 }
 
 class Text extends React.Component {
+
+  static propTypes = {
+    lang: PropTypes.string,
+    children: PropTypes.node,
+    value: PropTypes.string,
+    context: PropTypes.string,
+  }
 
   static defaultProps = {
     value: null,

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from "react";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -8,6 +9,18 @@ import Chip from "@material-ui/core/Chip";
 import Field from "./Field";
 
 export default class SelectBadgesField extends Field {
+
+  static propTypes = {
+    options: PropTypes.any,
+    disabled: PropTypes.any,
+    fullWidth: PropTypes.any,
+    info: PropTypes.any,
+    label: PropTypes.any,
+    name: PropTypes.any,
+    placeholder: PropTypes.any,
+    required: PropTypes.any,
+    variant: PropTypes.any
+  }
 
   static defaultProps = {
     ...Field.defaultProps,

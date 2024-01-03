@@ -9,36 +9,39 @@ export default class Field extends Component {
   static jsClass = 'Field';
   static propTypes = {
     ...Component.propTypes,
+    accept: PropTypes.string,
     autoComplete: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
     checkValidity: PropTypes.func,
-    controlClasses: PropTypes.string,
+    controlClasses: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
     default: PropTypes.any,
     disabled: PropTypes.bool,
-    readOnly: PropTypes.bool,
     errorMessage: PropTypes.oneOfType([PropTypes.string, PropTypes.bool, PropTypes.node]),
     first: PropTypes.oneOf(['label', 'control']),
+    floating: PropTypes.bool,
+    hidden: PropTypes.bool,
     inline: PropTypes.bool,
+    inlineControlClasses: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
     label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-    labelClasses: PropTypes.string,
+    labelClasses: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
     max: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    message: PropTypes.oneOfType([PropTypes.string, PropTypes.bool, PropTypes.node]),
+    messageClasses: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
     min: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    multiple: PropTypes.bool,
     noValidate: PropTypes.bool,
-    options: PropTypes.arrayOf(PropTypes.shape({
-      label: PropTypes.oneOfType([PropTypes.string, PropTypes.node, PropTypes.bool]),
-      value: PropTypes.any,
-      disabled: PropTypes.bool,
-      divider: PropTypes.bool
-    })),
     pattern: PropTypes.string,
     placeholder: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+    readOnly: PropTypes.bool,
     required: PropTypes.bool,
     step: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     type: PropTypes.string.isRequired,
     value: PropTypes.any,
-    accept: PropTypes.string,
-    message: PropTypes.oneOfType([PropTypes.string, PropTypes.bool, PropTypes.node]),
-    floating: PropTypes.bool,
-    hidden: PropTypes.bool
+    options: PropTypes.arrayOf(PropTypes.shape({
+      disabled: PropTypes.bool,
+      divider: PropTypes.bool,
+      label: PropTypes.oneOfType([PropTypes.string, PropTypes.node, PropTypes.bool]),
+      value: PropTypes.any,
+    })),
   }
   static defaultProps = {
     ...Component.defaultProps,
@@ -184,10 +187,9 @@ export default class Field extends Component {
       placeholder: prePlaceholder, step, noValidate, multiple, autoComplete,
       min, max, pattern, dir, _propsControl = {}, hidden } = this.props;
     const { value, error } = this.state;
-    const cn = [
-      'form-control',
-      controlClasses, error ? 'is-invalid' : ''
-    ];
+    const cn = ['form-control'];
+    if (controlClasses) cn.push(controlClasses);
+    if (error) cn.push('is-invalid');
     if (autoComplete === false) {
       var autocomplete = 'off';
       var list1 = 'autocompleteOff';

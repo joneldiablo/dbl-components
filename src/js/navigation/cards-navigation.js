@@ -1,9 +1,16 @@
+import PropTypes from 'prop-types';
 import React from "react";
 import { Link } from "react-router-dom";
+
 import { randomS4 } from "../functions";
 import Icons from "../media/icons";
 
 export default class CardsNavigation extends React.Component {
+
+  static propTypes = {
+    closestId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    menu: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
+  }
 
   static jsClass = 'CardsNavigation';
   static defaultProps = {
@@ -48,14 +55,16 @@ export default class CardsNavigation extends React.Component {
     let rowClassName = 'row g-3 ' + this.state.rowCols;
     return React.createElement('div', { className: "container-fluid p-4 nav-cards" },
       React.createElement('div', { className: rowClassName },
-        menu.map((item, i) =>
+        Object.entries(menu).map(([i, item]) =>
           React.createElement('div', { className: "", key: i },
             React.createElement('div', { className: "card h-100 shadow-hover" },
-              item.image ? React.createElement('img', { src: item.image, className: "card-img", style: {
-                opacity: .3,
-                objectFit: 'cover',
-                minHeight: 150
-              } }) : React.createElement('div', { className: "card-img", style: { minHeight: 150 } }),
+              item.image ? React.createElement('img', {
+                src: item.image, className: "card-img", style: {
+                  opacity: .3,
+                  objectFit: 'cover',
+                  minHeight: 150
+                }
+              }) : React.createElement('div', { className: "card-img", style: { minHeight: 150 } }),
               React.createElement('div', { className: "card-img-overlay" },
                 React.createElement('div', { className: "card-body nav-card-body" },
                   React.createElement('h5', { className: "card-title nav-item" },

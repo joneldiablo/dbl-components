@@ -1,14 +1,15 @@
+import PropTypes from 'prop-types';
 import React from "react";
 import moment from "moment";
 
 import eventHandler from "../functions/event-handler";
 import deepMerge from "../functions/deep-merge";
-import Component from "../component";
 import fields from "../forms/fields";
 import Icons from "../media/icons";
 import JsonRender from "../json-render";
 import DropdownContainer from "../containers/dropdown-container";
 import Action from "../actions/action";
+import Component from "../component";
 
 /**
  * @typedef {Object} FormatOptions
@@ -137,6 +138,15 @@ export const addFormatTemplates = (newTemplates = {}) => {
  */
 export class HeaderCell extends React.Component {
 
+  static propTypes = {
+    classes: PropTypes.any,
+    col: PropTypes.any,
+    filterPos: PropTypes.any,
+    headerClasses: PropTypes.any,
+    icons: PropTypes.any,
+    orderable: PropTypes.any
+  }
+
   static jsClass = 'HeaderColumn';
   static defaultProps = {
     filterPos: 'down'
@@ -229,9 +239,9 @@ export class HeaderCell extends React.Component {
     const hClasses = ["align-middle", col.name];
     if (headerClasses) hClasses.push(headerClasses);
     return React.createElement('th',
-      { className: hClasses.flat().join(' '), scope: "col" },
+      { className: hClasses.filter(c => !!c).flat().join(' '), scope: "col" },
       React.createElement('div', { className: "d-flex align-items-center" },
-        React.createElement('div', { className: cn.flat().join(' '), style },
+        React.createElement('div', { className: cn.filter(c => !!c).flat().join(' '), style },
           React.createElement('span', {}, col.label)
         ),
         React.createElement('div', { className: "d-flex" },
@@ -240,7 +250,7 @@ export class HeaderCell extends React.Component {
               {
                 name: col.name + 'DropdownFilter',
                 label: React.createElement(Icons,
-                  { icon: icons.search, className: cnSearch.flat().join(' ') }
+                  { icon: icons.search, className: cnSearch.filter(c => !!c).flat().join(' ') }
                 ),
                 dropdownClasses: "dropdown-menu-end p-0",
                 dropdownClass: false
@@ -293,6 +303,23 @@ export class HeaderCell extends React.Component {
 export default class Table extends Component {
 
   static jsClass = 'Table';
+  static propTypes = {
+    ...Component.propTypes,
+    colClasses: PropTypes.any,
+    columns: PropTypes.any,
+    data: PropTypes.any,
+    headerClasses: PropTypes.any,
+    hover: PropTypes.any,
+    icons: PropTypes.any,
+    mapCells: PropTypes.any,
+    mapRows: PropTypes.any,
+    mutations: PropTypes.any,
+    onChange: PropTypes.any,
+    orderable: PropTypes.any,
+    striped: PropTypes.any,
+    tableClasses: PropTypes.any,
+    vertical: PropTypes.bool,
+  }
   static defaultProps = {
     ...Component.defaultProps,
     data: [],
@@ -423,7 +450,7 @@ export default class Table extends Component {
     return {
       key: rowKey,
       ...rowProps,
-      className: cnRow.flat().join(' ')
+      className: cnRow.filter(c => !!c).flat().join(' ')
     };
   };
 
@@ -463,7 +490,7 @@ export default class Table extends Component {
       }
       deepMerge(cellAttrs, mutation);
     }
-    cellAttrs.className = cellAttrs.className.flat().join(' ');
+    cellAttrs.className = cellAttrs.className.filter(c => !!c).flat().join(' ');
 
     const formater = FORMATS[col.format] || (raw => raw);
     const cellData = typeof rowData[col.name] !== 'undefined' ? rowData[col.name] : true;
@@ -479,7 +506,7 @@ export default class Table extends Component {
       : React.createElement('td',
         {
           key: i + '-' + colName,
-          className: vertical ? [colName, 'row-' + (i - 1)].flat().join(' ') : colName
+          className: vertical ? [colName, 'row-' + (i - 1)].filter(c => !!c).flat().join(' ') : colName
         },
         cell
       )
@@ -544,7 +571,7 @@ export default class Table extends Component {
 
     // Renderización de la tabla con las estructuras de encabezado, cuerpo y pie de página
     return (
-      React.createElement('table', { className: cn.flat().join(' ') },
+      React.createElement('table', { className: cn.filter(c => !!c).flat().join(' ') },
         React.createElement('thead', {},
           header && (
             React.createElement('tr', {},

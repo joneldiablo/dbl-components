@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Dropdown } from "bootstrap";
@@ -7,6 +8,17 @@ import ProportionalContainer from "../containers/proportional-container";
 import components from "../functions/components-manager";
 
 export default class HeaderNavigation extends Navigation {
+
+  static propTypes = {
+    className: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+    classes: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+    icon: PropTypes.string,
+    img: PropTypes.string,
+    label: PropTypes.node,
+    menu: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+    style: PropTypes.object,
+    svg: PropTypes.object
+  }
 
   static jsClass = 'HeaderNavigation';
 
@@ -23,7 +35,7 @@ export default class HeaderNavigation extends Navigation {
     if (ref) this.dropdowns.push(new Dropdown(ref));
   }
 
-  menuItem = item => {
+  menuItem = ([i, item]) => {
     if (item === 'divider') {
       return (React.createElement('li', { key: item.name },
         React.createElement('hr', { className: "dropdown-divider" })
@@ -57,18 +69,21 @@ export default class HeaderNavigation extends Navigation {
         ),
       item.menu?.length &&
       React.createElement('ul', { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": item.name },
-        item.menu.map(e => this.menuItem({ dropdown: true, ...e }))
+        Object.entries(item.menu).map(([i, e]) => this.menuItem([i, { dropdown: true, ...e }]))
       )
     );
   }
 
   render() {
-    let { className, style, menu, label, icon, svg, img } = this.props;
-    let cn = [HeaderNavigation, 'shadow-sm sticky-top', className].flat().join(' ');
-    return React.createElement('nav', { className: cn, style: style },
+    let { className, classes, style, menu, label, icon, svg, img } = this.props;
+    let cn = [this.constructor.jsClass, 'shadow-sm sticky-top'];
+    if (className) cn.push(className);
+    if (classes) cn.push(classes);
+
+    return React.createElement('nav', { className: cn.filter(c => !!c).flat().join(' '), style },
       React.createElement('div', { className: "py-2 position-relative" },
         React.createElement('div', { className: "position-absolute left-50 left-sm-0 top-50 translate-middle translatey-sm-middle mx-auto mx-sm-3" },
-          icon && React.createElement(Icons, { icon: icon, inline: false }),
+          icon && React.createElement(Icons, { icon, inline: false }),
           svg && React.createElement(Svg, { ...svg }),
           img && React.createElement('img', { src: img }),
           label && React.createElement('span', null, label)
@@ -76,7 +91,7 @@ export default class HeaderNavigation extends Navigation {
         React.createElement('div', { className: "ml-auto mr-3", style: { width: 'fit-content' } },
           menu?.length &&
           React.createElement('ul', { className: "navbar-nav" },
-            menu.map(this.menuItem)
+            Object.entries(menu).map(this.menuItem)
           )
         )
       )

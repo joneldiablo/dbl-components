@@ -7,10 +7,16 @@ export default class Component extends React.Component {
 
   static jsClass = 'Component';
   static propTypes = {
-    name: PropTypes.string.isRequired,
+    _props: PropTypes.object,
+    active: PropTypes.bool,
+    children: PropTypes.node,
     classes: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.array]),
+    name: PropTypes.string.isRequired,
     style: PropTypes.object,
-    active: PropTypes.bool
+    tag: PropTypes.oneOfType([
+      PropTypes.instanceOf(React.Component),
+      PropTypes.string
+    ])
   };
   static defaultProps = {
     classes: '',

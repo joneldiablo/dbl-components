@@ -1,7 +1,15 @@
+import PropTypes from 'prop-types';
 import React from "react";
 import { NavLink } from "react-router-dom";
 
 export default class Footer extends React.Component {
+
+  static propTypes = {
+    classes: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
+    copyright: PropTypes.node,
+    menu: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+    textOverColor: PropTypes.string
+  }
 
   static jsClass = 'Footer';
   static defaultProps = {
@@ -9,15 +17,14 @@ export default class Footer extends React.Component {
   }
 
   render() {
-    let { menu, copyright, textOverColor } = this.props;
-    let className = [
-      'navbar',
-      !!textOverColor && 'navbar-' + textOverColor,
-    ].filter(c => !!c).flat().join(' ');
+    let { menu, copyright, textOverColor, classes } = this.props;
+    let cn = ['navbar'];
+    if (textOverColor) cn.push('navbar-' + textOverColor);
+    if (classes) cn.push(classes);
     return React.createElement('footer', {},
       menu
         ? React.createElement(React.Fragment, {},
-          React.createElement('nav', { className },
+          React.createElement('nav', { className: cn.filter(c => !!c).flat().join(' ') },
             React.createElement('div', { className: "container-fluid" },
               React.createElement('div', { className: "navbar-nav" },
                 menu.map((item, i) =>

@@ -1,8 +1,17 @@
+import PropTypes from 'prop-types';
 import React from "react";
 import ResizeSensor from "css-element-queries/src/ResizeSensor";
 import { randomS4 } from "../functions";
 
 export default class AutoResponsiveContainer extends React.Component {
+
+  static propTypes = {
+    children: PropTypes.node,
+    className: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
+    id: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
+    onResize: PropTypes.func,
+    style: PropTypes.object,
+  }
 
   static jsClass = 'AutoResponsiveContainer';
   static defaultProps = {

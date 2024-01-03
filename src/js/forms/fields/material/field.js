@@ -1,9 +1,21 @@
+import PropTypes from 'prop-types';
 import React from "react";
 import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Info from "./info";
 
 export default class Field extends React.Component {
+
+  static propTypes = {
+    disabled: PropTypes.any,
+    fullWidth: PropTypes.any,
+    info: PropTypes.any,
+    label: PropTypes.any,
+    name: PropTypes.any,
+    placeholder: PropTypes.any,
+    required: PropTypes.any,
+    variant: PropTypes.any
+  }
 
   static defaultProps = {
     //value: '',

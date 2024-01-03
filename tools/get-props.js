@@ -22,54 +22,53 @@ function analizarArchivo(filePath) {
 
     // Usar babel-traverse para buscar this.props.<nombre> y destructuring
     traverse(ast, {
-      ClassMethod(path) {
-        const { node } = path;
-        if (node.key.name === 'render') {
-          const componentName = path.parentPath.parentPath.node.id.name;
-          propsInfo[componentName] = {
-            filePath,
-            props: [],
-          };
+      ClassDeclaration(path) {
+        const { node: nodeClass } = path;
+        let isComponent = false;
+        path.traverse({
+          ClassMethod(path) {
+            const { node: nodeMethod } = path;
+            if (!nodeClass.superClass) return;
+            isComponent = [
+              nodeClass.superClass.name === 'Component',
+              nodeClass.superClass.object?.name === 'React',
+              ['render', 'content'].includes(nodeMethod.key.name),
+              nodeClass.body.body.some(member => member.key.name === 'state')
+            ].some(q => q);
+          }
+        });
+        if (!isComponent) return;
 
-          // Buscar this.props.<nombre>
-          path.traverse({
-            MemberExpression(innerPath) {
-              const { node } = innerPath;
-              if (
-                node.object.type === 'MemberExpression'
-                && node.object.object.type === 'ThisExpression'
-                && node.object.property.name === 'props'
-                && node.property.type === 'Identifier'
-              ) {
-                propsInfo[componentName].props.push(node.property.name);
-              }
-            },
-          });
+        const componentName = nodeClass.id.name;
+        propsInfo[componentName] = {
+          filePath,
+          props: [],
+        };
 
-          // Buscar destructuring de props
-          path.traverse({
-            VariableDeclarator(innerPath) {
-              const { node } = innerPath;
-              if (
-                node.id.type === 'ObjectPattern'
-                && node.init.property.name === 'props'
-              ) {
-                node.id.properties
-                  .filter(prop => !!prop.key)
-                  .sort((prop1, prop2) =>
-                    (prop1.key.name < prop2.key.name) ? -1 :
-                      ((prop1.key.name > prop2.key.name) ? 1 : 0)
-                  )
-                  .forEach(prop => {
-                    if (prop.key.type === 'Identifier') {
-                      propsInfo[componentName].props.push(prop.key.name);
-                    }
-                  });
-              }
-            },
-          });
-        }
-      },
+        // Buscar props
+        path.traverse({
+          VariableDeclarator(innerPath) {
+            const { node } = innerPath;
+            console.log(node);
+            if (
+              node.init.property?.name === 'props' ||
+              node.init.alternate?.name === 'props'
+            ) {
+              node.id.properties
+                .filter(prop => !!prop.key)
+                .sort((prop1, prop2) =>
+                  (prop1.key.name < prop2.key.name) ? -1 :
+                    ((prop1.key.name > prop2.key.name) ? 1 : 0)
+                )
+                .forEach(prop => {
+                  if (prop.key.type === 'Identifier') {
+                    propsInfo[componentName].props.push(prop.key.name);
+                  }
+                });
+            }
+          },
+        });
+      }
     });
   }
 }

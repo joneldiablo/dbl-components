@@ -1,8 +1,16 @@
+import PropTypes from 'prop-types';
 import React from "react";
 import { NavLink } from "react-router-dom";
 import Icons from "../media/icons";
 
 export default class SideNavigation extends React.Component {
+
+  static propTypes = {
+    className: PropTypes.any,
+    iconSize: PropTypes.any,
+    menu: PropTypes.any,
+    style: PropTypes.any
+  }
 
   static jsClass = 'SideNavigation';
   static defaultProps = {

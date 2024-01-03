@@ -1,6 +1,14 @@
+import PropTypes from 'prop-types';
 import React from "react";
 
 export default class FlexContainer extends React.Component {
+
+  static propTypes = {
+    children: PropTypes.node,
+    className: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+    colClassNames: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+    style: PropTypes.object,
+  }
 
   static jsClass = 'FlexContainer';
   static defaultProps = {
