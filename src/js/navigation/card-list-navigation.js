@@ -1,11 +1,11 @@
-import React from "react";
+import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import { assets } from "../functions";
 import Icons from "../media/icons";
 
-export default class NavListCards extends React.Component {
+export default class NavListCards extends Component {
 
   static propTypes = {
     menu: PropTypes.oneOfType([PropTypes.object, PropTypes.array])

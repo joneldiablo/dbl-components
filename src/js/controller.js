@@ -1,2 +1,1 @@
-import Controller from "./views/view";
-export default Controller;
+export { default as Controller } from "./views/view";

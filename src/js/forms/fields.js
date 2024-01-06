@@ -1,23 +1,24 @@
-import AutocompleteField from "./fields/autocomplete-field";
-import CheckboxField from "./fields/checkbox-field";
-import DateRangeField from "./fields/date-range-field";
-import DropFileField from "./fields/drop-file-field";
-import EditorField from "./fields/editor-field";
-import Field from "./fields/field";
-import FileButtonField from "./fields/file-button-field";
-import FileField from "./fields/file-field";
-import GroupField from "./fields/group-field";
-import HiddenField from "./fields/hidden-field";
-import JsonEditorField from "./fields/json-editor-field";
-import NewPasswordField from "./fields/new-password-field";
-import NoWrapField from "./fields/no-wrap-field";
-import PaginationField from "./fields/pagination-field";
-import RadioField from "./fields/radio-field";
-import RangeField from "./fields/range-field";
-import SelectField from "./fields/select-field";
-import SwitchField from "./fields/switch-field";
-import TextareaField from "./fields/textarea-field";
-import groups from "./groups";
+export { default as AutocompleteField } from "./fields/autocomplete-field";
+export { default as CheckboxField } from "./fields/checkbox-field";
+export { default as DateRangeField } from "./fields/date-range-field";
+export { default as DropFileField } from "./fields/drop-file-field";
+export { default as EditorField } from "./fields/editor-field";
+export { default as Field } from "./fields/field";
+export { default as FileButtonField } from "./fields/file-button-field";
+export { default as FileField } from "./fields/file-field";
+export { default as GroupField } from "./fields/group-field";
+export { default as HiddenField } from "./fields/hidden-field";
+export { default as JsonEditorField } from "./fields/json-editor-field";
+export { default as NewPasswordField } from "./fields/new-password-field";
+export { default as NoWrapField } from "./fields/no-wrap-field";
+export { default as PaginationField } from "./fields/pagination-field";
+export { default as RadioField } from "./fields/radio-field";
+export { default as RangeField } from "./fields/range-field";
+export { default as SelectField } from "./fields/select-field";
+export { default as SwitchField } from "./fields/switch-field";
+export { default as TextareaField } from "./fields/textarea-field";
+export { default as groups } from "./groups";
+export * from "./groups";
 
 const fieldComponents = {
   AutocompleteField,
@@ -48,5 +49,6 @@ const fieldComponents = {
 export const addFields = (_components) => {
   Object.assign(fieldComponents, _components);
 }
+
 
 export default fieldComponents;

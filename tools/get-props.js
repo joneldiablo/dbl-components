@@ -39,17 +39,25 @@ function analizarArchivo(filePath) {
         });
         if (!isComponent) return;
 
+        const parents = [];
+
+        let tmpNode = nodeClass;
+        while (tmpNode.superClass) {
+          tmpNode = tmpNode.superClass;
+          parents.push(tmpNode.id.name);
+        }
+
         const componentName = nodeClass.id.name;
         propsInfo[componentName] = {
           filePath,
           props: [],
+          parents
         };
 
         // Buscar props
         path.traverse({
           VariableDeclarator(innerPath) {
             const { node } = innerPath;
-            console.log(node);
             if (
               node.init.property?.name === 'props' ||
               node.init.alternate?.name === 'props'

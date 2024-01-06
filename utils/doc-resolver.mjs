@@ -12,18 +12,24 @@ const resolver = (ast) => {
         nodeClass.superClass.object?.name === 'React',
         nodeClass.body.body.some(member => ['state', 'props', 'jsClass'].includes(member.key.name))
       ].some(q => q);
-      if (isComponent) {
-        classes.push(path);
-        const file = './tmp/add-info.json';
-        if (!fs.existsSync(file)) {
-          fs.writeFileSync(file, '[]', 'utf-8');
-        }
-        const extra = JSON.parse(fs.readFileSync(file));
-        const jsClass = nodeClass.body.body.find(member => member.key.name === 'jsClass');
+      if (!isComponent) return;
 
-        extra.push({ className: nodeClass.id?.name || jsClass.value.value, pathFile, jsClass: jsClass?.value.value });
-        fs.writeFileSync(file, JSON.stringify(extra, null, 2), 'utf-8');
+      classes.push(path);
+      const file = './tmp/add-info.json';
+      if (!fs.existsSync(file)) {
+        fs.writeFileSync(file, '[]', 'utf-8');
       }
+      const extra = JSON.parse(fs.readFileSync(file));
+      const jsClass = nodeClass.body.body.find(member => member.key.name === 'jsClass');
+
+      extra.push({
+        className: nodeClass.id?.name || jsClass.value.value,
+        pathFile,
+        jsClass: jsClass?.value.value,
+        parent: nodeClass.superClass
+      });
+      fs.writeFileSync(file, JSON.stringify(extra, null, 2), 'utf-8');
+
     }
   });
   return classes;

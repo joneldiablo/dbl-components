@@ -1,8 +1,8 @@
-import Icons from "./media/icons";
-import Component from "./component";
-import Image from "./media/image";
-import ListContainer from "./containers/list-container";
-import TabsContainer from "./containers/tabs-container";
+export { default as Icons } from "./media/icons";
+export { default as Component } from "./component";
+export { default as Image } from "./media/image";
+export { default as ListContainer } from "./containers/list-container";
+export { default as TabsContainer } from "./containers/tabs-container";
 
 const COMPONENTS = {
   Component,
@@ -12,8 +12,9 @@ const COMPONENTS = {
   ListContainer,
 }
 
-export default COMPONENTS;
-
 export const addComponents = (newComponents) => {
   Object.assign(COMPONENTS, newComponents);
 }
+
+
+export default COMPONENTS;

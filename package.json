@@ -1,6 +1,6 @@
 {
   "name": "dbl-components",
-  "version": "2.0.15",
+  "version": "2.0.16",
   "description": "Framework based on bootstrap 5",
   "main": "src/js/index.js",
   "types": "@types/dbl-components.d.ts",
@@ -17,7 +17,7 @@
     "scss": "cp -r src/scss lib",
     "build": "yarn clear && yarn scss && yarn babel",
     "build-components-doc": "npx babel-node --presets @babel/preset-env --experimental-modules ./tools/build-docs.mjs",
-    "build-info": "react-docgen -o tmp/components-info.json ./src/js/**/*.js --resolver utils/doc-resolver.mjs --pretty && node tools/join-data.js"
+    "build-info": "react-docgen -o tmp/components-info.json ./src/js/**/*.js ./src/js/*.js --resolver utils/doc-resolver.mjs --pretty && node tools/join-data.js"
   },
   "keywords": [
     "bs",
