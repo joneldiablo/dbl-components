@@ -1,6 +1,6 @@
 
 import ComplexResponsiveComponent from "../complex-responsive-component";
 
-export default class extends ComplexResponsiveComponent {
+export default class TableContainer extends ComplexResponsiveComponent {
   static jsClass = 'TableContainer';
 }

@@ -3,7 +3,7 @@ import Component from "../component";
 
 export default class ActionComponent extends Component {
 
-  static jsClass = 'ActionComponent';
+  static jsClass = 'Action';
   static defaultProps = {
     ...Component.defaultProps,
     type: 'button',
