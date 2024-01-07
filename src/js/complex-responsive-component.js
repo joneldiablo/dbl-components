@@ -3,9 +3,9 @@ import ResizeSensor from "css-element-queries/src/ResizeSensor";
 import eventHandler from "./functions/event-handler";
 import ComplexComponent from "./complex-component";
 
-export default class extends ComplexComponent {
+export default class ComplexResponsiveComponent extends ComplexComponent {
 
-  static jsClass = 'ComplexResponsiveComponent';
+  static jsClass = 'ComplexResponsive';
   static defaultProps = {
     ...ComplexComponent.defaultProps,
     breakpoints: {

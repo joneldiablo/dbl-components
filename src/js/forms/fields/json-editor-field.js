@@ -1,7 +1,7 @@
 import Field from "./field";
 
 
-export default class extends Field {
+export default class JsonEditorField extends Field {
 
   static jsClass = 'JsonEditorField';
 

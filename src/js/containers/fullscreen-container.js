@@ -5,7 +5,7 @@ export default class FullscreenContainer extends React.Component {
 
   static propTypes = {
     children: PropTypes.node,
-    className: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+    className: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
     gutter: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     overflow: PropTypes.string,
     style: PropTypes.object

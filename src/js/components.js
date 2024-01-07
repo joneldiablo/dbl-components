@@ -27,8 +27,6 @@ export { default as ModalContainer } from "./containers/modal-container";
 export { default as TabsContainer } from "./containers/tabs-container";
 export { default as DetailsContainer } from "./containers/details-container";
 export { default as DndListContainer } from "./containers/dnd-list-container";
-export { default as fields } from "./forms/fields";
-export * from "./forms/fields";
 export { default as Action } from "./actions/action";
 export { default as Link } from "./navigation/react-router-link";
 export { default as NavLink } from "./navigation/react-router-navlink";
@@ -39,6 +37,8 @@ export { default as MenuItem } from "./navigation/menu-item/menu-item";
 export { default as TableContainer } from "./containers/table-container";
 export { default as AlertContainer } from "./containers/alert-container/alert-container";
 export { default as SchemaContainer } from "./react-router-schema/react-router-schema";
+export { default as fields } from "./forms/fields";
+export * from "./forms/fields";
 
 const COMPONENTS = {
   Component,

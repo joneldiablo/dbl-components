@@ -1,4 +1,5 @@
 import React, { createRef } from "react";
+import PropTypes from "prop-types";
 import { Dropdown } from "bootstrap";
 import { NavLink } from "react-router-dom";
 
@@ -10,6 +11,16 @@ import JsonRender from "../json-render";
 export class DropdownItem extends Component {
 
   static jsClass = 'DropdownItem';
+  static propTypes = {
+    ...NavLink.propTypes,
+    ...Component.propTypes,
+    _component: PropTypes.elementType,
+    badge: PropTypes.node,
+    badgeClasses: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+    icon: PropTypes.string,
+    label: PropTypes.node,
+    value: PropTypes.node,
+  }
   static defaultProps = {
     ...Component.defaultProps,
     badgeClasses: 'rounded-pill bg-danger'
@@ -68,7 +79,7 @@ export class DropdownItem extends Component {
     const { label, icon, badge, badgeClasses } = this.props;
 
     return React.createElement(React.Fragment, {},
-      icon && React.createElement(React.Fragment, {}, React.createElement(Icons, { icon: icon }), '&nbsp;'),
+      icon && React.createElement(React.Fragment, {}, React.createElement(Icons, { icon }), '&nbsp;'),
       label,
       badge && React.createElement(React.Fragment, {},
         '&nbsp;',
@@ -84,13 +95,32 @@ export class DropdownItem extends Component {
 export default class DropdownButtonContainer extends Component {
 
   static jsClass = 'DropdownButtonContainer';
+  static propTypes = {
+    ...Component.propTypes,
+    allowClose: PropTypes.bool,
+    btnClasses: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+    disabled: PropTypes.bool,
+    dropdown: PropTypes.any,
+    dropdownClass: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+    dropdownClasses: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+    itemClasses: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+    label: PropTypes.node,
+    menu: PropTypes.arrayOf(PropTypes.oneOfType([
+      PropTypes.node,
+      PropTypes.shape({
+        ...DropdownItem.propTypes
+      }), PropTypes.string
+    ])),
+    mutations: PropTypes.func,
+    value: PropTypes.node,
+  };
   static defaultProps = {
     ...Component.defaultProps,
     itemClasses: '',
     dropdownClasses: '',
     btnClasses: '',
     dropdown: {}
-  }
+  };
 
   classes = 'dropdown';
 

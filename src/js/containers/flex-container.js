@@ -5,8 +5,8 @@ export default class FlexContainer extends React.Component {
 
   static propTypes = {
     children: PropTypes.node,
-    className: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-    colClassNames: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+    className: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+    colClassNames: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
     style: PropTypes.object,
   }
 

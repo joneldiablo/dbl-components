@@ -1,5 +1,20 @@
 import fs from 'fs';
 
+const findSuperClass = (path) => new Promise(resolve => {
+  const { node } = path;
+  const superClassNode = node.superClass;
+  if (!superClassNode) return resolve(null);
+
+  // Obtener el path del nodo superClass
+  const superClassNodePath = path.get('superClass');
+  superClassNodePath.traverse({
+    ClassDeclaration(innerPath) {
+      return resolve(innerPath);
+    }
+  });
+})
+
+
 const resolver = (ast) => {
   const classes = [];
   const pathFile = ast.opts.filename;
@@ -26,8 +41,9 @@ const resolver = (ast) => {
         className: nodeClass.id?.name || jsClass.value.value,
         pathFile,
         jsClass: jsClass?.value.value,
-        parent: nodeClass.superClass
+        parent: nodeClass.superClass,
       });
+
       fs.writeFileSync(file, JSON.stringify(extra, null, 2), 'utf-8');
 
     }

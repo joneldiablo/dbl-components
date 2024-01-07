@@ -12,7 +12,7 @@ toggle: alert-dismissible alert-success text-success
     
 */
 
-export default class extends Component {
+export default class AlertContainer extends Component {
 
   static jsClass = 'AlertContainer';
   static defaultProps = {

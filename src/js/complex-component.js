@@ -16,7 +16,7 @@ const schema = { view: { name: '$nameDummy', content: 'Remplazar esto' }, defini
 
 export default class ComplexComponent extends Component {
 
-  static jsClass = 'ComplexComponent';
+  static jsClass = 'Complex';
   static defaultProps = {
     ...Component.defaultProps,
     schema,

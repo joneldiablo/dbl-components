@@ -10,8 +10,8 @@ import components from "../functions/components-manager";
 export default class HeaderNavigation extends Navigation {
 
   static propTypes = {
-    className: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-    classes: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+    className: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+    classes: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
     icon: PropTypes.string,
     img: PropTypes.string,
     label: PropTypes.node,
