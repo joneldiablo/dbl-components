@@ -1,5 +1,5 @@
-export { default as TitleView } from "./views/title-view";
-export { default as View } from "./views/view";
+import TitleView from "./views/title-view";
+import View from "./views/view";
 
 const VIEWS = {
   TitleView,

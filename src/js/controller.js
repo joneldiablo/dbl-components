@@ -1,1 +1,1 @@
-export { default as Controller } from "./views/view";
+export * from "./views/view";

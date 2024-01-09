@@ -1,7 +1,11 @@
-const fs = require('fs');
+import fs from 'fs';
 
-const componentsInfo = require('../tmp/components-info.json');
-const addInfo = require('../tmp/add-info.json');
+import * as dm from "../src/js/functions/deep-merge.js";
+
+const { default: { default: deepMerge } } = dm;
+
+const componentsInfo = JSON.parse(fs.readFileSync('./tmp/components-info.json', 'utf-8'));
+const addInfo = JSON.parse(fs.readFileSync('./tmp/add-info.json', 'utf-8'));
 
 const newObj = Object.entries(componentsInfo).map(([pathFile, components]) =>
   components.map(component => {
@@ -19,13 +23,13 @@ function findSuperProps(component, components, props = component.props) {
   const parent = components.find(c => c.displayName === component.parent.name);
   if (!parent) return props;
   if (parent.type === "MemberExpression") return props;
-  props = Object.assign({}, parent.props, props);
+  props = deepMerge({}, parent.props, props);
   props = findSuperProps(parent, components, props);
   return props;
 }
 
 newObj.forEach(component =>
-  (component.props = Object.assign({}, findSuperProps(component, newObj), component.props))
+  (component.props = deepMerge({}, findSuperProps(component, newObj), component.props))
 );
 
 fs.writeFileSync('tmp/components-info.json', JSON.stringify(newObj, null, 2), 'utf-8');

@@ -106,7 +106,7 @@ export default class AppController {
   findingRoutesRecursive(schema) {
     this.tmpRoutesFound++;
     const newDefs = deepMerge({}, ...this.globalDefinitions, schema.definitions || {});
-    const view = resolveRefs(schema.view, { definitions: newDefs });
+    const view = resolveRefs(schema.view, { definitions: newDefs, data: schema.data || {} });
     if (schema.routes?.length)
       view.routes = Object.entries(resolveRefs(schema.routes, { routes: this.routes })).map(([key, route]) => {
         if (!(route && route.view)) {
