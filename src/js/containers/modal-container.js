@@ -79,7 +79,7 @@ export default class ModalContainer extends Component {
       bodyClasses, footerClasses } = this.props;
     const { showModal } = this.state;
     const cnModal = ['modal-dialog', modalClasses];
-    const cg = children.reduce((reducer, child) => {
+    const cg = (Array.isArray(children) ? children : [children]).reduce((reducer, child) => {
       if (!child) return reducer;
       // Se separa el contenido según tipo de container header, body, footer o ninguno
       if (['string', 'number'].includes(typeof child)) {

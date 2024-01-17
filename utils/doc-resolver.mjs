@@ -20,6 +20,8 @@ const resolver = (ast) => {
   const pathFile = ast.opts.filename;
   ast.traverse({
     ClassDeclaration(path) {
+      if (pathFile.includes('i18n/')) return;
+      if (pathFile.includes('functions/')) return;
       const { node: nodeClass } = path;
       if (!nodeClass.superClass) return;
       const isComponent = [

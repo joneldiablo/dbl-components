@@ -48,7 +48,7 @@ export default class RadioField extends Field {
     delete props.className;
     return {
       ...props,
-      className: 'form-check-input mx-2 p-0'
+      className: 'form-check-input'
     }
   }
 
@@ -97,7 +97,7 @@ export default class RadioField extends Field {
       { className: "form-check-label", htmlFor: id, style },
       labelIn
     );
-    const theInput = labels.length === 2
+    const theInput = Array.isArray(labels)
       ? React.createElement(React.Fragment, {},
         label(this.jsonRender.buildContent(labels[0])),
         React.createElement('input', { ...inputProps }),

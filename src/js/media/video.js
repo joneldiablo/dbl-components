@@ -38,8 +38,8 @@ export default class Video extends Component {
 
   content(children = this.props.children) {
     if (this.props.src) return false;
-    return this.props.sources.map((s, i) =>
-      React.createElement('source', { src: s.src, type: s.type, key: i })
+    return (Array.isArray(this.props.sources) ? this.props.sources : [this.props.sources]).map((s, i) =>
+      s && React.createElement('source', { src: s.src, type: s.type, key: i })
     );
   }
 }

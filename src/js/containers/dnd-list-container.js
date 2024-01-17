@@ -40,10 +40,14 @@ export default class DndListContainer extends Component {
     super(props);
     this.onDragStart = this.onDragStart.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
-    this.state.items = [...this.props.children];
+    this.state.items = this.itemsFilter(props.children);
     this.events = [
       ['update.' + props.name, this.onChangeOrder]
     ];
+  }
+
+  itemsFilter(items) {
+    return Array.from(Array.isArray(items) ? items : [items]).filter(i => !!i)
   }
 
   componentDidMount() {
@@ -52,7 +56,7 @@ export default class DndListContainer extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.children !== this.props.children) {
-      this.setState({ items: [...this.props.children] });
+      this.setState({ items: this.itemsFilter(this.props.children) });
     }
   }
 

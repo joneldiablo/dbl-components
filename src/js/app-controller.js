@@ -166,11 +166,15 @@ export default class AppController {
     delete GLOBAL_STATE[key];
   }
 
+  getRootDefinitions() {
+    const allDefs = deepMerge({}, ...this.globalDefinitions, this.rootSchema.definitions || {});
+    return resolveRefs(allDefs, { definitions: allDefs });
+  }
+
   getViewDefinitions(name) {
     if (!this.routes[name]?.definitions) return {};
-    return resolveRefs(this.routes[name].definitions, {
-      definitions: deepMerge({}, ...this.globalDefinitions, this.routes[name].definitions || {})
-    });
+    const allDefs = deepMerge({}, ...this.globalDefinitions, this.routes[name].definitions || {});
+    return resolveRefs(allDefs, { definitions: allDefs });
   }
 
   getGlobalDefinitions() {

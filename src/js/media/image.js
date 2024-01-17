@@ -1,9 +1,20 @@
 import React from "react";
+import PropTypes from "prop-types";
+
 import Component from "../component";
 
 export default class Image extends Component {
 
   static jsClass = 'Image';
+  static propTypes = {
+    ...Component.propTypes,
+    src: PropTypes.string,
+    alt: PropTypes.string,
+    width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    objectFit: PropTypes.string,
+    imageClasses: PropTypes.oneOfType([PropTypes.arrayOf('string'), PropTypes.string])
+  }
   static defaultProps = {
     ...Component.defaultProps,
     objectFit: 'cover',

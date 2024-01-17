@@ -19,7 +19,7 @@ export default class SlideContainer extends Component {
     const attrs = this.props.slider;
     return React.createElement(Splide,
       { ...attrs },
-      ...children.map((c, i) =>
+      ...(Array.isArray(children) ? children : [children]).map((c, i) =>
         !!c && React.createElement(SplideSlide, { key: i }, c)
       ).filter(c => !!c)
     );

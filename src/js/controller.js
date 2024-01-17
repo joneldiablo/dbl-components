@@ -1,1 +1,1 @@
-export * from "./views/view";
+export { default as default } from "./views/view";
