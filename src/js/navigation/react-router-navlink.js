@@ -15,10 +15,7 @@ export default class NavLink extends Component {
     _component: ReactRouterNavLink.propTypes.component
   }
   static defaultProps = {
-    ...ReactRouterNavLink.defaultProps,
     ...Component.defaultProps,
-    ariaCurrent: ReactRouterNavLink.defaultProps['aria-current'],
-    _component: ReactRouterNavLink.defaultProps.component
   }
 
   tag = ReactRouterNavLink;

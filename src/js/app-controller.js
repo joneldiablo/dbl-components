@@ -40,12 +40,18 @@ export default class AppController {
   constructor(props = {}) {
     const {
       definitions = [],
-      routes = [{ name: 'addRoutes', content: 'Please add routes', path: '/' }],
+      routes = [],
       fields = {},
       components = {},
       controllers = {},
       icons = false,
-      schema = { name: 'appEmpty', content: 'Hello world' },
+      schema = {
+        view: {
+          name: 'appEmpty',
+          path: '/',
+          content: 'Root empty site'
+        }
+      },
       api = "http://localhost:3000/",
       fetchBefore = (url, options) => options,
       fetchError = (error, url) => error,
@@ -98,8 +104,8 @@ export default class AppController {
     if (formatTime) addFormatTime(formatTime);
     if (lang) setLang(lang);
 
+    schema.path = schema.path || '/';
     this.rootSchema = this.buildRootSchema(schema);
-
     console.info('Total Routes:', this.tmpRoutesFound);
   }
 
