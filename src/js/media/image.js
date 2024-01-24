@@ -13,11 +13,13 @@ export default class Image extends Component {
     width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     objectFit: PropTypes.string,
+    objectPosition: PropTypes.string,
     imageClasses: PropTypes.oneOfType([PropTypes.arrayOf('string'), PropTypes.string])
   }
   static defaultProps = {
     ...Component.defaultProps,
     objectFit: 'cover',
+    objectPosition: 'center',
     imageClasses: '',
     style: {
       overflow: 'hidden'
@@ -28,7 +30,7 @@ export default class Image extends Component {
   classes = 'position-relative';
 
   content() {
-    const { src, alt, children, width, height, objectFit, imageClasses } = this.props;
+    const { src, alt, children, width, height, objectFit, objectPosition, imageClasses } = this.props;
     let imgSrc = src;
     if (!imgSrc) {
       imgSrc = '';
@@ -45,7 +47,7 @@ export default class Image extends Component {
         React.createElement('img',
           {
             src: imgSrc, alt, width, height,
-            style: { objectFit, objectPosition: 'center' },
+            style: { objectFit, objectPosition },
             className: imageClasses
           }
         )
