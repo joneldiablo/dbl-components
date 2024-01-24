@@ -10,6 +10,7 @@ export default class Link extends Component {
   static propTypes = {
     ...ReactRouterLink.propTypes,
     ...Component.propTypes,
+    ariaCurrent: PropTypes.string,
     _component: PropTypes.node
   }
   static defaultProps = {

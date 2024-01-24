@@ -12,7 +12,7 @@ export default class NavLink extends Component {
   static propTypes = {
     ...ReactRouterNavLink.propTypes,
     ...Component.propTypes,
-    ariaCurrent: ReactRouterNavLink.propTypes['aria-current'],
+    ariaCurrent: PropTypes.string,
     _component: PropTypes.node
   }
   static defaultProps = {
