@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
+
 import eventHandler from "../../functions/event-handler";
+import JsonRender from "../../json-render";
 import Field from "./field";
 import NoWrapField from "./no-wrap-field";
 
@@ -14,11 +16,22 @@ export default class NewPasswordField extends Field {
     ...Field.propTypes,
     labelRepeat: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     placeholderRepeat: PropTypes.string,
-    dividerClasses: PropTypes.string
+    dividerClasses: PropTypes.string,
+    patterns: PropTypes.arrayOf(PropTypes.shape({
+      pattern: PropTypes.string,
+      errorMessage: PropTypes.string
+    })),
+    mutations: PropTypes.func
   }
   static defaultProps = {
     ...Field.defaultProps,
     dividerClasses: 'mb-3'
+  }
+
+  constructor(props) {
+    super(props);
+    const { mutations, ...jProps } = props;
+    this.jsonRender = new JsonRender(jProps, mutations);
   }
 
   get type() {
@@ -51,6 +64,25 @@ export default class NewPasswordField extends Field {
     const diff = (value !== valueRepeat);
     eventHandler.dispatch(`update.${this.props.name}-repeat`, { error: diff });
     return error;
+  }
+
+  get errorMessageNode() {
+    const { errorMessage: em, patterns } = this.props;
+    const { error, value } = this.state;
+    if (!error && !errorMessage || !patterns) return false;
+    const errorMessage = !patterns ? [em] : [
+      em, React.createElement('ul', {},
+        ...Object.entries(patterns)
+          .map(([k, { pattern, errorMessage }]) => !value.match(pattern)
+            && <li>{this.jsonRender.buildContent(errorMessage)}</li>)
+          .filter(p => !!p))
+    ];
+    const errorNode = React.createElement('p', { className: "m-1 lh-1" },
+      React.createElement('small', { className: "text-danger" },
+        ...errorMessage
+      )
+    );
+    return errorNode;
   }
 
   content(children = this.props.children) {

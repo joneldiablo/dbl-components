@@ -36,10 +36,11 @@ export default class CheckboxField extends RadioField {
   }
 
   content(children = this.props.children) {
-    let { options, label, disabled, readOnly, hidden } = this.props;
+    let { options, label, disabled, readOnly, hidden, labelInline } = this.props;
     const hasOptions = Array.isArray(options);
     return React.createElement(React.Fragment, {},
       !!label && hasOptions && this.labelNode,
+      !!label && hasOptions && !labelInline && React.createElement('br'),
       hasOptions
         ? options.map(this.nodeOption).filter(o => !!o)
         : this.nodeOption({

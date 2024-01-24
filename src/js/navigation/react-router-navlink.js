@@ -1,7 +1,8 @@
 import React from "react";
+import PropTypes from "prop-types";
+import { NavLink as ReactRouterNavLink } from "react-router-dom";
 
 import Component from "../component";
-import { NavLink as ReactRouterNavLink } from "react-router-dom";
 
 
 
@@ -12,7 +13,7 @@ export default class NavLink extends Component {
     ...ReactRouterNavLink.propTypes,
     ...Component.propTypes,
     ariaCurrent: ReactRouterNavLink.propTypes['aria-current'],
-    _component: ReactRouterNavLink.propTypes.component
+    _component: PropTypes.node
   }
   static defaultProps = {
     ...Component.defaultProps,

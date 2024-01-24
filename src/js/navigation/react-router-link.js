@@ -1,13 +1,19 @@
 import React from "react";
+import PropTypes from "prop-types";
+import { Link as ReactRouterLink } from "react-router-dom";
 
 import Component from "../component";
-import { Link as ReactRouterLink } from "react-router-dom";
 
 export default class Link extends Component {
 
   static jsClass = 'Link';
+  static propTypes = {
+    ...ReactRouterLink.propTypes,
+    ...Component.propTypes,
+    _component: PropTypes.node
+  }
   static defaultProps = {
-    ...Component.defaultProps
+    ...Component.defaultProps,
   }
 
   tag = ReactRouterLink;
