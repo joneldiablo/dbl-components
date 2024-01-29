@@ -10,7 +10,10 @@ export default class Component extends React.Component {
     _props: PropTypes.object,
     active: PropTypes.bool,
     children: PropTypes.node,
-    classes: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.arrayOf(PropTypes.string)]),
+    classes: PropTypes.oneOfType([
+      PropTypes.string, PropTypes.object,
+      PropTypes.arrayOf(PropTypes.string)
+    ]),
     name: PropTypes.string.isRequired,
     style: PropTypes.object,
     tag: PropTypes.elementType
@@ -50,14 +53,17 @@ export default class Component extends React.Component {
       ? this.state.localClasses
       : this.state.localClasses.split(' '));
     const setLocalClasses = new Set(localClasses);
+    if (!classes) return [setLocalClasses, new Set()];
     const setClasses = new Set(
-      classes && (Array.isArray(classes) ? classes
+      classes && (Array.isArray(classes)
+        ? classes.flatMap(c => c.split(' '))
         : classes.split(' '))
     );
     return [setLocalClasses, setClasses];
   }
 
   toggleClasses(classes) {
+    if (!classes) return false;
     const [localClasses, setClasses] = this.setClasses(classes);
     setClasses.forEach(c => {
       if (localClasses.has(c)) localClasses.delete(c);
@@ -66,22 +72,27 @@ export default class Component extends React.Component {
     this.setState({
       localClasses: Array.from(localClasses).flat().join(' ')
     });
+    return true;
   }
 
   addClasses(classes) {
+    if (!classes) return false;
     const [localClasses, setClasses] = this.setClasses(classes);
     setClasses.forEach(localClasses.add.bind(localClasses));
     this.setState({
       localClasses: Array.from(localClasses).flat().join(' ')
     });
+    return true;
   }
 
   deleteClasses(classes) {
+    if (!classes) return false;
     const [localClasses, setClasses] = this.setClasses(classes);
     setClasses.forEach(localClasses.delete.bind(localClasses));
     this.setState({
       localClasses: Array.from(localClasses).flat().join(' ')
     });
+    return true;
   }
 
   get componentProps() {

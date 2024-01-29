@@ -127,15 +127,20 @@ export default class JsonRender {
       match,
       history
     }
+
     if (Component.dontBuildContent) componentProps.content = content;
-    if (!Component.dontBuildContent && content && (childrenIn === section.name)) {
+    const childrenHere = (
+      (Array.isArray(childrenIn) ? childrenIn.join('-') : childrenIn)
+      === (Array.isArray(section.name) ? section.name.join('-') : section.name)
+    );
+    if (!Component.dontBuildContent && content && childrenHere) {
       componentProps.children = React.createElement(React.Fragment, {},
         this.buildContent(content),
         children
       );
     } else if (!Component.dontBuildContent && content) {
       componentProps.children = this.buildContent(content);
-    } else if (childrenIn === section.name) {
+    } else if (childrenHere) {
       componentProps.children = children;
     }
 

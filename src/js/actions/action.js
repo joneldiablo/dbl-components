@@ -1,3 +1,5 @@
+import JsonRender from "../json-render";
+import resolveRefs from "../functions/resolve-refs";
 import eventHandler from "../functions/event-handler";
 import Component from "../component";
 
@@ -7,18 +9,54 @@ export default class ActionComponent extends Component {
   static defaultProps = {
     ...Component.defaultProps,
     type: 'button',
-    classButton: true
-  }
+    classButton: true,
+    statusIcons: {
+      success: 'check',
+      error: 'x',
+      warning: 'exclamation',
+      loading: 'spinner'
+    },
+    statusClasses: {
+      success: 'text-bold text-success',
+      error: 'text-bold text-danger',
+      warning: 'text-bold text-warning',
+      loading: 'spinner'
+    }
+  };
+  static schemaContent = {
+    actionIcon: {
+      name: ["$props/name", "actionIcon"],
+      component: "Icons",
+      icon: "$props/icon",
+      classes: ["me-2 float-start", "$props/iconClasses"]
+    },
+    actionStatus: {
+      name: ["$props/name", "actionStatus"],
+      component: 'Icons',
+      icon: "$state/status",
+      classes: ["ms-2 float-end", "$state/statusClasses"]
+    },
+    actionContent: {
+      name: ["$props/name", "actionContent"],
+      tag: 'span'
+    }
+  };
 
   tag = 'button';
 
   constructor(props) {
     super(props);
     this.state.localClasses = props.classButton ? 'btn' : '';
+    this.onClick = this.onClick.bind(this);
     this.eventHandlers.onClick = this.onClick;
+    this.schema = resolveRefs(ActionComponent.schemaContent, { props });
+    this.jsonRender = new JsonRender({
+      childrenIn: [props.name, 'actionContent'],
+      ...props
+    }, this.mutations.bind(this));
   }
 
-  onClick = (e) => {
+  onClick(e) {
     e.stopPropagation();
     if (this.props.type === 'link') {
       const { history, location, to } = this.props;
@@ -51,8 +89,34 @@ export default class ActionComponent extends Component {
     return { type, disabled, ..._props, form: form ? form + '-form' : undefined };
   }
 
-  content(children = this.props.children) {
-    return children;
+  content() {
+    return this.jsonRender.buildContent(this.schema);
+  }
+
+  mutations(name, config) {
+    const search = name.replace(this.props.name + '-', '');
+    switch (search) {
+      case "actionIcon": {
+        return {
+          active: !!this.props.icon,
+          icon: this.props.icon
+        }
+      }
+      case 'actionStatus': {
+        return {
+          active: !!this.props.status,
+          icon: this.props.statusIcons[this.props.status],
+          classes: [config.classes[0], this.props.statusClasses[this.props.status]],
+        }
+      }
+      case "actionContent": {
+        return {
+          active: !!this.props.children
+        }
+      }
+      default:
+        break;
+    }
   }
 
 }

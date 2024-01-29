@@ -1,14 +1,31 @@
 import React from "react";
+import PropTypes from "prop-types";
 import ResizeSensor from "css-element-queries/src/ResizeSensor";
 
-import Component from "../component";
 import eventHandler from "../functions/event-handler";
+import Component from "../component";
 import Icons from "../media/icons";
 
+const typeClasses = PropTypes.oneOfType([
+  PropTypes.string,
+  PropTypes.arrayOf(PropTypes.string)
+]);
 
 export default class Container extends Component {
 
   static jsClass = 'Container';
+  static propTypes = {
+    ...Component.propTypes,
+    fluid: PropTypes.bool,
+    fullWidth: PropTypes.bool,
+    breakpoints: PropTypes.objectOf(PropTypes.number),
+    xsClasses: typeClasses,
+    smClasses: typeClasses,
+    mdClasses: typeClasses,
+    lgClasses: typeClasses,
+    xlClasses: typeClasses,
+    xxlClasses: typeClasses
+  }
   static defaultProps = {
     ...Component.defaultProps,
     fluid: true,
@@ -45,7 +62,12 @@ export default class Container extends Component {
     const localClasses = new Set(this.state.localClasses.split(' '));
     Object.keys(this.props.breakpoints).forEach(br => localClasses.delete(br));
     [containerType, this.breakpoint, 'animate'].forEach(c => localClasses.add(c));
-    this.setState({ localClasses: Array.from(localClasses).flat().join(' ') });
+    this.state.localClasses = Array.from(localClasses).flat().join(' ');
+    if (!this.addClasses(this.props[this.breakpoint + 'Classes'])) {
+      this.setState({
+        localClasses: this.state.localClasses
+      });
+    }
   }
 
   onResize(firstTime) {
@@ -90,7 +112,6 @@ export default class Container extends Component {
     if (this.ref)
       this.resizeSensor = new ResizeSensor(this.ref.current, this.onResize);
     this.onResize(true);
-
   }
 
   componentDidUpdate(prevProps) {

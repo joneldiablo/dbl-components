@@ -2,6 +2,7 @@
   0% {
     transform: rotate(0);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -12,7 +13,10 @@
   &.icon-inline {
     width: 1.2em;
     vertical-align: text-bottom;
+    margin-top: 0.15rem;
+    margin-bottom: -0.15rem;
   }
+
   &.small {
     font-size: 0.5em;
   }
