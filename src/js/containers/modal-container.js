@@ -4,8 +4,10 @@ import Modal from "bootstrap/js/dist/modal";
 import eventHandler from "../functions/event-handler";
 import Component from "../component";
 
-export default class ModalContainer extends Component {
 
+
+export default class ModalContainer extends Component {
+  //PATCH: se iomplementó un clone del elemento para colocarlo hasta el body, esta solución corrige cuando un modal se mete dentro de un contenedor flex que no permite acomodar el modal correctamente
   static jsClass = 'ModalContainer';
   static defaultProps = {
     ...Component.defaultProps,
@@ -13,7 +15,8 @@ export default class ModalContainer extends Component {
     modalClasses: '',
     headerClasses: '',
     bodyClasses: '',
-    footerClasses: ''
+    footerClasses: '',
+    moveElement: false
   }
 
   constructor(props) {
@@ -63,13 +66,16 @@ export default class ModalContainer extends Component {
     this.setState({ showModal: false });
   }
 
-  onModalRef = (ref) => {
-    if (ref) {
+  onModalRef = (refOriginal) => {
+    if (refOriginal) {
+      const ref = this.props.moveElement ? refOriginal.cloneNode(true) : refOriginal;
+      if (this.props.moveElement) refOriginal.style.display = 'none';
       this.modal = new Modal(ref, this.props.modal);
       this.events.forEach(event => {
         ref.addEventListener(event + '.bs.modal', this.onEvent, false);
       });
       ref.addEventListener('hidden.bs.modal', this.destroy, false);
+      if (this.props.moveElement) document.body.appendChild(ref);
       this.modal.show();
     }
   }
