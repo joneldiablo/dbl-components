@@ -35,6 +35,7 @@ export default class AppController {
   rootSchema;
   random = randomS4();
   props;
+  prefixStorage = '_gs.';
 
 
   constructor(props = {}) {
@@ -61,7 +62,8 @@ export default class AppController {
       formatDate = {},
       formatNumber = {},
       formatTime = {},
-      lang = 'default'
+      lang = 'default',
+      initialState = {}
     } = props;
 
     this.props = {
@@ -103,6 +105,20 @@ export default class AppController {
     if (formatNumber) addFormatNumber(formatNumber);
     if (formatTime) addFormatTime(formatTime);
     if (lang) setLang(lang);
+    if (initialState) {
+
+      const keys = [
+        ...Object.keys(sessionStorage),
+        ...Object.keys(localStorage)
+      ]
+        .filter(k => k.startsWith(this.prefixStorage))
+        .map(k => k.replace(this.prefixStorage, ''));
+
+      Object.entries(initialState).forEach(([key, value]) => {
+        if (keys.includes(key)) this.get(key);
+        else GLOBAL_STATE[key] = value;
+      });
+    }
 
     schema.path = schema.path || '/';
     this.rootSchema = this.buildRootSchema(schema);
@@ -150,17 +166,17 @@ export default class AppController {
   }
 
   set(key, data, { dispatch = true, storage = 'local', encrypt = false } = {}) {
-    if (storage === 'local') localStorage.setItem(key, this.stringify(data, encrypt));
-    else if (storage === 'session') sessionStorage.setItem(key, this.stringify(data, encrypt));
+    if (storage === 'local') localStorage.setItem(this.prefixStorage + key, this.stringify(data, encrypt));
+    else if (storage === 'session') sessionStorage.setItem(this.prefixStorage + key, this.stringify(data, encrypt));
     GLOBAL_STATE[key] = data;
     if (dispatch) eventHandler.dispatch('global.' + key, data);
   }
 
   get(key) {
     if (GLOBAL_STATE[key] === undefined) {
-      let value = sessionStorage.getItem(key);
+      let value = sessionStorage.getItem(this.prefixStorage + key);
       if (value === undefined)
-        value = localStorage.getItem(key);
+        value = localStorage.getItem(this.prefixStorage + key);
       if (value !== undefined) GLOBAL_STATE[key] = this.parse(value);
     }
     return GLOBAL_STATE[key];

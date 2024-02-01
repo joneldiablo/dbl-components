@@ -30,7 +30,8 @@ export default class CardContainer extends Container {
       footerClasses } = this.props;
     children.forEach((child, i) => {
       if (!child) return;
-      const props = child.type === 'section' ? child.props.children.props : child.props;
+      const props = (!(child.props?.style && child.props.style['--component-name'])
+        ? child : child.props.children).props;
 
       if (props.header) {
         theContent.header.push(child);

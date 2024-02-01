@@ -6,6 +6,8 @@ import Icons from "./media/icons";
 import COMPONENTS from "./components";
 import { hash } from "./functions";
 import t from "./functions/i18n";
+import formatValue from "./functions/format-value";
+import { deepMerge } from ".";
 
 /**
  * Clase utilizada para generar contenido dinámico en React a partir de una estructura de datos JSON.
@@ -54,6 +56,8 @@ export default class JsonRender {
     }
   }
 
+  actualSections = [];
+
   /**
    * Crea una instancia de JsonRender.
    * @param {Object} props - Las propiedades del componente.
@@ -76,12 +80,15 @@ export default class JsonRender {
     if (!content) return false;
     if (typeof content !== 'object') {
       const translate = t(content, this.props.context);
+      const section = this.actualSections[this.actualSections.length - 1];
       if (typeof translate === 'number' || typeof translate === 'boolean') {
-        return translate;
+        return formatValue(translate, section);
       } else if (typeof translate === 'string') {
+        let parsed = parseReact(translate, this.parseOpts);
+        if (typeof parsed === 'string') parsed = formatValue(parsed, section);
         return React.createElement(React.Fragment,
           { key: hash(translate) },
-          parseReact(translate, this.parseOpts)
+          parsed
         );
       }
     } else if (React.isValidElement(content)) {
@@ -97,8 +104,10 @@ export default class JsonRender {
         .map((name, i) => this.buildContent(typeof content[name] !== 'object'
           ? content[name] : { name, ...content[name] }, i)
         );
-
-    return this.sections(content, index);
+    this.actualSections.push(content);
+    const builded = this.sections(content, index);
+    this.actualSections.pop();
+    return builded;
   }
 
   /**
@@ -108,12 +117,14 @@ export default class JsonRender {
    * @returns {React.Component|boolean} - El componente de la sección construido.
    */
   sections(sr, i) {
-    const m = typeof this.mutations === 'function' && this.mutations(sr.name, sr);
+    const m = (typeof this.mutations === 'function' && this.mutations(sr.name, sr)) || {};
+    if (m.style && sr.style) m.style = deepMerge({}, sr.style, m.style);
+    if (m._props && sr._props) m._props = deepMerge({}, sr._props, m._props);
     const sectionRaw = Object.assign({}, sr, m || {});
     if (sectionRaw.active === false) return false;
 
     const { component: componentName, content, placeholder,
-      label, message, errorMessage, managerName, wrapperClasses, wrapperStyles = {}, ...section } = sectionRaw;
+      label, message, errorMessage, managerName, wrapperClasses, wrapperStyle = {}, ...section } = sectionRaw;
     const { location, match, childrenIn = this.childrenIn, history, children } = this.props;
     const Component = COMPONENTS[componentName] || (COMPONENTS.Component);
     const componentProps = {
@@ -170,7 +181,7 @@ export default class JsonRender {
         className: cnSection.flat().join(' '),
         style: {
           "--component-name": `"${componentProps.name}"`,
-          ...wrapperStyles
+          ...wrapperStyle
         }
       },
       React.createElement(Component, { ...componentProps })

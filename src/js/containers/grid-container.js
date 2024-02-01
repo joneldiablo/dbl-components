@@ -27,7 +27,7 @@ export default class GridContainer extends Container {
     return Array.isArray(children) && children.map((child, i) => {
       if (!child) return false;
       let colcn = ['col-md', i % 2 ? 'even' : 'odd', 'col-num-' + i];
-      const childConf = (!(child.props.style && child.props.style['--component-name'])
+      const childConf = (!(child.props?.style && child.props.style['--component-name'])
       ? child : child.props.children).props;
       const childColClasses = childConf.colClasses;
       if (childColClasses) colcn.push(childColClasses);

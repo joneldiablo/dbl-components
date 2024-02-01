@@ -115,7 +115,7 @@ export default class Component extends React.Component {
       this.ready = setTimeout(() => eventHandler.dispatch(`ready.${name}`), 50);
     }
     const content = this.content();
-    const cn = [this.constructor.jsClass, this.name, this.classes, localClasses];
+    const cn = [this.constructor.jsClass, name, this.name, this.classes, localClasses];
     if (!!classes) cn.push(typeof classes === 'string' ? classes : (Array.isArray(classes) ? classes.flat().join(' ') : classes['.']));
     const s = Object.assign({}, this.style, localStyles, style);
     const Tag = tag || this.tag;

@@ -21,8 +21,19 @@ const config = {
     default: 'h:mm:ss A'
   },
   formatNumber: {
-    default: {}
+    default: {
+    }
+  },
+  formatCurrency: {
+    default: {
+      currency: 'USD',
+      style: 'currency'
+    }
   }
+}
+
+if (process.env.NODE_ENV === 'development') {
+  globalThis.textsFounded = new Set();
 }
 
 /**
@@ -66,6 +77,18 @@ export const addFormatTime = (formats) => {
 export const addFormatNumber = (formats) => {
   if (typeof formats !== 'object') return false;
   deepMerge(config.formatNumber, formats);
+  return true;
+}
+
+/**
+ * Adds currency formats to the configuration object.
+ * @param {Object} formats - The currency formats to add.
+ * @returns {boolean} Returns true if the currency formats were added correctly, otherwise returns false.
+ */
+export const addFormatCurrency = (formats) => {
+  if (typeof formats !== 'object') return false;
+  Object.values(formats).forEach(f => (f.style = 'currency'));
+  deepMerge(config.formatCurrency, formats);
   return true;
 }
 
@@ -136,6 +159,21 @@ export const formatNumber = (context) => {
 }
 
 /**
+ * Formats a currency according to the current language and context.
+ * @param {string} context - The context of the currency.
+ * @returns {string} The formatted currency.
+ */
+export const formatCurrency = (context) => {
+  if (config.lang !== '_default' && config.formatCurrency[config.lang]) {
+    if (context && config.formatCurrency[config.lang][context]) return config.formatCurrency[config.lang][context];
+    else return config.formatCurrency[config.lang];
+  } else {
+    if (context && config.formatCurrency.default[context]) return config.formatCurrency.default[context];
+    else return config.formatCurrency.default;
+  }
+}
+
+/**
  * Selects a text from the default dictionary.
  * @param {string} text - The text to select.
  * @param {string} context - The context of the text.
@@ -155,6 +193,9 @@ const selectFromDefault = (text, context) => {
  * @returns {string} The translated text.
  */
 const t = (text, context) => {
+  if (process.env.NODE_ENV === 'development') {
+    globalThis.textsFounded.add(text);
+  }
   if (config.lang === '_default') return selectFromDefault(text, context);
   const dict1 = config.dictionary[config.lang];
   if (typeof dict1 !== 'object') return selectFromDefault(text, context);
