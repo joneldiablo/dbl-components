@@ -1,0 +1,378 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "genericObject": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "nodeObject": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "type": "boolean"
+        },
+        "component": {
+          "type": "string"
+        },
+        "title": {
+          "$ref": "#/definitions/anyNode"
+        },
+        "label": {
+          "$ref": "#/definitions/anyNode"
+        },
+        "content": {
+          "$ref": "#/definitions/anyNode"
+        },
+        "message": {
+          "$ref": "#/definitions/anyNode"
+        },
+        "errorMessage": {
+          "$ref": "#/definitions/anyNode"
+        },
+        "placeholder": {
+          "$ref": "#/definitions/anyNode"
+        },
+        "classes": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "style": {
+          "$ref": "#/definitions/genericObject"
+        },
+        "_props": {
+          "$ref": "#/definitions/genericObject"
+        },
+        "childrenIn": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "routesIn": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "name": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "id": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "wrapper": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "tag": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "accept": {
+          "type": "string"
+        },
+        "autoComplete": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "checkValidity": {
+          "instanceof": "Function"
+        },
+        "controlClasses": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "default": {},
+        "disabled": {
+          "type": "boolean"
+        },
+        "first": {
+          "enum": [
+            "label",
+            "control"
+          ]
+        },
+        "floating": {
+          "type": "boolean"
+        },
+        "hidden": {
+          "type": "boolean"
+        },
+        "inline": {
+          "type": "boolean"
+        },
+        "inlineControlClasses": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "labelClasses": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "max": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "messageClasses": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "min": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "multiple": {
+          "type": "boolean"
+        },
+        "noValidate": {
+          "type": "boolean"
+        },
+        "pattern": {
+          "type": "string"
+        },
+        "readOnly": {
+          "type": "boolean"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "step": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "type": {
+          "type": "string"
+        },
+        "value": {},
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "disabled": {
+                "type": "boolean"
+              },
+              "divider": {
+                "type": "boolean"
+              },
+              "label": {
+                "$ref": "#/definitions/anyNode"
+              },
+              "title": {
+                "$ref": "#/definitions/anyNode"
+              },
+              "value": {}
+            },
+            "required": [
+              "value"
+            ]
+          }
+        },
+        "fluid": {
+          "type": "boolean"
+        },
+        "fullWidth": {
+          "type": "boolean"
+        },
+        "breakpoints": {
+          "type": "object",
+          "properties": {
+            "xs": {
+              "type": "number",
+              "const": 0
+            },
+            "sm": {
+              "type": "number",
+              "const": 540
+            },
+            "md": {
+              "type": "number",
+              "const": 720
+            },
+            "lg": {
+              "type": "number",
+              "const": 960
+            },
+            "xl": {
+              "type": "number",
+              "const": 1140
+            },
+            "xxl": {
+              "type": "number",
+              "const": 1320
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "xs",
+            "sm",
+            "md",
+            "lg",
+            "xl",
+            "xxl"
+          ]
+        }
+      },
+      "patternProperties": {
+        ".*Classes$": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "anyNode": {
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/anyNode"
+          }
+        },
+        {
+          "$ref": "#/definitions/nodeObject"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/anyNode"
+          }
+        }
+      ]
+    }
+  },
+  "$ref": "#/definitions/anyNode"
+}
