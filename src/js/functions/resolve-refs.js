@@ -1,9 +1,12 @@
-import deepMerge from "./deep-merge.js";
 import flat from "flat";
+
+import stringify from "../functions/stringify";
+import deepMerge from "./deep-merge.js";
+
 const { unflatten } = flat;
 
 export default
-  (object, schema = JSON.parse(JSON.stringify(object)), rules = {}, extraTasks = {}) => {
+  (object, schema = JSON.parse(stringify(object)), rules = {}, extraTasks = {}) => {
     const processRules = (key) => {
       if (!rules[key]) return undefined;
       const tasks = {
@@ -61,12 +64,12 @@ export default
         let data;
         try {
           data = keys.reduce((obj, key) => obj[key], schema);
-          data = JSON.parse(JSON.stringify(data));
+          data = JSON.parse(stringify(data));
         } catch (error) {
           return item;
         }
         return loop(data);
       } else return item;
     }
-    return loop(JSON.parse(JSON.stringify(object)));
+    return loop(JSON.parse(stringify(object)));
   }

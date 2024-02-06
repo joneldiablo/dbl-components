@@ -1,19 +1,21 @@
 import { flatten } from "flat";
 
+import defaultIcons from "../app-icons-v1.0/selection.json";
+import { randomS4 } from "./functions";
+import stringify from "./functions/stringify";
 import resolveRefs from "./functions/resolve-refs";
 import deepMerge from "./functions/deep-merge";
 import eventHandler from "./functions/event-handler";
-import { addIcons, setIconSet } from "./media/icons";
-import { addControllers } from "./controllers";
-import { addComponents } from "./components";
-import { addFields } from "./forms/fields";
-import defaultIcons from "../app-icons-v1.0/selection.json";
-import { randomS4 } from "./functions";
 import {
   addDictionary, addFormatDate,
   addFormatNumber, addFormatTime,
   getLang, setLang,
 } from "./functions/i18n";
+
+import { addIcons, setIconSet } from "./media/icons";
+import { addControllers } from "./controllers";
+import { addComponents } from "./components";
+import { addFields } from "./forms/fields";
 
 const GLOBAL_STATE = {};
 
@@ -86,7 +88,7 @@ export default class AppController {
       lang
     };
 
-    const copyIcons = JSON.parse(JSON.stringify(defaultIcons));
+    const copyIcons = JSON.parse(stringify(defaultIcons));
     setIconSet(copyIcons);
     if (icons) addIcons(icons);
 
@@ -139,7 +141,7 @@ export default class AppController {
             tag: 'error',
             content: `
         <p class='text-danger'>NOT FOUND</p>
-        <p class='bg-dark text-light'><pre>${JSON.stringify(schema, null, 2)}}</pre></p>
+        <p class='bg-dark text-light'><pre>${stringify(schema, null, 2)}}</pre></p>
         `
           };
         }
@@ -157,7 +159,7 @@ export default class AppController {
 
   stringify(data, encrypt) {
     //TODO: encrypt data y agregar un uno (1::) al principio, para saber que es una cadena encriptada
-    return JSON.stringify(data);
+    return stringify(data);
   }
 
   parse(data) {
@@ -220,7 +222,7 @@ export default class AppController {
     }
     const { query, format = 'json',
       timeout = this.props.maxTimeout, body, headers, ...conf } = this.props.fetchBefore(url, options);
-    if (body) conf.body = JSON.stringify(body);
+    if (body) conf.body = stringify(body);
     const urlFinal = new URL(url, this.props.api);
     const flattenQuery = flatten(query || {}, { safe: true });
     Object.entries(flattenQuery).forEach(([key, value]) => {

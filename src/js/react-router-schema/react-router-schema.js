@@ -10,6 +10,7 @@ import {
   Redirect,
   Switch
 } from "react-router-dom";
+import stringify from "../functions/stringify";
 
 import { hash } from "../functions";
 import controllers from "../controllers";
@@ -63,7 +64,7 @@ export default class SchemaController extends React.Component {
 
   buildRoutes() {
     // crear un clone de lo que se recibe
-    const schemaStr = JSON.stringify(this.props.routes);
+    const schemaStr = stringify(this.props.routes);
     const routesSchema = JSON.parse(schemaStr);
     // se crean las rutas de forma única.
     let routes;
@@ -85,7 +86,7 @@ export default class SchemaController extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     // comprobar si ha cambiado el schema
-    let newHash = hash(JSON.stringify(this.props.routes));
+    let newHash = hash(stringify(this.props.routes));
     if (this.routesHash !== newHash) {
       this.buildRoutes();
       this.routesHash = newHash;
@@ -109,7 +110,7 @@ export default class SchemaController extends React.Component {
     if (subroutes) {
       const mapRoutes = (subRoute, i) => {
         // crear un clone para no tocar el original
-        subRoute = JSON.parse(JSON.stringify(subRoute));
+        subRoute = JSON.parse(stringify(subRoute));
         // si las rutas son un arreglo
         if (Array.isArray(route.path) && Array.isArray(subRoute.path)) {
           subRoute.path = subRoute.path.reduce((paths, path) => {
