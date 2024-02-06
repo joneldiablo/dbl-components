@@ -13,8 +13,8 @@ import {
 } from "./functions/i18n";
 
 import { addIcons, setIconSet } from "./media/icons";
-import { addControllers } from "./controllers";
 import { addComponents } from "./components";
+import { addControllers } from "./controllers";
 import { addFields } from "./forms/fields";
 
 const GLOBAL_STATE = {};
@@ -28,7 +28,7 @@ const GLOBAL_STATE = {};
  * @param {Object[]} props.routes - array of routes
  * @param {Object} props.schema - initial schema, the app root
 */
-export default class AppController {
+export class AppController {
 
   fetchList = {};
   globalDefinitions = [];
@@ -39,8 +39,11 @@ export default class AppController {
   props;
   prefixStorage = '_gs.';
 
+  constructor(props = false) {
+    if (props) this.init(props);
+  }
 
-  constructor(props = {}) {
+  init(props = {}) {
     const {
       definitions = [],
       routes = [],
@@ -286,3 +289,5 @@ export default class AppController {
   }
 
 }
+
+export default new AppController();

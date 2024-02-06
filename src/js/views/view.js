@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import eventHandler from "../functions/event-handler";
-import Icons from "../media/icons";
 import Container from "../containers/container";
 import JsonRender from "../json-render";
 

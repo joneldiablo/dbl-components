@@ -10,5 +10,4 @@ export const addControllers = (controllers) => {
   Object.assign(CONTROLLERS, controllers);
 }
 
-
 export default CONTROLLERS;

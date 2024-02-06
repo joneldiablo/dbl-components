@@ -1,0 +1,11 @@
+{
+  "view": {
+    "ref": "$props",
+    "wrapper": false,
+    "content": {
+      "tag": "span",
+      "content": "ya te la pelaste\"!!!!\""
+    }
+  },
+  "definitions": {}
+}

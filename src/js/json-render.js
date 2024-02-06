@@ -7,7 +7,7 @@ import COMPONENTS from "./components";
 import { hash } from "./functions";
 import t from "./functions/i18n";
 import formatValue from "./functions/format-value";
-import { deepMerge } from ".";
+import deepMerge from "./functions/deep-merge";
 
 /**
  * Clase utilizada para generar contenido dinámico en React a partir de una estructura de datos JSON.
