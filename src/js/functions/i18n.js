@@ -18,7 +18,10 @@ const config = {
     default: 'MM/DD/YYYY'
   },
   formatTime: {
-    default: 'h:mm:ss A'
+    default: 'HH:mm:ss'
+  },
+  formatDateTime: {
+    default: 'MM/DD/YYYY HH:mm:ss'
   },
   formatNumber: {
     default: {
@@ -66,6 +69,17 @@ export const addFormatDate = (formats) => {
 export const addFormatTime = (formats) => {
   if (typeof formats !== 'object') return false;
   deepMerge(config.formatTime, formats);
+  return true;
+}
+
+/**
+ * Adds date-time formats to the configuration object.
+ * @param {Object} formats - The date-time formats to add.
+ * @returns {boolean} Returns true if the date-time formats were added correctly, otherwise returns false.
+ */
+export const addFormatDateTime = (formats) => {
+  if (typeof formats !== 'object') return false;
+  deepMerge(config.formatDateTime, formats);
   return true;
 }
 
@@ -140,6 +154,21 @@ export const formatTime = (context) => {
   } else {
     if (context && config.formatTime.default[context]) return config.formatTime.default[context];
     else return config.formatTime.default;
+  }
+}
+
+/**
+ * Formats a date-time according to the current language and context.
+ * @param {string} context - The context of the date-time.
+ * @returns {string} The formatted date-time.
+ */
+export const formatDateTime = (context) => {
+  if (config.lang !== '_default' && config.formatDateTime[config.lang]) {
+    if (context && config.formatDateTime[config.lang][context]) return config.formatDateTime[config.lang][context];
+    else return config.formatDateTime[config.lang];
+  } else {
+    if (context && config.formatDateTime.default[context]) return config.formatDateTime.default[context];
+    else return config.formatDateTime.default;
   }
 }
 

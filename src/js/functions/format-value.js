@@ -1,4 +1,5 @@
-import t, { formatDate, formatNumber, formatCurrency, formatTime, getLang } from "./i18n";
+import moment from "moment";
+import t, { formatDate, formatNumber, formatCurrency, formatTime, formatDateTime, getLang } from "./i18n";
 
 export default (value, conf) => {
   if (!conf?.format) return value;
@@ -18,6 +19,8 @@ export default (value, conf) => {
       return moment(value).format(formatDate(conf.context));
     case 'time':
       return moment(value).format(formatTime(conf.context));
+    case 'date-time':
+      return moment(value).format(formatDateTime(conf.context));
     default:
       return value;
   }
