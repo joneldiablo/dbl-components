@@ -10,6 +10,8 @@ export default class ActionComponent extends Component {
     ...Component.defaultProps,
     type: 'button',
     classButton: true,
+    open: false,
+    close: false,
     statusIcons: {
       success: 'check',
       error: 'x',
@@ -74,6 +76,12 @@ export default class ActionComponent extends Component {
         }
       }
       return history.push(path);
+    }
+    if (this.props.open) {
+      eventHandler.dispatch('update.' + this.props.open, { open: true });
+    }
+    if (this.props.close) {
+      eventHandler.dispatch('update.' + this.props.close, { open: false });
     }
     const { value, name, id } = this.props;
     let dispatch = name;
