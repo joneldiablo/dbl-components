@@ -18,6 +18,11 @@ export default class RadioField extends Field {
     this.jsonRender = new JsonRender(propsRender, mutations);
   }
 
+
+  get type() {
+    return 'radio';
+  }
+
   onChange(e) {
     const { value, dataset } = e.target;
     let setValue;
@@ -38,24 +43,23 @@ export default class RadioField extends Field {
     }, () => this.returnData());
   }
 
-  get type() {
-    return 'radio';
-  }
-
   get inputProps() {
     const props = super.inputProps;
     delete props.ref;
     delete props.className;
+    let className = 'form-check-input';
+    if (this.props.format === 'button') className = 'btn-check';
     return {
       ...props,
-      className: 'form-check-input'
+      className
     }
   }
 
   nodeOption = (itemRaw, i) => {
     if (!itemRaw) return false;
 
-    const { inline, name, labels: las, optionClasses, format, first } = this.props;
+    const { inline, name, labels: las, optionClasses, format, labelClasses } = this.props;
+    let { first } = this.props;
     const { value } = this.state;
     const modify = typeof this.props.mutations === 'function'
       && this.props.mutations(`${name}.${itemRaw.value}`, itemRaw);
@@ -76,7 +80,10 @@ export default class RadioField extends Field {
     if (inline) cn.push('form-check-inline');
     if (item.hidden && !checked) cn.push('visually-hidden-focusable');
     if (format === 'switch') cn.unshift('form-switch');
-    else cn.unshift('form-check');
+    else if (format === 'button') {
+      cn.unshift('');
+      first = 'control';
+    } else cn.unshift('form-check');
 
     const inputProps = {
       ...this.inputProps,
@@ -93,8 +100,13 @@ export default class RadioField extends Field {
     }
     const style = {};
     if (disabled) style['opacity'] = .5;
+    const lc = [
+      format === 'button' ? 'btn' : "form-check-label",
+      labelClasses,
+      item.labelClasses
+    ];
     const label = (labelIn) => React.createElement('label',
-      { className: "form-check-label", htmlFor: id, style },
+      { className: lc.flat().join(' '), htmlFor: id, style },
       labelIn
     );
     const theInput = Array.isArray(labels)
@@ -108,20 +120,21 @@ export default class RadioField extends Field {
     return React.createElement('div',
       {
         key: i + '-' + item.value,
-        className: cn.flat().join(' '),
+        className: cn.filter(c => !!c).flat().join(' '),
         style: { pointerEvents: readOnly ? 'none' : null }
       },
-      first === 'label' && label(item.label),
+      first === 'label' && label(this.jsonRender.buildContent(item.label)),
       theInput,
-      first === 'control' && label(item.label)
+      first === 'control' && label(this.jsonRender.buildContent(item.label))
     )
   }
 
   content(children = this.props.children) {
     let { options, label, labelInline } = this.props;
+    const hasOptions = Array.isArray(options);
     return React.createElement(React.Fragment, {},
-      label && this.labelNode,
-      !labelInline && React.createElement('br'),
+      !!label && hasOptions && this.labelNode,
+      !!label && hasOptions && !labelInline && React.createElement('br'),
       options.map(this.nodeOption).filter(o => !!o),
       React.createElement(React.Fragment, {},
         this.errorMessageNode,

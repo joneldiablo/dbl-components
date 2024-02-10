@@ -39,7 +39,7 @@ export default class Field extends Component {
     options: PropTypes.arrayOf(PropTypes.shape({
       disabled: PropTypes.bool,
       divider: PropTypes.bool,
-      label: PropTypes.oneOfType([PropTypes.string, PropTypes.node, PropTypes.bool]),
+      label: PropTypes.oneOfType([PropTypes.string, PropTypes.node, PropTypes.bool, PropTypes.object]),
       value: PropTypes.any,
     })),
   }

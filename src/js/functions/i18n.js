@@ -136,6 +136,8 @@ export const formatDate = (context) => {
   if (config.lang !== '_default' && config.formatDate[config.lang]) {
     if (context && config.formatDate[config.lang][context]) return config.formatDate[config.lang][context];
     else return config.formatDate[config.lang];
+  } else if (config.formatDate[context]) {
+    return config.formatDate[context];
   } else {
     if (context && config.formatDate.default[context]) return config.formatDate.default[context];
     else return config.formatDate.default;
@@ -151,6 +153,8 @@ export const formatTime = (context) => {
   if (config.lang !== '_default' && config.formatTime[config.lang]) {
     if (context && config.formatTime[config.lang][context]) return config.formatTime[config.lang][context];
     else return config.formatTime[config.lang];
+  } else if (config.formatTime[context]) {
+    return config.formatTime[context];
   } else {
     if (context && config.formatTime.default[context]) return config.formatTime.default[context];
     else return config.formatTime.default;
@@ -166,6 +170,8 @@ export const formatDateTime = (context) => {
   if (config.lang !== '_default' && config.formatDateTime[config.lang]) {
     if (context && config.formatDateTime[config.lang][context]) return config.formatDateTime[config.lang][context];
     else return config.formatDateTime[config.lang];
+  } else if (config.formatDateTime[context]) {
+    return config.formatDateTime[context];
   } else {
     if (context && config.formatDateTime.default[context]) return config.formatDateTime.default[context];
     else return config.formatDateTime.default;
@@ -181,6 +187,8 @@ export const formatNumber = (context) => {
   if (config.lang !== '_default' && config.formatNumber[config.lang]) {
     if (context && config.formatNumber[config.lang][context]) return config.formatNumber[config.lang][context];
     else return config.formatNumber[config.lang];
+  } else if (config.formatNumber[context]) {
+    return config.formatNumber[context];
   } else {
     if (context && config.formatNumber.default[context]) return config.formatNumber.default[context];
     else return config.formatNumber.default;
@@ -196,6 +204,8 @@ export const formatCurrency = (context) => {
   if (config.lang !== '_default' && config.formatCurrency[config.lang]) {
     if (context && config.formatCurrency[config.lang][context]) return config.formatCurrency[config.lang][context];
     else return config.formatCurrency[config.lang];
+  } else if (config.formatCurrency[context]) {
+    return config.formatCurrency[context];
   } else {
     if (context && config.formatCurrency.default[context]) return config.formatCurrency.default[context];
     else return config.formatCurrency.default;

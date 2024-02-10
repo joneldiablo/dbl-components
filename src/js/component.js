@@ -16,7 +16,7 @@ export default class Component extends React.Component {
     ]),
     name: PropTypes.string.isRequired,
     style: PropTypes.object,
-    tag: PropTypes.elementType
+    tag: PropTypes.oneOfType([PropTypes.elementType, PropTypes.bool])
   };
   static defaultProps = {
     classes: '',
@@ -115,17 +115,19 @@ export default class Component extends React.Component {
       this.ready = setTimeout(() => eventHandler.dispatch(`ready.${name}`), 50);
     }
     const content = this.content();
+    const Tag = tag === undefined ? this.tag : tag;
+    if (Tag === false) return content;
     const cn = [this.constructor.jsClass, name, this.name, this.classes, localClasses];
     if (!!classes) cn.push(typeof classes === 'string' ? classes : (Array.isArray(classes) ? classes.flat().join(' ') : classes['.']));
     const s = Object.assign({}, this.style, localStyles, style);
-    const Tag = tag || this.tag;
+    const props = Tag === React.Fragment ? {} : {
+      className: cn.flat().join(' '),
+      style: s, ref: this.ref,
+      ...this.eventHandlers,
+      ...this.componentProps
+    }
     return (active
-      ? React.createElement(Tag, {
-        className: cn.flat().join(' '),
-        style: s, ref: this.ref,
-        ...this.eventHandlers,
-        ...this.componentProps
-      },
+      ? React.createElement(Tag, props,
         content
       )
       : React.createElement(React.Fragment));

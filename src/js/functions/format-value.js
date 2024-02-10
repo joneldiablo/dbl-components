@@ -6,9 +6,9 @@ export default (value, conf) => {
   switch (conf.format) {
     case 'number':
       return typeof value === 'boolean' ? Number(value)
-        : value.toLocaleString(getLang(), formatNumber(conf.context));
+        : value.toLocaleString(getLang(), conf.formatConf || formatNumber(conf.context));
     case 'currency':
-      const globalConf = formatCurrency(conf.context);
+      const globalConf = conf.formatConf || formatCurrency(conf.context);
       return value.toLocaleString(getLang(), {
         ...globalConf,
         currency: conf.currency || globalConf.currency,
@@ -16,11 +16,11 @@ export default (value, conf) => {
     case 'dictionary':
       return t(value, conf.context);
     case 'date':
-      return moment(value).format(formatDate(conf.context));
+      return moment(value).format(conf.formatConf || formatDate(conf.context));
     case 'time':
-      return moment(value).format(formatTime(conf.context));
+      return moment(value).format(conf.formatConf || formatTime(conf.context));
     case 'date-time':
-      return moment(value).format(formatDateTime(conf.context));
+      return moment(value).format(conf.formatConf || formatDateTime(conf.context));
     default:
       return value;
   }
