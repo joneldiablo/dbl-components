@@ -19,7 +19,7 @@ const schemaInput = {
         name: ['$definitions/name', 'fromControl'],
         wrapper: false,
         component: 'NoWrapField',
-        controlClasses: 'border-end-0 text-end',
+        controlClasses: 'border-end-0',
         type: '$definitions/type',
         style: {
           minWidth: 50
@@ -97,6 +97,15 @@ export default class RangeField extends Field {
     this.events.forEach(([evtName]) => eventHandler.unsubscribe(evtName));
   }
 
+  onUpdate(...args) {
+    super.onUpdate(...args);
+    const [{ value }] = args;
+    if (value === undefined) return;
+    const [from, to] = value === null ? [null, null] : value;
+    eventHandler.dispatch(`update.${this.props.name}-fromControl`, { value: from });
+    eventHandler.dispatch(`update.${this.props.name}-toControl`, { value: to });
+  }
+
   get inputNode() {
     return this.jsonRender.buildContent(this.schemaInput, 0);
   }
@@ -159,10 +168,9 @@ export default class RangeField extends Field {
           required, type, disabled,
           min, max, step, noValidate,
           readOnly, dir, accept,
-          multiple, maxLength, minLength,
-          default: def, value: v
+          multiple, maxLength, minLength
         } = this.props;
-        const idef = name.endsWith('fromControl') ? 0 : 1;
+        const { value: v } = this.state;
         const ival = name.endsWith('fromControl') ? 0 : 1;
         const minMax = name.endsWith('fromControl') ? 'max' : 'min';
         const controlClasses = new Set(section.controlClasses.split(' '));
@@ -177,7 +185,7 @@ export default class RangeField extends Field {
             min, max, step, noValidate,
             readOnly, dir, accept,
             multiple, maxLength, minLength,
-            default: def[idef], value: v[ival]
+            value: v[ival]
           },
           name.endsWith('fromControl') ? this.props.from : this.props.to,
           {
