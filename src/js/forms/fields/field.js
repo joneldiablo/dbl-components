@@ -57,7 +57,9 @@ export default class Field extends Component {
   state = {
     value: this.props.value || this.props.default,
     options: this.props.options,
-    error: false
+    error: false,
+    pristine: true,
+    dirty: false
   }
   ContentWrap = 'div';
 
@@ -75,7 +77,8 @@ export default class Field extends Component {
   }
 
   componentWillUnmount() {
-    clearTimeout(this.timeout);
+    clearTimeout(this.timeoutReturnData);
+    clearTimeout(this.timeoutRevalidate);
     eventHandler.unsubscribe('update.' + this.props.name, this.unique);
   }
 
@@ -97,8 +100,8 @@ export default class Field extends Component {
     if (data) toDispatch.data = data;
     if (this._reset) this._reset = false;
     else if (!error) {
-      clearTimeout(this.timeout);
-      this.timeout = setTimeout(() => {
+      clearTimeout(this.timeoutReturnData);
+      this.timeoutReturnData = setTimeout(() => {
         eventHandler.dispatch(name, toDispatch, extra);
       }, 300);
     }
@@ -142,14 +145,19 @@ export default class Field extends Component {
     const error = this.isInvalid(value);
     this.setState({
       value,
-      error
+      error,
+      pristine: false,
+      dirty: true
     }, () => this.returnData());
   }
 
   onUpdate({ value, options, error, reset }) {
     const newState = {};
-    if (typeof value !== 'undefined')
+    if (typeof value !== 'undefined') {
       newState.value = (value !== null ? value : this.props.default);
+      newState.dirty = newState.value === this.props.default;
+      newState.pristine = newState.value !== this.props.default;
+    }
     if (options) newState.options = options;
     if (typeof error === 'boolean') {
       newState.error = error;
@@ -163,12 +171,14 @@ export default class Field extends Component {
       return this.setState(newState, this.returnData);
     }
     this.setState(newState, () => {
-      if (this.input.current && typeof value !== 'undefined') {
-        setTimeout(() => {
-          const error = this.isInvalid(value);
-          if (this.state.error !== error) this.setState({ error });
-        }, 300);
-      }
+      if (value === undefined) return;
+      clearTimeout(this.timeoutRevalidate);
+      this.timeoutRevalidate = setTimeout(() => {
+        //if (this.state.dirty) this.input.current.reportValidity();
+        const error = this.isInvalid(value);
+        if (this.state.error !== error) this.setState({ error });
+      }, 300);
+
     });
   }
 

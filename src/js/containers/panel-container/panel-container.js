@@ -75,13 +75,15 @@ export default class PanelContainer extends Component {
     this.events.forEach(e => eventHandler.subscribe(...e));
     window.addEventListener('resize', this.onWindowResize);
     this.historyUnlisten = this.props.history.listen(this.onChangeLocation);
-    setTimeout(() => this.onWindowResize({ target: window }), 150);
+    clearTimeout(this.timeoutResize);
+    this.timeoutResize = setTimeout(() => this.onWindowResize({ target: window }), 150);
   }
 
   componentWillUnmount() {
     this.events.forEach(([eName]) => eventHandler.unsubscribe(eName));
     this.historyUnlisten();
     window.removeEventListener('resize', this.onWindowResize);
+    clearTimeout(this.timeoutResize);
   }
 
   onWindowResize = (e) => {

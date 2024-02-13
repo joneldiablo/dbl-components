@@ -25,6 +25,7 @@ export default class FormContainer extends Component {
     super(props);
     this.form = createRef();
     this.onChange = this.onChange.bind(this);
+    this.checkValidity = this.checkValidity.bind(this);
     this.state.data = {};
     this.state.invalidFields = {};
     this.state.defaultValues = {};
@@ -51,6 +52,7 @@ export default class FormContainer extends Component {
   componentWillUnmount() {
     clearTimeout(this.timeoutInvalid);
     clearTimeout(this.timeoutOnchage);
+    clearTimeout(this.timeoutCheckvalidity);
     this.events.forEach(([eventName]) => eventHandler.unsubscribe(eventName, this.unique));
   }
 
@@ -59,11 +61,18 @@ export default class FormContainer extends Component {
     if (typeof props.onChange === 'function') {
       const past = this.props._props.onChange;
       props.onChange = () => {
-        if (this.timeoutOnchage) clearTimeout(this.timeoutOnchage);
+        clearTimeout(this.timeoutOnchage);
         this.timeoutOnchage = setTimeout(() => past(this.state.data), 310);
       };
     }
     return props;
+  }
+
+  checkValidity() {
+    clearTimeout(this.timeoutCheckvalidity);
+    this.timeoutCheckvalidity = setTimeout(() =>
+      this.form.current?.checkValidity()
+      && eventHandler.dispatch('valid.' + this.props.name, this.state.data), 310);
   }
 
   onReadyOnce() {
@@ -92,7 +101,7 @@ export default class FormContainer extends Component {
         Object.keys(data).forEach(fieldName => {
           eventHandler.dispatch('update.' + fieldName, { value: data[fieldName] });
         });
-      this.setState({ data: { ...this.state.data, ...data } });
+      this.setState({ data: { ...this.state.data, ...data } }, this.checkValidity);
     }
     if (typeof reset === 'boolean') {
       this.reset();
@@ -150,9 +159,7 @@ export default class FormContainer extends Component {
     Object.assign(data, fieldData);
     this.setState({ data, invalidFields });
     eventHandler.dispatch('change.' + this.props.name, data);
-    if (this.form.current?.checkValidity()) {
-      eventHandler.dispatch('valid.' + this.props.name, data);
-    }
+    this.checkValidity();
   }
 
   content(children = this.props.children) {
