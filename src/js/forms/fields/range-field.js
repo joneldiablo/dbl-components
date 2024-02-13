@@ -173,7 +173,7 @@ export default class RangeField extends Field {
         const { value: v } = this.state;
         const ival = name.endsWith('fromControl') ? 0 : 1;
         const minMax = name.endsWith('fromControl') ? 'max' : 'min';
-        const controlClasses = new Set(section.controlClasses.split(' '));
+        const controlClasses = new Set(this.props.controlClasses.split(' '));
         let addDelete;
         if (readOnly) addDelete = 'add';
         else addDelete = 'delete';

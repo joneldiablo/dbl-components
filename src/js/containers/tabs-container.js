@@ -15,6 +15,23 @@ export default class TabsContainer extends Container {
     this.state.i = 0;
   }
 
+  componentDidMount() {
+    super.componentDidMount();
+    eventHandler.subscribe(`update.${this.props.name}`, this.onUpdate.bind(this), this.name);
+  }
+
+  componentWillUnmount() {
+    super.componentWillUnmount();
+    eventHandler.unsubscribe(`update.${this.props.name}`, this.name);
+  }
+
+  onUpdate({ active }) {
+    this.setState({
+      value: active + '',
+      i: parseInt(active)
+    });
+  }
+
   onClickTab = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -22,11 +39,11 @@ export default class TabsContainer extends Container {
     const { target } = e;
     const tabName = target.getAttribute('index');
     if (!tabName) return;
-    const { name } = this.props;
     this.setState({
       value: tabName,
-      i: parseInt(target.getAttribute('index'))
+      i: parseInt(tabName)
     });
+    const { name } = this.props;
     eventHandler.dispatch(name, { [name]: tabName });
   }
 
