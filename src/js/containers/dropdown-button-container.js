@@ -101,7 +101,7 @@ export default class DropdownButtonContainer extends Component {
     btnClasses: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
     disabled: PropTypes.bool,
     dropdown: PropTypes.any,
-    dropdownClass: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+    dropdownClass: PropTypes.bool,
     dropdownClasses: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
     itemClasses: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
     label: PropTypes.node,
@@ -118,6 +118,7 @@ export default class DropdownButtonContainer extends Component {
     ...Component.defaultProps,
     itemClasses: '',
     dropdownClasses: '',
+    dropdownClass: true,
     btnClasses: '',
     dropdown: {}
   };
@@ -241,9 +242,9 @@ export default class DropdownButtonContainer extends Component {
   }
 
   content(children = this.props.children) {
-    const { btnClasses, label, value, disabled } = this.props;
+    const { btnClasses, label, value, disabled, dropdownClass } = this.props;
     const cn = ['btn', btnClasses];
-    if (this.props.dropdownClass !== false) cn.push('dropdown-toggle');
+    if (dropdownClass !== false) cn.push('dropdown-toggle');
     return React.createElement(React.Fragment, {},
       React.createElement('button',
         {

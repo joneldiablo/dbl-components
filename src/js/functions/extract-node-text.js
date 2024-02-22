@@ -1,3 +1,5 @@
+import React from "react";
+
 const extractNodeString = (obj) => {
   if (typeof obj === 'string') return obj;
   else if (Array.isArray(obj)) {

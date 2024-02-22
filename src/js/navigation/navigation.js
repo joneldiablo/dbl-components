@@ -99,7 +99,7 @@ export default class Navigation extends Component {
   collapseRef(ref, item) {
     if (!ref) return;
     if (!this.collapses.current) this.collapses.current = {};
-    if (this.collapses.current[item.name]) return;
+    if (this.collapses.current[item.name]?.ref === ref) return;
     this.collapses.current[item.name] = {
       ref,
       item,
@@ -122,7 +122,9 @@ export default class Navigation extends Component {
       this.state.carets[item.name] = this.props.caretIcons[0];
       this.setState({ carets: this.state.carets }, () => itemControl.collapse.show());
     } else {
-      //Se oculta todo en el evento de ocultar
+      //Se usa en event hide para ocultar todo
+      Array.from(itemControl.ref.querySelectorAll('.collapse'))
+        .reverse().forEach(c => Collapse.getInstance(c)?.hide());
       itemControl.collapse.hide();
     }
     itemControl.submenuOpen = !itemControl.submenuOpen;
@@ -131,8 +133,10 @@ export default class Navigation extends Component {
   hide(e) {
     const itemName = e.target.id.split('-collapse')[0];
     const itemControl = this.collapses.current[itemName];
+    const caretClose = this.props.caretIcons[1];
     itemControl.submenuOpen = false;
-    this.state.carets[itemName] = this.props.caretIcons[1];
+    this.state.carets[itemName] = caretClose;
+
     this.setState({ carets: this.state.carets });
   }
 
