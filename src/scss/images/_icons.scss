@@ -11,10 +11,8 @@
 .Svg,
 .Icons {
   &.icon-inline {
-    width: 1.2em;
-    vertical-align: text-bottom;
-    margin-top: 0.15rem;
-    margin-bottom: -0.15rem;
+    width: 1rem;
+    vertical-align: baseline;
   }
 
   &.small {

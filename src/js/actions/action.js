@@ -23,7 +23,8 @@ export default class ActionComponent extends Component {
       error: 'text-bold text-danger',
       warning: 'text-bold text-warning',
       loading: 'spinner'
-    }
+    },
+    iconClasses: ''
   };
   static schemaContent = {
     actionIcon: {
@@ -75,7 +76,7 @@ export default class ActionComponent extends Component {
           path = `./${actual}/${path}`;
         }
       }
-      return history.push(path);
+      history.push(path);
     }
     if (this.props.open) {
       eventHandler.dispatch('update.' + this.props.open, { open: true });
