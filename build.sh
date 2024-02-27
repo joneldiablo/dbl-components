@@ -1,21 +1,17 @@
 #!/bin/bash
 
 # Inicialización de variables
-MESSAGE=""
 OTP=""
 
 # Función de uso
 usage() {
-  echo "Uso: $0 [-m <mensaje>] [--otp <otp>]"
+  echo "Uso: $0 [--otp <otp>]"
   exit 1
 }
 
 # Parseo de argumentos
-while getopts ":m:-:" opt; do
+while getopts ":-:" opt; do
   case ${opt} in
-    m )
-      MESSAGE=$OPTARG
-      ;;
     - )
       case "${OPTARG}" in
         otp )
@@ -40,24 +36,26 @@ done
 
 ##------
 
-if [ -n "$MESSAGE" ]; then
-  node update-version.js
-fi
+# Actualizar versión y capturar la nueva versión
+nueva_version=$(node update-version.js)
 
+# Preparar los directorios
 rm -rf ./lib/js/* && mkdir -p lib/js
 rm -rf ./lib/css/* && mkdir -p lib/css
 rm -rf ./lib/scss/* && mkdir -p lib/scss
 cp -r src/scss lib
 
+# Compilar con Babel
 yarn babel
 
-if [ -n "$MESSAGE" ]; then
-  git add .
-  git commit -m "$MESSAGE"
-  git push origin --all
-  #git push backup --all
-fi
+# Hacer commit con el número de la nueva versión
+git add .
+git commit -m "$nueva_version"
+git push origin --all
+git tag -a "$nueva_version" -m "$nueva_version"
+git push origin "$nueva_version"
 
+# Publicar en npm
 if [ -n "$OTP" ]; then
   npm publish --otp "$OTP"
 else

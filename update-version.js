@@ -6,4 +6,4 @@ let v = parseInt(vArr.pop());
 vArr.push(++v);
 pkg.version = vArr.join('.');
 fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2));
-
+console.log(pkg.version);
