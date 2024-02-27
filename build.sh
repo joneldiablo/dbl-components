@@ -36,6 +36,9 @@ done
 
 ##------
 
+git checkout master
+git merge dev
+
 # Actualizar versión y capturar la nueva versión
 nueva_version=$(node update-version.js)
 
@@ -54,6 +57,7 @@ git commit -m "$nueva_version"
 git push origin --all
 git tag -a "$nueva_version" -m "$nueva_version"
 git push origin "$nueva_version"
+git checkout dev
 
 # Publicar en npm
 if [ -n "$OTP" ]; then
