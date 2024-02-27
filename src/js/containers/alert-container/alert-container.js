@@ -55,9 +55,7 @@ export default class AlertContainer extends Component {
   buildClasses(prevProps) {
     if (prevProps.color !== this.props.color) {
       this.setClasses.delete('alert-' + prevProps.color);
-      this.setClasses.delete('text-' + prevProps.color);
       this.setClasses.add('alert-' + this.props.color);
-      this.setClasses.add('text-' + this.props.color);
     }
     if (prevProps.showClose !== this.props.showClose) {
       this.setClasses[this.props.showClose ? 'add' : 'delete']('alert-dismissible');

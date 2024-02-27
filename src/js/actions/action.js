@@ -31,7 +31,7 @@ export default class ActionComponent extends Component {
       name: ["$props/name", "actionIcon"],
       component: "Icons",
       icon: "$props/icon",
-      classes: ["me-2 float-start", "$props/iconClasses"]
+      classes: ["me-2", "$props/iconClasses"]
     },
     actionStatus: {
       name: ["$props/name", "actionStatus"],
