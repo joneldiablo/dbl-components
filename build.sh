@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# Inicialización de variables
+# Variable initialization
 OTP=""
 
-# Función de uso
+# Usage function
 usage() {
-  echo "Uso: $0 [--otp <otp>]"
+  echo "Usage: $0 [--otp <otp>]"
   exit 1
 }
 
-# Parseo de argumentos
+# Argument parsing
 while getopts ":-:" opt; do
   case ${opt} in
     - )
@@ -18,50 +18,60 @@ while getopts ":-:" opt; do
           OTP="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
           ;;
         *)
-          echo "Opción inválida: --${OPTARG}" >&2
+          echo "Invalid option: --${OPTARG}" >&2
           usage
           ;;
       esac
       ;;
     \? )
-      echo "Opción inválida: -$OPTARG" >&2
+      echo "Invalid option: -$OPTARG" >&2
       usage
       ;;
     : )
-      echo "La opción -$OPTARG requiere un argumento." >&2
+      echo "Option -$OPTARG requires an argument." >&2
       usage
       ;;
   esac
 done
 
-##------
+##------ Check for uncommitted changes
+if git diff-index --quiet HEAD --; then
+  echo "No uncommitted changes. Continuing..."
+else
+  echo "Uncommitted changes detected. Stopping the script."
+  exit 1
+fi
 
+# Switch to master branch
 git checkout master
-git merge dev
+git merge -
 
-# Actualizar versión y capturar la nueva versión
-nueva_version=$(node update-version.js)
+# Update version and capture the new version
+new_version=$(node update-version.js)
 
-# Preparar los directorios
+# Prepare directories
 rm -rf ./lib/js/* && mkdir -p lib/js
 rm -rf ./lib/css/* && mkdir -p lib/css
 rm -rf ./lib/scss/* && mkdir -p lib/scss
 cp -r src/scss lib
 
-# Compilar con Babel
+# Compile with Babel
 yarn babel
 
-# Hacer commit con el número de la nueva versión
+# Commit with the new version number
 git add .
-git commit -m "$nueva_version"
+git commit -m "$new_version"
 git push origin --all
-git tag -a "$nueva_version" -m "$nueva_version"
-git push origin "$nueva_version"
-git checkout dev
+git tag -a "$new_version" -m "$new_version"
+git push origin "$new_version"
 
-# Publicar en npm
+# Publish on npm
 if [ -n "$OTP" ]; then
   npm publish --otp "$OTP"
 else
   npm publish
 fi
+
+# Switch back to the previous branch
+git checkout -
+

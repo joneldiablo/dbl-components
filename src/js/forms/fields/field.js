@@ -272,7 +272,7 @@ export default class Field extends Component {
   content(children = this.props.children) {
     const { inline, first, placeholder, label, floating, inlineControlClasses } = this.props;
     const cn = ['position-relative'];
-    if (inline) cn.push('d-flex');
+    if (inline) cn.push('d-flex align-items-center');
     if (placeholder && !label && floating) cn.push('form-floating');
     const wrapProps = {};
     const className = cn.flat().join(' ');
@@ -292,9 +292,9 @@ export default class Field extends Component {
         !inline && React.createElement(React.Fragment, {},
           this.errorMessageNode,
           this.messageNode,
-        )
-      ),
-      children
+        ),
+        children
+      )
     ));
   }
 };
