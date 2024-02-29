@@ -139,12 +139,26 @@ export const addFormatTemplates = (newTemplates = {}) => {
 export class HeaderCell extends React.Component {
 
   static propTypes = {
-    classes: PropTypes.any,
     col: PropTypes.any,
     filterPos: PropTypes.any,
-    headerClasses: PropTypes.any,
     icons: PropTypes.any,
-    orderable: PropTypes.any
+    orderable: PropTypes.bool,
+    classes: PropTypes.oneOfType([
+      PropTypes.string, PropTypes.object,
+      PropTypes.arrayOf(PropTypes.string)
+    ]),
+    headerClasses: PropTypes.oneOfType([
+      PropTypes.string, PropTypes.object,
+      PropTypes.arrayOf(PropTypes.string)
+    ]),
+    orderClasses: PropTypes.oneOfType([
+      PropTypes.string, PropTypes.object,
+      PropTypes.arrayOf(PropTypes.string)
+    ]),
+    orderActiveClasses: PropTypes.oneOfType([
+      PropTypes.string, PropTypes.object,
+      PropTypes.arrayOf(PropTypes.string)
+    ])
   }
 
   static jsClass = 'HeaderColumn';
@@ -223,7 +237,11 @@ export class HeaderCell extends React.Component {
    * @returns {React.Component} El componente renderizado.
    */
   render() {
-    const { col, classes, icons, orderable, filterPos, headerClasses } = this.props;
+    const {
+      col, classes, icons, orderable,
+      filterPos, headerClasses,
+      orderClasses, orderActiveClasses
+    } = this.props;
     const { sortDir, searchActive } = this.state;
     const showOrder = typeof col.orderable !== 'undefined' ? col.orderable : orderable;
     const style = {
@@ -234,10 +252,27 @@ export class HeaderCell extends React.Component {
       col.type, col.name + '-header',
       col.classes, classes
     ];
+
     const cnSearch = ['cursor-pointer'];
-    if (!searchActive) cnSearch.push('text-muted');
+    if (!searchActive) cnSearch.push('opacity-75');
+
     const hClasses = ["align-middle", col.name];
     if (headerClasses) hClasses.push(headerClasses);
+
+    const oc = ['ps-2', orderClasses];
+    if (!sortDir) oc.push('opacity-50');
+
+    const odescc = ['cursor-pointer'];
+    const oascc = ['cursor-pointer'];
+    if (sortDir === 'DESC') {
+      odescc.push(orderActiveClasses);
+      oascc.push('opacity-50');
+    }
+    if (sortDir === 'ASC') {
+      oascc.push(orderActiveClasses);
+      odescc.push('opacity-50');
+    }
+
     return React.createElement('th',
       { className: hClasses.filter(c => !!c).flat().join(' '), scope: "col" },
       React.createElement('div', { className: "d-flex align-items-center" },
@@ -269,19 +304,19 @@ export class HeaderCell extends React.Component {
           )
         ),
         showOrder && React.createElement('div',
-          { className: "ps-2 text-muted", style: { fontSize: 10 } },
+          { className: oc.flat().filter(c => !!c).join(' '), style: { fontSize: 10 } },
           React.createElement('span',
             { onClick: (e) => this.sort('DESC', e) },
             React.createElement(Icons, {
               icon: icons.caretUp,
-              className: 'cursor-pointer ' + (sortDir === 'DESC' ? 'text-body' : '')
+              className: odescc.flat().filter(c => !!c).join(' ')
             })
           ),
           React.createElement('span',
             { onClick: (e) => this.sort('ASC', e) },
             React.createElement(Icons, {
               icon: icons.caretDown,
-              className: 'cursor-pointer ' + (sortDir === 'ASC' ? 'text-body' : '')
+              className: oascc.flat().filter(c => !!c).join(' ')
             })
           )
         )
@@ -331,7 +366,9 @@ export default class Table extends Component {
       search: 'search',
       clear: 'close'
     },
-    vertical: false
+    vertical: false,
+    orderClasses: '',
+    orderActiveClasses: ''
   }
 
   constructor(props) {
@@ -411,7 +448,11 @@ export default class Table extends Component {
    * @memberof Table
    */
   mapHeaderCell = ([key, col], i) => {
-    const { colClasses, headerClasses, icons, orderable, name } = this.props;
+    const {
+      colClasses, headerClasses,
+      icons, orderable, name,
+      orderClasses, orderActiveClasses
+    } = this.props;
     const { orderBy } = this.state;
     col.name = col.name || key;
     col.label = this.jsonRender.buildContent(col.label);
@@ -423,7 +464,9 @@ export default class Table extends Component {
       icons,
       onSort: this.onSort,
       sort: orderBy === col.name,
-      tableName: name
+      tableName: name,
+      orderClasses,
+      orderActiveClasses
     };
 
     return React.createElement(HeaderCell, { key: i + '-' + col.name, ...props });
@@ -588,7 +631,7 @@ export default class Table extends Component {
         ),
         React.createElement('tbody', {},
           tableData.map(({ cells, data }, i) =>
-            React.createElement('tr', { ...this.rowProps(data, i) } > { cells })
+            React.createElement('tr', { ...this.rowProps(data, i) }, cells)
           )
         ),
         footer && (
