@@ -59,6 +59,7 @@ export class AppController {
         }
       },
       api = "http://localhost:3000/",
+      apiHeaders,
       fetchBefore = (url, options) => options,
       fetchError = (error, url) => error,
       maxTimeout = 30000,
@@ -80,6 +81,7 @@ export class AppController {
       icons,
       schema,
       api,
+      apiHeaders,
       fetchBefore,
       fetchError,
       maxTimeout,
@@ -237,10 +239,22 @@ export class AppController {
     });
     const controller = new AbortController();
     this.fetchList[options.method + url] = controller;
+
+    const apiHeaders = !this.props.apiHeaders ? {} :
+      typeof this.props.apiHeaders === 'object'
+        ? this.props.apiHeaders
+        : typeof this.props.apiHeaders === 'string'
+        && this.props.apiHeaders.split('|').reduce((rdx, c) => {
+          const [key, ...value] = c.split(':').map(s => s.trim());
+          rdx[key] = value.join(':');
+          return rdx;
+        }, {});
+
     conf.signal = controller.signal;
     conf.headers = Object.assign({
       'Content-Type': 'application/json',
-      'Accept': 'application/json'
+      'Accept': 'application/json',
+      ...apiHeaders
     }, headers);
     const timeoutId = setTimeout(this.onTimeout.bind(this), timeout, controller);
     const fetchPromise = fetch(urlFinal, conf)
