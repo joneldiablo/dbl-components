@@ -108,7 +108,8 @@ export default class ActionComponent extends Component {
       case "actionIcon": {
         return {
           active: !!this.props.icon,
-          icon: this.props.icon
+          icon: this.props.icon,
+          classes: [config.classes[0], this.props.iconClasses].flat().join(' ')
         }
       }
       case 'actionStatus': {
