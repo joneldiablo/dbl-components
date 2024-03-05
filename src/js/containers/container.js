@@ -84,6 +84,8 @@ export default class Container extends Component {
         .filter(br => width >= this.props.breakpoints[br])
         .pop();
       this.orientation = width >= height ? 'landscape' : 'portrait';
+      this.width = width;
+      this.height = height;
       const resp = {
         width, height,
         breakpoint: this.breakpoint,

@@ -1,165 +1,147 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
-export default function ScrollX({
-  tag = 'div',
-  classes = [], scrollTrackClasses = [], scrollBarClasses = [],
-  style = {}, scrollTrackStyle = {}, scrollBarStyle = {},
-  children
+import Container from "dbl-components/lib/js/containers/container";
+
+/**
+ * Custom horizontal scroll component with a custom scrollbar.
+ * @param {Object} props - Component properties.
+ * @returns {React.Component} - The ScrollX component with a custom scrollbar.
+ */
+function ScrollXNode({
+  scrollTrackClasses = [], // Scroll track classes.
+  scrollBarClasses = [], // Scroll bar classes.
+  scrollTrackStyle = {}, // Inline styles for the scroll track.
+  scrollBarStyle = {}, // Inline styles for the scroll bar.
+  breakpoint,
+  orientation,
+  width,
+  height,
+  children, // Child elements of the component.
 }) {
+  const containerRef = useRef(null); // Reference to the scroll container.
+  const scrollTrackRef = useRef(null); // Reference to the scroll track.
+  const scrollBarRef = useRef(null); // Reference to the scroll bar.
+  const initialMouseX = useRef(null); // Initial mouse X position for drag events.
+  const initialScrollLeft = useRef(null); // Left position of the scroll bar.
+  // State variables.
+  const [isTouchDevice, setIsTouchDevice] = useState(false); // Flag for touch device detection.
+  const [scrollBarLeft, setScrollBarLeft] = useState(0); // Left position of the scroll bar.
+  const [transform, setTransform] = useState(0); // Left position of the scroll bar.
+  const [wScrollBar, setWScrollBar] = useState(0); // Width of the scroll bar.
+  const [showBar, setShowBar] = useState(false); // State to dynamically set content style
+  const [contentWidth, setContentWidth] = useState(0); // State to dynamically set content style
 
-  const lastTouchXRef = useRef(0);
-  const containerRef = useRef(null);
-  const scrollTrackRef = useRef(null);
-  const lastTimeRef = useRef(null);
-
-  const [velocity, setVelocity] = useState(0); // Velocidad del desplazamiento durante el touch
-  const [timeoutTouchEnd, setTimeoutTouchEnd] = useState(null);
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
-  const [isTouchMove, setIsTouchMove] = useState(false);
-  const [marginLeft, setMarginLeft] = useState(0);
-  const [containerWidth, setContainerWidth] = useState(0);
-  const [contentWidth, setContentWidth] = useState(0);
-  const [startX, setStartX] = useState(0);
-  const [scrollBarLeft, setScrollBarLeft] = useState(0);
-  const [wScrollBar, setWScrollBar] = useState(0);
-
-  const applyInertia = () => {
-    let friction = 0.95; // Coeficiente de fricción para simular la desaceleración
-    const inertia = () => {
-      if (Math.abs(velocity) > 0.1) {
-        updateMarginLeft(velocity * 10); // Multiplicamos la velocidad para aumentar el efecto
-        setVelocity(velocity * friction); // Aplicamos fricción a la velocidad
-        requestAnimationFrame(inertia); // Continúa aplicando la inercia
-      }
-    };
-    requestAnimationFrame(inertia);
-  };
-
-  useLayoutEffect(() => {
-    return () => clearTimeout(timeoutTouchEnd);
-  }, []);
-
-  // Detect touch device
+  // Effect to detect if the device supports touch events.
   useEffect(() => {
     setIsTouchDevice('ontouchstart' in window);
-  }, [containerRef.current?.offsetWidth]);
+  }, []);
 
-  // Update container and content width
+  // Effect to update container and scroll bar properties.
   useEffect(() => {
     if (containerRef.current) {
       const container = containerRef.current;
-      setContainerWidth(container.offsetWidth);
-      setContentWidth(container.scrollWidth);
-      const wp = container.offsetWidth / container.scrollWidth * 100;
-      setWScrollBar(Math.max(wp, 20)); // Ensure scrollbar is not too small
+      const contentWidth = container.scrollWidth;
+      const containerWidth = container.clientWidth;
+
+      const isContentOverflowing = contentWidth > containerWidth;
+      setShowBar(isContentOverflowing);
+      setContentWidth(contentWidth);
+
+      const wp = (containerWidth / contentWidth) * 100;
+      setWScrollBar(Math.max(Math.min(wp, 90), 20)); // Ensure scrollbar is not too small
+
     }
-  }, [children, containerRef.current?.offsetWidth]);
+
+  }, [contentWidth, breakpoint, orientation, width, height]);
+
+  const handleScroll = () => {
+    if (!scrollTrackRef.current) return;
+    const container = containerRef.current;
+    const contentWidth = container.scrollWidth - container.clientWidth;
+    const scrollLeft = container.scrollLeft;
+    const scrollBarPosition = (scrollLeft / contentWidth) * (scrollTrackRef.current.clientWidth - scrollBarRef.current.clientWidth);
+    setScrollBarLeft(scrollBarPosition / scrollTrackRef.current.clientWidth);
+  };
 
   useEffect(() => {
-    const scrollPercentage = Math.abs(marginLeft) / (contentWidth - containerWidth);
-    setScrollBarLeft(scrollPercentage * (100 - wScrollBar)); // Use the updated wScrollBar value
-  }, [marginLeft, contentWidth, containerWidth, wScrollBar]); // Depend on wScrollBar as well
-
-  const handleTouchStart = (e) => {
-    lastTimeRef.current = performance.now();
-    setIsTouchMove(true);
-    setStartX(e.touches[0].clientX);
-  };
-
-  const handleTouchMove = (e) => {
-    const touchX = e.touches[0].clientX;
-    const dx = touchX - startX;
-    setStartX(touchX);
-    updateMarginLeft(dx);
-
-    // Calcula la velocidad del movimiento
-    const currentTime = performance.now();
-    const timeDelta = currentTime - lastTimeRef.current;
-    const newVelocity = timeDelta ? dx / timeDelta : 0;
-    setVelocity(newVelocity);
-    lastTouchXRef.current = touchX;
-    lastTimeRef.current = currentTime; // Actualiza el timestamp del último evento touchmove 
-  };
-
-  const handleTouchEnd = (e) => {
-    clearTimeout(timeoutTouchEnd);
-    setTimeoutTouchEnd(setTimeout(setIsTouchMove, 1333, false));
-
-    // Aplica la inercia basada en la velocidad calculada
-    //applyInertia();
-  };
+    const container = containerRef.current;
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [wScrollBar]);
 
   const handleDragStart = (e) => {
-    e.dataTransfer.setDragImage(new Image(), 0, 0); // Use a transparent image for dragging
-    setStartX(e.clientX);
+    e.preventDefault();
+    e.stopPropagation();
+    const initialPosValue = e.clientX || (e.touches ? e.touches[0].clientX : 0);
+    containerRef.current.removeEventListener('scroll', handleScroll);
+
+    document.addEventListener('mousemove', handleDrag);
+    document.addEventListener('touchmove', handleDrag);
+    document.addEventListener('mouseup', handleDragEnd);
+    document.addEventListener('touchend', handleDragEnd);
+    initialMouseX.current = initialPosValue;
+    initialScrollLeft.current = scrollBarLeft;
   };
 
   const handleDrag = (e) => {
-    if (e.clientX === 0) return; // Prevents updating when drag event fires with clientX = 0
-    const dx = e.clientX - startX;
-    setStartX(e.clientX);
-    updateScrollBarPosition(dx);
+    e.preventDefault();
+    e.stopPropagation();
+    const posValue = e.clientX || (e.touches ? e.touches[0].clientX : 0);
+    const initialValue = initialMouseX.current;
+    if (!containerRef.current || posValue === 0) return;
+
+    const barPercent = (scrollBarRef.current.clientWidth / scrollTrackRef.current.clientWidth);
+    const deltaX = (posValue - initialValue) * barPercent;
+    const pxScrollLeft = initialScrollLeft.current * scrollBarRef.current.clientWidth;
+    const newScrollLeft = (pxScrollLeft + deltaX) / scrollBarRef.current.clientWidth;
+    const max = 1 - barPercent;
+    const boundedNewScrollLeft = Math.max(0, Math.min(max, newScrollLeft));
+    setScrollBarLeft(boundedNewScrollLeft);
+
+    const container = containerRef.current;
+    const containerRatio = container.scrollWidth / container.clientWidth;
+    const translate = -((containerRatio - 1) * container.clientWidth) * (boundedNewScrollLeft / max);
+    setTransform(translate);
+
   };
 
-  const handleWheel = (e) => {
-    const wheelDelta = Math.abs(e.deltaX) === 0 && e.shiftKey ? e.deltaY : e.deltaX;
-    updateMarginLeft(-wheelDelta);
+  const handleDragEnd = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    containerRef.current.addEventListener('scroll', handleScroll);
+    document.removeEventListener('mousemove', handleDrag);
+    document.removeEventListener('touchmove', handleDrag);
+    document.removeEventListener('mouseup', handleDragEnd);
+    document.removeEventListener('touchend', handleDragEnd);
+    initialMouseX.current = 0;
+    initialScrollLeft.current = 0;
   };
 
-  // Update marginLeft based on delta movement
-  const updateMarginLeft = (dx) => {
-    setMarginLeft((prevMarginLeft) => {
-      let newMargin = prevMarginLeft + dx;
-      newMargin = Math.max(newMargin, containerWidth - contentWidth);
-      newMargin = Math.min(newMargin, 0);
-      return newMargin;
-    });
-  };
-
-  // Actualiza la posición de scrollBarLeft basada en el movimiento del mouse
-  const updateScrollBarPosition = (dx) => {
-    setScrollBarLeft((prevScrollBarLeft) => {
-
-      const scrollTrackWidth = scrollTrackRef.current.offsetWidth;
-      // Transforma el desplazamiento del mouse en X a porcentaje del ancho total del contenedor
-      let mouseXPercentage = (dx / scrollTrackWidth) * 100;
-      // Calcula el nuevo porcentaje de posición de la barra sumando el porcentaje actual
-      let newScrollBarLeft = prevScrollBarLeft + mouseXPercentage * (scrollTrackWidth - wScrollBar) / scrollTrackWidth;
-      // Establece un límite mínimo para newScrollBarLeft
-      newScrollBarLeft = Math.max(newScrollBarLeft, 0);
-      // Establece un límite máximo para newScrollBarLeft asegurando que no exceda el ancho disponible
-      newScrollBarLeft = Math.min(newScrollBarLeft, 100 - wScrollBar);
-
-      // Calcula el nuevo marginLeft basado en la posición de scrollBarLeft
-      const newMarginLeft = -((newScrollBarLeft / (100 - wScrollBar)) * (contentWidth - containerWidth));
-      // Calcula el dx como la diferencia entre el nuevo marginLeft y el actual
-      const marginLeftDx = newMarginLeft - marginLeft;
-      // Actualiza marginLeft usando el dx calculado
-      updateMarginLeft(marginLeftDx);
-
-      return newScrollBarLeft;
-    });
-  };
-
-  const Tag = tag;
-  const cn = [classes];
-  const stc = [scrollTrackClasses];
-  const sbc = [scrollBarClasses];
+  const stc = [scrollTrackClasses]; // Scroll track classes.
+  const sbc = ['cursor-pointer', scrollBarClasses]; // Scroll bar classes.
+  const fc = (input) => [input].flat().filter(Boolean).join(' '); // Function to flatten and filter class names.
 
   return (
-    <Tag ref={containerRef} className={cn.flat().filter(c => !!c).join(' ')} style={{ ...style, overflowX: 'clip' }} onWheel={handleWheel}>
+    <>
       <div
         style={{
-          marginLeft: `${marginLeft}px`,
-          width: 'max-content',
+          overflowX: 'clip'
         }}
-        {...(isTouchDevice ? { onTouchStart: handleTouchStart, onTouchMove: handleTouchMove, onTouchEnd: handleTouchEnd } : {})}
       >
-        {children}
-      </div>
-      {(!isTouchDevice || isTouchMove) && (
         <div
-          className={stc.flat().join(' ')}
+          ref={containerRef}
+          style={{
+            paddingBottom: "2rem",
+            marginBottom: "-2rem",
+            transform: `translate(${transform}px)`
+          }}
+        >
+          {children}
+        </div>
+      </div>
+      {showBar && (
+        <div
+          className={fc(stc)}
           ref={scrollTrackRef}
           style={{
             bottom: 0,
@@ -172,21 +154,48 @@ export default function ScrollX({
           }}
         >
           <div
-            className={sbc.flat().join(' ')}
+            ref={scrollBarRef}
+            className={fc(sbc)}
             style={{
               height: '100%',
               backgroundColor: '#888',
               ...scrollBarStyle,
               width: `${wScrollBar}%`,
-              marginLeft: `${scrollBarLeft}%`
+              marginLeft: `${scrollBarLeft * 100}%`
             }}
-            draggable="true"
-            onDragStart={handleDragStart}
-            onDrag={handleDrag}
+            onMouseDown={handleDragStart}
+            onTouchStart={handleDragStart}
           />
         </div>
-      )
-      }
-    </Tag >
+      )}
+    </>
   );
+}
+
+export default class ScrollX extends Container {
+
+  static jsClass = 'ScrollX';
+
+  content(children = this.props.children) {
+    const {
+      scrollTrackClasses,
+      scrollBarClasses,
+      scrollTrackStyle,
+      scrollBarStyle,
+    } = this.props;
+    return <ScrollXNode
+      {...{
+        breakpoint: this.breakpoint,
+        orientation: this.orientation,
+        width: this.width,
+        height: this.height,
+        scrollTrackClasses,
+        scrollBarClasses,
+        scrollTrackStyle,
+        scrollBarStyle,
+        children
+      }}
+    />
+  }
+
 }
