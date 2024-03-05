@@ -4,11 +4,13 @@ import moment from "moment";
 
 import eventHandler from "../functions/event-handler";
 import deepMerge from "../functions/deep-merge";
+import t from '../functions/i18n';
+import resolveRefs from '../functions/resolve-refs';
 import fields from "../forms/fields";
 import Icons from "../media/icons";
-import JsonRender from "../json-render";
 import DropdownContainer from "../containers/dropdown-container";
 import Action from "../actions/action";
+import JsonRender from "../json-render";
 import Component from "../component";
 
 /**
@@ -43,13 +45,14 @@ export const FORMATS = {
    * @param {String} colName - Nombre de la columna.
    * @returns {React.Component} El componente formateado.
    */
-  component: (raw, props, data, jsonRender, colName) => {
+  component: (raw, rawprops, data, jsonRender, colName) => {
+    const props = resolveRefs(rawprops, { data });
     if (props.type === 'boolean') {
       props.value = !!raw;
     } else {
       props.value = raw;
     }
-    props.name += '.cell';
+    props.name = [props.name].flat().filter(Boolean).join('-') + '.cell';
     props.id = data.id;
     props.data = data;
     props.columnName = colName;
@@ -518,7 +521,7 @@ export default class Table extends Component {
           ...col.style
         }
         : col.style,
-      title: typeof rowData[colName] !== 'object' ? rowData[colName] : undefined
+      title: rowData[colName] !== undefined ? t(rowData[colName].toString(), col.context) : null
     }
 
     const mutation = typeof mapCellsFunc === 'function' && mapCellsFunc(name, col.name, rowData, cellAttrs) || {};
