@@ -169,7 +169,9 @@ export class HeaderCell extends React.Component {
     filterPos: 'down'
   }
 
-  state = {};
+  state = {
+    searchActive: false
+  };
 
   constructor(props) {
     super(props);
@@ -232,7 +234,9 @@ export class HeaderCell extends React.Component {
     let newDir = dir;
     if (sortDir === newDir) newDir = null;
     this.setState({ sortDir: newDir });
-    if (typeof onSort === 'function') onSort(newDir ? { [col.name]: newDir } : null);
+    const dispatchData = { [col.name]: newDir };
+    if (typeof onSort === 'function') onSort(newDir ? dispatchData : null);
+    eventHandler.dispatch('order.' + this.props.tableName, dispatchData);
   }
 
   /**
@@ -258,6 +262,7 @@ export class HeaderCell extends React.Component {
 
     const cnSearch = ['cursor-pointer'];
     if (!searchActive) cnSearch.push('opacity-75');
+    else cnSearch.push('active');
 
     const hClasses = ["align-middle", col.name];
     if (headerClasses) hClasses.push(headerClasses);
@@ -267,11 +272,11 @@ export class HeaderCell extends React.Component {
 
     const odescc = ['cursor-pointer'];
     const oascc = ['cursor-pointer'];
-    if (sortDir === 'DESC') {
+    if (sortDir === 'ASC') {
       odescc.push(orderActiveClasses);
       oascc.push('opacity-50');
     }
-    if (sortDir === 'ASC') {
+    if (sortDir === 'DESC') {
       oascc.push(orderActiveClasses);
       odescc.push('opacity-50');
     }
@@ -292,31 +297,31 @@ export class HeaderCell extends React.Component {
                 ),
                 dropdownClasses: "dropdown-menu-end p-0",
                 dropdownClass: false
-              }
-            ),
-            searchActive && React.createElement(Action,
-              {
-                name: col.name + 'Clear',
-                classes: "btn-link btn-sm p-0",
-                style: { top: 5, position: 'absolute', right: 8, zIndex: 4 }
               },
-              React.createElement(Icons,
-                { icon: icons.clear, classes: "text-danger" })
-            ),
-            React.createElement(fields[col.filter.type] || fields.Field, col.filter)
+              searchActive && React.createElement(Action,
+                {
+                  name: col.name + 'Clear',
+                  classes: "btn-link btn-sm p-0",
+                  style: { top: 5, position: 'absolute', right: 8, zIndex: 4 }
+                },
+                React.createElement(Icons,
+                  { icon: icons.clear, classes: "text-danger" })
+              ),
+              React.createElement(fields[col.filter.component] || fields[col.filter.type] || fields.Field, col.filter)
+            )
           )
         ),
         showOrder && React.createElement('div',
           { className: oc.flat().filter(c => !!c).join(' '), style: { fontSize: 10 } },
           React.createElement('span',
-            { onClick: (e) => this.sort('DESC', e) },
+            { onClick: (e) => this.sort('ASC', e) },
             React.createElement(Icons, {
               icon: icons.caretUp,
               className: odescc.flat().filter(c => !!c).join(' ')
             })
           ),
           React.createElement('span',
-            { onClick: (e) => this.sort('ASC', e) },
+            { onClick: (e) => this.sort('DESC', e) },
             React.createElement(Icons, {
               icon: icons.caretDown,
               className: oascc.flat().filter(c => !!c).join(' ')
@@ -367,7 +372,7 @@ export default class Table extends Component {
       caretUp: 'caret-up',
       caretDown: 'caret-down',
       search: 'search',
-      clear: 'close'
+      clear: 'x'
     },
     vertical: false,
     orderClasses: '',
@@ -521,10 +526,10 @@ export default class Table extends Component {
           ...col.style
         }
         : col.style,
-      title: rowData[colName] !== undefined ? t(rowData[colName].toString(), col.context) : null
+      title: rowData[colName] !== undefined ? rowData[colName].toString() : null
     }
 
-    const mutation = typeof mapCellsFunc === 'function' && mapCellsFunc(name, col.name, rowData, cellAttrs) || {};
+    const mutation = typeof mapCellsFunc === 'function' && mapCellsFunc(name, col.name, rowData, { cellAttrs, fullColumn: col }) || {};
     let formatOptions;
     if (col.formatOpts) {
       formatOptions = deepMerge({ ...col.formatOpts }, mutation);
@@ -538,7 +543,7 @@ export default class Table extends Component {
     }
     cellAttrs.className = cellAttrs.className.filter(c => !!c).flat().join(' ');
 
-    const formater = FORMATS[col.format] || (raw => raw);
+    const formater = FORMATS[col.format] || (raw => t(raw, col.context));
     const cellData = typeof rowData[col.name] !== 'undefined' ? rowData[col.name] : true;
 
     const cell = React.createElement('div',
