@@ -57,7 +57,8 @@ export default class RangeField extends Field {
     default: [],
     from: {},
     to: {},
-    divisor: '-'
+    divisor: '-',
+    controlClasses: []
   }
 
   events = [];
@@ -101,7 +102,7 @@ export default class RangeField extends Field {
     super.onUpdate(...args);
     const [{ value }] = args;
     if (value === undefined) return;
-    const [from, to] = value === null ? [null, null] : value;
+    const [from, to] = value === null || value === '' ? [null, null] : value;
     eventHandler.dispatch(`update.${this.props.name}-fromControl`, { value: from });
     eventHandler.dispatch(`update.${this.props.name}-toControl`, { value: to });
   }
@@ -173,7 +174,7 @@ export default class RangeField extends Field {
         const { value: v } = this.state;
         const ival = name.endsWith('fromControl') ? 0 : 1;
         const minMax = name.endsWith('fromControl') ? 'max' : 'min';
-        const controlClasses = new Set(this.props.controlClasses.split(' '));
+        const controlClasses = new Set([this.props.controlClasses].flat().map(c => v.split(' ')).flat());
         let addDelete;
         if (readOnly) addDelete = 'add';
         else addDelete = 'delete';
