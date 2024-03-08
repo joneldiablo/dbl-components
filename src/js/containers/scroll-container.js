@@ -49,10 +49,26 @@ function ScrollXNode({
 
       const wp = (containerWidth / contentWidth) * 100;
       setWScrollBar(Math.max(Math.min(wp, 90), 20)); // Ensure scrollbar is not too small
-
+      setTransform(0);
+      setScrollBarLeft(0);
     }
 
   }, [contentWidth, breakpoint, orientation, width, height]);
+
+  // useEffect to add/remove the wheel event listener
+  useEffect(() => {
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener("wheel", handleWheel, { passive: false });
+      return () => container.removeEventListener("wheel", handleWheel);
+    }
+  }, []);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [wScrollBar]);
 
   const handleScroll = () => {
     if (!scrollTrackRef.current) return;
@@ -63,11 +79,26 @@ function ScrollXNode({
     setScrollBarLeft(scrollBarPosition / scrollTrackRef.current.clientWidth);
   };
 
-  useEffect(() => {
+  const handleWheel = (event) => {
+    let speed = event.deltaX;
+    if (speed === 0 && event.shiftKey) {
+      event.preventDefault();
+      speed = .03 * event.deltaY / Math.abs(event.deltaY);
+    }
+
     const container = containerRef.current;
-    container.addEventListener('scroll', handleScroll);
-    return () => container.removeEventListener('scroll', handleScroll);
-  }, [wScrollBar]);
+    const containerRatio = container.scrollWidth / container.clientWidth;
+    const percentScrollLeft = Number(scrollBarRef.current.style.marginLeft.replace('%', '')) / 100;
+    const barPercent = (scrollBarRef.current.clientWidth / scrollTrackRef.current.clientWidth);
+    const newScrollLeft = (percentScrollLeft + (speed * containerRatio));
+    const max = 1 - barPercent;
+    const boundedNewScrollLeft = Math.max(0, Math.min(max, newScrollLeft));
+    setScrollBarLeft(boundedNewScrollLeft);
+
+    const translate = -((containerRatio - 1) * container.clientWidth) * (boundedNewScrollLeft / max);
+    setTransform(translate);
+
+  };
 
   const handleDragStart = (e) => {
     e.preventDefault();
