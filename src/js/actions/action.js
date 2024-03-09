@@ -54,7 +54,6 @@ export default class ActionComponent extends Component {
     this.eventHandlers.onClick = this.onClick;
     this.schema = resolveRefs(ActionComponent.schemaContent, { props });
     this.jsonRender = new JsonRender({
-      childrenIn: [props.name, 'actionContent'],
       ...props
     }, this.mutations.bind(this));
   }
@@ -121,7 +120,8 @@ export default class ActionComponent extends Component {
       }
       case "actionContent": {
         return {
-          active: !!this.props.children
+          active: !!this.props.children,
+          content: this.props.children,
         }
       }
       default:
