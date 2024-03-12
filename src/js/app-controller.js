@@ -62,8 +62,8 @@ export class AppController {
       apiHeaders,
       fetchBefore = (url, options) => options,
       fetchError = (error, url) => error,
-      maxTimeout = 30000,
-      minTimeout = 300,
+      maxTimeout = 0,
+      minTimeout = 1000,
       dictionary = {},
       formatDate = {},
       formatNumber = {},
@@ -237,8 +237,11 @@ export class AppController {
         urlFinal.searchParams.set(key, value);
       }
     });
-    const controller = new AbortController();
-    this.fetchList[options.method + url] = controller;
+
+    if (timeout) {
+      this.fetchList[options.method + url] = new AbortController();
+      conf.signal = this.fetchList[options.method + url].signal;
+    }
 
     const apiHeaders = !this.props.apiHeaders ? {} :
       typeof this.props.apiHeaders === 'object'
@@ -250,16 +253,16 @@ export class AppController {
           return rdx;
         }, {});
 
-    conf.signal = controller.signal;
     conf.headers = Object.assign({
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       ...apiHeaders
     }, headers);
-    const timeoutId = setTimeout(this.onTimeout.bind(this), timeout, controller);
+    if (timeout) {
+      this.fetchList[options.method + url].timeoutId = setTimeout(this.onTimeout.bind(this), timeout, this.fetchList[options.method + url]);
+    }
     const fetchPromise = fetch(urlFinal, conf)
       .then(async (r) => {
-        clearTimeout(timeoutId);
         delete this.fetchList[options.method + url];
         if (!r.ok) {
           const e = new Error(r.statusText);
@@ -271,14 +274,18 @@ export class AppController {
         return format === 'raw' ? r : r[format]();
       })
       .catch(e => {
-        console.error(e);
         e.error = true;
-        if (e.name.includes('AbortError') && controller.timeout) {
+        if (e.name.includes('AbortError') && abortCtrl.timeout) {
           const et = new Error('timeout');
           et.error = true;
           return this.props.fetchError(et, url);
         }
+        console.error(e);
         return this.props.fetchError(e, url);
+      })
+      .finally(() => {
+        if (timeout)
+          clearTimeout(this.fetchList[options.method + url].timeoutId);
       });
     return this.minTimeout(fetchPromise);
   }
