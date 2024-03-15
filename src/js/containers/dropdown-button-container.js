@@ -236,7 +236,7 @@ export default class DropdownButtonContainer extends Component {
         className: cn, style: { minWidth: '100%' },
         onClick: allowClose ? null : (e) => e.stopPropagation(), 'aria-labelledby': this.trigger
       },
-      ...menuBuilded,
+      ...[this.state.open && menuBuilded].flat(),
       this.state.open && children
     );
   }

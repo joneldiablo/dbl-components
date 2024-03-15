@@ -31,21 +31,24 @@ export default class ActionComponent extends Component {
       name: ["$props/name", "actionIcon"],
       component: "Icons",
       icon: "$props/icon",
-      classes: ["me-2", "$props/iconClasses"]
+      style: {
+        width: "var(--bs-btn-font-size)"
+      }
+    },
+    actionContent: {
+      name: ["$props/name", "actionContent"],
+      tag: 'span'
     },
     actionStatus: {
       name: ["$props/name", "actionStatus"],
       component: 'Icons',
       icon: "$state/status",
       classes: ["ms-2 float-end", "$state/statusClasses"]
-    },
-    actionContent: {
-      name: ["$props/name", "actionContent"],
-      tag: 'span'
     }
   };
 
   tag = 'button';
+  classes = 'd-inline-flex align-items-center justify-content-center';
 
   constructor(props) {
     super(props);
@@ -105,10 +108,12 @@ export default class ActionComponent extends Component {
     const search = name.replace(this.props.name + '-', '');
     switch (search) {
       case "actionIcon": {
+        const cn = [];
+        if (!!this.props.children) cn.push('me-2');
         return {
           active: !!this.props.icon,
           icon: this.props.icon,
-          classes: [config.classes[0], this.props.iconClasses].flat().join(' ')
+          classes: [cn, this.props.iconClasses].flat().join(' ')
         }
       }
       case 'actionStatus': {
