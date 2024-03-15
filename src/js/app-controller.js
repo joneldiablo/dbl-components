@@ -9,7 +9,7 @@ import eventHandler from "./functions/event-handler";
 import {
   addDictionary, addFormatDate,
   addFormatNumber, addFormatTime,
-  getLang, setLang,
+  getLang, setLang, addFormatDateTime
 } from "./functions/i18n";
 
 import { addIcons, setIconSet } from "./media/icons";
@@ -68,6 +68,7 @@ export class AppController {
       formatDate = {},
       formatNumber = {},
       formatTime = {},
+      formatDateTime = {},
       lang = 'default',
       initialState = {}
     } = props;
@@ -90,6 +91,7 @@ export class AppController {
       formatDate,
       formatNumber,
       formatTime,
+      formatDateTime,
       lang
     };
 
@@ -111,6 +113,7 @@ export class AppController {
     if (formatDate) addFormatDate(formatDate);
     if (formatNumber) addFormatNumber(formatNumber);
     if (formatTime) addFormatTime(formatTime);
+    if (formatDateTime) addFormatDateTime(formatDateTime);
     if (lang) setLang(lang);
     if (initialState) {
 

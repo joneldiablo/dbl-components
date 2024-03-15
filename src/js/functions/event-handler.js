@@ -81,14 +81,39 @@ export class EventHandler {
     let events = eventString.split(/[ ,]+/);
     events.forEach(e => {
       if (e.includes('*')) {
-        // No need to modify the cache here since patterns are not stored directly in it
+        const regex = new RegExp('^' + e.split('*').map(this.escapeRegExp).join('.*') + '$');
+
+        this.patterns.forEach(patternObj => {
+          if (regex.source === patternObj.pattern.source) {
+            // Filter callbacks by id for this pattern
+            patternObj.callbacks = patternObj.callbacks.filter(([, callbackId]) => callbackId !== id);
+
+            // If no callbacks left for this pattern, remove the pattern
+            if (patternObj.callbacks.length === 0) {
+              this.patterns = this.patterns.filter(p => p.pattern.source !== patternObj.pattern.source);
+            }
+          }
+        });
+
+        // Remove matching events from the cache, considering the id
+        Object.keys(this.cache).forEach(cacheEvent => {
+          if (regex.test(cacheEvent)) {
+            this.cache[cacheEvent] = this.cache[cacheEvent].filter(([, callbackId]) => callbackId !== id);
+
+            // If no callbacks left in the cache for this event, remove the event from the cache
+            if (this.cache[cacheEvent].length === 0) {
+              delete this.cache[cacheEvent];
+            }
+          }
+        });
       } else {
+        // Direct event handling
         if (!this.events[e]) return;
-        const rest = this.events[e].filter(([, eventId]) => eventId != id);
+        const rest = this.events[e].filter(([, eventId]) => eventId !== id);
         this.events[e] = rest;
         // Update the cache
         if (this.cache[e]) {
-          this.cache[e] = this.cache[e].filter(([, eventId]) => eventId != id);
+          this.cache[e] = this.cache[e].filter(([, eventId]) => eventId !== id);
           if (this.cache[e].length === 0) {
             delete this.cache[e];  // Remove from cache if no callbacks are left
           }

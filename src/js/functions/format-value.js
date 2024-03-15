@@ -20,6 +20,7 @@ export default (value, conf) => {
     case 'time':
       return moment(value).format(conf.formatConf || formatTime(conf.context));
     case 'date-time':
+    case 'datetime':
       return moment(value).format(conf.formatConf || formatDateTime(conf.context));
     default:
       return value;

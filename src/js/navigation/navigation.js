@@ -201,24 +201,42 @@ export default class Navigation extends Component {
       if (disabled) r.push('disabled');
       return r;
     })().flat().join(' ');
-    const propsLink = (item.path || item.to) ? {
-      id: item.name + '-link', className,
-      onClick: !disabled ? ((e) => [
-        !!item.menu?.length && this.onToggleSubmenu(e, item),
-        this.onNavigate(e, item)
-      ]) : null,
-      to: (item.path || item.to),
-      activeClassName,
-      strict: item.strict,
-      exact: item.exact,
-      disabled,
-      style: {}
-    } : {
-      id: item.name + '-link', className,
-      onClick: !disabled && !!item.menu?.length ? (e) => this.onToggleSubmenu(e, item) : null,
-      disabled,
-      style: {}
-    }
+    const propsLink = (item.path || item.to)
+      ? {
+        id: item.name + '-link', className,
+        onClick: !disabled ? ((e) => [
+          !!item.menu?.length && this.onToggleSubmenu(e, item),
+          this.onNavigate(e, item)
+        ]) : null,
+        to: (item.path || item.to),
+        activeClassName,
+        strict: item.strict,
+        exact: item.exact,
+        disabled,
+        style: {}
+      }
+      : (item.href
+        ? {
+          tag: 'a',
+          name: item.name,
+          id: item.name + '-link',
+          classes: className,
+          disabled,
+          style: {},
+          _props: {
+            href: item.href, target: '_blank'
+          },
+          onClick: !disabled && !!item.menu?.length ? (e) => this.onToggleSubmenu(e, item) : null
+        }
+        : {
+          tag: 'span',
+          name: item.name,
+          id: item.name + '-link',
+          classes: className,
+          onClick: !disabled && !!item.menu?.length ? (e) => this.onToggleSubmenu(e, item) : null,
+          disabled,
+          style: {}
+        });
 
     const styleWrapCaret = {
     }
@@ -232,12 +250,9 @@ export default class Navigation extends Component {
       React.createElement('div', { ...(item.itemProps || {}) },
         React.createElement('div', { style: styleWrapCaret },
           (item.path || item.to)
-            ? React.createElement(NavLink, { ...propsLink },
-              innerNode
-            )
-            : React.createElement('span', { ...propsLink },
-              innerNode
-            ),
+            ? React.createElement(NavLink, propsLink, innerNode)
+            : React.createElement(Component, propsLink, innerNode)
+          ,
           !!item.menu?.length && open &&
           React.createElement('span',
             {

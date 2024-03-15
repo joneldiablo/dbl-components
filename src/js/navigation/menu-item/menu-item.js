@@ -72,9 +72,14 @@ export default class MenuItem extends Component {
       case name + 'Label':
         return { active: this.props.activeLabel, content: this.props.label };
       case name + 'Link':
+
         return {
           component: !this.props.to ? 'Component' : 'NavLink',
-          tag: !this.props.to ? 'span' : undefined,
+          tag: !this.props.to ? 'span' : (this.props.href ? 'a' : undefined),
+          _props: this.props.href ? {
+            target: '_blank',
+            href: this.props.href
+          } : undefined
         }
       default:
         break;
