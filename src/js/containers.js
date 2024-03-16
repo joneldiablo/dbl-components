@@ -17,12 +17,14 @@ import GridSwitchContainer from "./containers/grid-switch-container";
 import ListContainer from "./containers/list-container";
 import ModalButtonContainer from "./containers/modal-button-container";
 import ModalContainer from "./containers/modal-container";
+import OffcanvasContainer from "./containers/offcanvas/offcanvas";
 import PanelContainer from "./containers/panel-container/panel-container";
 import ProportionalContainer from "./containers/proportional-container";
+import SchemaContainer from "./react-router-schema/react-router-schema";
+import ScrollContainer from "./containers/scroll-container";
 import SlideContainer from "./containers/slide-container";
 import TableContainer from "./containers/table-container";
 import TabsContainer from "./containers/tabs-container";
-import SchemaContainer from "./react-router-schema/react-router-schema";
 
 const CONTAINERS = {
   Container,
@@ -42,12 +44,14 @@ const CONTAINERS = {
   ListContainer,
   ModalButtonContainer,
   ModalContainer,
+  OffcanvasContainer,
   PanelContainer,
   ProportionalContainer,
+  SchemaContainer,
+  ScrollContainer,
   SlideContainer,
   TableContainer,
   TabsContainer,
-  SchemaContainer,
 }
 
 export const addContainers = (newContainers) => {

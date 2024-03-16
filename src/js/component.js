@@ -56,7 +56,7 @@ export default class Component extends React.Component {
     if (!classes) return [setLocalClasses, new Set()];
     const setClasses = new Set(
       classes && (Array.isArray(classes)
-        ? classes.flatMap(c => c.split(' '))
+        ? classes.flatMap(c => c && c.split(' ')).filter(Boolean)
         : classes.split(' '))
     );
     return [setLocalClasses, setClasses];
@@ -70,7 +70,7 @@ export default class Component extends React.Component {
       else localClasses.add(c);
     });
     this.setState({
-      localClasses: Array.from(localClasses).flat().join(' ')
+      localClasses: Array.from(localClasses).flat().filter(Boolean).join(' ')
     });
     return true;
   }
@@ -80,7 +80,7 @@ export default class Component extends React.Component {
     const [localClasses, setClasses] = this.setClasses(classes);
     setClasses.forEach(localClasses.add.bind(localClasses));
     this.setState({
-      localClasses: Array.from(localClasses).flat().join(' ')
+      localClasses: Array.from(localClasses).flat().filter(Boolean).join(' ')
     });
     return true;
   }
@@ -90,7 +90,7 @@ export default class Component extends React.Component {
     const [localClasses, setClasses] = this.setClasses(classes);
     setClasses.forEach(localClasses.delete.bind(localClasses));
     this.setState({
-      localClasses: Array.from(localClasses).flat().join(' ')
+      localClasses: Array.from(localClasses).flat().filter(Boolean).join(' ')
     });
     return true;
   }
@@ -118,10 +118,10 @@ export default class Component extends React.Component {
     const Tag = tag === undefined ? this.tag : tag;
     if (Tag === false) return content;
     const cn = [this.constructor.jsClass, name, this.name, this.classes, localClasses];
-    if (!!classes) cn.push(typeof classes === 'string' ? classes : (Array.isArray(classes) ? classes.flat().join(' ') : classes['.']));
+    if (!!classes) cn.push(typeof classes === 'string' ? classes : (Array.isArray(classes) ? classes.flat().filter(Boolean).join(' ') : classes['.']));
     const s = Object.assign({}, this.style, localStyles, style);
     const props = Tag === React.Fragment ? {} : {
-      className: cn.flat().join(' '),
+      className: cn.flat().filter(Boolean).join(' '),
       style: s, ref: this.ref,
       ...this.eventHandlers,
       ...this.componentProps
