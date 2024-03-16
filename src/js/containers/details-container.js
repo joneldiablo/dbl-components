@@ -46,7 +46,7 @@ export default class DetailsContainer extends Component {
   onUpdate({ open }) {
     const newState = {};
     if (typeof open === 'boolean')
-      newState.open = true;
+      newState.open = open;
     this.setState(newState);
   }
 
