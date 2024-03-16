@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-import Container from "dbl-components/lib/js/containers/container";
+import Container from "./container";
 
 /**
  * Custom horizontal scroll component with a custom scrollbar.
@@ -87,9 +87,11 @@ function ScrollXNode({
     }
 
     const container = containerRef.current;
+    const scrollBar = scrollBarRef.current;
+    if (!(container && scrollBar)) return;
     const containerRatio = container.scrollWidth / container.clientWidth;
-    const percentScrollLeft = Number(scrollBarRef.current.style.marginLeft.replace('%', '')) / 100;
-    const barPercent = (scrollBarRef.current.clientWidth / scrollTrackRef.current.clientWidth);
+    const percentScrollLeft = Number(scrollBar.style.marginLeft.replace('%', '')) / 100;
+    const barPercent = (scrollBar.clientWidth / scrollTrackRef.current.clientWidth);
     const newScrollLeft = (percentScrollLeft + (speed * containerRatio));
     const max = 1 - barPercent;
     const boundedNewScrollLeft = Math.max(0, Math.min(max, newScrollLeft));
@@ -203,9 +205,9 @@ function ScrollXNode({
   );
 }
 
-export default class ScrollX extends Container {
+export default class ScrollContainer extends Container {
 
-  static jsClass = 'ScrollX';
+  static jsClass = 'ScrollContainer';
 
   content(children = this.props.children) {
     const {
