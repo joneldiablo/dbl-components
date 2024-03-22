@@ -298,6 +298,7 @@ export class HeaderCell extends React.Component {
                 dropdownClasses: "dropdown-menu-end p-0",
                 dropdownClass: false
               },
+              (typeof col.filter.showClear === 'boolean' ? col.filter.showClear : true) &&
               searchActive && React.createElement(Action,
                 {
                   name: col.name + 'Clear',
@@ -573,7 +574,7 @@ export default class Table extends Component {
    * @memberof Table
    */
   content(children = this.props.children) {
-    const { data, columns, tableClasses, hover, striped, vertical } = this.props;
+    const { data, columns, tableClasses, hover, striped, vertical, disabled } = this.props;
 
     // Definir encabezado y pie de página si están presentes
     let header, footer;
@@ -586,6 +587,7 @@ export default class Table extends Component {
     if (hover) cn.push('table-hover');
     if (tableClasses) cn.push(tableClasses);
     if (vertical) cn.push('vertical');
+    if (disabled) cn.push('disabled');
 
     // Inicialización de los datos de la tabla según la disposición (vertical/horizontal)
     const tableData = [];
