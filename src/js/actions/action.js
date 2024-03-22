@@ -24,7 +24,8 @@ export default class ActionComponent extends Component {
       warning: 'text-bold text-warning',
       loading: 'spinner'
     },
-    iconClasses: ''
+    iconClasses: '',
+    iconProps: {}
   };
   static schemaContent = {
     actionIcon: {
@@ -111,6 +112,7 @@ export default class ActionComponent extends Component {
         const cn = [];
         if (!!this.props.children) cn.push('me-2');
         return {
+          ...this.props.iconProps,
           active: !!this.props.icon,
           icon: this.props.icon,
           classes: [cn, this.props.iconClasses].flat().join(' ')
