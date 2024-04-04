@@ -44,7 +44,7 @@ export default class ActionComponent extends Component {
       name: ["$props/name", "actionStatus"],
       component: 'Icons',
       icon: "$state/status",
-      classes: ["ms-2 float-end", "$state/statusClasses"]
+      classes: "float-end"
     }
   };
 
@@ -119,10 +119,12 @@ export default class ActionComponent extends Component {
         }
       }
       case 'actionStatus': {
+        const classes = [config.classes, this.props.statusClasses[this.props.status]];
+        if (this.props.icon || this.props.children) classes.push('ms-2');
         return {
           active: !!this.props.status,
           icon: this.props.statusIcons[this.props.status],
-          classes: [config.classes[0], this.props.statusClasses[this.props.status]],
+          classes,
         }
       }
       case "actionContent": {
