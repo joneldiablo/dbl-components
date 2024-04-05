@@ -1,4 +1,5 @@
 import moment from "moment";
+import 'moment/min/locales';
 
 import deepMerge from "./deep-merge";
 
@@ -135,7 +136,7 @@ export const getLang = () => {
 export const formatDate = (context) => {
   if (config.lang !== '_default' && config.formatDate[config.lang]) {
     if (context && config.formatDate[config.lang][context]) return config.formatDate[config.lang][context];
-    else return config.formatDate[config.lang];
+    else return config.formatDate[config.lang].default || config.formatDate[config.lang];
   } else if (config.formatDate[context]) {
     return config.formatDate[context];
   } else {
@@ -152,7 +153,7 @@ export const formatDate = (context) => {
 export const formatTime = (context) => {
   if (config.lang !== '_default' && config.formatTime[config.lang]) {
     if (context && config.formatTime[config.lang][context]) return config.formatTime[config.lang][context];
-    else return config.formatTime[config.lang];
+    else return config.formatTime[config.lang].default || config.formatTime[config.lang];
   } else if (config.formatTime[context]) {
     return config.formatTime[context];
   } else {
@@ -169,7 +170,7 @@ export const formatTime = (context) => {
 export const formatDateTime = (context) => {
   if (config.lang !== '_default' && config.formatDateTime[config.lang]) {
     if (context && config.formatDateTime[config.lang][context]) return config.formatDateTime[config.lang][context];
-    else return config.formatDateTime[config.lang];
+    else return config.formatDateTime[config.lang].default || config.formatDateTime[config.lang];
   } else if (config.formatDateTime[context]) {
     return config.formatDateTime[context];
   } else {
@@ -186,7 +187,7 @@ export const formatDateTime = (context) => {
 export const formatNumber = (context) => {
   if (config.lang !== '_default' && config.formatNumber[config.lang]) {
     if (context && config.formatNumber[config.lang][context]) return config.formatNumber[config.lang][context];
-    else return config.formatNumber[config.lang];
+    else return config.formatNumber[config.lang].default || config.formatNumber[config.lang];
   } else if (config.formatNumber[context]) {
     return config.formatNumber[context];
   } else {
@@ -203,7 +204,7 @@ export const formatNumber = (context) => {
 export const formatCurrency = (context) => {
   if (config.lang !== '_default' && config.formatCurrency[config.lang]) {
     if (context && config.formatCurrency[config.lang][context]) return config.formatCurrency[config.lang][context];
-    else return config.formatCurrency[config.lang];
+    else return config.formatCurrency[config.lang].default || config.formatCurrency[config.lang];
   } else if (config.formatCurrency[context]) {
     return config.formatCurrency[context];
   } else {

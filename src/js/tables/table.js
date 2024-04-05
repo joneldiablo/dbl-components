@@ -4,7 +4,8 @@ import moment from "moment";
 
 import eventHandler from "../functions/event-handler";
 import deepMerge from "../functions/deep-merge";
-import t from '../functions/i18n';
+import t, { formatDate } from '../functions/i18n';
+import formatValue from '../functions/format-value';
 import resolveRefs from '../functions/resolve-refs';
 import fields from "../forms/fields";
 import Icons from "../media/icons";
@@ -66,8 +67,7 @@ export const FORMATS = {
    * @param {Object} options - Opciones de formato de la fecha.
    * @returns {String} La fecha formateada.
    */
-  date: (raw, { format: f = 'DD/MM/YYYY', locale = false } = {}) =>
-    raw ? locale ? moment(raw).format(f) : moment(raw).format(f) : '',
+  date: (raw, params = {}) => formatValue(raw, Object.assign(params, { format: 'date' })),
   /**
    * Formatea los datos en crudo a un datetime.
    *
@@ -76,8 +76,8 @@ export const FORMATS = {
    * @param {Object} options - Opciones de formato del datetime.
    * @returns {String} El datetime formateado.
    */
-  datetime: (raw, { format: f = 'DD/MM/YYYY HH:mm', locale = false, options } = {}) =>
-    raw ? locale ? moment(raw, options).format(f) : moment(raw, options).format(f) : '',
+  datetime: (raw, params = {}) => formatValue(raw, Object.assign(params, { format: 'datetime' })),
+  time: (raw, params = {}) => formatValue(raw, Object.assign(params, { format: 'time' })),
   /**
    * Formatea los datos en crudo a una moneda.
    *
@@ -86,11 +86,7 @@ export const FORMATS = {
    * @param {Object} options - Opciones de formato de la moneda.
    * @returns {String} La moneda formateada.
    */
-  currency: (raw, { locale = 'en-US', currency = 'USD' } = {}) =>
-    ['string', 'number'].includes(typeof raw) ? (new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency
-    })).format(raw) : '',
+  currency: (raw, params = {}) => formatValue(raw, Object.assign(params, { format: 'currency' })),
   /**
    * Formatea los datos en crudo a un número.
    *
@@ -99,9 +95,7 @@ export const FORMATS = {
    * @param {Object} options - Opciones de formato del número.
    * @returns {String} El número formateado.
    */
-  number: (raw, { locale = 'en-US' } = {}) =>
-    ['string', 'number'].includes(typeof raw) ?
-      (new Number(raw)).toLocaleString(locale) : '',
+  number: (raw, params = {}) => formatValue(raw, Object.assign(params, { format: 'number' })),
   /**
    * Formatea los datos en crudo a un booleano.
    *
@@ -549,7 +543,7 @@ export default class Table extends Component {
 
     const cell = React.createElement('div',
       { ...cellAttrs },
-      formater(cellData, formatOptions, rowData, this.jsonRender, colName));
+      formater(cellData, formatOptions || col, rowData, this.jsonRender, colName));
     return (colName === 'id'
       ? React.createElement('th',
         { key: i + '-' + colName, className: colName, scope: "row" },

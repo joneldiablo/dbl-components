@@ -43,12 +43,20 @@ export default class CardContainer extends Container {
         theContent.body.push(child);
       }
     });
+    const hc = ['card-header'],
+      bc = ['card-body'],
+      fc = ['card-footer'];
+
+    if (headerClasses) hc.push(headerClasses);
+    if (bodyClasses) bc.push(bodyClasses);
+    if (footerClasses) fc.push(footerClasses);
+
     return React.createElement(React.Fragment, {},
       !!theContent.header.length &&
-      React.createElement('div', { className: 'card-header ' + headerClasses }, theContent.header),
-      React.createElement('div', { className: 'card-body ' + bodyClasses }, theContent.body),
+      React.createElement('div', { className: hc.flat().filter(Boolean).join(' ') }, theContent.header),
+      React.createElement('div', { className: bc.flat().filter(Boolean).join(' ') }, theContent.body),
       !!theContent.footer.length &&
-      React.createElement('div', { className: 'card-footer ' + footerClasses }, theContent.footer)
+      React.createElement('div', { className: fc.flat().filter(Boolean).join(' ') }, theContent.footer)
     );
   }
 
