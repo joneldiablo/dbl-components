@@ -123,10 +123,10 @@ export default class FormContainer extends Component {
 
   reset() {
     this.fieldsForEach(field => {
-      if (typeof this.state.defaultValues[field.name] !== undefined)
+      if (this.state.defaultValues[field.name] !== undefined)
         eventHandler.dispatch('update.' + field.name, { value: this.state.defaultValues[field.name] });
       else
-        eventHandler.dispatch('update.' + field.name, { reset: true });
+        eventHandler.dispatch('update.' + field.name, { clear: true, error: false });
     });
     this.setState({ data: {} });
   }
