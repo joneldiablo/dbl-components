@@ -151,7 +151,8 @@ export default class Field extends Component {
     }, () => this.returnData());
   }
 
-  onUpdate({ value, options, error, reset }) {
+  onUpdate(updateObj) {
+    const { value, options, error, reset, clear } = updateObj;
     const newState = {};
     if (typeof value !== 'undefined') {
       newState.value = (value !== null ? value : this.props.default);
@@ -164,6 +165,10 @@ export default class Field extends Component {
       let message = '';
       if (error) message = this.extractString(this.props.errorMessage);
       this.input.current.setCustomValidity(message);
+    }
+    if (clear) {
+      newState.value = newState.value || this.props.default;
+      return this.setState(newState);
     }
     if (reset) {
       newState.value = newState.value || this.props.default;
