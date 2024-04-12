@@ -7,6 +7,7 @@ import JsonRender from "../json-render";
 import Component from "../component";
 import Icons from "../media/icons";
 import Action from "../actions/action";
+import deepMerge from "../functions/deep-merge";
 
 export class ToggleTextNavigation extends Action {
 
@@ -184,7 +185,7 @@ export default class Navigation extends Component {
         )
         : React.createElement(React.Fragment, {},
           React.createElement(Icons,
-            { icon: item.icon, className: "mx-2", ...iconStyle, ...(item.iconProps || {}) }),
+            { icon: item.icon, className: "mx-2", ...iconStyle, ...deepMerge(this.props.iconProps || {}, item.iconProps || {}) }),
           open && React.createElement('span',
             { className: "label" },
             this.jsonRender.buildContent(item.label)

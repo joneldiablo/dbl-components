@@ -52,7 +52,7 @@ export default class Image extends Component {
           }
         )
       ),
-      React.createElement('figcaption', {}, children)
+      React.createElement('figcaption', this.props.contentProps, children)
     ));
   }
 }
