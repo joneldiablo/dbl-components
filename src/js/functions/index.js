@@ -47,8 +47,22 @@ export const hash = (string) => {
   return hash;
 }
 
-// TODO: configurar esta función, por el momento solo devuelve el mismo texto que se ingrese
-export const i18n = t => t;
+export const fixReactRouter = (location, to) => {
+  let path = to;
+  //FIX: react router tiene un error al navegar de forma relativa
+  if (!path.startsWith('/')) {
+    const tmp = location.pathname.replace(/\/$/, '').split('/');
+    const actual = tmp.pop();
+    if (path.startsWith('..')) {
+      path = `../${tmp.pop()}/${path.replace(/\.\.\/?/, '')}`;
+    } else if (path.startsWith('.')) {
+      path = path.replace('.', actual);
+    } else {
+      path = `./${actual}/${path}`;
+    }
+  }
+  return path;
+}
 
 export default {
   normalize,
@@ -60,5 +74,5 @@ export default {
   sanitizedAttributes,
   randomS4,
   hash,
-  i18n,
+  fixReactRouter
 };
