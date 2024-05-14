@@ -193,8 +193,8 @@ export class AppController {
   }
 
   remove(key, { storage = 'local' }) {
-    if (storage === 'local') localStorage.removeItem(key);
-    else if (storage === 'session') sessionStorage.removeItem(key);
+    if (storage === 'local') localStorage.removeItem(this.prefixStorage + key);
+    else if (storage === 'session') sessionStorage.removeItem(this.prefixStorage + key);
     delete GLOBAL_STATE[key];
   }
 

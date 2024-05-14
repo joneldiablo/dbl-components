@@ -77,7 +77,7 @@ export default class NewPasswordField extends Field {
             && <li>{this.jsonRender.buildContent(errorMessage)}</li>)
           .filter(p => !!p))
     ];
-    const errorNode = React.createElement('p', { className: "m-1 lh-1" },
+    const errorNode = React.createElement('div', { className: "m-1 lh-1" },
       React.createElement('small', { className: "text-danger" },
         ...errorMessage
       )
