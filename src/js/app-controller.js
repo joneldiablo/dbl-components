@@ -61,6 +61,7 @@ export class AppController {
       api = "http://localhost:3000/",
       apiHeaders = {},
       fetchBefore = (url, options) => options,
+      fetchAfter = (res) => res,
       fetchError = (error, url) => error,
       maxTimeout = 0,
       minTimeout = 1000,
@@ -84,6 +85,7 @@ export class AppController {
       api,
       apiHeaders,
       fetchBefore,
+      fetchAfter,
       fetchError,
       maxTimeout,
       minTimeout,
@@ -303,6 +305,7 @@ export class AppController {
         console.error(e);
         return this.props.fetchError(e, url);
       })
+      .then(this.props.fetchAfter)
       .finally(() => {
         if (timeout)
           clearTimeout(this.fetchList[options.method + url].timeoutId);
