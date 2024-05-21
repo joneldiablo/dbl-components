@@ -59,8 +59,9 @@ export class AppController {
         }
       },
       api = "http://localhost:3000/",
-      apiHeaders,
+      apiHeaders = {},
       fetchBefore = (url, options) => options,
+      fetchAfter = (res) => res,
       fetchError = (error, url) => error,
       maxTimeout = 0,
       minTimeout = 1000,
@@ -84,6 +85,7 @@ export class AppController {
       api,
       apiHeaders,
       fetchBefore,
+      fetchAfter,
       fetchError,
       maxTimeout,
       minTimeout,
@@ -185,17 +187,23 @@ export class AppController {
   get(key) {
     if (GLOBAL_STATE[key] === undefined) {
       let value = sessionStorage.getItem(this.prefixStorage + key);
-      if (value === undefined)
+      if (value === null)
         value = localStorage.getItem(this.prefixStorage + key);
-      if (value !== undefined) GLOBAL_STATE[key] = this.parse(value);
+      if (value !== null) GLOBAL_STATE[key] = this.parse(value);
     }
     return GLOBAL_STATE[key];
   }
 
-  remove(key, { storage = 'local' }) {
+  remove(key, { storage, dispatch = true } = {}) {
     if (storage === 'local') localStorage.removeItem(this.prefixStorage + key);
     else if (storage === 'session') sessionStorage.removeItem(this.prefixStorage + key);
+    else {
+      localStorage.removeItem(this.prefixStorage + key);
+      sessionStorage.removeItem(this.prefixStorage + key);
+    }
+    GLOBAL_STATE[key] = null;
     delete GLOBAL_STATE[key];
+    if (dispatch) eventHandler.dispatch('global.' + key);
   }
 
   getRootDefinitions() {
@@ -221,6 +229,17 @@ export class AppController {
     const [r] =
       await Promise.all([promise, new Promise((resolve) => setTimeout(resolve, timeout, true))]);
     return r;
+  }
+
+  addHeaders(obj) {
+    Object.assign(this.props.apiHeaders, obj);
+  }
+
+  removeHeaders(...headerName) {
+    headerName.flat().filter(Boolean).forEach(hn => {
+      this.props.apiHeaders[hn] = null;
+      delete this.props.apiHeaders[hn];
+    });
   }
 
   fetch(url, options = { method: 'GET' }) {
@@ -286,6 +305,7 @@ export class AppController {
         console.error(e);
         return this.props.fetchError(e, url);
       })
+      .then(this.props.fetchAfter)
       .finally(() => {
         if (timeout)
           clearTimeout(this.fetchList[options.method + url].timeoutId);
