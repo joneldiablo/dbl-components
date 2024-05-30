@@ -222,6 +222,7 @@
   "js/navigation/react-router-navlink.js",
   "js/navigation/service-list-navigation.js",
   "js/navigation/side-navigation.js",
+  "js/prop-types.js",
   "js/react-router-schema/react-router-schema.js",
   "js/sliders/hero.js",
   "js/tables/table.js",
