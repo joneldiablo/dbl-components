@@ -73,6 +73,7 @@
     "moment": "^2.29.4",
     "moment-locales-webpack-plugin": "^1.2.0",
     "pluralize-es": "^1.0.0",
+    "prop-types": "^15.8.1",
     "react-beautiful-dnd": "^13.1.0",
     "react-docgen": "^7.0.2",
     "react-icomoon": "^2.1.5",
