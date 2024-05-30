@@ -48,6 +48,7 @@ git merge -
 
 # Update version and capture the new version
 new_version=$(node update-version.js)
+node tools/ai-tools.js
 
 # Prepare directories
 rm -rf ./lib/js/* && mkdir -p lib/js
