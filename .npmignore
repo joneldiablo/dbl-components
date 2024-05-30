@@ -6,3 +6,4 @@ build.sh
 babel.sh
 update-version.js
 tests
+helpers
