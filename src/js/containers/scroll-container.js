@@ -2,7 +2,11 @@ import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { ptClasses } from "../prop-types";
+import useEventHandler from "../hooks/use-eventhandler";
+import eventHandler from '../functions/event-handler';
 import Container from "./container";
+
+let timeoutDispatchPosition;
 
 /**
  * Custom horizontal scroll component with a custom scrollbar.
@@ -41,8 +45,25 @@ function ScrollXNode({
   const containerPosition = (step) => {
     const newTranslate = Math.min(Math.max(initialTranslate.current + step, -diffContentWidth), 0);
     initialTranslate.current = newTranslate;
+    const percentage = Math.abs(newTranslate / diffContentWidth);
     setTranslate(newTranslate);
-    scrollBarPosition(Math.abs(newTranslate / diffContentWidth));
+    scrollBarPosition(percentage);
+    clearTimeout(timeoutDispatchPosition);
+    timeoutDispatchPosition = setTimeout(() => {
+      eventHandler.dispatch(name, { [name]: { position: Math.abs(newTranslate), percentage, size: diffContentWidth } });
+    }, 660);
+  }
+
+  const updateScroll = (update) => {
+    if (update.position !== undefined) {
+      initialTranslate.current = 0;
+      containerPosition(update.position);
+    }
+    if (update.percentage !== undefined) {
+      initialTranslate.current = 0;
+      const position = -update.percentage * diffContentWidth;
+      containerPosition(position);
+    }
   }
 
   /**
@@ -71,7 +92,7 @@ function ScrollXNode({
     const container = containerRef.current;
     if (!container) return;
 
-    const containerRatio = -container.scrollWidth / container.clientWidth;
+    const containerRatio = container.scrollWidth / container.clientWidth;
     containerPosition(speed * containerRatio);
   };
 
@@ -171,6 +192,11 @@ function ScrollXNode({
   const [diffContentWidth, setDiffContentWidth] = useState(0); // difference Width of the scrollable content.
   const [translate, setTranslate] = useState(initialTranslate.current); // Transform value for the scroll bar.
 
+  // Custom hook to handle events
+  useEventHandler([
+    [`update.${name}`, updateScroll]
+  ], [name, ScrollX.jsClass].join('-'));
+
   // Effect to detect if the device supports touch events.
   useLayoutEffect(() => {
     setIsTouchDevice('ontouchstart' in window);
@@ -187,12 +213,19 @@ function ScrollXNode({
       const diffContentWidth = container.scrollWidth - container.clientWidth;
 
       const isContentOverflowing = contentWidth > containerWidth;
-      setShowBar(isContentOverflowing);
+      setShowBar(isContentOverflowing && (!isTouchDevice || isTouching));
       setContentWidth(contentWidth);
       setDiffContentWidth(diffContentWidth);
 
       const wp = (containerWidth / contentWidth) * 100;
       setWScrollBar(Math.max(Math.min(wp, 90), 20)); // Ensure scrollbar is not too small
+      eventHandler.dispatch(name, {
+        [name]: {
+          position: Math.abs(initialTranslate.current),
+          percentage: Math.abs(initialTranslate.current / diffContentWidth),
+          size: diffContentWidth
+        }
+      });
     }
   }, [contentWidth, breakpoint, orientation, width, height, isTouchDevice, isTouching]);
 
@@ -243,7 +276,8 @@ function ScrollXNode({
           style={{
             paddingBottom: "2rem",
             marginBottom: "-2rem",
-            transform: `translate(${translate}px)`
+            transform: `translate(${translate}px)`,
+            "--dbl-scroll-x-position": `${Math.abs(translate)}px`
           }}
         >
           {children}
