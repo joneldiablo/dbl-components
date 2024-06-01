@@ -290,7 +290,12 @@ export class HeaderCell extends React.Component {
                   { icon: icons.search, className: cnSearch.filter(c => !!c).flat().join(' ') }
                 ),
                 dropdownClasses: "dropdown-menu-end p-0",
-                dropdownClass: false
+                dropdownClass: false,
+                dropdown: {
+                  popperConfig: {
+                    strategy: 'fixed'
+                  }
+                }
               },
               (typeof col.filter.showClear === 'boolean' ? col.filter.showClear : true) &&
               searchActive && React.createElement(Action,
