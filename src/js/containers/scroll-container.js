@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { ptClasses } from "../prop-types";
-import useEventHandler from "../hooks/use-eventhandler";
+import useEventHandler from "../hooks/use-event-handler";
 import eventHandler from '../functions/event-handler';
 import Container from "./container";
 
