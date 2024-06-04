@@ -14,12 +14,12 @@ import FormContainer from "./containers/form-container";
 import FullscreenContainer from "./containers/fullscreen-container";
 import GridContainer from "./containers/grid-container";
 import GridSwitchContainer from "./containers/grid-switch-container";
+import JsonRenderContainer from "./containers/json-render-container";
 import ListContainer from "./containers/list-container";
 import ModalButtonContainer from "./containers/modal-button-container";
 import ModalContainer from "./containers/modal-container";
 import OffcanvasContainer from "./containers/offcanvas/offcanvas";
 import PanelContainer from "./containers/panel-container/panel-container";
-import ProportionalContainer from "./containers/proportional-container";
 import SchemaContainer from "./react-router-schema/react-router-schema";
 import ScrollContainer from "./containers/scroll-container";
 import SlideContainer from "./containers/slide-container";
@@ -41,12 +41,13 @@ const CONTAINERS = {
   FullscreenContainer,
   GridContainer,
   GridSwitchContainer,
+  JsonRenderContainer,
   ListContainer,
   ModalButtonContainer,
   ModalContainer,
   OffcanvasContainer,
   PanelContainer,
-  ProportionalContainer,
+  ProportionalContainer: AspectRatioContainer,
   SchemaContainer,
   ScrollContainer,
   SlideContainer,
