@@ -138,6 +138,7 @@
   "js/containers/grid-container.js",
   "js/containers/grid-switch-container.js",
   "js/containers/hero-container.js",
+  "js/containers/json-render-container.js",
   "js/containers/list-container.js",
   "js/containers/modal-button-container.js",
   "js/containers/modal-container.js",
