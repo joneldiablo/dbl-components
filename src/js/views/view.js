@@ -17,7 +17,8 @@ export default class View extends JsonRenderContainer {
 
   static defaultProps = {
     ...JsonRenderContainer.defaultProps,
-    test: false
+    test: false,
+    content: {}
   }
 
   tag = 'article';
