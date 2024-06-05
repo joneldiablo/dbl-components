@@ -10,7 +10,7 @@ import Container from "./container";
 export default class JsonRenderContainer extends Container {
 
   static jsClass = 'JsonRenderContainer';
-  static content = {
+  static template = {
     view: {}, definitions: {}
   };
 
@@ -50,15 +50,15 @@ export default class JsonRenderContainer extends Container {
   }
 
   get theView() {
-    return this.constructor.content.view;
+    return this.constructor.template.view;
   }
 
   componentDidMount() {
     super.componentDidMount();
-    this.events.forEach(([evtName, callback]) => eventHandler.subscribe(evtName, callback, [this.name, JsonRenderContainer.jsClass].join('.')));
-    const definitions = deepMerge(this.constructor.content.definitions || {}, this.props.definitions);
+    this.events.forEach(([evtName, callback]) => eventHandler.subscribe(evtName, callback, this.name));
+    const definitions = deepMerge(this.constructor.template.definitions || {}, this.props.definitions);
 
-    this.contentSolved = this.props.view
+    this.templateSolved = this.props.view
       ? resolveRefs(this.props.view, {
         template: this.theView,
         definitions,
@@ -75,7 +75,7 @@ export default class JsonRenderContainer extends Container {
 
   componentWillUnmount() {
     super.componentWillUnmount();
-    this.events.forEach(([eName]) => eventHandler.unsubscribe(eName, [this.name, JsonRenderContainer.jsClass].join('.')));
+    this.events.forEach(([eName]) => eventHandler.unsubscribe(eName, this.name));
   }
 
   mutations(sectionName, section) {
@@ -83,9 +83,9 @@ export default class JsonRenderContainer extends Container {
   }
 
   content(children = this.props.children) {
-    if (!(this.breakpoint && this.contentSolved)) return this.waitBreakpoint;
+    if (!(this.breakpoint && this.templateSolved)) return this.waitBreakpoint;
 
-    const builded = this.jsonRender.buildContent(this.contentSolved);
+    const builded = this.jsonRender.buildContent(this.templateSolved);
     return !this.childrenIn
       ? React.createElement(React.Fragment, {}, builded, children)
       : builded;

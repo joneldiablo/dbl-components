@@ -111,7 +111,7 @@ export default class Container extends Component {
   }
 
   componentDidMount() {
-    if (this.ref)
+    if (this.ref.current)
       this.resizeSensor = new ResizeSensor(this.ref.current, this.onResize);
     this.onResize(true);
   }
