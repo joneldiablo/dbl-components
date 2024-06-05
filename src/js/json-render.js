@@ -127,6 +127,13 @@ export default class JsonRender {
       label, message, errorMessage, managerName, wrapperClasses, wrapperStyle = {}, ...section } = sectionRaw;
     const { location, match, childrenIn = this.childrenIn, history, children } = this.props;
     const Component = COMPONENTS[componentName] || (COMPONENTS.Component);
+    const extraBuilded = [Component.slots].flat().filter(Boolean).reduce(([eb, key]) => {
+      const tmp = section[key];
+      section[key] = null;
+      delete section[key];
+      eb[key] = this.buildContent(tmp);
+      return eb;
+    }, {});
     const componentProps = {
       ...section,
       managerName: managerName || this.props.name,
@@ -134,6 +141,7 @@ export default class JsonRender {
       placeholder: this.buildContent(placeholder),
       message: this.buildContent(message),
       errorMessage: this.buildContent(errorMessage),
+      ...extraBuilded,
       location,
       match,
       history
