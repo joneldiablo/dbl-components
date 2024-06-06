@@ -132,6 +132,7 @@
   "js/containers/dropdown-container.js",
   "js/containers/fetch-container.js",
   "js/containers/flex-container.js",
+  "js/containers/floating-container/floating-container.jsx",
   "js/containers/footer-container.js",
   "js/containers/form-container.js",
   "js/containers/fullscreen-container.js",
