@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from "react";
+import React, { createRef } from "react";
 import moment from "moment";
 
 import eventHandler from "../functions/event-handler";
@@ -9,10 +9,10 @@ import formatValue from '../functions/format-value';
 import resolveRefs from '../functions/resolve-refs';
 import fields from "../forms/fields";
 import Icons from "../media/icons";
-import DropdownContainer from "../containers/dropdown-container";
 import Action from "../actions/action";
 import JsonRender from "../json-render";
 import Component from "../component";
+import FloatingContainer from '../containers/floating-container/floating-container';
 
 /**
  * @typedef {Object} FormatOptions
@@ -155,7 +155,9 @@ export class HeaderCell extends React.Component {
     orderActiveClasses: PropTypes.oneOfType([
       PropTypes.string, PropTypes.object,
       PropTypes.arrayOf(PropTypes.string)
-    ])
+    ]),
+    dropFilters: PropTypes.object.isRequired,
+    tableName: PropTypes.string
   }
 
   static jsClass = 'HeaderColumn';
@@ -170,6 +172,7 @@ export class HeaderCell extends React.Component {
   constructor(props) {
     super(props);
     this.events = [];
+    this.ref = createRef();
   }
 
   /**
@@ -180,6 +183,7 @@ export class HeaderCell extends React.Component {
     const { col } = this.props;
     if (col.filter) {
       this.events.push([col.filter.name, this.onChangeFilter]);
+      this.events.push(['update.' + col.filter.name, this.onUpdateFilter.bind(this)]);
     }
     for (const event of this.events) {
       eventHandler.subscribe(...event);
@@ -218,6 +222,16 @@ export class HeaderCell extends React.Component {
     eventHandler.dispatch(this.props.tableName, data);
   }
 
+  onUpdateFilter({ value, reset }) {
+    if (value !== undefined) {
+      const searchActive = !!(Array.isArray(value) ? value.length : value);
+      this.setState({ searchActive });
+    }
+    if (reset) {
+      this.setState({ searchActive: false });
+    }
+  }
+
   /**
    * Realiza la acción de ordenar las celdas en el encabezado.
    * @param {string} dir - La dirección en la que se va a realizar la ordenación.
@@ -249,20 +263,21 @@ export class HeaderCell extends React.Component {
       minWidth: col.width
     }
     const cn = [
-      'header position-relative w-100',
+      'header position-relative flex-grow-1 w-100',
       col.type, col.name + '-header',
       col.classes, classes
     ];
 
-    const cnSearch = ['cursor-pointer'];
-    if (!searchActive) cnSearch.push('opacity-75');
-    else cnSearch.push('active');
+    const cnSearch = ['btn-dark', icons.search];
+    if (!!searchActive) cnSearch.push('active');
+    else cnSearch.push('opacity-75');
+
+    const oc = ['', orderClasses];
+    if (!sortDir) oc.push('opacity-50');
+
 
     const hClasses = ["align-middle", col.name];
     if (headerClasses) hClasses.push(headerClasses);
-
-    const oc = ['ps-2', orderClasses];
-    if (!sortDir) oc.push('opacity-50');
 
     const odescc = ['cursor-pointer'];
     const oascc = ['cursor-pointer'];
@@ -275,56 +290,58 @@ export class HeaderCell extends React.Component {
       odescc.push('opacity-50');
     }
 
+    if (col.filter?.name) {
+      this.props.dropFilters[col.name] = React.createElement(FloatingContainer,
+        {
+          name: `${col.name}-${this.props.tableName}-floatingFilter`,
+          floatAround: this.ref,
+          active: false,
+          placement: 'bottom-start',
+          allowedPlacements: ['bottom-start', 'top-start', 'bottom-end', 'top-end']
+        },
+        (typeof col.filter.showClear === 'boolean' ? col.filter.showClear : true) &&
+        searchActive && React.createElement(Action,
+          {
+            name: col.name + 'Clear',
+            classes: "btn-link btn-sm p-0",
+            style: { top: 5, position: 'absolute', right: 8, zIndex: 4 }
+          },
+          React.createElement(Icons,
+            { icon: icons.clear, classes: "text-danger" })
+        ),
+        React.createElement(fields[col.filter.component] || fields[col.filter.type] || fields.Field, col.filter)
+      );
+    }
+
     return React.createElement('th',
-      { className: hClasses.filter(c => !!c).flat().join(' '), scope: "col" },
-      React.createElement('div', { className: "d-flex align-items-center" },
-        React.createElement('div', { className: cn.filter(c => !!c).flat().join(' '), style },
+      { className: hClasses.filter(Boolean).flat().join(' '), scope: "col", ref: this.ref },
+      React.createElement('div', { className: "d-flex align-items-center gap-3" },
+        React.createElement('div', { className: cn.filter(Boolean).flat().join(' '), style },
           React.createElement('span', {}, col.label)
         ),
-        React.createElement('div', { className: "d-flex" },
-          col.filter && React.createElement('div', { className: "ps-2 mt-1 drop" + filterPos },
-            React.createElement(DropdownContainer,
-              {
-                name: col.name + 'DropdownFilter',
-                label: React.createElement(Icons,
-                  { icon: icons.search, className: cnSearch.filter(c => !!c).flat().join(' ') }
-                ),
-                dropdownClasses: "dropdown-menu-end p-0",
-                dropdownClass: false,
-                dropdown: {
-                  popperConfig: {
-                    strategy: 'fixed'
-                  }
-                }
-              },
-              (typeof col.filter.showClear === 'boolean' ? col.filter.showClear : true) &&
-              searchActive && React.createElement(Action,
-                {
-                  name: col.name + 'Clear',
-                  classes: "btn-link btn-sm p-0",
-                  style: { top: 5, position: 'absolute', right: 8, zIndex: 4 }
-                },
-                React.createElement(Icons,
-                  { icon: icons.clear, classes: "text-danger" })
-              ),
-              React.createElement(fields[col.filter.component] || fields[col.filter.type] || fields.Field, col.filter)
-            )
-          )
-        ),
+        col.filter && React.createElement(Action, {
+          tag: 'div',
+          classButton: false,
+          name: `${col.name}-${this.props.tableName}-triggerFilter`,
+          open: `${col.name}-${this.props.tableName}-floatingFilter`,
+          classes: cnSearch.flat().filter(Boolean).join(' '),
+          icon: icons.search,
+          style: { minWidth: '1.5rem' }
+        }),
         showOrder && React.createElement('div',
-          { className: oc.flat().filter(c => !!c).join(' '), style: { fontSize: 10 } },
+          { className: oc.flat().filter(Boolean).join(' '), style: { fontSize: 10 } },
           React.createElement('span',
             { onClick: (e) => this.sort('ASC', e) },
             React.createElement(Icons, {
               icon: icons.caretUp,
-              className: odescc.flat().filter(c => !!c).join(' ')
+              className: odescc.flat().filter(Boolean).join(' ')
             })
           ),
           React.createElement('span',
             { onClick: (e) => this.sort('DESC', e) },
             React.createElement(Icons, {
               icon: icons.caretDown,
-              className: oascc.flat().filter(c => !!c).join(' ')
+              className: oascc.flat().filter(Boolean).join(' ')
             })
           )
         )
@@ -383,6 +400,7 @@ export default class Table extends Component {
     super(props);
     const { mutations, ...propsJ } = props;
     this.jsonRender = new JsonRender(propsJ, mutations);
+    this.state.dropFilters = {};
   }
 
   /**
@@ -474,7 +492,8 @@ export default class Table extends Component {
       sort: orderBy === col.name,
       tableName: name,
       orderClasses,
-      orderActiveClasses
+      orderActiveClasses,
+      dropFilters: this.state.dropFilters
     };
 
     return React.createElement(HeaderCell, { key: i + '-' + col.name, ...props });
@@ -501,7 +520,7 @@ export default class Table extends Component {
     return {
       key: rowKey,
       ...rowProps,
-      className: cnRow.filter(c => !!c).flat().join(' ')
+      className: cnRow.filter(Boolean).flat().join(' ')
     };
   };
 
@@ -541,7 +560,7 @@ export default class Table extends Component {
       }
       deepMerge(cellAttrs, mutation);
     }
-    cellAttrs.className = cellAttrs.className.filter(c => !!c).flat().join(' ');
+    cellAttrs.className = cellAttrs.className.filter(Boolean).flat().join(' ');
 
     const formater = FORMATS[col.format] || (raw => t(raw, col.context));
     const cellData = typeof rowData[col.name] !== 'undefined' ? rowData[col.name] : true;
@@ -557,7 +576,7 @@ export default class Table extends Component {
       : React.createElement('td',
         {
           key: i + '-' + colName,
-          className: vertical ? [colName, 'row-' + (i - 1)].filter(c => !!c).flat().join(' ') : colName
+          className: vertical ? [colName, 'row-' + (i - 1)].filter(Boolean).flat().join(' ') : colName
         },
         cell
       )
@@ -574,7 +593,6 @@ export default class Table extends Component {
    */
   content(children = this.props.children) {
     const { data, columns, tableClasses, hover, striped, vertical, disabled } = this.props;
-
     // Definir encabezado y pie de página si están presentes
     let header, footer;
     if (Array.isArray(children))
@@ -622,38 +640,40 @@ export default class Table extends Component {
     });
 
     // Renderización de la tabla con las estructuras de encabezado, cuerpo y pie de página
-    return (
-      React.createElement('table', { className: cn.filter(c => !!c).flat().join(' ') },
-        React.createElement('thead', {},
-          header && (
-            React.createElement('tr', {},
-              React.createElement('td', { colSpan: "1000" },
-                React.createElement('div', {}, header)
-              )
-            )
-          ),
-          !vertical && (
-            React.createElement('tr', {},
-              Object.entries(columns).map(this.mapHeaderCell)
+    const finalTable = React.createElement('table', { className: cn.filter(Boolean).flat().join(' ') },
+      React.createElement('thead', {},
+        header && (
+          React.createElement('tr', {},
+            React.createElement('td', { colSpan: "1000" },
+              React.createElement('div', {}, header)
             )
           )
         ),
-        React.createElement('tbody', {},
-          tableData.map(({ cells, data }, i) =>
-            React.createElement('tr', { ...this.rowProps(data, i) }, cells)
+        !vertical && (
+          React.createElement('tr', {},
+            Object.entries(columns).map(this.mapHeaderCell)
           )
-        ),
-        footer && (
-          React.createElement('tfoot', {},
-            React.createElement('tr', {},
-              React.createElement('td', { colSpan: "1000" },
-                React.createElement('div', {}, footer)
-              )
+        )
+      ),
+      React.createElement('tbody', {},
+        tableData.map(({ cells, data }, i) =>
+          React.createElement('tr', { ...this.rowProps(data, i) }, cells)
+        )
+      ),
+      footer && (
+        React.createElement('tfoot', {},
+          React.createElement('tr', {},
+            React.createElement('td', { colSpan: "1000" },
+              React.createElement('div', {}, footer)
             )
           )
         )
       )
     );
+    return Object.keys(this.state.dropFilters).length
+      ? React.createElement(React.Fragment, {},
+        finalTable, ...Object.values(this.state.dropFilters))
+      : finalTable
   }
 
 }

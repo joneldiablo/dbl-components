@@ -112,7 +112,7 @@ export default class DropdownButtonContainer extends Component {
       }), PropTypes.string
     ])),
     mutations: PropTypes.func,
-    value: PropTypes.node,
+    value: PropTypes.node
   };
   static defaultProps = {
     ...Component.defaultProps,
@@ -143,8 +143,27 @@ export default class DropdownButtonContainer extends Component {
 
   componentDidMount() {
     this.events.forEach(e => eventHandler.subscribe(...e));
+  }
+
+  componentWillUnmount() {
+    this.events.forEach(e => eventHandler.unsubscribe(e[0]));
+    if (this.bsDropdown) {
+      this.bsDropdown.dispose();
+      this.bsDropdown = false;
+    }
     if (this.btn.current) {
       const btn = this.btn.current;
+      btn.removeEventListener('hide.bs.dropdown', this.onBsEvents);
+      btn.removeEventListener('hidden.bs.dropdown', this.onBsEvents);
+      btn.removeEventListener('show.bs.dropdown', this.onBsEvents);
+      btn.removeEventListener('shown.bs.dropdown', this.onBsEvents);
+    }
+  }
+
+  refBtn(ref) {
+    if (ref) {
+      this.btn.current = ref;
+      const btn = ref;
       const last = Dropdown.getInstance(btn);
       if (last) last.dispose();
       this.bsDropdown = new Dropdown(btn, {
@@ -161,21 +180,6 @@ export default class DropdownButtonContainer extends Component {
       btn.addEventListener('hidden.bs.dropdown', this.onBsEvents);
       btn.addEventListener('show.bs.dropdown', this.onBsEvents);
       btn.addEventListener('shown.bs.dropdown', this.onBsEvents);
-    }
-  }
-
-  componentWillUnmount() {
-    this.events.forEach(e => eventHandler.unsubscribe(e[0]));
-    if (this.bsDropdown) {
-      this.bsDropdown.dispose();
-      this.bsDropdown = false;
-    }
-    if (this.btn.current) {
-      const btn = this.btn.current;
-      btn.removeEventListener('hide.bs.dropdown', this.onBsEvents);
-      btn.removeEventListener('hidden.bs.dropdown', this.onBsEvents);
-      btn.removeEventListener('show.bs.dropdown', this.onBsEvents);
-      btn.removeEventListener('shown.bs.dropdown', this.onBsEvents);
     }
   }
 
@@ -253,7 +257,7 @@ export default class DropdownButtonContainer extends Component {
           disabled,
           id: this.trigger,
           onClick: this.onToggleDrop.bind(this),
-          ref: this.btn,
+          ref: (ref) => this.refBtn(ref),
           type: "button"
         },
         label || value,

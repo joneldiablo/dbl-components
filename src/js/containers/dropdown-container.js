@@ -16,14 +16,14 @@ export default class DropdownContainer extends DropdownButtonContainer {
     const cn = [btnClasses];
     if (this.props.dropdownClass !== false) cn.unshift('dropdown-toggle');
     return React.createElement(React.Fragment, {},
-      React.createElement('span',
+      (label || value) && React.createElement('span',
         {
           className: cn.flat().join(' '),
           'data-bs-toggle': "dropdown",
           disabled: disabled,
           id: this.trigger,
           onClick: this.onToggleDrop.bind(this),
-          ref: this.btn,
+          ref: (ref) => this.refBtn(ref),
           style: { cursor: 'pointer' }
         },
         label || value
