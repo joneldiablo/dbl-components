@@ -25,6 +25,7 @@ import ScrollContainer from "./containers/scroll-container";
 import SlideContainer from "./containers/slide-container";
 import TableContainer from "./containers/table-container";
 import TabsContainer from "./containers/tabs-container";
+import FloatingContainer from "./containers/floating-container/floating-container";
 
 const CONTAINERS = {
   Container,
@@ -53,6 +54,7 @@ const CONTAINERS = {
   SlideContainer,
   TableContainer,
   TabsContainer,
+  FloatingContainer
 }
 
 export const addContainers = (newContainers) => {
