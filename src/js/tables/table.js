@@ -264,8 +264,8 @@ export class HeaderCell extends React.Component {
       col.type, col.name + '-header',
       col.classes, classes
     ];
-    if (!vertical) cn.push('w-100');
-    else cn.push('my-1 pe-2 d-inline-block');
+    if (!vertical) cn.push('w-100', col.hClasses, col.hHeadClasses);
+    else cn.push('my-1 pe-2 d-inline-block', col.vClasses, col.vHeadClasses);
 
     const cnSearch = ['search'];
     if (!!searchActive) cnSearch.push('active');
@@ -351,8 +351,8 @@ export class HeaderCell extends React.Component {
         ),
         (col.filter || showOrder)
         && React.createElement('div', {
-          className: 'd-flex align-items-center flex-shrink-1 justify-content-end'
-            + (vertical ? ' float-end my-2 gap-2' : 'gap-1')
+          className: 'd-flex align-items-center flex-shrink-1 justify-content-end gap-2'
+            + (vertical ? ' float-end my-2' : '')
         }, ..._actions)
       )
     )
@@ -547,8 +547,16 @@ export default class Table extends Component {
   mapCell = (rowData, col, i) => {
     const { mapCells: mapCellsFunc, name, colClasses, vertical } = this.props;
     const colName = col.name;
+    const className = ['cell', col.type, col.name + '-cell', col.classes, colClasses];
+
+    if (vertical) {
+      className.push(col.vClasses, col.vCellClasses);
+    } else {
+      className.push(col.hClasses, col.hCellClasses);
+    }
+
     const cellAttrs = {
-      className: ['cell', col.type, col.name + '-cell', col.classes, colClasses],
+      className,
       style: vertical
         ? {
           minWidth: col.width,

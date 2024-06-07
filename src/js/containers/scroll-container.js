@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useRef, useLayoutEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import { ptClasses } from "../prop-types";
@@ -35,14 +35,14 @@ function ScrollXNode({
   children, // Child elements of the component.
 }) {
 
-  const scrollBarPosition = (percentagePosition) => {
+  const scrollBarPosition = useCallback((percentagePosition) => {
     if (!(scrollTrackRef.current && scrollBarRef.current)) return;
     const scrollBarrPercentage = percentagePosition
       * (scrollTrackRef.current.clientWidth - scrollBarRef.current.clientWidth);
     setScrollBarLeft(scrollBarrPercentage / scrollTrackRef.current.clientWidth);
-  }
+  });
 
-  const containerPosition = (step) => {
+  const containerPosition = useCallback((step) => {
     const newTranslate = Math.min(Math.max(initialTranslate.current + step, -diffContentWidth), 0);
     initialTranslate.current = newTranslate;
     const percentage = Math.abs(newTranslate / diffContentWidth);
@@ -52,9 +52,9 @@ function ScrollXNode({
     timeoutDispatchPosition = setTimeout(() => {
       eventHandler.dispatch(name, { [name]: { position: Math.abs(newTranslate), percentage, size: diffContentWidth } });
     }, 660);
-  }
+  });
 
-  const updateScroll = (update) => {
+  const updateScroll = useCallback((update) => {
     if (update.position !== undefined) {
       initialTranslate.current = 0;
       containerPosition(update.position);
@@ -64,24 +64,24 @@ function ScrollXNode({
       const position = -update.percentage * diffContentWidth;
       containerPosition(position);
     }
-  }
+  });
 
   /**
    * Handles the scroll event on the container.
    */
-  const handleScroll = () => {
+  const handleScroll = useCallback(() => {
     if (!scrollTrackRef.current) return;
     const container = containerRef.current;
     const scrollLeft = container.scrollLeft;
     const scrollBarPosition = (scrollLeft / diffContentWidth) * (scrollTrackRef.current.clientWidth - scrollBarRef.current.clientWidth);
     setScrollBarLeft(scrollBarPosition / scrollTrackRef.current.clientWidth);
-  };
+  });
 
   /**
    * Handles the wheel event for scrolling.
    * @param {Event} event - The wheel event.
    */
-  const handleWheel = (event) => {
+  const handleWheel = useCallback((event) => {
     let speed = event.deltaX;
     if (speed === 0 && event.shiftKey) {
       event.preventDefault();
@@ -94,13 +94,13 @@ function ScrollXNode({
 
     const containerRatio = container.scrollWidth / container.clientWidth;
     containerPosition(speed * containerRatio);
-  };
+  });
 
   /**
    * Handles the start of a drag event.
    * @param {Event} e - The drag event.
    */
-  const handleDragStart = (e) => {
+  const handleDragStart = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
     const initialPosValue = e.clientX || (e.touches ? e.touches[0].clientX : 0);
@@ -112,30 +112,31 @@ function ScrollXNode({
     document.addEventListener('touchend', handleDragEnd);
     initialMouseX.current = initialPosValue;
     initialScrollLeft.current = scrollBarLeft;
-  };
+  });
 
   /**
    * Handles the scrollBar drag event.
    * @param {Event} e - The drag event.
    */
-  const handleDrag = (e) => {
+  const handleDrag = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
     const posValue = e.clientX || (e.touches ? e.touches[0].clientX : 0);
     const initialValue = initialMouseX.current;
     if (!containerRef.current || posValue === 0) return;
+    if (Math.abs(posValue - initialValue) < 40) return;
 
     const barPercent = (scrollBarRef.current.clientWidth / scrollTrackRef.current.clientWidth);
     const deltaX = (posValue - initialValue) * barPercent;
     containerPosition(-deltaX);
 
-  };
+  });
 
   /**
    * Handles the end of a drag event.
    * @param {Event} e - The drag event.
    */
-  const handleDragEnd = (e) => {
+  const handleDragEnd = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
     containerRef.current.addEventListener('scroll', handleScroll);
@@ -145,34 +146,34 @@ function ScrollXNode({
     document.removeEventListener('touchend', handleDragEnd);
     initialMouseX.current = 0;
     initialScrollLeft.current = 0;
-  };
+  });
 
   /**
    * Handles the touch start event for touch devices.
    * @param {Event} e - The touch event.
    */
-  const handleTouchStart = (e) => {
+  const handleTouchStart = useCallback((e) => {
     initialTouchX.current = e.touches[0].clientX;
     setIsTouching(true);
-  };
+  });
 
   /**
    * Handles the touch move event for touch devices.
    * @param {Event} e - The touch event.
   */
-  const handleTouchMove = (event) => {
+  const handleTouchMove = useCallback((event) => {
     const vector = event.touches[0].clientX - initialTouchX.current;
     initialTouchX.current = event.touches[0].clientX;
     containerPosition(vector);
-  };
+  });
 
   /**
    * Handles the touch end event for touch devices.
    * @param {Event} e - The touch event.
    */
-  const handleTouchEnd = (e) => {
+  const handleTouchEnd = useCallback((e) => {
     setIsTouching(false);
-  };
+  });
 
   const containerRef = useRef(null); // Reference to the scroll container.
   const scrollTrackRef = useRef(null); // Reference to the scroll track.
@@ -195,7 +196,7 @@ function ScrollXNode({
   // Custom hook to handle events
   useEventHandler([
     [`update.${name}`, updateScroll]
-  ], [name, ScrollX.jsClass].join('-'));
+  ], [name, ScrollContainer.jsClass].join('-'));
 
   // Effect to detect if the device supports touch events.
   useLayoutEffect(() => {
@@ -330,11 +331,11 @@ ScrollXNode.propTypes = {
 }
 
 /**
- * Container class for the ScrollX component.
+ * Container class for the ScrollContainer component.
  */
-export default class ScrollX extends Container {
+export default class ScrollContainer extends Container {
 
-  static jsClass = 'ScrollX';
+  static jsClass = 'ScrollContainer';
 
   /**
    * Renders the ScrollXNode component with the provided properties.
