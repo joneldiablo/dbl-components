@@ -54,7 +54,7 @@ const CONTAINERS = {
   SlideContainer,
   TableContainer,
   TabsContainer,
-  FloatingContainer
+  FloatingContainer,
 }
 
 export const addContainers = (newContainers) => {

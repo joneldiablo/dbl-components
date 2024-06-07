@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { createRef } from "react";
-import moment from "moment";
 
 import eventHandler from "../functions/event-handler";
 import deepMerge from "../functions/deep-merge";
-import t, { formatDate } from '../functions/i18n';
+import t from '../functions/i18n';
 import formatValue from '../functions/format-value';
 import resolveRefs from '../functions/resolve-refs';
 import fields from "../forms/fields";
@@ -137,7 +136,6 @@ export class HeaderCell extends React.Component {
 
   static propTypes = {
     col: PropTypes.any,
-    filterPos: PropTypes.any,
     icons: PropTypes.any,
     orderable: PropTypes.bool,
     classes: PropTypes.oneOfType([
@@ -157,12 +155,12 @@ export class HeaderCell extends React.Component {
       PropTypes.arrayOf(PropTypes.string)
     ]),
     dropFilters: PropTypes.object.isRequired,
-    tableName: PropTypes.string
+    tableName: PropTypes.string,
+    vertical: PropTypes.bool
   }
 
   static jsClass = 'HeaderColumn';
   static defaultProps = {
-    filterPos: 'down'
   }
 
   state = {
@@ -253,9 +251,8 @@ export class HeaderCell extends React.Component {
    */
   render() {
     const {
-      col, classes, icons, orderable,
-      filterPos, headerClasses,
-      orderClasses, orderActiveClasses
+      col, classes, icons, orderable, vertical,
+      headerClasses, orderClasses, orderActiveClasses
     } = this.props;
     const { sortDir, searchActive } = this.state;
     const showOrder = typeof col.orderable !== 'undefined' ? col.orderable : orderable;
@@ -263,12 +260,14 @@ export class HeaderCell extends React.Component {
       minWidth: col.width
     }
     const cn = [
-      'header position-relative flex-grow-1 w-100',
+      'header position-relative flex-grow-1',
       col.type, col.name + '-header',
       col.classes, classes
     ];
+    if (!vertical) cn.push('w-100', col.hClasses, col.hHeadClasses);
+    else cn.push('my-1 pe-2 d-inline-block', col.vClasses, col.vHeadClasses);
 
-    const cnSearch = ['btn-dark', icons.search];
+    const cnSearch = ['search'];
     if (!!searchActive) cnSearch.push('active');
     else cnSearch.push('opacity-75');
 
@@ -313,38 +312,48 @@ export class HeaderCell extends React.Component {
       );
     }
 
+    const _actions = [
+      col.filter && React.createElement(Action, {
+        tag: 'div',
+        classButton: false,
+        name: `${col.name}-${this.props.tableName}-triggerFilter`,
+        open: `${col.name}-${this.props.tableName}-floatingFilter`,
+        classes: cnSearch.flat().filter(Boolean).join(' '),
+        icon: icons.search,
+        style: { minWidth: '1.2rem' }
+      }),
+      showOrder && React.createElement('div',
+        { className: oc.flat().filter(Boolean).join(' '), style: { fontSize: 10 } },
+        React.createElement('span',
+          { onClick: (e) => this.sort('ASC', e) },
+          React.createElement(Icons, {
+            icon: icons.caretUp,
+            className: odescc.flat().filter(Boolean).join(' ')
+          })
+        ),
+        React.createElement('span',
+          { onClick: (e) => this.sort('DESC', e) },
+          React.createElement(Icons, {
+            icon: icons.caretDown,
+            className: oascc.flat().filter(Boolean).join(' ')
+          })
+        )
+      )
+    ];
+
     return React.createElement('th',
       { className: hClasses.filter(Boolean).flat().join(' '), scope: "col", ref: this.ref },
-      React.createElement('div', { className: "d-flex align-items-center gap-3" },
-        React.createElement('div', { className: cn.filter(Boolean).flat().join(' '), style },
-          React.createElement('span', {}, col.label)
+      React.createElement('div',
+        { className: (vertical ? '' : 'd-flex') + " align-items-center gap-3" },
+        React.createElement('div',
+          { className: cn.filter(Boolean).flat().join(' '), style },
+          col.label
         ),
-        col.filter && React.createElement(Action, {
-          tag: 'div',
-          classButton: false,
-          name: `${col.name}-${this.props.tableName}-triggerFilter`,
-          open: `${col.name}-${this.props.tableName}-floatingFilter`,
-          classes: cnSearch.flat().filter(Boolean).join(' '),
-          icon: icons.search,
-          style: { minWidth: '1.5rem' }
-        }),
-        showOrder && React.createElement('div',
-          { className: oc.flat().filter(Boolean).join(' '), style: { fontSize: 10 } },
-          React.createElement('span',
-            { onClick: (e) => this.sort('ASC', e) },
-            React.createElement(Icons, {
-              icon: icons.caretUp,
-              className: odescc.flat().filter(Boolean).join(' ')
-            })
-          ),
-          React.createElement('span',
-            { onClick: (e) => this.sort('DESC', e) },
-            React.createElement(Icons, {
-              icon: icons.caretDown,
-              className: oascc.flat().filter(Boolean).join(' ')
-            })
-          )
-        )
+        (col.filter || showOrder)
+        && React.createElement('div', {
+          className: 'd-flex align-items-center flex-shrink-1 justify-content-end gap-2'
+            + (vertical ? ' float-end my-2' : '')
+        }, ..._actions)
       )
     )
   }
@@ -476,7 +485,7 @@ export default class Table extends Component {
   mapHeaderCell = ([key, col], i) => {
     const {
       colClasses, headerClasses,
-      icons, orderable, name,
+      icons, orderable, name, vertical,
       orderClasses, orderActiveClasses
     } = this.props;
     const { orderBy } = this.state;
@@ -493,7 +502,8 @@ export default class Table extends Component {
       tableName: name,
       orderClasses,
       orderActiveClasses,
-      dropFilters: this.state.dropFilters
+      dropFilters: this.state.dropFilters,
+      vertical
     };
 
     return React.createElement(HeaderCell, { key: i + '-' + col.name, ...props });
@@ -537,8 +547,16 @@ export default class Table extends Component {
   mapCell = (rowData, col, i) => {
     const { mapCells: mapCellsFunc, name, colClasses, vertical } = this.props;
     const colName = col.name;
+    const className = ['cell', col.type, col.name + '-cell', col.classes, colClasses];
+
+    if (vertical) {
+      className.push(col.vClasses, col.vCellClasses);
+    } else {
+      className.push(col.hClasses, col.hCellClasses);
+    }
+
     const cellAttrs = {
-      className: ['cell', col.type, col.name + '-cell', col.classes, colClasses],
+      className,
       style: vertical
         ? {
           minWidth: col.width,
@@ -610,33 +628,21 @@ export default class Table extends Component {
     const tableData = [];
 
     // Procesamiento de los datos para construir la estructura de la tabla
-    data.forEach((row, i) => {
-      Object.entries(columns).forEach(([key, col], j) => {
-        const column = col.name ? col : { name: key, ...col };
+    Object.entries(columns).forEach(([key, col], j) => {
+      const column = col.name ? col : { name: key, ...col };
 
-        if (!vertical) {
-          // Si la tabla no es vertical (es decir, es horizontal)
+      if (vertical) {
+        if (!tableData[j]) tableData[j] = { cells: [], data: column };
+        tableData[j].cells[0] = this.mapHeaderCell([key, column], 0);
+      }
 
-          // Si no se ha inicializado el registro de la tabla (fila) en la posición i, se inicializa
-          if (!tableData[i]) tableData[i] = { cells: [], data: row };
-
-          // Se mapea la celda en la posición j de la fila i, pasándole los datos de la fila y la columna
-          tableData[i].cells[j] = this.mapCell(row, column, j);
-        } else {
-          // Si la tabla es vertical
-
-          // Si no se ha inicializado el registro de la tabla (columna) en la posición j, se inicializa
-          if (!tableData[j]) tableData[j] = { cells: [], data: column };
-
-          // Para la primera fila de cada columna (i === 0), se mapea la celda de encabezado
-          if (i === 0) tableData[j].cells[0] = this.mapHeaderCell([key, column], 0);
-
-          // Para las filas restantes de cada columna, se mapea la celda correspondiente
-          const k = i + 1;
-          tableData[j].cells[k] = this.mapCell(row, column, k);
-        }
-
+      data.forEach((row, i) => {
+        const k = vertical ? i + 1 : i;
+        const [x, y] = vertical ? [k, j] : [j, k];
+        if (!tableData[y]) tableData[y] = { cells: [], data: row };
+        tableData[y].cells[x] = this.mapCell(row, column, x);
       });
+
     });
 
     // Renderización de la tabla con las estructuras de encabezado, cuerpo y pie de página
