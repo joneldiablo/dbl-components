@@ -66,7 +66,8 @@ export const FORMATS = {
    * @param {Object} options - Opciones de formato de la fecha.
    * @returns {String} La fecha formateada.
    */
-  date: (raw, params = {}) => formatValue(raw, Object.assign(params, { format: 'date' })),
+  date: (raw, params = {}) =>
+    typeof raw !== 'string' ? '' : formatValue(raw, Object.assign(params, { format: 'date' })),
   /**
    * Formatea los datos en crudo a un datetime.
    *
@@ -75,8 +76,10 @@ export const FORMATS = {
    * @param {Object} options - Opciones de formato del datetime.
    * @returns {String} El datetime formateado.
    */
-  datetime: (raw, params = {}) => formatValue(raw, Object.assign(params, { format: 'datetime' })),
-  time: (raw, params = {}) => formatValue(raw, Object.assign(params, { format: 'time' })),
+  datetime: (raw, params = {}) =>
+    typeof raw !== 'string' ? '' : formatValue(raw, Object.assign(params, { format: 'datetime' })),
+  time: (raw, params = {}) =>
+    typeof raw !== 'string' ? '' : formatValue(raw, Object.assign(params, { format: 'time' })),
   /**
    * Formatea los datos en crudo a una moneda.
    *
@@ -85,7 +88,8 @@ export const FORMATS = {
    * @param {Object} options - Opciones de formato de la moneda.
    * @returns {String} La moneda formateada.
    */
-  currency: (raw, params = {}) => formatValue(raw, Object.assign(params, { format: 'currency' })),
+  currency: (raw, params = {}) =>
+    typeof raw !== 'number' ? '' : formatValue(raw, Object.assign(params, { format: 'currency' })),
   /**
    * Formatea los datos en crudo a un número.
    *
@@ -94,7 +98,8 @@ export const FORMATS = {
    * @param {Object} options - Opciones de formato del número.
    * @returns {String} El número formateado.
    */
-  number: (raw, params = {}) => formatValue(raw, Object.assign(params, { format: 'number' })),
+  number: (raw, params = {}) =>
+    typeof raw !== 'number' ? '' : formatValue(raw, Object.assign(params, { format: 'number' })),
   /**
    * Formatea los datos en crudo a un booleano.
    *
@@ -155,6 +160,7 @@ export class HeaderCell extends React.Component {
       PropTypes.arrayOf(PropTypes.string)
     ]),
     dropFilters: PropTypes.object.isRequired,
+    headerRefs: PropTypes.object.isRequired,
     tableName: PropTypes.string,
     vertical: PropTypes.bool
   }
@@ -289,6 +295,7 @@ export class HeaderCell extends React.Component {
       odescc.push('opacity-50');
     }
 
+    this.props.headerRefs[col.name] = this.ref;
     if (col.filter?.name) {
       this.props.dropFilters[col.name] = React.createElement(FloatingContainer,
         {
@@ -351,7 +358,7 @@ export class HeaderCell extends React.Component {
         ),
         (col.filter || showOrder)
         && React.createElement('div', {
-          className: 'd-flex align-items-center flex-shrink-1 justify-content-end gap-2'
+          className: 'd-flex align-items-center flex-shrink-1 justify-content-end gap-2 filter-order-container'
             + (vertical ? ' float-end my-2' : '')
         }, ..._actions)
       )
@@ -410,6 +417,7 @@ export default class Table extends Component {
     const { mutations, ...propsJ } = props;
     this.jsonRender = new JsonRender(propsJ, mutations);
     this.state.dropFilters = {};
+    this.state.headerRefs = {};
   }
 
   /**
@@ -503,6 +511,7 @@ export default class Table extends Component {
       orderClasses,
       orderActiveClasses,
       dropFilters: this.state.dropFilters,
+      headerRefs: this.state.headerRefs,
       vertical
     };
 
@@ -562,7 +571,10 @@ export default class Table extends Component {
           minWidth: col.width,
           ...col.style
         }
-        : col.style,
+        : {
+          paddingRight: `var(--${colName}-${name}-Table)`,
+          ...col.style
+        },
       title: rowData[colName] !== undefined ? rowData[colName].toString() : null
     }
 
@@ -645,8 +657,22 @@ export default class Table extends Component {
 
     });
 
+    const cssHeaderVars = Object.entries(this.state.headerRefs).reduce((chv, [colName, hRef]) => {
+      const foc = hRef.current?.querySelector('.filter-order-container');
+      if (!foc) return chv;
+      const colNameLabel = foc.parentElement.querySelector(`.${colName}-header`);
+      const pTotal = foc.parentElement.clientWidth - colNameLabel.clientWidth;
+      chv[`--${colName}-${this.props.name}-Table`] = pTotal + 'px';
+      return chv;
+    }, {});
+
     // Renderización de la tabla con las estructuras de encabezado, cuerpo y pie de página
-    const finalTable = React.createElement('table', { className: cn.filter(Boolean).flat().join(' ') },
+    const finalTable = React.createElement('table', {
+      className: cn.filter(Boolean).flat().join(' '),
+      style: {
+        ...cssHeaderVars
+      }
+    },
       React.createElement('thead', {},
         header && (
           React.createElement('tr', {},
