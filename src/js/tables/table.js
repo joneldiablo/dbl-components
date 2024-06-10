@@ -67,7 +67,7 @@ export const FORMATS = {
    * @returns {String} La fecha formateada.
    */
   date: (raw, params = {}) =>
-    typeof raw !== 'string' ? '' : formatValue(raw, Object.assign(params, { format: 'date' })),
+    typeof raw !== 'string' ? (params.empty || '') : formatValue(raw, Object.assign(params, { format: 'date' })),
   /**
    * Formatea los datos en crudo a un datetime.
    *
@@ -77,9 +77,9 @@ export const FORMATS = {
    * @returns {String} El datetime formateado.
    */
   datetime: (raw, params = {}) =>
-    typeof raw !== 'string' ? '' : formatValue(raw, Object.assign(params, { format: 'datetime' })),
+    typeof raw !== 'string' ? (params.empty || '') : formatValue(raw, Object.assign(params, { format: 'datetime' })),
   time: (raw, params = {}) =>
-    typeof raw !== 'string' ? '' : formatValue(raw, Object.assign(params, { format: 'time' })),
+    typeof raw !== 'string' ? (params.empty || '') : formatValue(raw, Object.assign(params, { format: 'time' })),
   /**
    * Formatea los datos en crudo a una moneda.
    *
@@ -89,7 +89,7 @@ export const FORMATS = {
    * @returns {String} La moneda formateada.
    */
   currency: (raw, params = {}) =>
-    typeof raw !== 'number' ? '' : formatValue(raw, Object.assign(params, { format: 'currency' })),
+    typeof raw !== 'number' ? (params.empty || '') : formatValue(raw, Object.assign(params, { format: 'currency' })),
   /**
    * Formatea los datos en crudo a un número.
    *
@@ -99,7 +99,7 @@ export const FORMATS = {
    * @returns {String} El número formateado.
    */
   number: (raw, params = {}) =>
-    typeof raw !== 'number' ? '' : formatValue(raw, Object.assign(params, { format: 'number' })),
+    typeof raw !== 'number' ? (params.empty || '') : formatValue(raw, Object.assign(params, { format: 'number' })),
   /**
    * Formatea los datos en crudo a un booleano.
    *
@@ -581,6 +581,9 @@ export default class Table extends Component {
     const mutation = typeof mapCellsFunc === 'function' && mapCellsFunc(name, col.name, rowData, { cellAttrs, fullColumn: col }) || {};
     let formatOptions;
     if (col.formatOpts) {
+      deepMerge.setConfig({
+        fix: (target, source) => React.isValidElement(source) || React.isValidElement(target) ? source : undefined
+      });
       formatOptions = deepMerge({ ...col.formatOpts }, mutation);
     } else {
       if (mutation.classes) {
@@ -588,11 +591,14 @@ export default class Table extends Component {
         delete mutation.classes;
         cellAttrs.className.push(classes);
       }
+      deepMerge.setConfig({
+        fix: (target, source) => React.isValidElement(source) || React.isValidElement(target) ? source : undefined
+      });
       deepMerge(cellAttrs, mutation);
     }
     cellAttrs.className = cellAttrs.className.filter(Boolean).flat().join(' ');
 
-    const formater = FORMATS[col.format] || (raw => t(raw, col.context));
+    const formater = FORMATS[col.format] || ((raw, opts) => ((raw === '' || typeof raw !== 'string') && opts.empty) || t(raw, opts.context));
     const cellData = typeof rowData[col.name] !== 'undefined' ? rowData[col.name] : true;
 
     const cell = React.createElement('div',
