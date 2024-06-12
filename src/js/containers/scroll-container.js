@@ -45,12 +45,13 @@ function ScrollXNode({
   const containerPosition = useCallback((step) => {
     const newTranslate = Math.min(Math.max(initialTranslate.current + step, -diffContentWidth), 0);
     initialTranslate.current = newTranslate;
-    const percentage = Math.abs(newTranslate / diffContentWidth);
+    const newPercentage = Math.abs(newTranslate / diffContentWidth);
+    setPercentage(newPercentage);
     setTranslate(newTranslate);
-    scrollBarPosition(percentage);
+    scrollBarPosition(newPercentage);
     clearTimeout(timeoutDispatchPosition);
     timeoutDispatchPosition = setTimeout(() => {
-      eventHandler.dispatch(name, { [name]: { position: Math.abs(newTranslate), percentage, size: diffContentWidth } });
+      eventHandler.dispatch(name, { [name]: { position: Math.abs(newTranslate), percentage: newPercentage, size: diffContentWidth } });
     }, 660);
   });
 
@@ -62,6 +63,18 @@ function ScrollXNode({
     if (update.percentage !== undefined) {
       initialTranslate.current = 0;
       const position = -update.percentage * diffContentWidth;
+      containerPosition(position);
+    }
+    if (update.resize) {
+      const container = containerRef.current;
+      const newContentWidth = container.scrollWidth;
+      const newDiffContentWidth = container.scrollWidth - container.clientWidth;
+
+      setContentWidth(newContentWidth);
+      setDiffContentWidth(newDiffContentWidth);
+
+      initialTranslate.current = 0;
+      const position = -percentage * newDiffContentWidth;
       containerPosition(position);
     }
   });
@@ -192,6 +205,7 @@ function ScrollXNode({
   const [contentWidth, setContentWidth] = useState(0); // Width of the scrollable content.
   const [diffContentWidth, setDiffContentWidth] = useState(0); // difference Width of the scrollable content.
   const [translate, setTranslate] = useState(initialTranslate.current); // Transform value for the scroll bar.
+  const [percentage, setPercentage] = useState(initialTranslate.current); // percentage value for the scroll bar.
 
   // Custom hook to handle events
   useEventHandler([
@@ -308,7 +322,7 @@ function ScrollXNode({
             aria-controls={`${name}-container`}
             aria-valuemin="0"
             aria-valuemax="100"
-            aria-valuenow={(translate / diffContentWidth) * 100}
+            aria-valuenow={percentage * 100}
             tabIndex="0"
           />
         </div>
