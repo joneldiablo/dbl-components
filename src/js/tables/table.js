@@ -395,6 +395,9 @@ export default class Table extends Component {
     striped: PropTypes.any,
     tableClasses: PropTypes.any,
     vertical: PropTypes.bool,
+    headerCustom: PropTypes.oneOfType([PropTypes.element, PropTypes.bool, PropTypes.string]),
+    columnsCustom: PropTypes.oneOfType([PropTypes.element, PropTypes.bool, PropTypes.string]),
+    footerCustom: PropTypes.oneOfType([PropTypes.element, PropTypes.bool, PropTypes.string]),
   }
   static defaultProps = {
     ...Component.defaultProps,
@@ -628,7 +631,11 @@ export default class Table extends Component {
    * @memberof Table
    */
   content(children = this.props.children) {
-    const { data, columns, tableClasses, hover, striped, vertical, disabled } = this.props;
+    const {
+      data, columns, tableClasses,
+      hover, striped, vertical, disabled,
+      headerCustom, columnsCustom, footerCustom
+    } = this.props;
     // Definir encabezado y pie de página si están presentes
     let header, footer;
     if (Array.isArray(children))
@@ -687,11 +694,13 @@ export default class Table extends Component {
             )
           )
         ),
+        ...[headerCustom].flat().filter(Boolean),
         !vertical && (
           React.createElement('tr', {},
             Object.entries(columns).map(this.mapHeaderCell)
           )
-        )
+        ),
+        ...[columnsCustom].flat().filter(Boolean),
       ),
       React.createElement('tbody', {},
         tableData.map(({ cells, data }, i) =>
@@ -700,6 +709,7 @@ export default class Table extends Component {
       ),
       footer && (
         React.createElement('tfoot', {},
+          ...[footerCustom].flat().filter(Boolean),
           React.createElement('tr', {},
             React.createElement('td', { colSpan: "1000" },
               React.createElement('div', {}, footer)
