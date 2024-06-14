@@ -40,12 +40,19 @@ const schemaPropTypes = {
   routes: routePropTypes.routes,
   redirect: PropTypes.func,
   defaultController: PropTypes.func,
-  history: PropTypes.any
+  history: PropTypes.any,
+  Router: PropTypes.elementType
 }
 
 const schemaDefaultProps = {
   routes: [],
   defaultController: controllers.Controller
+}
+const routeComponents = {
+  Route
+}
+export const AddRouteComponents = (nrc) => {
+  Object.assign(routeComponents, nrc);
 }
 
 export default class SchemaController extends React.Component {
@@ -172,16 +179,17 @@ export default class SchemaController extends React.Component {
       ));
     }
     const key = i || typeof i === 'number' ? (i + '-' + route.name) : route.name;
-    return React.createElement(Route, { key, ...routeProps, render: RedirViewManager });
+    const TheRoute = routeComponents[route.RouteComponent] || routeComponents.Route;
+    return React.createElement(TheRoute, { key, ...routeProps, render: RedirViewManager });
   }
 
   render() {
-    let { history, theme } = this.props;
+    let { history, theme, Router: OtherRouter } = this.props;
     let { routeNodes } = this.state;
-    return (React.createElement(Router,
+    return (React.createElement(OtherRouter || Router,
       { history },
       theme && React.createElement('link', { rel: "stylesheet", type: "text/css", href: theme }),
-      React.createElement(Switch, {}, routeNodes)
+      React.createElement(Switch, {}, ...routeNodes)
     ));
   }
 }
