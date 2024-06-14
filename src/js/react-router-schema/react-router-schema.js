@@ -189,7 +189,7 @@ export default class SchemaController extends React.Component {
     return (React.createElement(OtherRouter || Router,
       { history },
       theme && React.createElement('link', { rel: "stylesheet", type: "text/css", href: theme }),
-      React.createElement(Switch, {}, ...routeNodes)
+      React.createElement(Switch, {}, routeNodes)
     ));
   }
 }
