@@ -4,15 +4,18 @@ import t, { formatDate, formatNumber, formatCurrency, formatTime, formatDateTime
 export default (value, conf) => {
   if (!conf?.format) return value;
   switch (conf.format) {
-    case 'number':
+    case 'number': {
       return typeof value === 'boolean' ? Number(value)
         : value.toLocaleString(getLang(), conf.formatConf || formatNumber(conf.context));
-    case 'currency':
+    }
+    case 'currency': {
       const globalConf = conf.formatConf || formatCurrency(conf.context);
       return value.toLocaleString(getLang(), {
         ...globalConf,
+        style: "currency",
         currency: conf.currency || globalConf.currency,
       });
+    }
     case 'dictionary':
       return t(value, conf.context);
     case 'date':

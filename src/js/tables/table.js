@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { createRef } from "react";
 
+import { ptClasses } from "../prop-types";
 import eventHandler from "../functions/event-handler";
 import deepMerge from "../functions/deep-merge";
 import t from '../functions/i18n';
@@ -381,10 +382,13 @@ export default class Table extends Component {
   static jsClass = 'Table';
   static propTypes = {
     ...Component.propTypes,
-    colClasses: PropTypes.any,
+    colClasses: ptClasses,
+    headerClasses: ptClasses,
+    tableClasses: ptClasses,
+    orderClasses: ptClasses,
+    orderActiveClasses: ptClasses,
     columns: PropTypes.any,
     data: PropTypes.any,
-    headerClasses: PropTypes.any,
     hover: PropTypes.any,
     icons: PropTypes.any,
     mapCells: PropTypes.any,
@@ -393,7 +397,6 @@ export default class Table extends Component {
     onChange: PropTypes.any,
     orderable: PropTypes.any,
     striped: PropTypes.any,
-    tableClasses: PropTypes.any,
     vertical: PropTypes.bool,
     headerCustom: PropTypes.oneOfType([PropTypes.element, PropTypes.bool, PropTypes.string]),
     columnsCustom: PropTypes.oneOfType([PropTypes.element, PropTypes.bool, PropTypes.string]),

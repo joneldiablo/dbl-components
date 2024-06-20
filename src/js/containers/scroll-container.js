@@ -98,7 +98,7 @@ function ScrollXNode({
     let speed = event.deltaX;
     if (speed === 0 && event.shiftKey) {
       event.preventDefault();
-      speed = event.deltaY / Math.abs(event.deltaY);
+      speed = -event.deltaY / Math.abs(event.deltaY);
     }
     speed *= 10;
 
