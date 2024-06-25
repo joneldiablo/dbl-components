@@ -1,3 +1,6 @@
+import PropTypes from "prop-types";
+
+import { ptClasses } from "../prop-types";
 import JsonRender from "../json-render";
 import resolveRefs from "../functions/resolve-refs";
 import eventHandler from "../functions/event-handler";
@@ -6,6 +9,24 @@ import Component from "../component";
 export default class ActionComponent extends Component {
 
   static jsClass = 'Action';
+  static propTypes = {
+    ...Component.propTypes,
+    classButton: PropTypes.bool,
+    close: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+    disabled: PropTypes.bool,
+    form: PropTypes.string,
+    icon: PropTypes.string,
+    iconClasses: ptClasses,
+    iconProps: PropTypes.object,
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    open: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+    status: PropTypes.string,
+    statusClasses: PropTypes.objectOf(ptClasses),
+    statusIcons: PropTypes.objectOf(PropTypes.string),
+    to: PropTypes.string,
+    type: PropTypes.string,
+    value: PropTypes.any,
+  }
   static defaultProps = {
     ...Component.defaultProps,
     type: 'button',
@@ -110,7 +131,7 @@ export default class ActionComponent extends Component {
     switch (search) {
       case "actionIcon": {
         const cn = [];
-        if (!!this.props.children) cn.push('me-2');
+        if (this.props.children) cn.push('me-2');
         return {
           ...this.props.iconProps,
           active: !!this.props.icon,
