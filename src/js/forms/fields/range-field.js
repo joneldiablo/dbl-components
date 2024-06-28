@@ -103,6 +103,10 @@ export default class RangeField extends Field {
     const [{ value }] = args;
     if (value === undefined) return;
     const [from, to] = value === null || value === '' ? [null, null] : value;
+    this.setState({
+      min: from,
+      max: to
+    });
     eventHandler.dispatch(`update.${this.props.name}-fromControl`, { value: from });
     eventHandler.dispatch(`update.${this.props.name}-toControl`, { value: to });
   }
