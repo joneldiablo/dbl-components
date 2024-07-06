@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
 import React from "react";
-import IcoMoon, { iconList } from "react-icomoon";
+import IcoMoon, { iconList, } from "react-icomoon";
+import defaultIcons from "../../app-icons-v1.0/selection.json";
+import stringify from "../functions/stringify";
 
-let is;
+let is = JSON.parse(stringify(defaultIcons));
 
 export default class Icons extends React.Component {
 
@@ -47,6 +49,7 @@ export default class Icons extends React.Component {
       title,
       size
     }
+
     return React.createElement(IcoMoon, { ...props });
   }
 }

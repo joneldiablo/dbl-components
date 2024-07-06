@@ -1,6 +1,5 @@
 import { flatten } from "flat";
 
-import defaultIcons from "../app-icons-v1.0/selection.json";
 import { randomS4 } from "./functions";
 import stringify from "./functions/stringify";
 import resolveRefs from "./functions/resolve-refs";
@@ -97,8 +96,6 @@ export class AppController {
       lang
     };
 
-    const copyIcons = JSON.parse(stringify(defaultIcons));
-    setIconSet(copyIcons);
     if (icons) addIcons(icons);
 
     this.globalDefinitions.push(...(Array.isArray(definitions) ? definitions : [definitions]));
