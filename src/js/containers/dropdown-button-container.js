@@ -112,7 +112,8 @@ export default class DropdownButtonContainer extends Component {
       }), PropTypes.string
     ])),
     mutations: PropTypes.func,
-    value: PropTypes.node
+    value: PropTypes.node,
+    zIndex: PropTypes.number
   };
   static defaultProps = {
     ...Component.defaultProps,
@@ -120,10 +121,14 @@ export default class DropdownButtonContainer extends Component {
     dropdownClasses: '',
     dropdownClass: true,
     btnClasses: '',
-    dropdown: {}
+    dropdown: {},
+    zIndex: 1000
   };
 
-  classes = 'dropdown';
+  /**
+   * @override classes
+   */
+  classes = 'btn-group';
 
   constructor(props) {
     super(props);
@@ -164,13 +169,13 @@ export default class DropdownButtonContainer extends Component {
     if (ref) {
       this.btn.current = ref;
       const btn = ref;
-      const last = Dropdown.getInstance(btn);
-      if (last) last.dispose();
-      this.bsDropdown = new Dropdown(btn, {
+      this.bsDropdown = Dropdown.getOrCreateInstance(btn, {
         autoClose: true,
-        reference: 'toggle',
-        ...this.props.dropdown,
+        reference: 'parent',
+        display: 'dynamic',
+        ...this.props.dropdown
       });
+
       btn.removeEventListener('hide.bs.dropdown', this.onBsEvents);
       btn.removeEventListener('hidden.bs.dropdown', this.onBsEvents);
       btn.removeEventListener('show.bs.dropdown', this.onBsEvents);
@@ -208,6 +213,9 @@ export default class DropdownButtonContainer extends Component {
     } else {
       this.setState({ open: true }, () => {
         this.bsDropdown.show();
+        setTimeout(() =>
+          this.bsDropdown.update()
+          , 400)
       });
     }
   }
@@ -237,7 +245,7 @@ export default class DropdownButtonContainer extends Component {
       }) : [];
     return React.createElement('div',
       {
-        className: cn, style: { minWidth: '100%' },
+        className: cn, style: { minWidth: '100%', "--bs-dropdown-zindex": this.props.zIndex },
         onClick: allowClose ? null : (e) => e.stopPropagation(), 'aria-labelledby': this.trigger
       },
       ...[this.state.open && menuBuilded].flat(),
