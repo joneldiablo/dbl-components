@@ -205,6 +205,7 @@
   "js/i18n/README.md",
   "js/i18n/select-language.js",
   "js/index.js",
+  "js/json-render-component.js",
   "js/json-render.js",
   "js/konva/index.js",
   "js/media/icons.js",
