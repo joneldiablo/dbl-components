@@ -26,7 +26,9 @@ export default class Navigation extends Component {
     menu: [],
     caretIcons: ['angle-up', 'angle-down'],
     navLink: true,
-    activeClassName: 'active'
+    activeClassName: 'active',
+    itemTag: 'div',
+    itemClasses: ''
   }
 
   tag = 'nav';
@@ -160,7 +162,7 @@ export default class Navigation extends Component {
   link(itemRaw, i, parent) {
     if (!itemRaw) return false;
 
-    const { caretIcons, linkClasses, navLink, activeClassName } = this.props;
+    const { caretIcons, linkClasses, navLink, activeClassName, itemTag } = this.props;
     const { carets, open } = this.state;
 
     const modify = typeof this.props.mutations === 'function'
@@ -246,42 +248,43 @@ export default class Navigation extends Component {
       propsLink.style.paddingRight = "2.3rem";
     }
 
-    return (React.createElement(React.Fragment,
-      { key: i + '-' + (item.path || item.to) },
-      React.createElement('div', { ...(item.itemProps || {}) },
-        React.createElement('div', { style: styleWrapCaret },
-          (item.path || item.to)
-            ? React.createElement(NavLink, propsLink, innerNode)
-            : React.createElement(Component, propsLink, innerNode)
-          ,
-          !!item.menu?.length && open &&
-          React.createElement('span',
-            {
-              className: "position-absolute top-50 end-0 translate-middle-y caret-icon p-1 cursor-pointer",
-              onClick: e => this.onToggleSubmenu(e, item)
-            },
-            React.createElement(Icons,
-              {
-                icon: carets[item.name], ...iconStyle, inline: false,
-                style: {
-                  width: "1.8rem", padding: '.5rem'
-                }, className: "rounded-circle"
-              }
-            )
-          )
-        ),
-        !!item.menu?.length &&
-        React.createElement('div',
+    const itemProps = {
+      ...(item.itemProps || {}),
+      className: [item.itemClasses || this.props.itemClasses].flat().filter(Boolean).join(' ')
+    }
+    return React.createElement(itemTag, itemProps,
+      React.createElement('div', { style: styleWrapCaret },
+        (item.path || item.to)
+          ? React.createElement(NavLink, propsLink, innerNode)
+          : React.createElement(Component, propsLink, innerNode)
+        ,
+        !!item.menu?.length && open &&
+        React.createElement('span',
           {
-            ref: (ref) => this.collapseRef(ref, item),
-            id: item.name + '-collapse', className: "collapse"
+            className: "position-absolute top-50 end-0 translate-middle-y caret-icon p-1 cursor-pointer",
+            onClick: e => this.onToggleSubmenu(e, item)
           },
-          //renderear solo cuando este abierto
-          this.state.carets[item.name] === this.props.caretIcons[0] &&
-          item.menu.map((m, i) => this.link(m, i, item)).filter(m => !!m)
+          React.createElement(Icons,
+            {
+              icon: carets[item.name], ...iconStyle, inline: false,
+              style: {
+                width: "1.8rem", padding: '.5rem'
+              }, className: "rounded-circle"
+            }
+          )
         )
+      ),
+      !!item.menu?.length &&
+      React.createElement('div',
+        {
+          ref: (ref) => this.collapseRef(ref, item),
+          id: item.name + '-collapse', className: "collapse"
+        },
+        //renderear solo cuando este abierto
+        this.state.carets[item.name] === this.props.caretIcons[0] &&
+        item.menu.map((m, i) => this.link(m, i, item)).filter(m => !!m)
       )
-    ));
+    );
   }
 
   // TODO: agregar submenu dropdown 
@@ -289,7 +292,7 @@ export default class Navigation extends Component {
   content(children = this.props.children) {
     this.flatItems = [];
     return (React.createElement(React.Fragment, {},
-      this.props.menu.map((m, i) => this.link(m, i)).filter(m => !!m),
+      ...this.props.menu.map((m, i) => this.link(m, i)).filter(m => !!m),
       children
     ));
   }
