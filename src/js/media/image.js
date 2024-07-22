@@ -48,7 +48,7 @@ export default class Image extends Component {
           {
             src: imgSrc, alt, width, height,
             style: { objectFit, objectPosition },
-            className: imageClasses
+            className: [imageClasses].flat().filter(Boolean).join(' ')
           }
         )
       ),
