@@ -1,45 +1,64 @@
-import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
-import { useFloating, autoUpdate, autoPlacement, FloatingArrow } from '@floating-ui/react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useFloating, autoUpdate, autoPlacement } from '@floating-ui/react';
+import PropTypes from "prop-types";
 
-
+import Component from '../../component';
 import useEventHandler from '../../hooks/use-event-handler';
 import eventHandler from '../../functions/event-handler';
 
-function onOpenChange(open, event, reason) {
-  //console.log(open, event, reason);
-}
+export default function FloatingContainer({
+  name, floatAround, children, placement, card,
+  alignment, allowedPlacements, classes, styles
+}) {
+  const [open, setOpen] = useState(false);
+  const floatingRef = useRef(null);
+  const changeOpen = useRef(null);
 
-export default function FloatingContainer({ name, active, floatAround, children, placement, alignment, allowedPlacements, classes, styles = {} }) {
-  const reference = floatAround.current
-    ? (floatAround.current.ref?.current || floatAround.current)
-    : floatAround;
+  const reference = !!floatAround && (
+    floatAround.current
+      ? (floatAround.current.ref?.current || floatAround.current)
+      : floatAround
+  ) || document.body;
 
-  const selfUpdate = useCallback((update) => {
+  const onOpenChange = useCallback((inOpen, event, reason) => {
+    console.log(inOpen, event, reason);
+    eventHandler.dispatch(name, { [name]: { open: inOpen, event } });
+  });
+
+  const selfUpdate = useCallback((update, echo) => {
     if (update.open !== undefined) {
-      setOpen(update.open);
+      const newOpen = update.open === 'toggle' ? !open : update.open;
+      clearTimeout(changeOpen.current);
+      changeOpen.current = setTimeout(() => {
+        setOpen(newOpen);
+        if (echo) eventHandler.dispatch(name, { [name]: { open: newOpen } });
+      }, 100);
     }
   }, []);
 
   const handleClickOutside = useCallback((event) => {
     if (floatingRef.current && !floatingRef.current.contains(event.target)) {
-      setOpen(false);
-      eventHandler.dispatch(name, { [name]: { open: false } });
+      clearTimeout(changeOpen.current);
+      changeOpen.current = setTimeout(() => {
+        setOpen(false);
+        eventHandler.dispatch(name, { [name]: { open: false } });
+      }, 100);
     }
   }, [name]);
-
 
   const handleKeyDown = useCallback((event) => {
     if (event.key === 'Escape') {
-      setOpen(false);
-      eventHandler.dispatch(name, { [name]: { open: false } });
+      clearTimeout(changeOpen.current);
+      changeOpen.current = setTimeout(() => {
+        setOpen(false);
+        eventHandler.dispatch(name, { [name]: { open: false } });
+      }, 100);
     }
   }, [name]);
 
-  const [open, setOpen] = useState(active === undefined || !!active);
-  const floatingRef = useRef(null);
   const { refs, floatingStyles } = useFloating({
     elements: {
-      reference
+      reference,
     },
     strategy: 'fixed',
     placement,
@@ -55,11 +74,13 @@ export default function FloatingContainer({ name, active, floatAround, children,
   useEventHandler([
     [`update.${name}`, selfUpdate]
   ], `${name}-FloatingContainer`);
+
   useEffect(() => {
     if (open && refs.setFloating.current) {
       refs.setFloating.current.focus();
     }
   }, [open, refs.setFloating.current]);
+
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     document.addEventListener('keydown', handleKeyDown);
@@ -70,11 +91,18 @@ export default function FloatingContainer({ name, active, floatAround, children,
     };
   }, [handleClickOutside, handleKeyDown]);
 
-  const cn = [name, name + '-FloatingContainer', 'card shadow',];
-  if (classes) cn.push(classes);
+  useLayoutEffect(() => {
+    return () => {
+      clearTimeout(changeOpen.current);
+    }
+  }, []);
 
-  return open
-    ? <div
+  const cn = [name, name + '-FloatingContainer'];
+  if (classes) cn.push(classes);
+  if (card) cn.push('card shadow');
+
+  return <div>
+    {reference instanceof Node && open && <div
       ref={(node) => {
         floatingRef.current = node;
         refs.setFloating(node);
@@ -84,5 +112,26 @@ export default function FloatingContainer({ name, active, floatAround, children,
     >
       {children}
     </div>
-    : <Fragment />
+    }
+  </div>
+}
+
+const placements = PropTypes.oneOf([
+  'top', 'right', 'bottom', 'left',
+  'top-start', 'right-start', 'bottom-start', 'left-start',
+  'top-end', 'right-end', 'bottom-end', 'left-end',
+]);
+
+FloatingContainer.propTypes = {
+  ...Component.propTypes,
+  floatAround: PropTypes.any,
+  placement: placements,
+  alignment: PropTypes.oneOf(['start', 'end']),
+  allowedPlacements: PropTypes.arrayOf(placements),
+  card: PropTypes.bool
+}
+
+FloatingContainer.defaultProps = {
+  ...Component.defaultProps,
+  card: true
 }

@@ -710,10 +710,10 @@ export default class Table extends Component {
           React.createElement('tr', { ...this.rowProps(data, i) }, cells)
         )
       ),
-      footer && (
+      (footer || footerCustom) && (
         React.createElement('tfoot', {},
           ...[footerCustom].flat().filter(Boolean),
-          React.createElement('tr', {},
+          footer && React.createElement('tr', {},
             React.createElement('td', { colSpan: "1000" },
               React.createElement('div', {}, footer)
             )
