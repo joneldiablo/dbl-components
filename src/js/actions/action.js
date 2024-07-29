@@ -26,6 +26,7 @@ export default class ActionComponent extends Component {
     to: PropTypes.string,
     type: PropTypes.string,
     value: PropTypes.any,
+    justifyContent: PropTypes.oneOf(['start', 'center', 'end'])
   }
   static defaultProps = {
     ...Component.defaultProps,
@@ -46,7 +47,8 @@ export default class ActionComponent extends Component {
       loading: 'spinner'
     },
     iconClasses: '',
-    iconProps: {}
+    iconProps: {},
+    justifyContent: 'center'
   };
   static schemaContent = {
     actionIcon: {
@@ -70,10 +72,12 @@ export default class ActionComponent extends Component {
   };
 
   tag = 'button';
-  classes = 'd-inline-flex align-items-center justify-content-center';
+  classes = 'd-inline-flex align-items-center';
+
 
   constructor(props) {
     super(props);
+    this.classes += ' justify-content-' + props.justifyContent;
     this.state.localClasses = props.classButton ? 'btn' : '';
     this.onClick = this.onClick.bind(this);
     this.eventHandlers.onClick = this.onClick;
