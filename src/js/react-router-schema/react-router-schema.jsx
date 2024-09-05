@@ -29,7 +29,6 @@ const routePropTypes = {
   strict: PropTypes.bool,
   location: PropTypes.object,
   sensitive: PropTypes.bool,
-  redirect: PropTypes.string,
   routes: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.shape(this)),
     PropTypes.shape(this)
@@ -40,9 +39,7 @@ const schemaPropTypes = {
   test: PropTypes.bool,
   theme: PropTypes.string,
   routes: routePropTypes.routes,
-  redirect: PropTypes.func,
-  defaultController: PropTypes.func,
-  history: PropTypes.any
+  defaultController: PropTypes.func
 }
 
 const schemaDefaultProps = {

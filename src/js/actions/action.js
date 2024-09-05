@@ -89,33 +89,22 @@ export default class ActionComponent extends Component {
 
   onClick(e) {
     e.stopPropagation();
-    if (this.props.type === 'link') {
-      const { history, location, to } = this.props;
-      let path = to;
-      //FIX: react router tiene un error al navegar de forma relativa
-      if (!path.startsWith('/')) {
-        const tmp = location.pathname.replace(/\/$/, '').split('/');
-        const actual = tmp.pop();
-        if (path.startsWith('..')) {
-          path = `../${tmp.pop()}/${path.replace(/\.\.\/?/, '')}`;
-        } else if (path.startsWith('.')) {
-          path = path.replace('.', actual);
-        } else {
-          path = `./${actual}/${path}`;
-        }
-      }
-      history.push(path);
+    const { navigate, to, type, open, close, value, name, id } = props;
+
+    if (type === 'link' && to) {
+      navigate(to);
     }
-    if (this.props.open) {
-      eventHandler.dispatch('update.' + this.props.open, { open: true });
+  
+    if (open) {
+      eventHandler.dispatch('update.' + open, { open: true });
     }
-    if (this.props.close) {
-      eventHandler.dispatch('update.' + this.props.close, { open: false });
+    if (close) {
+      eventHandler.dispatch('update.' + close, { open: false });
     }
-    const { value, name, id } = this.props;
+  
     let dispatch = name;
     if (value || id) {
-      dispatch = { [name]: value, id }
+      dispatch = { [name]: value, id };
     }
     eventHandler.dispatch(name, dispatch);
   }
