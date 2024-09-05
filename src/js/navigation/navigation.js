@@ -1,13 +1,51 @@
 import React, { createRef } from "react";
 import { NavLink } from "react-router-dom";
+import PropTypes from 'prop-types';
 import Collapse from "bootstrap/js/dist/collapse";
 
 import eventHandler from "../functions/event-handler";
-import JsonRender from "../json-render";
-import Component from "../component";
+import deepMerge from "../functions/deep-merge";
 import Icons from "../media/icons";
 import Action from "../actions/action";
-import deepMerge from "../functions/deep-merge";
+import JsonRender from "../json-render";
+import Component from "../component";
+
+const itemPropTypes = {
+  active: PropTypes.bool,
+  classes: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string)
+  ]),
+  content: PropTypes.oneOfType([
+    PropTypes.node,
+    PropTypes.string,
+    PropTypes.element,
+  ]),
+  disabled: PropTypes.bool,
+  exact: PropTypes.bool,
+  hasAnActive: PropTypes.bool,
+  href: PropTypes.string,
+  icon: PropTypes.string,
+  iconProps: PropTypes.object,
+  itemClasses: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string)
+  ]),
+  itemProps: PropTypes.object,
+  label: PropTypes.string.isRequired,
+  menu: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.object,
+  ]),
+  name: PropTypes.string.isRequired,
+  parent: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object,
+  ]),
+  path: PropTypes.string,
+  strict: PropTypes.bool,
+  to: PropTypes.string
+};
 
 export class ToggleTextNavigation extends Action {
 
@@ -26,7 +64,10 @@ export default class Navigation extends Component {
     menu: [],
     caretIcons: ['angle-up', 'angle-down'],
     navLink: true,
-    activeClassName: 'active',
+    activeClasses: 'active',
+    inactiveClasses: '',
+    pendingClasses: 'pending',
+    transitioningClasses: 'transitioning',
     itemTag: 'div',
     itemClasses: ''
   }
@@ -41,44 +82,44 @@ export default class Navigation extends Component {
       open: typeof this.props.open !== 'boolean' || this.props.open,
       localClasses: 'nav label-show'
     });
-    
+
     this.collapses = createRef({});
     this.jsonRender = new JsonRender(props);
     this.hide = this.hide.bind(this);
     this.link = this.link.bind(this);
     this.onToggleBtn = this.onToggleBtn.bind(this);
-  
+
     // Agrega el evento solo si existe el prop `toggle`
     if (this.props.toggle) {
       this.events.push([this.props.toggle, this.onToggleBtn]);
     }
   }
-  
+
   componentDidMount() {
     this.findFirstActive(this.props.menu);
     // Suscribimos a todos los eventos almacenados en `this.events`
     this.events.forEach(evt => eventHandler.subscribe(...evt, this.name));
   }
-  
+
   componentDidUpdate(prevProps) {
     // Verificar si `open` cambió y actualizar
     if (typeof this.props.open === 'boolean' && prevProps.open !== this.props.open) {
       this.toggleText(this.props.open);
     }
-  
+
     // Manejo de cambio en `toggle`
     if (this.props.toggle && prevProps.toggle !== this.props.toggle) {
       // Desuscribimos del evento anterior solo si existía
       if (prevProps.toggle) {
         eventHandler.unsubscribe(prevProps.toggle, this.name);
       }
-  
+
       // Actualizar el array de eventos con el nuevo toggle
       const i = this.events.findIndex(([evtName]) => evtName === prevProps.toggle);
       if (i !== -1) {
         this.events.splice(i, 1); // Eliminamos el evento anterior
       }
-  
+
       // Evitamos duplicar eventos
       if (!this.events.some(([evtName]) => evtName === this.props.toggle)) {
         this.events.push([this.props.toggle, this.onToggleBtn]); // Añadir el nuevo evento
@@ -86,7 +127,7 @@ export default class Navigation extends Component {
       }
     }
   }
-  
+
   componentWillUnmount() {
     // Desuscribimos de todos los eventos cuando el componente se desmonta
     this.events.forEach(([evt]) => eventHandler.unsubscribe(evt, this.name));
@@ -189,7 +230,9 @@ export default class Navigation extends Component {
   link(itemRaw, i, parent) {
     if (!itemRaw) return false;
 
-    const { caretIcons, linkClasses, navLink, activeClassName, itemTag } = this.props;
+    const { caretIcons, linkClasses, navLink, itemTag,
+      activeClasses, inactiveClasses, pendingClasses, transitioningClasses,
+    } = this.props;
     const { carets, open } = this.state;
 
     const modify = typeof this.props.mutations === 'function'
@@ -239,7 +282,12 @@ export default class Navigation extends Component {
           this.onNavigate(e, item)
         ]) : null,
         to: (item.path || item.to),
-        activeClassName,
+        className: ({ isActive, isPending, isTransitioning }) => [
+          isActive ? activeClasses : inactiveClasses,
+          isPending ? pendingClasses : "",
+          isTransitioning ? transitioningClasses : "",
+          className
+        ].join(" "),
         strict: item.strict,
         exact: item.exact,
         disabled,
