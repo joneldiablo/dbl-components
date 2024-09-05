@@ -125,7 +125,7 @@ export default class JsonRender {
 
     const { component: componentName, content, placeholder,
       label, message, errorMessage, managerName, wrapperClasses, wrapperStyle = {}, ...section } = sectionRaw;
-    const { location, match, childrenIn = this.childrenIn, history, children } = this.props;
+    const { navigate, location, match, childrenIn = this.childrenIn, children } = this.props;
     const Component = COMPONENTS[componentName] || (COMPONENTS.Component);
     const extraBuilded = [Component.slots].flat().filter(Boolean).reduce((eb, key) => {
       const tmp = section[key];
@@ -144,7 +144,7 @@ export default class JsonRender {
       ...extraBuilded,
       location,
       match,
-      history
+      navigate
     }
 
     if (Component.dontBuildContent) componentProps.content = content;

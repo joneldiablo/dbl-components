@@ -5,7 +5,7 @@ import AlertContainer from "./containers/alert-container/alert-container";
 import AspectRatioContainer from "./containers/proportional-container";
 import CardContainer from "./containers/card-container";
 import DetailsContainer from "./containers/details-container";
-import DndListContainer from "./containers/dnd-list-container";
+//import DndListContainer from "./containers/dnd-list-container";
 import DropdownButtonContainer from "./containers/dropdown-button-container";
 import DropdownContainer from "./containers/dropdown-container";
 import FetchContainer from "./containers/fetch-container";
@@ -33,7 +33,7 @@ const CONTAINERS = {
   AspectRatioContainer,
   CardContainer,
   DetailsContainer,
-  DndListContainer,
+  //DndListContainer,
   DropdownButtonContainer,
   DropdownContainer,
   FetchContainer,
