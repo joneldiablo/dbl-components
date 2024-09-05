@@ -51,7 +51,8 @@ export default class PanelContainer extends Component {
     super(props);
     this.events = [
       ['update.' + props.name, this.onUpdate],
-      [props.name + 'ToggleFixed', this.onToggleFixed]
+      [props.name + 'ToggleFixed', this.onToggleFixed],
+      ['location', this.onChangeLocation.bind(this)]
     ];
     this.eventHandlers = {
       onMouseEnter: this.onMouseEnter,
@@ -74,14 +75,12 @@ export default class PanelContainer extends Component {
   componentDidMount() {
     this.events.forEach(e => eventHandler.subscribe(...e));
     window.addEventListener('resize', this.onWindowResize);
-    this.historyUnlisten = this.props.history.listen(this.onChangeLocation);
     clearTimeout(this.timeoutResize);
     this.timeoutResize = setTimeout(() => this.onWindowResize({ target: window }), 150);
   }
 
   componentWillUnmount() {
     this.events.forEach(([eName]) => eventHandler.unsubscribe(eName));
-    this.historyUnlisten();
     window.removeEventListener('resize', this.onWindowResize);
     clearTimeout(this.timeoutResize);
   }

@@ -32,6 +32,7 @@ export default class Navigation extends Component {
   }
 
   tag = 'nav';
+  events = [];
 
   constructor(props) {
     super(props);
@@ -39,30 +40,56 @@ export default class Navigation extends Component {
       carets: {},
       open: typeof this.props.open !== 'boolean' || this.props.open,
       localClasses: 'nav label-show'
-    })
+    });
+    
     this.collapses = createRef({});
     this.jsonRender = new JsonRender(props);
     this.hide = this.hide.bind(this);
     this.link = this.link.bind(this);
+    this.onToggleBtn = this.onToggleBtn.bind(this);
+  
+    // Agrega el evento solo si existe el prop `toggle`
+    if (this.props.toggle) {
+      this.events.push([this.props.toggle, this.onToggleBtn]);
+    }
   }
-
+  
   componentDidMount() {
-    if (this.props.toggle)
-      eventHandler.subscribe(this.props.toggle, this.onToggleBtn.bind(this));
-    this.unlisten = this.props.history.listen(this.onChangeRoute.bind(this));
     this.findFirstActive(this.props.menu);
+    // Suscribimos a todos los eventos almacenados en `this.events`
+    this.events.forEach(evt => eventHandler.subscribe(...evt, this.name));
   }
-
-  componentDidUpdate(prevProps, prevState) {
+  
+  componentDidUpdate(prevProps) {
+    // Verificar si `open` cambió y actualizar
     if (typeof this.props.open === 'boolean' && prevProps.open !== this.props.open) {
       this.toggleText(this.props.open);
     }
+  
+    // Manejo de cambio en `toggle`
+    if (this.props.toggle && prevProps.toggle !== this.props.toggle) {
+      // Desuscribimos del evento anterior solo si existía
+      if (prevProps.toggle) {
+        eventHandler.unsubscribe(prevProps.toggle, this.name);
+      }
+  
+      // Actualizar el array de eventos con el nuevo toggle
+      const i = this.events.findIndex(([evtName]) => evtName === prevProps.toggle);
+      if (i !== -1) {
+        this.events.splice(i, 1); // Eliminamos el evento anterior
+      }
+  
+      // Evitamos duplicar eventos
+      if (!this.events.some(([evtName]) => evtName === this.props.toggle)) {
+        this.events.push([this.props.toggle, this.onToggleBtn]); // Añadir el nuevo evento
+        eventHandler.subscribe(this.props.toggle, this.onToggleBtn, this.name); // Suscribir
+      }
+    }
   }
-
+  
   componentWillUnmount() {
-    if (this.props.toggle)
-      eventHandler.unsubscribe(this.props.toggle);
-    this.unlisten();
+    // Desuscribimos de todos los eventos cuando el componente se desmonta
+    this.events.forEach(([evt]) => eventHandler.unsubscribe(evt, this.name));
   }
 
   findFirstActive(menu, parent) {
