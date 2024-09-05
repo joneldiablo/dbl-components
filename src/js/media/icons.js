@@ -30,6 +30,7 @@ export default class Icons extends React.Component {
 
   render() {
     let { inline, icon, classes, className, style, width, height, title, size } = this.props;
+    icon = searchIcon(icon) ? icon : 'src-error';
     // first element empty to generate an space
     let cn = [this.constructor.jsClass, icon];
     if (className) cn.push(className);
