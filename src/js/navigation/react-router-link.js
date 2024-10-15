@@ -23,7 +23,7 @@ export default class Link extends Component {
     const {
       to,
       replace,
-      innerRef,
+      ref,
       target,
       _component
     } = this.props;
@@ -31,7 +31,7 @@ export default class Link extends Component {
     return {
       to,
       replace,
-      innerRef,
+      ref,
       target,
       component: _component
     }

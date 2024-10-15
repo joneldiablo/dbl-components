@@ -23,28 +23,20 @@ export default class NavLink extends Component {
 
   get componentProps() {
     const {
-      activeClassName,
-      activeStyle,
-      exact,
       strict,
-      isActive,
       ariaCurrent,
       to,
       replace,
-      innerRef,
+      ref,
       _component
     } = this.props;
 
     return {
-      activeClassName,
-      activeStyle,
-      exact,
       strict,
-      isActive,
       'aria-current': ariaCurrent,
       to,
       replace,
-      innerRef,
+      ref,
       component: _component
     }
   }
