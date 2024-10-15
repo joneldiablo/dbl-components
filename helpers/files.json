@@ -218,6 +218,7 @@
   "js/konva/index.js",
   "js/media/icons.js",
   "js/media/image.js",
+  "js/media/svg-imports.jsx",
   "js/media/svg.js",
   "js/media/video.js",
   "js/media/youtube-video.js",
