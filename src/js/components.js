@@ -10,6 +10,7 @@ import Navbar from "./navigation/navbar";
 import Navigation, { ToggleTextNavigation } from "./navigation/navigation";
 import NavLink from "./navigation/react-router-navlink";
 import Svg from "./media/svg";
+import SvgImports from "./media/svg-imports";
 import Table from "./tables/table";
 import Video from "./media/video";
 import YoutubeVideo from "./media/youtube-video";
@@ -22,6 +23,7 @@ const COMPONENTS = {
   Component,
   Form,
   Icons,
+  SvgImports,
   Image,
   Link,
   MenuItem,

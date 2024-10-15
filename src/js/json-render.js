@@ -9,6 +9,13 @@ import t from "./functions/i18n";
 import formatValue from "./functions/format-value";
 import deepMerge from "./functions/deep-merge";
 
+const excludeSectionWrapper = ['NavLink', 'Image', 'Link', 'Icons', 'SvgImports', 'Action',
+  'DropdownButtonContainer', 'ModalButtonContainer', 'DropdownItem'];
+
+export function addExclusions(exclusion) {
+  excludeSectionWrapper.push(...[exclusion].flat());
+};
+
 /**
  * Clase utilizada para generar contenido dinámico en React a partir de una estructura de datos JSON.
  *
@@ -168,9 +175,7 @@ export default class JsonRender {
     if (this.props.wrapperClasses) cnSection.push(this.props.wrapperClasses);
     if (wrapperClasses) cnSection.push(wrapperClasses);
 
-    const exclusionSec = ['NavLink', 'Image', 'Link', 'Icons', 'Action',
-      'DropdownButtonContainer', 'ModalButtonContainer', 'DropdownItem']
-      .includes(componentName);
+    const exclusionSec = excludeSectionWrapper.includes(componentName);
 
     const Wrapper = (componentProps.wrapper === false || Component.wrapper === false)
       ? false : componentProps.wrapper || Component.wrapper || 'section';

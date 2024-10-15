@@ -180,6 +180,7 @@ export default class Navigation extends Component {
   }
 
   onToggleSubmenu(e, item) {
+    if (!item.menu?.length) return;
     e.stopPropagation();
     e.nativeEvent.stopPropagation();
     e.nativeEvent.preventDefault();
@@ -256,8 +257,13 @@ export default class Navigation extends Component {
           : this.jsonRender.buildContent(item.content[1])
         )
         : React.createElement(React.Fragment, {},
-          React.createElement(Icons,
-            { icon: item.icon, className: "mx-2", ...iconStyle, ...deepMerge(this.props.iconProps || {}, item.iconProps || {}) }),
+          item.icon !== false && React.createElement(Icons,
+            {
+              icon: item.icon,
+              className: "mx-2",
+              ...iconStyle,
+              ...deepMerge(this.props.iconProps || {}, item.iconProps || {})
+            }),
           open && React.createElement('span',
             { className: "label" },
             this.jsonRender.buildContent(item.label)
@@ -276,18 +282,18 @@ export default class Navigation extends Component {
     })().flat().join(' ');
     const propsLink = (item.path || item.to)
       ? {
-        id: item.name + '-link', className,
-        onClick: !disabled ? ((e) => [
-          !!item.menu?.length && this.onToggleSubmenu(e, item),
-          this.onNavigate(e, item)
-        ]) : null,
+        id: item.name + '-link',
+        onClick: ((e) => [
+          !disabled && !!item.menu?.length && this.onToggleSubmenu(e, item),
+          !disabled && this.onNavigate(e, item)
+        ]),
         to: (item.path || item.to),
         className: ({ isActive, isPending, isTransitioning }) => [
           isActive ? activeClasses : inactiveClasses,
           isPending ? pendingClasses : "",
           isTransitioning ? transitioningClasses : "",
           className
-        ].join(" "),
+        ].flat().filter(Boolean).join(" "),
         strict: item.strict,
         exact: item.exact,
         disabled,
@@ -297,23 +303,25 @@ export default class Navigation extends Component {
         ? {
           tag: 'a',
           name: item.name,
-          id: item.name + '-link',
-          classes: className,
+          classes: [className, inactiveClasses].flat().filter(Boolean).join(' '),
           disabled,
           style: {},
           _props: {
-            href: item.href, target: '_blank'
-          },
-          onClick: !disabled && !!item.menu?.length ? (e) => this.onToggleSubmenu(e, item) : null
+            id: item.name + '-link',
+            href: item.href, target: '_blank',
+            onClick: (e) => !disabled && !!item.menu?.length && this.onToggleSubmenu(e, item)
+          }
         }
         : {
           tag: 'span',
           name: item.name,
-          id: item.name + '-link',
-          classes: className,
-          onClick: !disabled && !!item.menu?.length ? (e) => this.onToggleSubmenu(e, item) : null,
+          classes: [className, inactiveClasses].flat().filter(Boolean).join(' '),
           disabled,
-          style: {}
+          style: {},
+          _props: {
+            id: item.name + '-link',
+            onClick: (e) => !disabled && !!item.menu?.length && this.onToggleSubmenu(e, item),
+          }
         });
 
     const styleWrapCaret = {
@@ -324,6 +332,7 @@ export default class Navigation extends Component {
     }
 
     const itemProps = {
+      key: item.name,
       ...(item.itemProps || {}),
       className: [item.itemClasses || this.props.itemClasses].flat().filter(Boolean).join(' ')
     }
@@ -337,7 +346,7 @@ export default class Navigation extends Component {
         React.createElement('span',
           {
             className: "position-absolute top-50 end-0 translate-middle-y caret-icon p-1 cursor-pointer",
-            onClick: e => this.onToggleSubmenu(e, item)
+            onClick: e => !disabled && this.onToggleSubmenu(e, item),
           },
           React.createElement(Icons,
             {
