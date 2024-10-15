@@ -9,6 +9,8 @@ import Icons from "../media/icons";
 import Action from "../actions/action";
 import JsonRender from "../json-render";
 import Component from "../component";
+import FloatingContainer from "../containers/floating-container/floating-container";
+import { ptClasses } from "../prop-types";
 
 const itemPropTypes = {
   active: PropTypes.bool,
@@ -23,6 +25,7 @@ const itemPropTypes = {
   ]),
   disabled: PropTypes.bool,
   exact: PropTypes.bool,
+  floatingClasses: ptClasses,
   hasAnActive: PropTypes.bool,
   href: PropTypes.string,
   icon: PropTypes.string,
@@ -69,7 +72,8 @@ export default class Navigation extends Component {
     pendingClasses: 'pending',
     transitioningClasses: 'transitioning',
     itemTag: 'div',
-    itemClasses: ''
+    itemClasses: '',
+    floatingClasses: '',
   }
 
   tag = 'nav';
@@ -84,6 +88,8 @@ export default class Navigation extends Component {
     });
 
     this.collapses = createRef({});
+    this.itemsRefs = createRef({});
+    this.itemsRefs.current = {};
     this.jsonRender = new JsonRender(props);
     this.hide = this.hide.bind(this);
     this.link = this.link.bind(this);
@@ -184,22 +190,27 @@ export default class Navigation extends Component {
     e.stopPropagation();
     e.nativeEvent.stopPropagation();
     e.nativeEvent.preventDefault();
-    const itemControl = this.collapses.current[item.name];
-    if (!itemControl.collapse) {
-      itemControl.ref.removeEventListener('hidden.bs.collapse', this.hide);
-      itemControl.collapse = Collapse.getOrCreateInstance(itemControl.ref, { autoClose: false, toggle: false });
-      itemControl.ref.addEventListener('hidden.bs.collapse', this.hide);
-    }
-    if (!itemControl.submenuOpen) {
-      this.state.carets[item.name] = this.props.caretIcons[0];
-      this.setState({ carets: this.state.carets }, () => itemControl.collapse.show());
+
+    if (!this.state.open) {
+      eventHandler.dispatch('update.' + item.name + 'Floating', { open: true });
     } else {
-      //Se usa en event hide para ocultar todo
-      Array.from(itemControl.ref.querySelectorAll('.collapse'))
-        .reverse().forEach(c => Collapse.getInstance(c)?.hide());
-      itemControl.collapse.hide();
+      const itemControl = this.collapses.current[item.name];
+      if (!itemControl.collapse) {
+        itemControl.ref.removeEventListener('hidden.bs.collapse', this.hide);
+        itemControl.collapse = Collapse.getOrCreateInstance(itemControl.ref, { autoClose: false, toggle: false });
+        itemControl.ref.addEventListener('hidden.bs.collapse', this.hide);
+      }
+      if (!itemControl.submenuOpen) {
+        this.state.carets[item.name] = this.props.caretIcons[0];
+        this.setState({ carets: this.state.carets }, () => itemControl.collapse.show());
+      } else {
+        //Se usa en event hide para ocultar todo
+        Array.from(itemControl.ref.querySelectorAll('.collapse'))
+          .reverse().forEach(c => Collapse.getInstance(c)?.hide());
+        itemControl.collapse.hide();
+      }
+      itemControl.submenuOpen = !itemControl.submenuOpen;
     }
-    itemControl.submenuOpen = !itemControl.submenuOpen;
   }
 
   hide(e) {
@@ -226,12 +237,15 @@ export default class Navigation extends Component {
     });
     activeItem.active = true;
     this.hasAnActive(activeItem);
+    if (!this.state.open && activeItem.parent) {
+      eventHandler.dispatch(`update.${activeItem.parent.name}Floating`, { open: false });
+    }
   }
 
   link(itemRaw, i, parent) {
     if (!itemRaw) return false;
 
-    const { caretIcons, linkClasses, navLink, itemTag,
+    const { caretIcons, linkClasses, navLink, itemTag, floatingClasses,
       activeClasses, inactiveClasses, pendingClasses, transitioningClasses,
     } = this.props;
     const { carets, open } = this.state;
@@ -264,7 +278,7 @@ export default class Navigation extends Component {
               ...iconStyle,
               ...deepMerge(this.props.iconProps || {}, item.iconProps || {})
             }),
-          open && React.createElement('span',
+          (open || !!parent) && React.createElement('span',
             { className: "label" },
             this.jsonRender.buildContent(item.label)
           )
@@ -334,6 +348,7 @@ export default class Navigation extends Component {
     const itemProps = {
       key: item.name,
       ...(item.itemProps || {}),
+      ref: (ref) => this.itemsRefs.current[item.name] = ref,
       className: [item.itemClasses || this.props.itemClasses].flat().filter(Boolean).join(' ')
     }
     return React.createElement(itemTag, itemProps,
@@ -358,15 +373,25 @@ export default class Navigation extends Component {
           )
         )
       ),
-      !!item.menu?.length &&
-      React.createElement('div',
-        {
-          ref: (ref) => this.collapseRef(ref, item),
-          id: item.name + '-collapse', className: "collapse"
+      !!item.menu?.length
+      && (open
+        ? React.createElement('div',
+          {
+            ref: (ref) => this.collapseRef(ref, item),
+            id: item.name + '-collapse', className: "collapse"
+          },
+          //renderizar solo cuando este abierto
+          this.state.carets[item.name] === this.props.caretIcons[0] &&
+          item.menu.map((m, i) => this.link(m, i, item)).filter(m => !!m)
+        )
+        : this.itemsRefs.current[item.name] && React.createElement(FloatingContainer, {
+          name: item.name + 'Floating',
+          floatAround: this.itemsRefs.current[item.name],
+          card: false, allowedPlacements: ['right', 'left'],
+          classes: [floatingClasses, item.floatingClasses].flat().filter(Boolean).join(' ')
         },
-        //renderear solo cuando este abierto
-        this.state.carets[item.name] === this.props.caretIcons[0] &&
-        item.menu.map((m, i) => this.link(m, i, item)).filter(m => !!m)
+          item.menu.map((m, i) => this.link(m, i, item)).filter(m => !!m)
+        )
       )
     );
   }
