@@ -9,6 +9,8 @@ import Icons from "../media/icons";
 import Action from "../actions/action";
 import JsonRender from "../json-render";
 import Component from "../component";
+import FloatingContainer from "../containers/floating-container/floating-container";
+import { ptClasses } from "../prop-types";
 
 const itemPropTypes = {
   active: PropTypes.bool,
@@ -23,6 +25,7 @@ const itemPropTypes = {
   ]),
   disabled: PropTypes.bool,
   exact: PropTypes.bool,
+  floatingClasses: ptClasses,
   hasAnActive: PropTypes.bool,
   href: PropTypes.string,
   icon: PropTypes.string,
@@ -69,11 +72,13 @@ export default class Navigation extends Component {
     pendingClasses: 'pending',
     transitioningClasses: 'transitioning',
     itemTag: 'div',
-    itemClasses: ''
+    itemClasses: '',
+    floatingClasses: '',
   }
 
   tag = 'nav';
   events = [];
+  activeElements = {};
 
   constructor(props) {
     super(props);
@@ -84,6 +89,8 @@ export default class Navigation extends Component {
     });
 
     this.collapses = createRef({});
+    this.itemsRefs = createRef({});
+    this.itemsRefs.current = {};
     this.jsonRender = new JsonRender(props);
     this.hide = this.hide.bind(this);
     this.link = this.link.bind(this);
@@ -153,10 +160,11 @@ export default class Navigation extends Component {
 
   onChangeRoute(location, action) {
     this.pathname = location.pathname;
-    eventHandler.dispatch(this.props.name, { pathname: this.pathname, item: this.activeItem });
+    eventHandler.dispatch(this.props.name, { pathname: this.pathname, item: this.activeItem, open: this.state.open });
   }
 
   onToggleBtn() {
+    console.log('cambiando!!!', this.state.open);
     this.toggleText();
   }
 
@@ -180,10 +188,11 @@ export default class Navigation extends Component {
   }
 
   onToggleSubmenu(e, item) {
-    if (!item.menu?.length) return;
+    if (!item.menu?.length || !this.state.open) return;
     e.stopPropagation();
     e.nativeEvent.stopPropagation();
     e.nativeEvent.preventDefault();
+
     const itemControl = this.collapses.current[item.name];
     if (!itemControl.collapse) {
       itemControl.ref.removeEventListener('hidden.bs.collapse', this.hide);
@@ -202,6 +211,14 @@ export default class Navigation extends Component {
     itemControl.submenuOpen = !itemControl.submenuOpen;
   }
 
+  onToggleFloating(e, item) {
+    eventHandler.dispatch('update.' + item.name + 'Floating', { open: true });
+    //load references in this.itemsRefs
+    setTimeout(() => {
+      this.forceUpdate();
+    }, 350);
+  }
+
   hide(e) {
     const itemName = e.target.id.split('-collapse')[0];
     const itemControl = this.collapses.current[itemName];
@@ -212,6 +229,11 @@ export default class Navigation extends Component {
     this.setState({ carets: this.state.carets });
   }
 
+  setActive(name, isActive) {
+    this.activeElements[name] = isActive;
+    return false;
+  }
+
   hasAnActive(menuItem) {
     if (!menuItem.parent) return menuItem.name;
     menuItem.parent.hasAnActive = true;
@@ -219,20 +241,29 @@ export default class Navigation extends Component {
   }
 
   onNavigate(e, activeItem) {
+    if (this.activeItem?.name === activeItem.name) return;
     this.activeItem = activeItem;
     this.flatItems.forEach(i => {
-      i.active = false;
       i.hasAnActive = false;
     });
-    activeItem.active = true;
     this.hasAnActive(activeItem);
+    if (!this.state.open && activeItem.parent) {
+      eventHandler.dispatch(`update.${activeItem.parent.name}Floating`, { open: false });
+    }
+    //load changes
+    setTimeout(() => {
+      this.forceUpdate();
+    }, 350);
   }
 
   link(itemRaw, i, parent) {
     if (!itemRaw) return false;
 
-    const { caretIcons, linkClasses, navLink, itemTag,
-      activeClasses, inactiveClasses, pendingClasses, transitioningClasses,
+    const {
+      caretIcons, navLink, itemTag,
+      linkClasses, floatingClasses, activeClasses,
+      inactiveClasses, pendingClasses, transitioningClasses,
+      caretClasses, activeCaretClasses
     } = this.props;
     const { carets, open } = this.state;
 
@@ -264,7 +295,7 @@ export default class Navigation extends Component {
               ...iconStyle,
               ...deepMerge(this.props.iconProps || {}, item.iconProps || {})
             }),
-          open && React.createElement('span',
+          (open || !!parent) && React.createElement('span',
             { className: "label" },
             this.jsonRender.buildContent(item.label)
           )
@@ -292,7 +323,8 @@ export default class Navigation extends Component {
           isActive ? activeClasses : inactiveClasses,
           isPending ? pendingClasses : "",
           isTransitioning ? transitioningClasses : "",
-          className
+          className,
+          this.setActive(item.name, isActive)
         ].flat().filter(Boolean).join(" "),
         strict: item.strict,
         exact: item.exact,
@@ -325,27 +357,32 @@ export default class Navigation extends Component {
         });
 
     const styleWrapCaret = {
+      position: "relative"
     }
     if (!!item.menu?.length && open) {
-      styleWrapCaret.position = "relative";
       propsLink.style.paddingRight = "2.3rem";
     }
 
     const itemProps = {
       key: item.name,
       ...(item.itemProps || {}),
+      ref: (ref) => (this.itemsRefs.current[item.name] = ref),
       className: [item.itemClasses || this.props.itemClasses].flat().filter(Boolean).join(' ')
     }
+
     return React.createElement(itemTag, itemProps,
       React.createElement('div', { style: styleWrapCaret },
         (item.path || item.to)
           ? React.createElement(NavLink, propsLink, innerNode)
           : React.createElement(Component, propsLink, innerNode)
         ,
-        !!item.menu?.length && open &&
-        React.createElement('span',
+        !!item.menu?.length && open
+        && React.createElement('span',
           {
-            className: "position-absolute top-50 end-0 translate-middle-y caret-icon p-1 cursor-pointer",
+            className: [
+              "position-absolute top-50 end-0 translate-middle-y caret-icon p-1 cursor-pointer",
+              this.activeElements[item.name] ? (item.activeCaretClasses || activeCaretClasses) : (item.caretClasses || caretClasses),
+            ].flat().filter(Boolean).join(' '),
             onClick: e => !disabled && this.onToggleSubmenu(e, item),
           },
           React.createElement(Icons,
@@ -356,17 +393,46 @@ export default class Navigation extends Component {
               }, className: "rounded-circle"
             }
           )
+        ),
+        !!item.menu?.length && !open
+        && React.createElement('span',
+          {
+            className: [
+              "position-absolute top-50 end-0 translate-middle-y caret-icon p-1 cursor-pointer",
+              this.activeElements[item.name] ? (item.activeCaretClasses || activeCaretClasses) : (item.caretClasses || caretClasses),
+            ].flat().filter(Boolean).join(' '),
+            onClick: e => !disabled && this.onToggleFloating(e, item),
+          },
+          React.createElement(Icons,
+            {
+              icon: 'angle-right', ...iconStyle, inline: false,
+              style: {
+                width: "1.8rem", padding: '.5rem',
+                transform: "scale(.8)"
+              }, className: "rounded-circle"
+            }
+          )
         )
       ),
-      !!item.menu?.length &&
-      React.createElement('div',
-        {
-          ref: (ref) => this.collapseRef(ref, item),
-          id: item.name + '-collapse', className: "collapse"
+      !!item.menu?.length
+      && (open
+        ? React.createElement('div',
+          {
+            ref: (ref) => this.collapseRef(ref, item),
+            id: item.name + '-collapse', className: "collapse"
+          },
+          //renderizar solo cuando este abierto
+          this.state.carets[item.name] === this.props.caretIcons[0] &&
+          item.menu.map((m, i) => this.link(m, i, item)).filter(m => !!m)
+        )
+        : this.itemsRefs.current[item.name] && React.createElement(FloatingContainer, {
+          name: item.name + 'Floating',
+          floatAround: this.itemsRefs.current[item.name], placement: 'right',
+          card: false, allowedPlacements: ['right', 'bottom', 'top'],
+          classes: [floatingClasses, item.floatingClasses].flat().filter(Boolean).join(' ')
         },
-        //renderear solo cuando este abierto
-        this.state.carets[item.name] === this.props.caretIcons[0] &&
-        item.menu.map((m, i) => this.link(m, i, item)).filter(m => !!m)
+          item.menu.map((m, i) => this.link(m, i, item)).filter(m => !!m)
+        )
       )
     );
   }
