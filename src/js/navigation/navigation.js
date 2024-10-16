@@ -78,6 +78,7 @@ export default class Navigation extends Component {
 
   tag = 'nav';
   events = [];
+  activeElements = {};
 
   constructor(props) {
     super(props);
@@ -159,10 +160,11 @@ export default class Navigation extends Component {
 
   onChangeRoute(location, action) {
     this.pathname = location.pathname;
-    eventHandler.dispatch(this.props.name, { pathname: this.pathname, item: this.activeItem });
+    eventHandler.dispatch(this.props.name, { pathname: this.pathname, item: this.activeItem, open: this.state.open });
   }
 
   onToggleBtn() {
+    console.log('cambiando!!!', this.state.open);
     this.toggleText();
   }
 
@@ -186,31 +188,35 @@ export default class Navigation extends Component {
   }
 
   onToggleSubmenu(e, item) {
-    if (!item.menu?.length) return;
+    if (!item.menu?.length || !this.state.open) return;
     e.stopPropagation();
     e.nativeEvent.stopPropagation();
     e.nativeEvent.preventDefault();
 
-    if (!this.state.open) {
-      eventHandler.dispatch('update.' + item.name + 'Floating', { open: true });
-    } else {
-      const itemControl = this.collapses.current[item.name];
-      if (!itemControl.collapse) {
-        itemControl.ref.removeEventListener('hidden.bs.collapse', this.hide);
-        itemControl.collapse = Collapse.getOrCreateInstance(itemControl.ref, { autoClose: false, toggle: false });
-        itemControl.ref.addEventListener('hidden.bs.collapse', this.hide);
-      }
-      if (!itemControl.submenuOpen) {
-        this.state.carets[item.name] = this.props.caretIcons[0];
-        this.setState({ carets: this.state.carets }, () => itemControl.collapse.show());
-      } else {
-        //Se usa en event hide para ocultar todo
-        Array.from(itemControl.ref.querySelectorAll('.collapse'))
-          .reverse().forEach(c => Collapse.getInstance(c)?.hide());
-        itemControl.collapse.hide();
-      }
-      itemControl.submenuOpen = !itemControl.submenuOpen;
+    const itemControl = this.collapses.current[item.name];
+    if (!itemControl.collapse) {
+      itemControl.ref.removeEventListener('hidden.bs.collapse', this.hide);
+      itemControl.collapse = Collapse.getOrCreateInstance(itemControl.ref, { autoClose: false, toggle: false });
+      itemControl.ref.addEventListener('hidden.bs.collapse', this.hide);
     }
+    if (!itemControl.submenuOpen) {
+      this.state.carets[item.name] = this.props.caretIcons[0];
+      this.setState({ carets: this.state.carets }, () => itemControl.collapse.show());
+    } else {
+      //Se usa en event hide para ocultar todo
+      Array.from(itemControl.ref.querySelectorAll('.collapse'))
+        .reverse().forEach(c => Collapse.getInstance(c)?.hide());
+      itemControl.collapse.hide();
+    }
+    itemControl.submenuOpen = !itemControl.submenuOpen;
+  }
+
+  onToggleFloating(e, item) {
+    eventHandler.dispatch('update.' + item.name + 'Floating', { open: true });
+    //load references in this.itemsRefs
+    setTimeout(() => {
+      this.forceUpdate();
+    }, 350);
   }
 
   hide(e) {
@@ -223,6 +229,11 @@ export default class Navigation extends Component {
     this.setState({ carets: this.state.carets });
   }
 
+  setActive(name, isActive) {
+    this.activeElements[name] = isActive;
+    return false;
+  }
+
   hasAnActive(menuItem) {
     if (!menuItem.parent) return menuItem.name;
     menuItem.parent.hasAnActive = true;
@@ -230,23 +241,29 @@ export default class Navigation extends Component {
   }
 
   onNavigate(e, activeItem) {
+    if (this.activeItem?.name === activeItem.name) return;
     this.activeItem = activeItem;
     this.flatItems.forEach(i => {
-      i.active = false;
       i.hasAnActive = false;
     });
-    activeItem.active = true;
     this.hasAnActive(activeItem);
     if (!this.state.open && activeItem.parent) {
       eventHandler.dispatch(`update.${activeItem.parent.name}Floating`, { open: false });
     }
+    //load changes
+    setTimeout(() => {
+      this.forceUpdate();
+    }, 350);
   }
 
   link(itemRaw, i, parent) {
     if (!itemRaw) return false;
 
-    const { caretIcons, linkClasses, navLink, itemTag, floatingClasses,
-      activeClasses, inactiveClasses, pendingClasses, transitioningClasses,
+    const {
+      caretIcons, navLink, itemTag,
+      linkClasses, floatingClasses, activeClasses,
+      inactiveClasses, pendingClasses, transitioningClasses,
+      caretClasses, activeCaretClasses
     } = this.props;
     const { carets, open } = this.state;
 
@@ -306,7 +323,8 @@ export default class Navigation extends Component {
           isActive ? activeClasses : inactiveClasses,
           isPending ? pendingClasses : "",
           isTransitioning ? transitioningClasses : "",
-          className
+          className,
+          this.setActive(item.name, isActive)
         ].flat().filter(Boolean).join(" "),
         strict: item.strict,
         exact: item.exact,
@@ -339,28 +357,32 @@ export default class Navigation extends Component {
         });
 
     const styleWrapCaret = {
+      position: "relative"
     }
     if (!!item.menu?.length && open) {
-      styleWrapCaret.position = "relative";
       propsLink.style.paddingRight = "2.3rem";
     }
 
     const itemProps = {
       key: item.name,
       ...(item.itemProps || {}),
-      ref: (ref) => this.itemsRefs.current[item.name] = ref,
+      ref: (ref) => (this.itemsRefs.current[item.name] = ref),
       className: [item.itemClasses || this.props.itemClasses].flat().filter(Boolean).join(' ')
     }
+
     return React.createElement(itemTag, itemProps,
       React.createElement('div', { style: styleWrapCaret },
         (item.path || item.to)
           ? React.createElement(NavLink, propsLink, innerNode)
           : React.createElement(Component, propsLink, innerNode)
         ,
-        !!item.menu?.length && open &&
-        React.createElement('span',
+        !!item.menu?.length && open
+        && React.createElement('span',
           {
-            className: "position-absolute top-50 end-0 translate-middle-y caret-icon p-1 cursor-pointer",
+            className: [
+              "position-absolute top-50 end-0 translate-middle-y caret-icon p-1 cursor-pointer",
+              this.activeElements[item.name] ? (item.activeCaretClasses || activeCaretClasses) : (item.caretClasses || caretClasses),
+            ].flat().filter(Boolean).join(' '),
             onClick: e => !disabled && this.onToggleSubmenu(e, item),
           },
           React.createElement(Icons,
@@ -368,6 +390,25 @@ export default class Navigation extends Component {
               icon: carets[item.name], ...iconStyle, inline: false,
               style: {
                 width: "1.8rem", padding: '.5rem'
+              }, className: "rounded-circle"
+            }
+          )
+        ),
+        !!item.menu?.length && !open
+        && React.createElement('span',
+          {
+            className: [
+              "position-absolute top-50 end-0 translate-middle-y caret-icon p-1 cursor-pointer",
+              this.activeElements[item.name] ? (item.activeCaretClasses || activeCaretClasses) : (item.caretClasses || caretClasses),
+            ].flat().filter(Boolean).join(' '),
+            onClick: e => !disabled && this.onToggleFloating(e, item),
+          },
+          React.createElement(Icons,
+            {
+              icon: 'angle-right', ...iconStyle, inline: false,
+              style: {
+                width: "1.8rem", padding: '.5rem',
+                transform: "scale(.8)"
               }, className: "rounded-circle"
             }
           )
@@ -386,8 +427,8 @@ export default class Navigation extends Component {
         )
         : this.itemsRefs.current[item.name] && React.createElement(FloatingContainer, {
           name: item.name + 'Floating',
-          floatAround: this.itemsRefs.current[item.name],
-          card: false, allowedPlacements: ['right', 'left'],
+          floatAround: this.itemsRefs.current[item.name], placement: 'right',
+          card: false, allowedPlacements: ['right', 'bottom', 'top'],
           classes: [floatingClasses, item.floatingClasses].flat().filter(Boolean).join(' ')
         },
           item.menu.map((m, i) => this.link(m, i, item)).filter(m => !!m)
