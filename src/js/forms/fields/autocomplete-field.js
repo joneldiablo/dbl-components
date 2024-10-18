@@ -128,7 +128,7 @@ export default class AutocompleteField extends Field {
   }
 
   mapOptions = (optRaw, i) => {
-    if (optRaw) return false;
+    if (!optRaw) return false;
 
     const modify = typeof this.props.mutations === 'function'
       && this.props.mutations(`${this.props.name}.${optRaw.value}`, optRaw);

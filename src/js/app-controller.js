@@ -1,4 +1,5 @@
 import { flatten } from "flat";
+import urlJoin from "url-join";
 
 import { randomS4 } from "./functions";
 import stringify from "./functions/stringify";
@@ -247,7 +248,8 @@ export class AppController {
     const { query, format = 'json',
       timeout = this.props.maxTimeout, body, headers, ...conf } = this.props.fetchBefore(url, options);
     if (body) conf.body = stringify(body);
-    const urlFinal = new URL(url, this.props.api);
+    const fUrl = urlJoin(this.props.api, url);
+    const urlFinal = new URL(fUrl);
     const flattenQuery = flatten(query || {}, { safe: true });
     Object.entries(flattenQuery).forEach(([key, value]) => {
       if (Array.isArray(value)) {

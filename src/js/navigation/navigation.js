@@ -164,7 +164,6 @@ export default class Navigation extends Component {
   }
 
   onToggleBtn() {
-    console.log('cambiando!!!', this.state.open);
     this.toggleText();
   }
 
