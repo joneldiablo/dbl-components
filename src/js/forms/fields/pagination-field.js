@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+
 import Field from "./field";
 
 export default class PaginationField extends Field {

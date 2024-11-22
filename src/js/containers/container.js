@@ -2,7 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import ResizeSensor from "css-element-queries/src/ResizeSensor";
 
-import eventHandler from "../functions/event-handler";
+import { eventHandler } from "dbl-utils";
+
 import Component from "../component";
 import Icons from "../media/icons";
 

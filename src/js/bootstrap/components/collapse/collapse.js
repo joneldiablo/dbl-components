@@ -1,12 +1,11 @@
 import { useLayoutEffect, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
-import JsonRender from "../../../json-render";
-import appCtrl from "../../../app-controller";
+import { resolveRefs } from "dbl-utils";
 
-import resolveRefs from "../../../functions/resolve-refs";
-import useEventHandler from "../../../hooks/use-event-handler";
-import eventHandler from "../../../functions/event-handler";
+import JsonRender from "../../json-render";
+import appCtrl from "../../app-controller";
+import useEventHandler from "../../hooks/use-event-handler";
 
 import schema from "./collapse.json";
 import "./collapse.scss";

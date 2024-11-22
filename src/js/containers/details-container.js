@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import "details-polyfill";
 
-import eventHandler from "../functions/event-handler";
+import { eventHandler } from "dbl-utils";
 
 import Component from "../component";
 

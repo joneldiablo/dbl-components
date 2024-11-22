@@ -1,12 +1,15 @@
 import PropTypes from 'prop-types';
 import React, { createRef } from "react";
 
+import {
+  eventHandler,
+  deepMerge,
+  t,
+  formatValue,
+  resolveRefs
+} from "dbl-utils";
+
 import { ptClasses } from "../prop-types";
-import eventHandler from "../functions/event-handler";
-import deepMerge from "../functions/deep-merge";
-import t from '../functions/i18n';
-import formatValue from '../functions/format-value';
-import resolveRefs from '../functions/resolve-refs';
 import fields from "../forms/fields";
 import Icons from "../media/icons";
 import Action from "../actions/action";

@@ -1,7 +1,8 @@
 import React from "react";
 import Modal from "bootstrap/js/dist/modal";
 
-import eventHandler from "../functions/event-handler";
+import { eventHandler } from "dbl-utils";
+
 import Component from "../component";
 
 export default class ModalButtonContainer extends Component {

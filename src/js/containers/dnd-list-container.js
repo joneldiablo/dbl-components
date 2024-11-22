@@ -1,8 +1,9 @@
 import React from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
+import { eventHandler } from 'dbl-utils';
+
 import Component from '../component';
-import eventHandler from '../functions/event-handler';
 
 // INFO: a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {

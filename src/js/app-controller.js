@@ -1,16 +1,15 @@
-import { flatten } from "flat";
 import urlJoin from "url-join";
 
-import { randomS4 } from "./functions";
-import stringify from "./functions/stringify";
-import resolveRefs from "./functions/resolve-refs";
-import deepMerge from "./functions/deep-merge";
-import eventHandler from "./functions/event-handler";
 import {
+  flatten,
+  randomS4,
+  resolveRefs,
+  deepMerge,
+  eventHandler,
   addDictionary, addFormatDate,
   addFormatNumber, addFormatTime,
   getLang, setLang, addFormatDateTime
-} from "./functions/i18n";
+} from "dbl-utils";
 
 import { addIcons } from "./media/icons";
 import { addComponents } from "./components";
@@ -149,7 +148,7 @@ export class AppController {
             tag: 'error',
             content: `
         <p class='text-danger'>NOT FOUND</p>
-        <p class='bg-dark text-light'><pre>${stringify(schema, null, 2)}}</pre></p>
+        <p class='bg-dark text-light'><pre>${JSON.stringify(schema, null, 2)}}</pre></p>
         `
           };
         }
@@ -167,7 +166,7 @@ export class AppController {
 
   stringify(data, encrypt) {
     //TODO: encrypt data y agregar un uno (1::) al principio, para saber que es una cadena encriptada
-    return stringify(data);
+    return JSON.stringify(data);
   }
 
   parse(data) {
@@ -247,7 +246,7 @@ export class AppController {
     }
     const { query, format = 'json',
       timeout = this.props.maxTimeout, body, headers, ...conf } = this.props.fetchBefore(url, options);
-    if (body) conf.body = stringify(body);
+    if (body) conf.body = JSON.stringify(body);
     const fUrl = urlJoin(this.props.api, url);
     const urlFinal = new URL(fUrl);
     const flattenQuery = flatten(query || {}, { safe: true });

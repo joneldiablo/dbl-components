@@ -2,9 +2,10 @@ import { createRef } from "react";
 import PropTypes from "prop-types";
 import { Doughnut, Bar, Bubble, Chart, Line, Pie, PolarArea, Radar, Scatter } from "react-chartjs-2";
 
-import ProportionalContainer from "dbl-components/lib/js/containers/proportional-container";
-import eventHandler from "dbl-components/lib/js/functions/event-handler";
-import Icons from "dbl-components/lib/js/media/icons";
+import { eventHandler } from "dbl-utils";
+
+import ProportionalContainer from "../containers/proportional-container";
+import Icons from "../media/icons";
 
 const graphs = {
   Doughnut, Bar, Bubble, Chart, Line, Pie, PolarArea, Radar, Scatter

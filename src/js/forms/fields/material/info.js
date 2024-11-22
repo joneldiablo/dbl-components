@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import HelpOutline from '@material-ui/icons/HelpOutline';
 import { Popover, Box, Typography } from "@material-ui/core";
+
 export default class HelpInputComponent extends React.Component {
 
   static propTypes = {

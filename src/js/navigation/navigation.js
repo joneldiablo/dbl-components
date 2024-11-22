@@ -3,8 +3,8 @@ import { NavLink } from "react-router-dom";
 import PropTypes from 'prop-types';
 import Collapse from "bootstrap/js/dist/collapse";
 
-import eventHandler from "../functions/event-handler";
-import deepMerge from "../functions/deep-merge";
+import { eventHandler, deepMerge } from "dbl-utils";
+
 import Icons from "../media/icons";
 import Action from "../actions/action";
 import JsonRender from "../json-render";

@@ -1,4 +1,5 @@
 import React from "react";
+
 import RadioField from "./radio-field";
 
 export default class CheckboxField extends RadioField {

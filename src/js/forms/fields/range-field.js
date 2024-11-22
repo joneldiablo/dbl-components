@@ -1,10 +1,10 @@
 import React from "react";
+import moment from "moment";
 
-import resolveRefs from "../../functions/resolve-refs";
-import eventHandler from "../../functions/event-handler";
+import { resolveRefs, eventHandler } from "dbl-utils";
+
 import JsonRender from "../../json-render";
 import Field from "./field";
-import moment from "moment";
 
 const schemaInput = {
   control: {

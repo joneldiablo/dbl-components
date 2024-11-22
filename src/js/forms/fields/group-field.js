@@ -1,4 +1,5 @@
 import React from "react";
+
 import Field from "./field";
 
 export default class GroupField extends Field {

@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import eventHandler from "../../functions/event-handler";
+import { eventHandler } from "dbl-utils";
 import Component, { nameSuffixes } from "../../complex-component";
 
 import schema from "./panel-schema.json";

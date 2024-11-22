@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { randomS4 } from "../functions";
+import { randomS4 } from "dbl-utils";
+
 import Icons from "../media/icons";
 
 export default class CardsNavigation extends React.Component {

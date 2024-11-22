@@ -1,4 +1,5 @@
 import React from "react";
+
 import GridContainer from "./grid-container";
 
 export default class GridSwitchContainer extends GridContainer {

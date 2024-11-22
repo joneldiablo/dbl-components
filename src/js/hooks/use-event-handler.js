@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import eventHandler from "../functions/event-handler";
+import { eventHandler } from "dbl-utils";
 
 export default function useEventHandler(events, id) {
   const eventNames = Object.values(events).map(([name]) => name).join('.');

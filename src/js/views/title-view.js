@@ -1,4 +1,5 @@
 import React from "react";
+
 import View from "./view";
 
 export default class TitleView extends View {

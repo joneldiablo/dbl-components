@@ -1,6 +1,5 @@
 import Field from "./field";
 
-
 export default class JsonEditorField extends Field {
 
   static jsClass = 'JsonEditorField';

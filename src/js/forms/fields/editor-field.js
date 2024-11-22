@@ -1,9 +1,9 @@
 import React from "react";
 import parseReact from "html-react-parser";
-
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 
-import eventHandler from "../../functions/event-handler";
+import { eventHandler } from "dbl-utils";
+
 import Field from "./field";
 
 export default class EditorField extends Field {

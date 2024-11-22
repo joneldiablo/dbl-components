@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import React from "react";
 import ResizeSensor from "css-element-queries/src/ResizeSensor";
-import { randomS4 } from "../functions";
+
+import { randomS4 } from "dbl-utils";
 
 export default class AutoResponsiveContainer extends React.Component {
 

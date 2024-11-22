@@ -1,8 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Stage, Layer, Line } from "react-konva";
+
 import Form from "../forms/form";
 import FlexContainer from "../containers/flex-container";
-import { Stage, Layer, Line } from "react-konva";
 
 export default class Trapezoid extends React.Component {
 

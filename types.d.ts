@@ -153,11 +153,3 @@ declare module 'dbl-components/lib/js/controller' {
     mutations(name: string, conf: { [key: string]: any }): { [key: string]: any } | void;
   }
 }
-
-declare module 'dbl-components/lib/js/functions/event-handler' {
-  export class EventHandler {
-    dispatch(evt: string, data: any);
-  }
-  const eventHandler: EventHandler;
-  export default eventHandler;
-}

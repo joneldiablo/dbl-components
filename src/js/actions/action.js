@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
 
+import { resolveRefs, eventHandler } from "dbl-utils";
+
 import { ptClasses } from "../prop-types";
 import JsonRender from "../json-render";
-import resolveRefs from "../functions/resolve-refs";
-import eventHandler from "../functions/event-handler";
 import Component from "../component";
 
 export default class ActionComponent extends Component {
@@ -94,14 +94,14 @@ export default class ActionComponent extends Component {
     if (type === 'link' && to) {
       navigate(to);
     }
-  
+
     if (open) {
       eventHandler.dispatch('update.' + open, { open: true });
     }
     if (close) {
       eventHandler.dispatch('update.' + close, { open: false });
     }
-  
+
     let dispatch = name;
     if (value || id) {
       dispatch = { [name]: value, id };

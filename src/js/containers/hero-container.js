@@ -1,5 +1,6 @@
 import React from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
+
 import Container from "./container";
 
 export default class HeroContainer extends Container {
