@@ -1,10 +1,12 @@
 import React from "react";
-import Field from "./field";
 import bytes from "bytes";
 import * as LZMAObj from 'lzma/src/lzma_worker';
 
-import eventHandler from "../../functions/event-handler";
+import { eventHandler } from "dbl-utils";
+
 import JsonRender from "../../json-render";
+import Field from "./field";
+
 
 export default class FileField extends Field {
 

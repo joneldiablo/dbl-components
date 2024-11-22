@@ -1,6 +1,7 @@
 import ResizeSensor from "css-element-queries/src/ResizeSensor";
 
-import eventHandler from "./functions/event-handler";
+import { eventHandler } from "dbl-utils";
+
 import ComplexComponent from "./complex-component";
 
 export default class ComplexResponsiveComponent extends ComplexComponent {

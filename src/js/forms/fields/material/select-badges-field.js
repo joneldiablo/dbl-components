@@ -6,7 +6,8 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Chip from "@material-ui/core/Chip";
-import Field from "./Field";
+
+import Field from "./field";
 
 export default class SelectBadgesField extends Field {
 

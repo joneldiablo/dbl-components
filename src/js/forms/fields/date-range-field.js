@@ -1,6 +1,7 @@
 import React, { createRef } from "react";
-import Field from "./field";
 import moment from "moment";
+
+import Field from "./field";
 
 export default class DateRangeField extends Field {
 

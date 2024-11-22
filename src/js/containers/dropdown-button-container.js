@@ -3,10 +3,11 @@ import PropTypes from "prop-types";
 import { Dropdown } from "bootstrap";
 import { NavLink } from "react-router-dom";
 
-import eventHandler from "../functions/event-handler";
-import Component from "../component";
+import { eventHandler } from "dbl-utils";
+
 import Icons from "../media/icons";
 import JsonRender from "../json-render";
+import Component from "../component";
 
 export class DropdownItem extends Component {
 

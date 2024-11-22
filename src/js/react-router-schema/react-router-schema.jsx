@@ -9,13 +9,10 @@ import {
   useLocation
 } from "react-router-dom";
 
-import stringify from "../functions/stringify";
-import { hash } from "../functions";
+import { hash, eventHandler } from "dbl-utils";
 
 import controllers from "../controllers";
-
 import withRouteWrapper from "./with-route-wrapper";
-import eventHandler from "../functions/event-handler";
 
 const routePropTypes = {
   path: PropTypes.oneOfType([
@@ -65,7 +62,7 @@ export default class SchemaController extends React.Component {
 
   buildRoutes() {
     // Crear un clone de lo que se recibe
-    const schemaStr = stringify(this.props.routes);
+    const schemaStr = JSON.stringify(this.props.routes);
     const routesSchema = JSON.parse(schemaStr);
 
     let routes;
@@ -87,7 +84,7 @@ export default class SchemaController extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     // comprobar si ha cambiado el schema
-    let newHash = hash(stringify(this.props.routes));
+    let newHash = hash(JSON.stringify(this.props.routes));
     if (this.routesHash !== newHash) {
       this.buildRoutes();
       this.routesHash = newHash;
@@ -114,7 +111,7 @@ export default class SchemaController extends React.Component {
 
     if (subroutes) {
       const mapRoutes = (subRoute, i) => {
-        subRoute = JSON.parse(stringify(subRoute));
+        subRoute = JSON.parse(JSON.stringify(subRoute));
         return this.views(subRoute, i);
       };
       subroutes = route.routes.map(mapRoutes);

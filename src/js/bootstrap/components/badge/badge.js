@@ -1,10 +1,10 @@
 import { useLayoutEffect, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
+import { resolveRefs } from "dbl-utils";
+
 import JsonRender from "../../json-render";
 import appCtrl from "../../app-controller";
-
-import resolveRefs from "../../functions/resolve-refs";
 import useEventHandler from "../../hooks/use-event-handler";
 
 import schema from "./badge.json";

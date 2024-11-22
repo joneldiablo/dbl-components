@@ -2,8 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import Offcanvas from "bootstrap/js/dist/offcanvas";
 
-import eventHandler from "../../functions/event-handler";
-import resolveRefs from "../../functions/resolve-refs";
+import { eventHandler, resolveRefs } from "dbl-utils";
+
 import JsonRender from "../../json-render";
 import Component from "../../component";
 import { ptClasses } from "../../prop-types";

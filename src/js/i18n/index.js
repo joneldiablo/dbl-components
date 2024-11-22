@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import deepMerge from "../functions/deep-merge";
+import deepMerge from "dbl-utils";
+
 import SL from "./select-language";
 
 const dictionary = {

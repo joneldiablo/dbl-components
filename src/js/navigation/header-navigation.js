@@ -2,10 +2,11 @@ import PropTypes from 'prop-types';
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Dropdown } from "bootstrap";
+
 import Icons from "../media/icons";
 import Svg from "../media/svg";
 import ProportionalContainer from "../containers/proportional-container";
-import components from "../functions/components-manager";
+import components from "../components";
 
 export default class HeaderNavigation extends Navigation {
 

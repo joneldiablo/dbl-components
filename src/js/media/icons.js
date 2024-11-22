@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import React from "react";
 import IcoMoon, { iconList, } from "react-icomoon";
-import defaultIcons from "../../app-icons-v1.0/selection.json";
-import stringify from "../functions/stringify";
 
-let is = JSON.parse(stringify(defaultIcons));
+import defaultIcons from "../../app-icons-v1.0/selection.json";
+
+let is = JSON.parse(JSON.stringify(defaultIcons));
 
 export default class Icons extends React.Component {
 

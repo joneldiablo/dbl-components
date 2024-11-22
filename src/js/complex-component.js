@@ -1,7 +1,7 @@
 import React from "react";
 
-import resolveRefs from "./functions/resolve-refs";
-import eventHandler from "./functions/event-handler";
+import { resolveRefs, eventHandler } from "dbl-utils";
+
 import JsonRender from "./json-render";
 import Component from "./component";
 

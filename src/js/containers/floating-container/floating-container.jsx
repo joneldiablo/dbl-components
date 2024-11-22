@@ -2,9 +2,10 @@ import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from
 import { useFloating, autoUpdate, autoPlacement } from '@floating-ui/react';
 import PropTypes from "prop-types";
 
-import Component from '../../component';
+import { eventHandler } from 'dbl-utils';
+
 import useEventHandler from '../../hooks/use-event-handler';
-import eventHandler from '../../functions/event-handler';
+import Component from '../../component';
 
 export default function FloatingContainer({
   name, floatAround, children, placement, card,

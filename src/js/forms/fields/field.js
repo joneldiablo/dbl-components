@@ -1,7 +1,8 @@
 import React, { Fragment, createRef } from "react";
 import PropTypes from "prop-types";
-import { randomS4 } from "../../functions";
-import eventHandler from "../../functions/event-handler";
+
+import { randomS4, eventHandler } from "dbl-utils";
+
 import Component from "../../component";
 
 export default class Field extends Component {

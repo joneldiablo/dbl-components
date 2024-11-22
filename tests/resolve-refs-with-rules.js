@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import resolveRefs from '../src/js/functions/resolve-refs.js';
+import { resolveRefs } from 'dbl-utils';
 
 const schema = {
   template: '$definitions/card',

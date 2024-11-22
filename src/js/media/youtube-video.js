@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import YouTube from "react-youtube";
+
 import Component from "../component";
 import AspectRatioContainer from "../containers/proportional-container";
 

@@ -2,12 +2,10 @@ import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import parseReact, { domToReact, attributesToProps } from "html-react-parser";
 
+import { hash, t, formatValue, deepMerge } from "dbl-utils";
+
 import Icons from "./media/icons";
 import COMPONENTS from "./components";
-import { hash } from "./functions";
-import t from "./functions/i18n";
-import formatValue from "./functions/format-value";
-import deepMerge from "./functions/deep-merge";
 
 const excludeSectionWrapper = ['NavLink', 'Image', 'Link', 'Icons', 'SvgImports', 'Action',
   'DropdownButtonContainer', 'ModalButtonContainer', 'DropdownItem'];

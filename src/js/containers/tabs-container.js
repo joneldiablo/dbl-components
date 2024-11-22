@@ -1,5 +1,7 @@
 import React from "react";
-import eventHandler from "../functions/event-handler";
+
+import { eventHandler } from "dbl-utils";
+
 import Container from "./container";
 
 export default class TabsContainer extends Container {

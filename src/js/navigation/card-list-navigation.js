@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
-import { assets } from "../functions";
 import Icons from "../media/icons";
 
 export default class NavListCards extends React.Component {
@@ -34,7 +33,7 @@ export default class NavListCards extends React.Component {
         React.createElement('div', { className: "row gx-3" },
           Object.entries(menu).map(([i, item]) =>
             React.createElement('div', { className: "col-12 col-sm-auto", key: i },
-              React.createElement('div', { className: "card", style: { backgroundImage: `url(${assets('images', item.image)})` } },
+              React.createElement('div', { className: "card", style: { backgroundImage: `url(${item.image})` } },
                 React.createElement('div', { className: "card-body" },
                   React.createElement('h5', { className: "card-title nav-item" },
                     React.createElement(Icons, { icon: item.icon, className: "mr-2" }),

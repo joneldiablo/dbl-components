@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import eventHandler from "../../functions/event-handler";
+import { eventHandler } from "dbl-utils";
+
 import JsonRender from "../../json-render";
 import Field from "./field";
 import NoWrapField from "./no-wrap-field";

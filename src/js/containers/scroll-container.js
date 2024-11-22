@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, useLayoutEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
+import { eventHandler } from 'dbl-utils';
+
 import { ptClasses } from "../prop-types";
 import useEventHandler from "../hooks/use-event-handler";
-import eventHandler from '../functions/event-handler';
 import Container from "./container";
 
 let timeoutDispatchPosition;

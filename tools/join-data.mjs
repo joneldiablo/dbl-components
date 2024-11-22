@@ -1,8 +1,6 @@
 import fs from 'fs';
 
-import * as dm from "../src/js/functions/deep-merge.js";
-
-const { default: { default: deepMerge } } = dm;
+import { deepMerge } from "dbl-utils";
 
 const componentsInfo = JSON.parse(fs.readFileSync('./tmp/components-info.json', 'utf-8'));
 const addInfo = JSON.parse(fs.readFileSync('./tmp/add-info.json', 'utf-8'));

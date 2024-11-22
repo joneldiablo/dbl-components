@@ -1,6 +1,5 @@
 import React from "react";
 
-import eventHandler from "../../functions/event-handler";
 import Component, { nameSuffixes } from "../../complex-component";
 
 import schema from "./alert-schema.json";

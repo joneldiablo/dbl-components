@@ -1,8 +1,7 @@
 import PropTypes from "prop-types";
 
-import eventHandler from "./functions/event-handler";
-import resolveRefs from "./functions/resolve-refs";
-import deepMerge from "./functions/deep-merge";
+import { eventHandler, resolveRefs, deepMerge } from "dbl-utils";
+
 import JsonRender from "./json-render";
 import Component from "./component";
 

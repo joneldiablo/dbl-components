@@ -4,3 +4,5 @@ yarn-error.log
 .fuse_hidden*
 dist
 tmp/*
+app-icons-v1.0.zip
+helpers/*

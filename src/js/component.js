@@ -1,7 +1,7 @@
 import React, { createRef } from "react";
 import PropTypes from "prop-types";
 
-import eventHandler from "./functions/event-handler";
+import { eventHandler } from "dbl-utils";
 
 export default class Component extends React.Component {
 

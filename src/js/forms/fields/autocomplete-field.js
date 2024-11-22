@@ -1,6 +1,7 @@
 import React, { createRef } from "react";
 
-import eventHandler from "../../functions/event-handler";
+import { eventHandler } from "dbl-utils";
+
 import Field from "./field";
 
 export default class AutocompleteField extends Field {

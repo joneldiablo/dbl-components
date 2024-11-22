@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { randomS4 } from "../functions";
+
+import { randomS4, extractNodeString } from "dbl-utils";
+
 import Icons from "../media/icons";
-import extractNodeString from '../functions/extract-node-text';
 
 export default class Navbar extends React.Component {
 

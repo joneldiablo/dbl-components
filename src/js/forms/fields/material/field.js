@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from "react";
 import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
+
 import Info from "./info";
 
 export default class Field extends React.Component {
