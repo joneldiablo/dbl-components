@@ -34,29 +34,6 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.1"
   },
-  "devDependencies": {
-    "@babel/cli": "^7.23.4",
-    "@babel/core": "^7.23.7",
-    "@babel/node": "^7.22.19",
-    "@babel/parser": "^7.23.6",
-    "@babel/plugin-proposal-class-properties": "^7.12.1",
-    "@babel/preset-env": "^7.23.7",
-    "@babel/preset-modules": "^0.1.6",
-    "@babel/preset-react": "^7.23.3",
-    "@babel/preset-typescript": "^7.12.1",
-    "@babel/traverse": "^7.23.7",
-    "@babel/types": "^7.23.6",
-    "@react-docgen/cli": "^2.0.1",
-    "autoprefixer": "^10.0.1",
-    "babel-loader": "^8.1.0",
-    "babel-plugin-inline-json-import": "^0.3.2",
-    "babel-plugin-polyfill-corejs3": "^0.2.0",
-    "jsdom": "^23.0.1",
-    "postcss": "^8.1.6",
-    "postcss-cli": "^8.2.0",
-    "react-is": "^17.0.1",
-    "sass-loader": "^10.0.5"
-  },
   "dependencies": {
     "@ckeditor/ckeditor5-react": "^3.0.2",
     "@floating-ui/react": "^0.26.16",
@@ -79,5 +56,28 @@
     "react-youtube": "^7.13.1",
     "resize-observer": "^1.0.2",
     "url-join": "^4.0.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.23.4",
+    "@babel/core": "^7.23.7",
+    "@babel/node": "^7.22.19",
+    "@babel/parser": "^7.23.6",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/preset-env": "^7.23.7",
+    "@babel/preset-modules": "^0.1.6",
+    "@babel/preset-react": "^7.23.3",
+    "@babel/preset-typescript": "^7.12.1",
+    "@babel/traverse": "^7.23.7",
+    "@babel/types": "^7.23.6",
+    "@react-docgen/cli": "^2.0.1",
+    "autoprefixer": "^10.0.1",
+    "babel-loader": "^8.1.0",
+    "babel-plugin-inline-json-import": "^0.3.2",
+    "babel-plugin-polyfill-corejs3": "^0.2.0",
+    "jsdom": "^23.0.1",
+    "postcss": "^8.1.6",
+    "postcss-cli": "^8.2.0",
+    "react-is": "^17.0.1",
+    "sass-loader": "^10.0.5"
   }
 }
