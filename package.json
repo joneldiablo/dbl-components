@@ -41,7 +41,7 @@
     "bytes": "^3.1.2",
     "chroma-js": "^2.4.2",
     "css-element-queries": "^1.2.3",
-    "dbl-utils": "^1.0.5",
+    "dbl-utils": "^1.0.6",
     "details-polyfill": "^1.2.0",
     "html-react-parser": "^1.2.4",
     "jexcel": "^4.4.1",
