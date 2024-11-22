@@ -12,7 +12,7 @@ import {
   getLang, setLang, addFormatDateTime
 } from "./functions/i18n";
 
-import { addIcons, setIconSet } from "./media/icons";
+import { addIcons } from "./media/icons";
 import { addComponents } from "./components";
 import { addControllers } from "./controllers";
 import { addFields } from "./forms/fields";

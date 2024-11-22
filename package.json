@@ -3,7 +3,7 @@
   "version": "2.2.0",
   "description": "Framework based on bootstrap 5",
   "main": "src/js/index.js",
-  "types": "@types/dbl-components.d.ts",
+  "types": "types.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "babel": "babel src/js -d lib/js --minified --source-maps && yarn cpInlineStyle",
