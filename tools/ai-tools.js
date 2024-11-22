@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const flat = require('flat');
+const { flatten } = require('dbl-utils');
 
 // Function to determine if a file is text or binary
 /**
@@ -54,7 +54,7 @@ const main = async () => {
     const dirPath = path.join(process.cwd(), 'src');
     const result = readDirectory(dirPath);
 
-    const filesPath = Object.keys(flat(result, { delimiter: '/' }));
+    const filesPath = Object.keys(flatten(result, { delimiter: '/' }));
     fs.writeFileSync('helpers/files.json', JSON.stringify(filesPath, null, 2), 'utf-8');
     fs.writeFileSync('helpers/structure.json', JSON.stringify(result), 'utf-8');
     return 'helpers IA created successfully!';
