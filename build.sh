@@ -74,6 +74,12 @@ cp -r src/scss lib
 # Compile with Babel
 yarn babel
 
+# Check if build was successful
+if [ $? -ne 0 ]; then
+  echo "Build failed. Stopping the script."
+  exit 1
+fi
+
 # Commit with the new version number
 git add .
 git commit -m "$new_version"
