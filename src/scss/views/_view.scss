@@ -1,6 +1,6 @@
 // test-view
 .test-view-wrapper {
-  border: 1px solid red;
+  outline: 1px solid red;
   padding: 1px;
   margin: 1px;
   overflow: auto;
@@ -15,7 +15,7 @@
 }
 
 .test-section-wrapper {
-  border: 1px solid blue;
+  outline: 1px solid blue;
   padding: 1px;
   margin: 1px;
 

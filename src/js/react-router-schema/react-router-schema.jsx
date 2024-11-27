@@ -36,7 +36,8 @@ const schemaPropTypes = {
   test: PropTypes.bool,
   theme: PropTypes.string,
   routes: routePropTypes.routes,
-  defaultController: PropTypes.func
+  defaultController: PropTypes.func,
+  forceRebuild: PropTypes.bool,
 }
 
 const schemaDefaultProps = {
@@ -98,6 +99,7 @@ export default class SchemaController extends React.Component {
    **/
   views = (route, i) => {
     const Controller = controllers[route.component] || this.props.defaultController || controllers.Controller;
+    route.test = route.test || this.props.test;
     const WrappedController = withRouteWrapper(Controller, route);
 
     let subroutes = false;
@@ -117,9 +119,24 @@ export default class SchemaController extends React.Component {
       subroutes = route.routes.map(mapRoutes);
     }
 
-
     const routeProps = {
       path: route.path,
+      index: route.index,
+
+      action: route.action,
+      caseSensitive: route.caseSensitive,
+      Component: route.Component,
+      ErrorBoundary: route.ErrorBoundary,
+      errorElement: route.errorElement,
+      handle: route.handle,
+      hasErrorBoundary: route.hasErrorBoundary,
+      HydrateFallback: route.HydrateFallback,
+      hydrateFallbackElement: route.hydrateFallbackElement,
+      id: route.id,
+      lazy: route.lazy,
+      loader: route.loader,
+      shouldRevalidate: route.shouldRevalidate,
+
       element: (
         <WrappedController  {...route}>
           {subroutes.length > 0 ? <Outlet /> : null}
@@ -138,7 +155,9 @@ export default class SchemaController extends React.Component {
 
   render() {
     const { theme } = this.props;
-
+    if (this.props.forceRebuild) {
+      this.buildRoutes();
+    }
     return (
       <>
         {!!theme && <link rel="stylesheet" type="text/css" href={theme} />}
