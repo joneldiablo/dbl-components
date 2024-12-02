@@ -5,6 +5,10 @@
 @import "./navigation";
 @import "./tables/table";
 
+:root {
+  --dbl-test-opacity: .5;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
