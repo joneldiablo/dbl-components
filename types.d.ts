@@ -68,9 +68,12 @@ declare module 'dbl-components/lib/js/react-router-schema/react-router-schema' {
   interface ReactRouterSchemaProps {
     routes: {
       [key: string]: any
-    }
+    };
+    test?: boolean;
+    forceRebuild?: boolean;
   }
   export const HashRouterSchema: React.FC<ReactRouterSchemaProps>;
+  export const BrowserRouterSchema: React.FC<ReactRouterSchemaProps>;
 }
 
 declare module 'dbl-components/lib/js/media/svg-imports' {
@@ -133,10 +136,12 @@ declare module 'dbl-components/lib/js/actions/action' {
 }
 
 declare module 'dbl-components/lib/js/controller' {
+  import { NavigateFunction } from "react-router";
+
   import Component, { ComponentProps, ComponentState } from 'dbl-components/lib/js/component';
 
   export interface ControllerProps extends ComponentProps {
-
+    navigate: NavigateFunction;
   }
   export interface ControllerState extends ComponentState {
 
@@ -153,3 +158,5 @@ declare module 'dbl-components/lib/js/controller' {
     mutations(name: string, conf: { [key: string]: any }): { [key: string]: any } | void;
   }
 }
+
+declare module 'dbl-components/lib/js/containers/hero-container';
