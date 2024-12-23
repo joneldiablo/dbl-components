@@ -114,15 +114,18 @@ declare module 'dbl-components/lib/js/component' {
   export interface ComponentProps extends React.PropsWithChildren {
     name: string,
     classes: string | string[],
+    label: React.ReactNode,
     style: {
       [key: string]: any
-    }
+    },
+    _props: object,
   }
   export interface ComponentState extends React.ComponentState {
 
   }
   export default class Component extends React.Component<ComponentProps> {
     public state: ComponentState;
+    public props: ComponentProps;
     constructor(props: ComponentProps);
   }
 }
@@ -160,3 +163,31 @@ declare module 'dbl-components/lib/js/controller' {
 }
 
 declare module 'dbl-components/lib/js/containers/hero-container';
+declare module 'dbl-components/lib/js/components';
+
+declare module 'dbl-components/lib/js/containers/modal-container' {
+  export default class ModalContainer extends Container {
+
+  }
+}
+
+declare module 'dbl-components/lib/js/json-render-component' {
+  import Component, { ComponentProps } from 'dbl-components/lib/js/component';
+  export interface JrcProps extends ComponentProps {
+    view: object;
+    childrenIn: string | string[];
+    definitions: object;
+  }
+  export default class JsonRenderComponent<T = JrcProps> extends React.Component {
+    props: T;
+    constructor(props: T);
+    mutations(name: string, conf: object): any;
+  }
+}
+
+declare module 'dbl-components/lib/js/containers/container' {
+  import Component from 'dbl-components/lib/js/component';
+  export default class Container extends Component {
+
+  }
+}
