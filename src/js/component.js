@@ -10,10 +10,7 @@ export default class Component extends React.Component {
     _props: PropTypes.object,
     active: PropTypes.bool,
     children: PropTypes.node,
-    classes: PropTypes.oneOfType([
-      PropTypes.string, PropTypes.object,
-      PropTypes.arrayOf(PropTypes.string)
-    ]),
+    classes: PropTypes.any,
     name: PropTypes.string.isRequired,
     style: PropTypes.object,
     tag: PropTypes.oneOfType([PropTypes.elementType, PropTypes.bool])

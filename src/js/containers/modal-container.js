@@ -1,7 +1,7 @@
 import React from "react";
 import Modal from "bootstrap/js/dist/modal";
 
-import { eventHandler } from "dbl-utils";
+import { eventHandler, splitAndFlat } from "dbl-utils";
 
 import Component from "../component";
 
@@ -17,7 +17,9 @@ export default class ModalContainer extends Component {
     headerClasses: '',
     bodyClasses: '',
     footerClasses: '',
-    moveElement: false
+    closeModalClasses: '',
+    moveElement: false,
+    headerTheme: null,
   }
 
   constructor(props) {
@@ -83,7 +85,7 @@ export default class ModalContainer extends Component {
 
   content(children = this.props.children) {
     const { modalClasses, name, showClose, headerClasses,
-      bodyClasses, footerClasses } = this.props;
+      bodyClasses, footerClasses, closeModalClasses, headerTheme } = this.props;
     const { showModal } = this.state;
     const cnModal = ['modal-dialog', modalClasses];
     const cg = (Array.isArray(children) ? children : [children]).reduce((reducer, child) => {
@@ -109,24 +111,42 @@ export default class ModalContainer extends Component {
         { className: cnModal.flat().join(' ') },
         React.createElement('div',
           { className: "modal-content" },
-          showClose && React.createElement('button',
+          showClose && !cg.header.length && React.createElement('button',
             {
               type: 'button',
-              className: 'btn-close position-absolute end-0 m-3',
+              className: splitAndFlat([
+                'btn-close position-absolute end-0 m-3',
+                closeModalClasses
+              ], ' ').join(' '),
+              'aria-label': 'Close',
               'data-bs-dismiss': 'modal', style: { zIndex: 1 }
             }
           ),
           cg.content,
           !!cg.header.length && React.createElement('div',
-            { className: 'modal-header ' + headerClasses },
+            {
+              className: splitAndFlat(['modal-header ', headerClasses]).join(' '),
+              'data-bs-theme': headerTheme
+            },
+            showClose && React.createElement('button',
+              {
+                type: 'button',
+                className: splitAndFlat([
+                  'btn-close position-absolute end-0 m-3',
+                  closeModalClasses
+                ], ' ').join(' '),
+                'aria-label': 'Close',
+                'data-bs-dismiss': 'modal', style: { zIndex: 1 }
+              }
+            ),
             cg.header
           ),
           !!cg.body.length && React.createElement('div',
-            { className: 'modal-body ' + bodyClasses },
+            { className: splitAndFlat(['modal-body ', bodyClasses], ' ').join(' ') },
             cg.body
           ),
           !!cg.footer.length && React.createElement('div',
-            { className: 'modal-footer ' + footerClasses },
+            { className: splitAndFlat(['modal-footer ', footerClasses], ' ').join(' ') },
             cg.footer
           )
         )

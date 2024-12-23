@@ -16,6 +16,7 @@ import Video from "./media/video";
 import YoutubeVideo from "./media/youtube-video";
 import fields from "./forms/fields";
 import containers from "./containers";
+import Route from "./react-router-schema/route";
 
 const COMPONENTS = {
   Action,
@@ -33,6 +34,7 @@ const COMPONENTS = {
   ToggleTextNavigation,
   Video,
   YoutubeVideo,
+  Route,
   ...containers,
   ...fields,
 }

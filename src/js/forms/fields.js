@@ -2,7 +2,6 @@ import AutocompleteField from "./fields/autocomplete-field";
 import CheckboxField from "./fields/checkbox-field";
 import DateRangeField from "./fields/date-range-field";
 import DropFileField from "./fields/drop-file-field";
-import EditorField from "./fields/editor-field";
 import Field from "./fields/field";
 import FileButtonField from "./fields/file-button-field";
 import FileField from "./fields/file-field";
@@ -25,7 +24,6 @@ const fieldComponents = {
   CheckboxField,
   DateRangeField,
   DropFileField,
-  EditorField,
   Field,
   FileButtonField,
   FileField,
