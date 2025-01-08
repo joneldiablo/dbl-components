@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "declaration": true,
+    "declarationDir": "./types",
+    "emitDeclarationOnly": true,
+    "outDir": "./types",
+    "jsx": "react",
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "src/js/**/*",
+    "types.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
