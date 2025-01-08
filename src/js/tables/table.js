@@ -6,7 +6,8 @@ import {
   deepMerge,
   t,
   formatValue,
-  resolveRefs
+  resolveRefs,
+  splitAndFlat
 } from "dbl-utils";
 
 import { ptClasses } from "../prop-types";
@@ -353,11 +354,15 @@ export class HeaderCell extends React.Component {
     ];
 
     return React.createElement('th',
-      { className: hClasses.filter(Boolean).flat().join(' '), scope: "col", ref: this.ref },
+      {
+        className: splitAndFlat(hClasses, ' ').join(' '),
+        scope: "col", ref: this.ref,
+        colSpan: col.colSpan, rowSpan: col.rowSpan
+      },
       React.createElement('div',
         { className: (vertical ? '' : 'd-flex') + " align-items-center gap-3" },
         React.createElement('div',
-          { className: cn.filter(Boolean).flat().join(' '), style },
+          { className: splitAndFlat(cn, ' ').join(' '), style },
           col.label
         ),
         (col.filter || showOrder)
@@ -383,6 +388,8 @@ export class HeaderCell extends React.Component {
 export default class Table extends Component {
 
   static jsClass = 'Table';
+  static slots = ['headerCustom', 'columnsCustom', 'footerCustom'];
+
   static propTypes = {
     ...Component.propTypes,
     colClasses: ptClasses,
@@ -401,9 +408,9 @@ export default class Table extends Component {
     orderable: PropTypes.any,
     striped: PropTypes.any,
     vertical: PropTypes.bool,
-    headerCustom: PropTypes.oneOfType([PropTypes.element, PropTypes.bool, PropTypes.string]),
-    columnsCustom: PropTypes.oneOfType([PropTypes.element, PropTypes.bool, PropTypes.string]),
-    footerCustom: PropTypes.oneOfType([PropTypes.element, PropTypes.bool, PropTypes.string]),
+    headerCustom: PropTypes.any,
+    columnsCustom: PropTypes.any,
+    footerCustom: PropTypes.any,
   }
   static defaultProps = {
     ...Component.defaultProps,
@@ -418,7 +425,9 @@ export default class Table extends Component {
     },
     vertical: false,
     orderClasses: '',
-    orderActiveClasses: ''
+    orderActiveClasses: '',
+    thead: {},
+    tbody: {}
   }
 
   constructor(props) {
@@ -548,7 +557,7 @@ export default class Table extends Component {
     return {
       key: rowKey,
       ...rowProps,
-      className: cnRow.filter(Boolean).flat().join(' ')
+      className: splitAndFlat(cnRow, ' ').join(' ')
     };
   };
 
@@ -605,7 +614,7 @@ export default class Table extends Component {
       });
       deepMerge(cellAttrs, mutation);
     }
-    cellAttrs.className = cellAttrs.className.filter(Boolean).flat().join(' ');
+    cellAttrs.className = splitAndFlat(cellAttrs.className, ' ').join(' ');
 
     const formater = FORMATS[col.format] || ((raw, opts) => ((raw === '' || typeof raw !== 'string') && opts.empty) || t(raw, opts.context));
     const cellData = typeof rowData[col.name] !== 'undefined' ? rowData[col.name] : true;
@@ -621,7 +630,7 @@ export default class Table extends Component {
       : React.createElement('td',
         {
           key: i + '-' + colName,
-          className: vertical ? [colName, 'row-' + (i - 1)].filter(Boolean).flat().join(' ') : colName
+          className: vertical ? splitAndFlat([colName, 'row-' + (i - 1)], ' ').join(' ') : colName
         },
         cell
       )
@@ -638,9 +647,9 @@ export default class Table extends Component {
    */
   content(children = this.props.children) {
     const {
-      data, columns, tableClasses,
+      data, columns, tableClasses, headerRows,
       hover, striped, vertical, disabled,
-      headerCustom, columnsCustom, footerCustom
+      headerCustom, columnsCustom, footerCustom, thead, tbody
     } = this.props;
     // Definir encabezado y pie de página si están presentes
     let header, footer;
@@ -687,12 +696,12 @@ export default class Table extends Component {
 
     // Renderización de la tabla con las estructuras de encabezado, cuerpo y pie de página
     const finalTable = React.createElement('table', {
-      className: cn.filter(Boolean).flat().join(' '),
+      className: splitAndFlat(cn, ' ').join(' '),
       style: {
         ...cssHeaderVars
       }
     },
-      React.createElement('thead', {},
+      React.createElement('thead', thead,
         header && (
           React.createElement('tr', {},
             React.createElement('td', { colSpan: "1000" },
@@ -702,13 +711,33 @@ export default class Table extends Component {
         ),
         ...[headerCustom].flat().filter(Boolean),
         !vertical && (
-          React.createElement('tr', {},
-            Object.entries(columns).map(this.mapHeaderCell)
-          )
+          !headerRows
+            ? React.createElement('tr', {},
+              Object.entries(columns).map(this.mapHeaderCell)
+            )
+            : headerRows.map((columnFix) =>
+              React.createElement('tr', { key: 'thead' + Object.keys(columnFix).join('.') },
+                Object.entries(columnFix).map(([cName, fix], icol) => {
+                  let renderColumn;
+                  const colF = Object.values(columns).find((c) => c.name === cName);
+                  if (typeof fix === 'string' || !colF) {
+                    renderColumn = <React.Fragment key={'custom' + icol}>
+                      {this.jsonRender.buildContent(fix)}
+                    </React.Fragment>
+                  } else {
+                    renderColumn = (fix === true
+                      ? this.mapHeaderCell([cName, colF], icol)
+                      : this.mapHeaderCell([cName, { ...colF, ...fix }], icol)
+                    );
+                  }
+                  return renderColumn;
+                })
+              )
+            )
         ),
         ...[columnsCustom].flat().filter(Boolean),
       ),
-      React.createElement('tbody', {},
+      React.createElement('tbody', tbody,
         tableData.map(({ cells, data }, i) =>
           React.createElement('tr', { ...this.rowProps(data, i) }, cells)
         )

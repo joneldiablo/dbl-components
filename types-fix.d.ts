@@ -130,14 +130,6 @@ declare module 'dbl-components/lib/js/component' {
   }
 }
 
-declare module 'dbl-components/lib/js/actions/action' {
-
-  export interface ActionComponent {
-    ref: React.RefObject<HTMLButtonElement | HTMLAnchorElement>;
-  }
-
-}
-
 declare module 'dbl-components/lib/js/controller' {
   import { NavigateFunction } from "react-router";
 
@@ -179,6 +171,7 @@ declare module 'dbl-components/lib/js/json-render-component' {
     definitions: object;
   }
   export default class JsonRenderComponent<T = JrcProps> extends React.Component {
+    static defaultProps;
     props: T;
     constructor(props: T);
     mutations(name: string, conf: object): any;
@@ -189,5 +182,15 @@ declare module 'dbl-components/lib/js/containers/container' {
   import Component from 'dbl-components/lib/js/component';
   export default class Container extends Component {
 
+  }
+}
+
+declare module 'dbl-components/lib/js/tables/table' {
+  export interface IColumn {
+
+  }
+  export interface IPropsTable extends ComponentProps {
+    columns: IColumn[] | Record<string, IColumn>;
+    headerCustom: any;
   }
 }

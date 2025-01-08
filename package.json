@@ -3,10 +3,12 @@
   "version": "2.3.8",
   "description": "Framework based on bootstrap 5",
   "main": "src/js/index.js",
-  "types": "types.d.ts",
+  "types": "types/index.d.ts",
+  "typesRoot": "types",
   "files": [
     "lib/",
-    "src/"
+    "src/",
+    "types/"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -17,9 +19,10 @@
     "postcss": "postcss lib/css/style.css --use autoprefixer -d lib/css --no-map",
     "scss": "cp -r src/scss lib",
     "cpInlineStyle": "sh ./cp-scss.sh",
-    "build": "yarn scss && yarn babel",
+    "build": "yarn types && yarn scss && yarn babel",
     "build-components-doc": "npx babel-node --presets @babel/preset-env --experimental-modules ./tools/build-docs.mjs",
-    "build-info": "react-docgen -o tmp/components-info.json ./src/js/**/*.js ./src/js/*.js --resolver utils/doc-resolver.mjs --pretty && npx babel-node --presets @babel/preset-env --experimental-modules tools/join-data.mjs"
+    "build-info": "react-docgen -o tmp/components-info.json ./src/js/**/*.js ./src/js/*.js --resolver utils/doc-resolver.mjs --pretty && npx babel-node --presets @babel/preset-env --experimental-modules tools/join-data.mjs",
+    "types":"tsc"
   },
   "keywords": [
     "bs",
