@@ -130,14 +130,6 @@ declare module 'dbl-components/lib/js/component' {
   }
 }
 
-declare module 'dbl-components/lib/js/actions/action' {
-
-  export interface ActionComponent {
-    ref: React.RefObject<HTMLButtonElement | HTMLAnchorElement>;
-  }
-
-}
-
 declare module 'dbl-components/lib/js/controller' {
   import { NavigateFunction } from "react-router";
 
