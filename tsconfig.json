@@ -7,11 +7,11 @@
     "outDir": "./types",
     "jsx": "react",
     "strict": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": "."
   },
   "include": [
-    "src/js/**/*",
-    "types.ts"
+    "src/js/**/*"
   ],
   "exclude": [
     "node_modules",
