@@ -8,7 +8,9 @@
   "files": [
     "lib/",
     "src/",
-    "types/"
+    "types/",
+    "types-dbl.ts",
+    "types-fix.d.ts"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
