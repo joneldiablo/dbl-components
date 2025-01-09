@@ -40,6 +40,8 @@ export default class Component extends React.Component {
       onChange: this.onEvent,
       onMouseOver: this.onEvent,
       onMouseOut: this.onEvent,
+      onMouseEnter: this.onEvent,
+      onMouseLeave: this.onEvent,
       onKeyDown: this.onEvent,
       onLoad: this.onEvent
     }
