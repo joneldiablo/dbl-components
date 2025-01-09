@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import PropTypes from 'prop-types';
 import Collapse from "bootstrap/js/dist/collapse";
 
-import { eventHandler, deepMerge } from "dbl-utils";
+import { eventHandler, deepMerge, splitAndFlat } from "dbl-utils";
 
 import Icons from "../media/icons";
 import Action from "../actions/action";
@@ -77,15 +77,19 @@ export default class Navigation extends Component {
   }
 
   tag = 'nav';
-  events = [];
+  events = [
+    ['location', this.onChangeLocation.bind(this)]
+  ];
   activeElements = {};
+  flatItems = {};
 
   constructor(props) {
     super(props);
+    const open = typeof this.props.open !== 'boolean' || this.props.open;
     Object.assign(this.state, {
       carets: {},
-      open: typeof this.props.open !== 'boolean' || this.props.open,
-      localClasses: 'nav label-show'
+      open,
+      localClasses: 'nav ' + (open ? 'label-show' : 'label-collapsed')
     });
 
     this.collapses = createRef({});
@@ -138,14 +142,16 @@ export default class Navigation extends Component {
   componentWillUnmount() {
     // Desuscribimos de todos los eventos cuando el componente se desmonta
     this.events.forEach(([evt]) => eventHandler.unsubscribe(evt, this.name));
+
   }
 
   findFirstActive(menu, parent) {
     let founded;
     menu.find(item => {
       item.parent = parent;
+      this.flatItems[item.name] = item;
+      item.hasAnActive = false;
       if (this.props.location.pathname === (item.path || item.to)) {
-        this.onNavigate(null, item);
         this.onChangeRoute(this.props.location);
         founded = item;
         return true;
@@ -155,6 +161,7 @@ export default class Navigation extends Component {
       }
       return false;
     });
+    this.onChangeLocation(this.props.location);
     return founded;
   }
 
@@ -239,25 +246,27 @@ export default class Navigation extends Component {
     return this.hasAnActive(menuItem.parent);
   }
 
-  onNavigate(e, activeItem) {
-    if (this.activeItem?.name === activeItem.name) return;
-    this.activeItem = activeItem;
-    this.flatItems.forEach(i => {
+  onChangeLocation(location) {
+
+    let activeItem;
+    Object.values(this.flatItems).forEach(i => {
+      let path = i.path || i.to;
       i.hasAnActive = false;
+      if (path === location.pathname) activeItem = i;
     });
-    this.hasAnActive(activeItem);
-    if (!this.state.open && activeItem.parent) {
-      eventHandler.dispatch(`update.${activeItem.parent.name}Floating`, { open: false });
+    if (activeItem) {
+      this.activeItem = activeItem;
+      this.hasAnActive(activeItem);
+      if (!this.state.open && activeItem.parent) {
+        eventHandler.dispatch(`update.${activeItem.parent.name}Floating`, { open: false });
+      }
     }
-    //load changes
-    setTimeout(() => {
-      this.forceUpdate();
-    }, 350);
+    this.forceUpdate();
+
   }
 
   link(itemRaw, i, parent) {
     if (!itemRaw) return false;
-
     const {
       caretIcons, navLink, itemTag,
       linkClasses, floatingClasses, activeClasses,
@@ -268,11 +277,13 @@ export default class Navigation extends Component {
 
     const modify = typeof this.props.mutations === 'function'
       && this.props.mutations(`${this.props.name}.${itemRaw.value}`, item);
-    const item = Object.assign({}, itemRaw, modify || {});
+    this.flatItems[itemRaw.name] = this.flatItems[itemRaw.name] || {};
+    const item = Object.assign(this.flatItems[itemRaw.name], itemRaw, modify || {});
+
     if (item.active === false) return false;
 
     carets[item.name] = carets[item.name] || caretIcons[1];
-    this.flatItems.push(item);
+    this.flatItems[item.name] = item;
     item.parent = parent;
 
     const iconStyle = {
@@ -304,7 +315,9 @@ export default class Navigation extends Component {
     const className = (() => {
       const r = [linkClasses, item.classes];
       if (!(item.path || item.to)) r.push('cursor-pointer');
-      if (item.hasAnActive) r.push('has-an-active');
+      if (item.hasAnActive) {
+        r.push(splitAndFlat(['has-an-active', activeClasses], ' ').join(' '));
+      }
       if (navLink) r.unshift('nav-link');
       if (!!item.menu?.length) r.push('has-submenu');
       if (disabled) r.push('disabled');
@@ -314,8 +327,7 @@ export default class Navigation extends Component {
       ? {
         id: item.name + '-link',
         onClick: ((e) => [
-          !disabled && !!item.menu?.length && this.onToggleSubmenu(e, item),
-          !disabled && this.onNavigate(e, item)
+          !disabled && !!item.menu?.length && this.onToggleSubmenu(e, item)
         ]),
         to: (item.path || item.to),
         className: ({ isActive, isPending, isTransitioning }) => [
@@ -380,7 +392,7 @@ export default class Navigation extends Component {
           {
             className: [
               "position-absolute top-50 end-0 translate-middle-y caret-icon p-1 cursor-pointer",
-              this.activeElements[item.name] ? (item.activeCaretClasses || activeCaretClasses) : (item.caretClasses || caretClasses),
+              this.activeElements[item.name] || item.hasAnActive ? (item.activeCaretClasses || activeCaretClasses) : (item.caretClasses || caretClasses),
             ].flat().filter(Boolean).join(' '),
             onClick: e => !disabled && this.onToggleSubmenu(e, item),
           },
@@ -398,7 +410,7 @@ export default class Navigation extends Component {
           {
             className: [
               "position-absolute top-50 end-0 translate-middle-y caret-icon p-1 cursor-pointer",
-              this.activeElements[item.name] ? (item.activeCaretClasses || activeCaretClasses) : (item.caretClasses || caretClasses),
+              this.activeElements[item.name] || item.hasAnActive ? (item.activeCaretClasses || activeCaretClasses) : (item.caretClasses || caretClasses),
             ].flat().filter(Boolean).join(' '),
             onClick: e => !disabled && this.onToggleFloating(e, item),
           },
@@ -439,7 +451,6 @@ export default class Navigation extends Component {
   // TODO: agregar submenu dropdown 
   //       y submenu collapsable
   content(children = this.props.children) {
-    this.flatItems = [];
     return (React.createElement(React.Fragment, {},
       ...this.props.menu.map((m, i) => this.link(m, i)).filter(m => !!m),
       children
