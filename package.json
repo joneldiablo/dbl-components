@@ -8,7 +8,9 @@
   "files": [
     "lib/",
     "src/",
-    "types/"
+    "types/",
+    "types-dbl.ts",
+    "types-fix.d.ts"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -22,7 +24,7 @@
     "build": "yarn types && yarn scss && yarn babel",
     "build-components-doc": "npx babel-node --presets @babel/preset-env --experimental-modules ./tools/build-docs.mjs",
     "build-info": "react-docgen -o tmp/components-info.json ./src/js/**/*.js ./src/js/*.js --resolver utils/doc-resolver.mjs --pretty && npx babel-node --presets @babel/preset-env --experimental-modules tools/join-data.mjs",
-    "types":"tsc"
+    "types": "tsc"
   },
   "keywords": [
     "bs",
