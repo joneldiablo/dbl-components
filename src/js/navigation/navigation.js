@@ -24,7 +24,7 @@ const itemPropTypes = {
     PropTypes.element,
   ]),
   disabled: PropTypes.bool,
-  exact: PropTypes.bool,
+  end: PropTypes.bool,
   floatingClasses: ptClasses,
   hasAnActive: PropTypes.bool,
   href: PropTypes.string,
@@ -338,7 +338,7 @@ export default class Navigation extends Component {
           this.setActive(item.name, isActive)
         ].flat().filter(Boolean).join(" "),
         strict: item.strict,
-        exact: item.exact,
+        end: item.end,
         disabled,
         style: {}
       }

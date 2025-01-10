@@ -28,6 +28,7 @@ export default class NavLink extends Component {
       to,
       replace,
       ref,
+      end,
       _component
     } = this.props;
 
@@ -37,6 +38,7 @@ export default class NavLink extends Component {
       to,
       replace,
       ref,
+      end,
       component: _component
     }
   }
