@@ -20,7 +20,7 @@
     "css": "node-sass --importer node_modules/node-sass-import src/scss/style.scss lib/css/style.css && yarn postcss",
     "postcss": "postcss lib/css/style.css --use autoprefixer -d lib/css --no-map",
     "scss": "cp -r src/scss lib",
-    "cpInlineStyle": "sh ./cp-scss.sh",
+    "cpInlineStyle": "./cp-scss.sh",
     "build": "yarn types && yarn scss && yarn babel",
     "build-components-doc": "npx babel-node --presets @babel/preset-env --experimental-modules ./tools/build-docs.mjs",
     "build-info": "react-docgen -o tmp/components-info.json ./src/js/**/*.js ./src/js/*.js --resolver utils/doc-resolver.mjs --pretty && npx babel-node --presets @babel/preset-env --experimental-modules tools/join-data.mjs",

@@ -1,15 +1,16 @@
 import React from "react";
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 
-import Component from "../component";
+import Container from "./container";
 
-export default class SlideContainer extends Component {
+export default class SlideContainer extends Container {
 
   static jsClass = 'SlideContainer';
   static defaultProps = {
-    ...Component.defaultProps,
+    ...Container.defaultProps,
     slider: {
       options: {
+        perPage: 1,
         rewind: true
       }
     }
@@ -20,10 +21,12 @@ export default class SlideContainer extends Component {
     const mapSlides = ([i, c]) =>
       !!c && React.createElement(SplideSlide, { key: i }, c);
 
-    return React.createElement(Splide,
-      { ...attrs, destroy: 'completely' },
-      ...Object.entries([children].flat()).map(mapSlides).filter(c => !!c)
-    );
+    return !!this.breakpoint
+      ? React.createElement(Splide,
+        { ...attrs, destroy: 'completely', key: this.name + ';perPage=' + attrs.options.perPage },
+        ...Object.entries([children].flat()).map(mapSlides).filter(c => !!c)
+      )
+      : this.waitBreakpoint;
   }
 
 }
