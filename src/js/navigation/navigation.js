@@ -3,7 +3,8 @@ import { NavLink } from "react-router-dom";
 import PropTypes from 'prop-types';
 import Collapse from "bootstrap/js/dist/collapse";
 
-import { eventHandler, deepMerge, splitAndFlat } from "dbl-utils";
+import { eventHandler, deepMerge, splitAndFlat, getTexts } from "dbl-utils";
+import { extractNodeString } from "dbl-utils/esm/extract-react-node-text";
 
 import Icons from "../media/icons";
 import Action from "../actions/action";
@@ -273,12 +274,13 @@ export default class Navigation extends Component {
       inactiveClasses, pendingClasses, transitioningClasses,
       caretClasses, activeCaretClasses
     } = this.props;
-    const { carets, open } = this.state;
+    const { carets, open: stateOpen } = this.state;
 
     const modify = typeof this.props.mutations === 'function'
-      && this.props.mutations(`${this.props.name}.${itemRaw.value}`, item);
+      && this.props.mutations(`${this.props.name}.${itemRaw.name}`, itemRaw);
     this.flatItems[itemRaw.name] = this.flatItems[itemRaw.name] || {};
     const item = Object.assign(this.flatItems[itemRaw.name], itemRaw, modify || {});
+    const open = typeof item.open === 'boolean' ? item.open : stateOpen;
 
     if (item.active === false) return false;
 
@@ -291,6 +293,7 @@ export default class Navigation extends Component {
         fill: 'currentColor'
       }
     };
+
     const innerNode = React.createElement('span', {},
       item.content
         ? (open
@@ -302,6 +305,7 @@ export default class Navigation extends Component {
             {
               icon: item.icon,
               className: "mx-2",
+              title: item.title || extractNodeString(item.label),
               ...iconStyle,
               ...deepMerge(this.props.iconProps || {}, item.iconProps || {})
             }),
