@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Collapse from "bootstrap/js/dist/collapse";
 
 import { eventHandler, deepMerge, splitAndFlat } from "dbl-utils";
+import { extractNodeString } from "dbl-utils/esm/extract-react-node-text";
 
 import Icons from "../media/icons";
 import Action from "../actions/action";
@@ -273,12 +274,13 @@ export default class Navigation extends Component {
       inactiveClasses, pendingClasses, transitioningClasses,
       caretClasses, activeCaretClasses
     } = this.props;
-    const { carets, open } = this.state;
+    const { carets, open: stateOpen } = this.state;
 
     const modify = typeof this.props.mutations === 'function'
-      && this.props.mutations(`${this.props.name}.${itemRaw.value}`, item);
+      && this.props.mutations(`${this.props.name}.${itemRaw.name}`, itemRaw);
     this.flatItems[itemRaw.name] = this.flatItems[itemRaw.name] || {};
     const item = Object.assign(this.flatItems[itemRaw.name], itemRaw, modify || {});
+    const open = typeof item.open === 'boolean' ? item.open : stateOpen;
 
     if (item.active === false) return false;
 
@@ -291,6 +293,7 @@ export default class Navigation extends Component {
         fill: 'currentColor'
       }
     };
+
     const innerNode = React.createElement('span', {},
       item.content
         ? (open
@@ -302,6 +305,7 @@ export default class Navigation extends Component {
             {
               icon: item.icon,
               className: "mx-2",
+              title: item.title || extractNodeString(item.label),
               ...iconStyle,
               ...deepMerge(this.props.iconProps || {}, item.iconProps || {})
             }),
@@ -313,7 +317,7 @@ export default class Navigation extends Component {
     )
     const disabled = item.disabled || this.props.disabled;
     const className = (() => {
-      const r = [linkClasses, item.classes];
+      const r = [item.classes || linkClasses];
       if (!(item.path || item.to)) r.push('cursor-pointer');
       if (item.hasAnActive) {
         r.push(splitAndFlat(['has-an-active', activeClasses], ' ').join(' '));
@@ -321,8 +325,8 @@ export default class Navigation extends Component {
       if (navLink) r.unshift('nav-link');
       if (!!item.menu?.length) r.push('has-submenu');
       if (disabled) r.push('disabled');
-      return r;
-    })().flat().join(' ');
+      return splitAndFlat(r, ' ').join(' ');
+    })();
     const propsLink = (item.path || item.to)
       ? {
         id: item.name + '-link',
@@ -330,13 +334,13 @@ export default class Navigation extends Component {
           !disabled && !!item.menu?.length && this.onToggleSubmenu(e, item)
         ]),
         to: (item.path || item.to),
-        className: ({ isActive, isPending, isTransitioning }) => [
+        className: ({ isActive, isPending, isTransitioning }) => splitAndFlat([
           isActive ? activeClasses : inactiveClasses,
           isPending ? pendingClasses : "",
           isTransitioning ? transitioningClasses : "",
           className,
           this.setActive(item.name, isActive)
-        ].flat().filter(Boolean).join(" "),
+        ], ' ').join(" "),
         strict: item.strict,
         end: item.end,
         disabled,
@@ -346,7 +350,7 @@ export default class Navigation extends Component {
         ? {
           tag: 'a',
           name: item.name,
-          classes: [className, inactiveClasses].flat().filter(Boolean).join(' '),
+          classes: splitAndFlat([className, inactiveClasses], ' ').join(' '),
           disabled,
           style: {},
           _props: {
@@ -358,7 +362,7 @@ export default class Navigation extends Component {
         : {
           tag: 'span',
           name: item.name,
-          classes: [className, inactiveClasses].flat().filter(Boolean).join(' '),
+          classes: splitAndFlat([className, inactiveClasses], ' ').join(' '),
           disabled,
           style: {},
           _props: {
@@ -378,7 +382,7 @@ export default class Navigation extends Component {
       key: item.name,
       ...(item.itemProps || {}),
       ref: (ref) => (this.itemsRefs.current[item.name] = ref),
-      className: [item.itemClasses || this.props.itemClasses].flat().filter(Boolean).join(' ')
+      className: splitAndFlat([item.itemClasses || this.props.itemClasses], ' ').join(' ')
     }
 
     return React.createElement(itemTag, itemProps,
@@ -390,10 +394,10 @@ export default class Navigation extends Component {
         !!item.menu?.length && open
         && React.createElement('span',
           {
-            className: [
+            className: splitAndFlat([
               "position-absolute top-50 end-0 translate-middle-y caret-icon p-1 cursor-pointer",
               this.activeElements[item.name] || item.hasAnActive ? (item.activeCaretClasses || activeCaretClasses) : (item.caretClasses || caretClasses),
-            ].flat().filter(Boolean).join(' '),
+            ], ' ').join(' '),
             onClick: e => !disabled && this.onToggleSubmenu(e, item),
           },
           React.createElement(Icons,
@@ -408,10 +412,10 @@ export default class Navigation extends Component {
         !!item.menu?.length && !open
         && React.createElement('span',
           {
-            className: [
+            className: splitAndFlat([
               "position-absolute top-50 end-0 translate-middle-y caret-icon p-1 cursor-pointer",
               this.activeElements[item.name] || item.hasAnActive ? (item.activeCaretClasses || activeCaretClasses) : (item.caretClasses || caretClasses),
-            ].flat().filter(Boolean).join(' '),
+            ], ' ').join(' '),
             onClick: e => !disabled && this.onToggleFloating(e, item),
           },
           React.createElement(Icons,
@@ -440,7 +444,7 @@ export default class Navigation extends Component {
           name: item.name + 'Floating',
           floatAround: this.itemsRefs.current[item.name], placement: 'right',
           card: false, allowedPlacements: ['right', 'bottom', 'top'],
-          classes: [floatingClasses, item.floatingClasses].flat().filter(Boolean).join(' ')
+          classes: splitAndFlat([item.floatingClasses || floatingClasses], ' ').join(' ')
         },
           item.menu.map((m, i) => this.link(m, i, item)).filter(m => !!m)
         )
