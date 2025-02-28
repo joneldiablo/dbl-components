@@ -75,6 +75,7 @@ export default class Navigation extends Component {
     itemTag: 'div',
     itemClasses: '',
     floatingClasses: '',
+    iconClasses: 'mx-2'
   }
 
   tag = 'nav';
@@ -304,7 +305,7 @@ export default class Navigation extends Component {
           item.icon !== false && React.createElement(Icons,
             {
               icon: item.icon,
-              className: "mx-2",
+              className: splitAndFlat([item.iconClasses || this.props.iconClasses], ' ').join(' '),
               title: item.title || extractNodeString(item.label),
               ...iconStyle,
               ...deepMerge(this.props.iconProps || {}, item.iconProps || {})
@@ -382,7 +383,10 @@ export default class Navigation extends Component {
       key: item.name,
       ...(item.itemProps || {}),
       ref: (ref) => (this.itemsRefs.current[item.name] = ref),
-      className: splitAndFlat([item.itemClasses || this.props.itemClasses], ' ').join(' ')
+      className: splitAndFlat([
+        item.itemClasses || this.props.itemClasses,
+        this.activeElements[item.name] || item.hasAnActive ? 'active' : ''
+      ], ' ').join(' ')
     }
 
     return React.createElement(itemTag, itemProps,
