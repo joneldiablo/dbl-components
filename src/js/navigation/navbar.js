@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import { randomS4, extractNodeString } from "dbl-utils";
+import { randomS4 } from "dbl-utils";
+import { extractNodeString } from "dbl-utils/esm/extract-react-node-text";
 
 import Icons from "../media/icons";
 
