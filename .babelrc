@@ -1,12 +1,20 @@
 {
   "plugins": [
-    ["inline-json-import", {}],
+    [
+      "inline-json-import",
+      {}
+    ],
     "@babel/plugin-proposal-class-properties"
   ],
   "presets": [
     "@babel/preset-react",
     "@babel/preset-typescript",
-    "@babel/preset-env"
+    [
+      "@babel/preset-env",
+      {
+        "modules": false
+      }
+    ]
   ],
   "env": {
     "production": {
