@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Collapse from "bootstrap/js/dist/collapse";
 
 import { eventHandler, deepMerge, splitAndFlat } from "dbl-utils";
-import { extractNodeString } from "dbl-utils/esm/extract-react-node-text";
+import { extractNodeString } from "dbl-utils/extract-react-node-text";
 
 import Icons from "../media/icons";
 import Action from "../actions/action";
