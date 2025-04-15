@@ -3,7 +3,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 
 import { randomS4 } from "dbl-utils";
-import { extractNodeString } from "dbl-utils/esm/extract-react-node-text";
+import { extractNodeString } from "dbl-utils/extract-react-node-text";
 
 import Icons from "../media/icons";
 
