@@ -1,6 +1,10 @@
 {
   "name": "dbl-components",
+<<<<<<< Updated upstream
   "version": "2.3.0-dev",
+=======
+  "version": "2.3.19",
+>>>>>>> Stashed changes
   "description": "Framework based on bootstrap 5",
   "main": "src/js/index.js",
   "types": "types/index.d.ts",
