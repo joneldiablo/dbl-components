@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { flatten } = require('dbl-utils/cjs/flat.js');
+const { flatten } = require('dbl-utils/flat');
 
 // Function to determine if a file is text or binary
 /**
