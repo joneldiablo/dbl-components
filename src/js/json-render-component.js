@@ -49,6 +49,10 @@ export default class JsonRenderComponent extends Component {
 
   componentDidMount() {
     this.events.forEach(([evtName, callback]) => eventHandler.subscribe(evtName, callback, this.name));
+    this.evalTemplate();
+  }
+
+  evalTemplate() {
     const definitions = deepMerge(this.constructor.template.definitions || {}, this.props.definitions);
 
     this.templateSolved = this.props.view
@@ -63,7 +67,6 @@ export default class JsonRenderComponent extends Component {
         props: this.props,
         state: this.state
       });
-
   }
 
   componentWillUnmount() {
@@ -74,8 +77,14 @@ export default class JsonRenderComponent extends Component {
     return this.state[sectionName];
   }
 
-  content() {
-    return this.jsonRender.buildContent(this.templateSolved);
+  content(children = this.props.children) {
+    const builded = this.jsonRender.buildContent(this.templateSolved);
+    return this.props.childrenIn !== undefined && !this.props.childrenIn
+      ? [
+        builded,
+        children
+      ]
+      : builded;
   }
 
 }
