@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { useFloating, autoUpdate, autoPlacement } from '@floating-ui/react';
+import { useFloating, autoPlacement } from '@floating-ui/react';
 import PropTypes from "prop-types";
 
 import { eventHandler } from 'dbl-utils';
@@ -12,17 +12,11 @@ export default function FloatingContainer({
   alignment, allowedPlacements, classes, styles
 }) {
   const [open, setOpen] = useState(false);
+  const [reference, setReference] = useState();
   const floatingRef = useRef(null);
   const changeOpen = useRef(null);
 
-  const reference = !!floatAround && (
-    floatAround.current
-      ? (floatAround.current.ref?.current || floatAround.current)
-      : floatAround
-  ) || document.body;
-
   const onOpenChange = useCallback((inOpen, event, reason) => {
-    console.log(inOpen, event, reason);
     eventHandler.dispatch(name, { [name]: { open: inOpen, event } });
   });
 
@@ -57,6 +51,14 @@ export default function FloatingContainer({
     }
   }, [name]);
 
+  useEffect(() => {
+    setReference(!!floatAround && (
+      floatAround.current
+        ? (floatAround.current.ref?.current || floatAround.current)
+        : floatAround
+    ) || document.body);
+  }, [floatAround, open]);
+
   const { refs, floatingStyles } = useFloating({
     elements: {
       reference,
@@ -64,7 +66,6 @@ export default function FloatingContainer({
     strategy: 'fixed',
     placement,
     onOpenChange,
-    whileElementsMounted: autoUpdate,
     middleware: [autoPlacement({
       alignment,
       autoAlignment: !alignment,
@@ -103,7 +104,7 @@ export default function FloatingContainer({
   if (card) cn.push('card shadow');
 
   return <div>
-    {reference instanceof Node && open && <div
+    {open && <div
       ref={(node) => {
         floatingRef.current = node;
         refs.setFloating(node);
