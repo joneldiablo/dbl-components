@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { useFloating, autoPlacement } from '@floating-ui/react';
+import { useFloating, autoPlacement, offset as offsetFUI, flip } from '@floating-ui/react';
 import PropTypes from "prop-types";
 
 import { eventHandler } from 'dbl-utils';
@@ -8,8 +8,9 @@ import useEventHandler from '../../hooks/use-event-handler';
 import Component from '../../component';
 
 export default function FloatingContainer({
-  name, floatAround, children, placement, card,
-  alignment, allowedPlacements, classes, styles
+  name, floatAround, children, placement, card = true, offset,
+  alignment, allowedPlacements, fallbackPlacements,
+  classes = Component.defaultProps.classes, style = Component.defaultProps.style
 }) {
   const [open, setOpen] = useState(false);
   const [reference, setReference] = useState();
@@ -59,6 +60,22 @@ export default function FloatingContainer({
     ) || document.body);
   }, [floatAround, open]);
 
+  const middleware = [];
+  if (offset) {
+    middleware.push(offsetFUI(offset));
+  }
+  if (allowedPlacements) {
+    middleware.push(autoPlacement({
+      alignment,
+      autoAlignment: !alignment,
+      allowedPlacements,
+    }));
+  } else if (fallbackPlacements) {
+    middleware.push(flip({
+      fallbackPlacements,
+    }));
+  }
+
   const { refs, floatingStyles } = useFloating({
     elements: {
       reference,
@@ -66,11 +83,7 @@ export default function FloatingContainer({
     strategy: 'fixed',
     placement,
     onOpenChange,
-    middleware: [autoPlacement({
-      alignment,
-      autoAlignment: !alignment,
-      allowedPlacements,
-    })],
+    middleware,
   });
 
   useEventHandler([
@@ -110,7 +123,7 @@ export default function FloatingContainer({
         refs.setFloating(node);
       }}
       className={cn.flat().filter(Boolean).join(' ')}
-      style={{ ...styles, ...floatingStyles, zIndex: 1050 }}
+      style={{ ...style, ...floatingStyles, zIndex: 1050 }}
     >
       {children}
     </div>
@@ -131,9 +144,4 @@ FloatingContainer.propTypes = {
   alignment: PropTypes.oneOf(['start', 'end']),
   allowedPlacements: PropTypes.arrayOf(placements),
   card: PropTypes.bool
-}
-
-FloatingContainer.defaultProps = {
-  ...Component.defaultProps,
-  card: true
 }
