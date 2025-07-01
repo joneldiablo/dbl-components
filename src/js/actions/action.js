@@ -95,10 +95,11 @@ export default class ActionComponent extends Component {
       if (typeof to === 'number') navigate(to);
       else {
         navigate({
-          ...navOptions,
           pathname: to,
           search,
           hash,
+        }, {
+          ...navOptions,
           state: {
             name, id, value
           }
