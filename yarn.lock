@@ -1638,10 +1638,10 @@ data-view-byte-offset@^1.0.1:
     es-errors "^1.3.0"
     is-data-view "^1.0.1"
 
-dbl-utils@^1.0.11:
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/dbl-utils/-/dbl-utils-1.0.11.tgz#ef6245974c7627acd2038158cc24dad829c633f6"
-  integrity sha512-vUBBoTpFIoZc1NsPcdUH2ydt7bCDECFKwAMOCVt/iJLGBPHVESznq4Z426UxJ7HUkmGuaZGOkD2c7+UvlRv0dQ==
+dbl-utils@^1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/dbl-utils/-/dbl-utils-1.0.12.tgz#941783dc87ebe3e2777aab1803680a1deed23052"
+  integrity sha512-L1JxZbDbQtuGrNU3Bt0pbkJIsI/eIvcwEAh8Ige2l23AhFXfBsiWJz7auQ06QYxF2r4Go63zsH5iRuCQFd+JYg==
   dependencies:
     change-case-all "^2.1.0"
     chroma-js "^3.1.2"
