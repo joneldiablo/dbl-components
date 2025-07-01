@@ -35,7 +35,7 @@ export default class GridContainer extends Container {
       // unir clases generales, si es un string se une  todas las columnas
       // si es un arreglo se une en su debido lugar y se repite la ultima clase 
       // si no coincide el número de columnas y clases
-      if (typeof colClasses === 'string') colcn.push(colClasses);
+      else if (typeof colClasses === 'string') colcn.push(colClasses);
       else if (Array.isArray(colClasses) && colClasses[i])
         colcn.push(colClasses[i]);
       else if (Array.isArray(colClasses) && colClasses.length > 0)
