@@ -89,10 +89,21 @@ export default class ActionComponent extends Component {
 
   onClick(e) {
     e.stopPropagation();
-    const { navigate, to, type, open, close, value, name, id } = this.props;
+    const { navigate, to, search, hash, type, open, close, value, name, id, navOptions = {} } = this.props;
 
     if (type === 'link' && to) {
-      navigate(to);
+      if (typeof to === 'number') navigate(to);
+      else {
+        navigate({
+          ...navOptions,
+          pathname: to,
+          search,
+          hash,
+          state: {
+            name, id, value
+          }
+        });
+      }
     }
 
     if (open) {
