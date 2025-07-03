@@ -70,7 +70,8 @@ export default class NewPasswordField extends Field {
   get errorMessageNode() {
     const { errorMessage: em, patterns } = this.props;
     const { error, value } = this.state;
-    if (!error && !errorMessage || !patterns) return false;
+    if (!error) return false;
+    if (!em && !patterns) return false;
     const errorMessage = !patterns ? [em] : [
       em, React.createElement('ul', {},
         ...Object.entries(patterns)
