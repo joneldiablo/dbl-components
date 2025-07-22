@@ -7,10 +7,10 @@ import JsonRender from "../json-render";
 import Container from "./container";
 
 export default class JsonRenderContainer extends Container {
-
-  static jsClass = 'JsonRenderContainer';
+  static jsClass = "JsonRenderContainer";
   static template = {
-    view: {}, definitions: {}
+    view: {},
+    definitions: {},
   };
 
   static propTypes = {
@@ -18,26 +18,28 @@ export default class JsonRenderContainer extends Container {
     content: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.array,
-      PropTypes.object
-    ])
-  }
+      PropTypes.object,
+    ]),
+  };
 
   static defaultProps = {
     ...Container.defaultProps,
     fullWidth: true,
     view: null,
     childrenIn: false,
-    definitions: {}
-  }
+    definitions: {},
+  };
 
-  tag = 'div';
+  tag = "div";
   events = [];
 
   constructor(props) {
     super(props);
-    Object.assign(this.state, {
-    });
-    this.jsonRender = new JsonRender(this.fixedProps, this.mutations.bind(this));
+    Object.assign(this.state, {});
+    this.jsonRender = new JsonRender(
+      this.fixedProps,
+      this.mutations.bind(this)
+    );
   }
 
   get fixedProps() {
@@ -54,27 +56,37 @@ export default class JsonRenderContainer extends Container {
 
   componentDidMount() {
     super.componentDidMount();
-    this.events.forEach(([evtName, callback]) => eventHandler.subscribe(evtName, callback, this.name));
-    const definitions = deepMerge(this.constructor.template.definitions || {}, this.props.definitions);
+    this.events.forEach(([evtName, callback]) =>
+      eventHandler.subscribe(evtName, callback, this.name)
+    );
+    this.evalTemplate();
+  }
+
+  evalTemplate() {
+    const definitions = deepMerge(
+      this.constructor.template.definitions || {},
+      this.props.definitions
+    );
 
     this.templateSolved = this.props.view
       ? resolveRefs(this.props.view, {
-        template: this.theView,
-        definitions,
-        props: this.props,
-        state: this.state
-      })
+          template: this.theView,
+          definitions,
+          props: this.props,
+          state: this.state,
+        })
       : resolveRefs(this.theView, {
-        definitions,
-        props: this.props,
-        state: this.state
-      });
-
+          definitions,
+          props: this.props,
+          state: this.state,
+        });
   }
 
   componentWillUnmount() {
     super.componentWillUnmount();
-    this.events.forEach(([eName]) => eventHandler.unsubscribe(eName, this.name));
+    this.events.forEach(([eName]) =>
+      eventHandler.unsubscribe(eName, this.name)
+    );
   }
 
   mutations(sectionName, section) {
@@ -89,5 +101,4 @@ export default class JsonRenderContainer extends Container {
       ? React.createElement(React.Fragment, {}, builded, children)
       : builded;
   }
-
 }
