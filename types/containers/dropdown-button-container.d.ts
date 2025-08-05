@@ -6,7 +6,7 @@ export class DropdownItem extends Component {
         style: {};
         active: boolean;
     };
-    tag: any;
+    tag: string | import("react").ForwardRefExoticComponent<import("react-router-dom").NavLinkProps & import("react").RefAttributes<HTMLAnchorElement>>;
     eventHandlers: {
         onClick: (e: any) => void;
     };
