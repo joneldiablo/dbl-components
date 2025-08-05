@@ -146,8 +146,8 @@ export default class OffcanvasContainer extends Component {
    * @param {boolean} param.open - Whether to show or hide the offcanvas.
    */
   onUpdateOffcanvas = ({ open: showOffcanvas }) => {
+    console.log("VIENE open??????", showOffcanvas, this.ref.current);
     if (showOffcanvas !== undefined) {
-      console.log("VIENE open!!!!", showOffcanvas);
       if (!showOffcanvas) {
         if (!this.offcanvas) {
           this.offcanvas = Offcanvas.getInstance(this.ref.current);
@@ -184,6 +184,8 @@ export default class OffcanvasContainer extends Component {
    */
   onOffcanvasRef = (refOriginal) => {
     if (refOriginal) {
+      console.log("actualizando componente!!!", refOriginal);
+
       this.ref.current = refOriginal;
       const ref = refOriginal;
 
