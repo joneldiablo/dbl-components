@@ -52,6 +52,7 @@ export default class View extends JsonRenderContainer {
 
     // 🚨 Forzar re-render si cambió la ruta (pathname)
     if (location?.pathname !== prevProps.location?.pathname) {
+      console.log("cambió el path!!!!");
       this.forceUpdate();
     }
 
