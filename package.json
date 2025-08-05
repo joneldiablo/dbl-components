@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "test": "node tests/react-router-schema.test.js",
-    "babel": "babel src/js -d lib/js --minified --source-maps && yarn cpInlineStyle",
+    "babel": "env=production babel src/js -d lib/js --minified --source-maps && yarn cpInlineStyle",
     "babelReact": "babel --config-file ./.babelrc2 src/js -d src/js",
     "clear": "yarn clear:js && yarn clear:css && yarn clear:scss",
     "css": "node-sass --importer node_modules/node-sass-import src/scss/style.scss lib/css/style.css && yarn postcss",
