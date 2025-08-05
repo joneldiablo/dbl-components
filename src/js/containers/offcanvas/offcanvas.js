@@ -115,9 +115,6 @@ export default class OffcanvasContainer extends Component {
 
   // Lifecycle method: componentDidMount
   componentDidMount() {
-    const { name } = this.props;
-    console.log("SE MONTA componente", this.ref.current);
-    eventHandler.subscribe("update." + name, this.onUpdateOffcanvas, this.name);
     this.deleteClasses(
       "offcanvas-start offcanvas-end offcanvas-top offcanvas-bottom"
     );
@@ -184,7 +181,12 @@ export default class OffcanvasContainer extends Component {
    */
   onOffcanvasRef = (refOriginal) => {
     if (refOriginal) {
-      console.log("actualizando componente!!!", refOriginal);
+      const { name } = this.props;
+      eventHandler.subscribe(
+        "update." + name,
+        this.onUpdateOffcanvas,
+        this.name
+      );
 
       this.ref.current = refOriginal;
       const ref = refOriginal;
