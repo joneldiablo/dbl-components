@@ -26,17 +26,12 @@ fi
 
 # 🔒 Verificar si hay cambios sin commitear
 if [[ -n $(git status --porcelain) ]]; then
-  echo "🚫 Tienes cambios sin guardar. Haz commit o stash primero."
-  exit 1
+  echo "🚫 Tienes cambios sin guardar...."
 fi
 
 # 🌿 Guardar rama actual
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 echo "🔀 Rama actual: $BRANCH"
-
-# ⬆️ Hacer push
-echo "📤 Haciendo push..."
-git push
 
 # 🔁 Sincronizar la copia
 echo "🧹 Restableciendo cambios en la copia y cambiando a rama '$BRANCH'"
