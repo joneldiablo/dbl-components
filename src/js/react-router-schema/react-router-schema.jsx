@@ -37,7 +37,6 @@ const schemaPropTypes = {
   theme: PropTypes.string,
   routes: routePropTypes.routes,
   defaultController: PropTypes.func,
-  forceRebuild: PropTypes.bool,
 };
 
 const schemaDefaultProps = {
@@ -45,6 +44,14 @@ const schemaDefaultProps = {
   defaultController: controllers.Controller,
 };
 
+/**
+ * Controller that renders a React Router `<Routes>` tree from a schema.
+ *
+ * @example
+ * ```jsx
+ * <BrowserRouterSchema routes={[{ path: '/', component: 'Controller' }]} />
+ * ```
+ */
 export default class SchemaController extends React.Component {
   static jsClass = "SchemaController";
   static propTypes = schemaPropTypes;
@@ -55,12 +62,18 @@ export default class SchemaController extends React.Component {
 
   constructor(props) {
     super(props);
-    this.routesHash = "";
+    this.routesHash = hash(JSON.stringify(props.routes));
     this.buildRoutes();
   }
 
+  /**
+   * Builds the route elements from the provided schema and updates the hash used
+   * to detect changes between renders.
+   *
+   * @private
+   */
   buildRoutes() {
-    // Crear un clone de lo que se recibe
+    // Create a clone of the incoming routes
     const schemaStr = JSON.stringify(this.props.routes);
     const routesSchema = JSON.parse(schemaStr);
 
@@ -73,26 +86,29 @@ export default class SchemaController extends React.Component {
         this.views({ name, ...routesSchema[name] }, i)
       );
 
-    //asignación directa
+    // Direct assignment
     this.routeNodes = routes;
+    this.routesHash = hash(JSON.stringify(this.props.routes));
   }
 
-  componentDidMount() {}
-
   componentDidUpdate(prevProps, prevState) {
-    // comprobar si ha cambiado el schema
-    let newHash = hash(JSON.stringify(this.props.routes));
+    // Check if the schema has changed
+    const newHash = hash(JSON.stringify(this.props.routes));
     if (this.routesHash !== newHash) {
       this.buildRoutes();
-      this.routesHash = newHash;
+      this.forceUpdate();
     }
   }
 
-  /** views
-   * Método recursivo que procesa el schema de rutas
-   * usar en el mapeo de un arreglo ej. routes.map(this.views)
-   * permite que el schema tenga un arreglo de paths
-   **/
+  /**
+   * Recursively processes a route definition and returns a React Router `<Route>`
+   * element. Intended to be used as a callback, for example
+   * `routes.map(this.views)`.
+   *
+   * @param {Object} route - Route definition.
+   * @param {number} [i] - Index of the current route.
+   * @returns {JSX.Element} The generated `<Route>` element.
+   */
   views = (route, i) => {
     const Controller =
       controllers[route.component] ||
@@ -156,9 +172,6 @@ export default class SchemaController extends React.Component {
 
   render() {
     const { theme } = this.props;
-    if (this.props.forceRebuild) {
-      this.buildRoutes();
-    }
     return (
       <>
         {!!theme && <link rel="stylesheet" type="text/css" href={theme} />}
@@ -168,6 +181,13 @@ export default class SchemaController extends React.Component {
   }
 }
 
+/**
+ * Internal wrapper that dispatches location changes and renders the schema
+ * controller.
+ *
+ * @param {Object} props - Props passed to {@link SchemaController}.
+ * @returns {JSX.Element} The rendered controller.
+ */
 const RouterSchema = (props) => {
   const location = useLocation();
   useEffect(() => {
@@ -176,6 +196,17 @@ const RouterSchema = (props) => {
   return <SchemaController {...props} />;
 };
 
+/**
+ * Renders the schema inside a {@link BrowserRouter}.
+ *
+ * @param {Object} incomingProps - Props containing the route schema.
+ * @returns {JSX.Element} The browser router with the schema.
+ *
+ * @example
+ * ```jsx
+ * <BrowserRouterSchema routes={[{ path: '/', component: 'Controller' }]} />
+ * ```
+ */
 export const BrowserRouterSchema = (incomingProps) => {
   const props = { ...schemaDefaultProps, ...incomingProps };
   return (
@@ -186,6 +217,17 @@ export const BrowserRouterSchema = (incomingProps) => {
 };
 BrowserRouterSchema.propTypes = schemaPropTypes;
 
+/**
+ * Renders the schema inside a {@link HashRouter}.
+ *
+ * @param {Object} incomingProps - Props containing the route schema.
+ * @returns {JSX.Element} The hash router with the schema.
+ *
+ * @example
+ * ```jsx
+ * <HashRouterSchema routes={[{ path: '/', component: 'Controller' }]} />
+ * ```
+ */
 export const HashRouterSchema = (incomingProps) => {
   const props = { ...schemaDefaultProps, ...incomingProps };
   return (

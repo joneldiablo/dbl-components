@@ -13,7 +13,7 @@
     "types-fix.d.ts"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node tests/react-router-schema.test.js",
     "babel": "babel src/js -d lib/js --minified --source-maps && yarn cpInlineStyle",
     "babelReact": "babel --config-file ./.babelrc2 src/js -d src/js",
     "clear": "yarn clear:js && yarn clear:css && yarn clear:scss",
@@ -81,6 +81,7 @@
     "@babel/preset-modules": "^0.1.6",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.12.1",
+    "@babel/register": "^7.23.7",
     "@babel/traverse": "^7.23.7",
     "@babel/types": "^7.23.6",
     "@react-docgen/cli": "^2.0.1",
@@ -91,7 +92,10 @@
     "jsdom": "^23.0.1",
     "postcss": "^8.1.6",
     "postcss-cli": "^8.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-is": "^17.0.1",
+    "react-router-dom": "^7.0.1",
     "sass-loader": "^10.0.5"
   }
 }

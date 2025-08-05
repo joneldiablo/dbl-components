@@ -2,6 +2,10 @@
 
 My own components https://joneldiablo.github.io/dbl-components/
 
+## Changes
+
+- Prevent full remount of parent routes when navigating to child routes in React Router Schema.
+
 finalidad: framework de componenentes react con bootstrap 5, todos los componentes han de funcionar exactamente igual para poder ser procesados por un componente específico llamado View, este componente tiene la propiedad de recorrer un objeto JSON de forma recursiva encontrando todos los componentes anidados, tomando como referencia el atributo name, con el cual sabrá que ese objeto es un componente. La estructura mínima JSON es entonces: `{"name":""}` la cual tomará el componente default para mostrar su contenido.
 Estructura JSON básica.
 
@@ -9,18 +13,18 @@ Estructura JSON básica.
 {
   "component":"string",
   "name":"string*",
-  "content":"string|JSON Object|React Component"
-}
-```
+    "content":"string|JSON Object|React Component"
+  }
+  ```
 
-* component: es el nombre del componente que se quiere utilizar 
-* name: 
+  * component: es el nombre del componente que se quiere utilizar
+  * name:
 
 
 TODO: 
 
 * Crear componente panel, que tenga swipe events, que haga el switch de ocultar textos y sólo mostrar íconos a mostrar u ocultar completamente el panel en mobile, además en mobile se muestra por encima de todo, agregar animaciones y dirección.
-* Modificar componente menú para que los elementos funcionen igual que el resto de componentes el toggle se le debe pasar el nombre del evento que ejecuta el toggle text para colapsar el texto dejando únicamente el ícono
+  * Modificar componente menú para que los elementos funcionen igual que el resto de componentes el toggle se le debe pasar el nombre del evento que ejecuta el toggle text para colapsar el texto dejando únicamente el ícono
 * Crear nuevo componente tabla a la cual se le pasen las columnas como contenido
   * Que la nueva tabla controle las columnas visibles pasandole un arreglo de nombres
 * permitir pasar componente react en "component"

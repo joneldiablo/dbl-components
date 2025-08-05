@@ -7,34 +7,33 @@ import JsonRenderContainer from "../containers/json-render-container";
  * View component that extends JsonRenderContainer
  */
 export default class View extends JsonRenderContainer {
-
-  static jsClass = 'View';
+  static jsClass = "View";
 
   static propTypes = {
     ...JsonRenderContainer.propTypes,
-    test: PropTypes.bool
-  }
+    test: PropTypes.bool,
+  };
 
   static defaultProps = {
     ...JsonRenderContainer.defaultProps,
     test: false,
-    content: {}
-  }
+    content: {},
+  };
 
-  tag = 'article';
+  tag = "article";
   events = [];
 
   constructor(props) {
     super(props);
     Object.assign(this.state, {
-      localClasses: this.props.test ? 'test-view-wrapper' : ''
+      localClasses: this.props.test ? "test-view-wrapper" : "",
     });
   }
 
   get fixedProps() {
     return {
       ...this.props,
-      childrenIn: this.props.routesIn
+      childrenIn: this.props.routesIn,
     };
   }
 
@@ -48,19 +47,25 @@ export default class View extends JsonRenderContainer {
 
   componentDidUpdate(prevProps, prevState) {
     super.componentDidUpdate(prevProps, prevState);
-    const { test } = this.props;
+
+    const { test, location } = this.props;
+
+    // 🚨 Forzar re-render si cambió la ruta (pathname)
+    if (location?.pathname !== prevProps.location?.pathname) {
+      this.forceUpdate();
+    }
+
     if (prevProps.test !== test) {
       const { localClasses } = this.state;
-      const setClasses = new Set(localClasses.split(' '));
+      const setClasses = new Set(localClasses.split(" "));
       if (test) {
-        setClasses.add('test-view-wrapper');
+        setClasses.add("test-view-wrapper");
       } else {
-        setClasses.delete('test-view-wrapper');
+        setClasses.delete("test-view-wrapper");
       }
       this.setState({
-        localClasses: [...setClasses].join(' ')
+        localClasses: [...setClasses].join(" "),
       });
     }
   }
-
 }

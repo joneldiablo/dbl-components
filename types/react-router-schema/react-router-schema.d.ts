@@ -1,3 +1,11 @@
+/**
+ * Controller that renders a React Router `<Routes>` tree from a schema.
+ *
+ * @example
+ * ```jsx
+ * <BrowserRouterSchema routes={[{ path: '/', component: 'Controller' }]} />
+ * ```
+ */
 export default class SchemaController {
     static jsClass: string;
     static propTypes: {
@@ -5,7 +13,6 @@ export default class SchemaController {
         theme: any;
         routes: any;
         defaultController: any;
-        forceRebuild: any;
     };
     static defaultProps: {
         routes: never[];
@@ -14,23 +21,32 @@ export default class SchemaController {
     constructor(props: any);
     routeNodes: any[];
     state: {};
-    routesHash: string;
-    buildRoutes(): void;
-    componentDidMount(): void;
-    componentDidUpdate(prevProps: any): void;
-    /** views
-     * Método recursivo que procesa el schema de rutas
-     * usar en el mapeo de un arreglo ej. routes.map(this.views)
-     * permite que el schema tenga un arreglo de paths
-     **/
-    views: (route: any, i: any, depth?: number) => any;
+    routesHash: number;
+    /**
+     * Builds the route elements from the provided schema and updates the hash used
+     * to detect changes between renders.
+     *
+     * @private
+     */
+    private buildRoutes;
+    componentDidUpdate(prevProps: any, prevState: any): void;
+    /**
+     * Recursively processes a route definition and returns a React Router `<Route>`
+     * element. Intended to be used as a callback, for example
+     * `routes.map(this.views)`.
+     *
+     * @param {Object} route - Route definition.
+     * @param {number} [i] - Index of the current route.
+     * @returns {JSX.Element} The generated `<Route>` element.
+     */
+    views: (route: Object, i?: number) => JSX.Element;
     render(): any;
 }
-export function BrowserRouterSchema(incomingProps: any): any;
+export function BrowserRouterSchema(incomingProps: Object): JSX.Element;
 export namespace BrowserRouterSchema {
     export { schemaPropTypes as propTypes };
 }
-export function HashRouterSchema(incomingProps: any): any;
+export function HashRouterSchema(incomingProps: Object): JSX.Element;
 export namespace HashRouterSchema {
     export { schemaPropTypes as propTypes };
 }
@@ -40,7 +56,6 @@ declare namespace schemaPropTypes {
     import routes = routePropTypes.routes;
     export { routes };
     export let defaultController: any;
-    export let forceRebuild: any;
 }
 declare namespace routePropTypes {
     export let path: any;
