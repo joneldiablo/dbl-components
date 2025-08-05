@@ -16,7 +16,6 @@ const withRouteWrapper = (WrappedComponent, route) => {
     const params = useParams();
     const timeoutRef = useRef(null);
     const [, forceUpdate] = React.useReducer((x) => x + 1, 0);
-    console.log("REDIBUJAR", props.name, location.pathname);
 
     // 💥 Nos suscribimos a cambios de ruta para forzar re-render
     useLayoutEffect(() => {
