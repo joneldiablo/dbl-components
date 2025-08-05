@@ -69,7 +69,7 @@ export default class OffcanvasContainer extends Component {
      */
     onUpdateOffcanvas: ({ open: showOffcanvas }: {
         open: boolean;
-    }) => void;
+    }) => any;
     offcanvas: any;
     /**
      * Destroy the offcanvas instance.
