@@ -79,14 +79,12 @@ export default class SchemaController extends React.Component {
 
   componentDidMount() {}
 
-  componentDidUpdate(prevProps) {
-    // Rebuild routes when the schema changes or forceRebuild is toggled
-    const currentHash = hash(JSON.stringify(this.props.routes));
-    const schemaChanged = this.routesHash !== currentHash;
-    const forceToggled = this.props.forceRebuild && this.props.forceRebuild !== prevProps.forceRebuild;
-    if (schemaChanged || forceToggled) {
+  componentDidUpdate(prevProps, prevState) {
+    // comprobar si ha cambiado el schema
+    let newHash = hash(JSON.stringify(this.props.routes));
+    if (this.routesHash !== newHash) {
       this.buildRoutes();
-      this.routesHash = currentHash;
+      this.routesHash = newHash;
     }
   }
 
@@ -95,11 +93,7 @@ export default class SchemaController extends React.Component {
    * usar en el mapeo de un arreglo ej. routes.map(this.views)
    * permite que el schema tenga un arreglo de paths
    **/
-  views = (route, i, depth = 0) => {
-    // Ensure nested routes use relative paths (no leading slash)
-    if (depth > 0 && typeof route.path === 'string') {
-      route.path = route.path.replace(/^\/+/, '');
-    }
+  views = (route, i) => {
     const Controller =
       controllers[route.component] ||
       this.props.defaultController ||
@@ -119,9 +113,9 @@ export default class SchemaController extends React.Component {
     }
 
     if (subroutes) {
-      const mapRoutes = (subRoute, idx) => {
-        const childSchema = JSON.parse(JSON.stringify(subRoute));
-        return this.views(childSchema, idx, depth + 1);
+      const mapRoutes = (subRoute, i) => {
+        subRoute = JSON.parse(JSON.stringify(subRoute));
+        return this.views(subRoute, i);
       };
       subroutes = route.routes.map(mapRoutes);
     }
@@ -162,6 +156,9 @@ export default class SchemaController extends React.Component {
 
   render() {
     const { theme } = this.props;
+    if (this.props.forceRebuild) {
+      this.buildRoutes();
+    }
     return (
       <>
         {!!theme && <link rel="stylesheet" type="text/css" href={theme} />}
