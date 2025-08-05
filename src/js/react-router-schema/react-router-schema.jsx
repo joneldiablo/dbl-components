@@ -6,7 +6,7 @@ import {
   Routes,
   Route,
   Outlet,
-  useLocation
+  useLocation,
 } from "react-router-dom";
 
 import { hash, eventHandler } from "dbl-utils";
@@ -17,7 +17,7 @@ import withRouteWrapper from "./with-route-wrapper";
 const routePropTypes = {
   path: PropTypes.oneOfType([
     PropTypes.string,
-    PropTypes.arrayOf(PropTypes.string)
+    PropTypes.arrayOf(PropTypes.string),
   ]).isRequired,
   content: PropTypes.any.isRequired,
   name: PropTypes.string,
@@ -28,8 +28,8 @@ const routePropTypes = {
   sensitive: PropTypes.bool,
   routes: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.shape(this)),
-    PropTypes.shape(this)
-  ])
+    PropTypes.shape(this),
+  ]),
 };
 
 const schemaPropTypes = {
@@ -38,26 +38,24 @@ const schemaPropTypes = {
   routes: routePropTypes.routes,
   defaultController: PropTypes.func,
   forceRebuild: PropTypes.bool,
-}
+};
 
 const schemaDefaultProps = {
   routes: [],
-  defaultController: controllers.Controller
-}
+  defaultController: controllers.Controller,
+};
 
 export default class SchemaController extends React.Component {
-
-  static jsClass = 'SchemaController';
+  static jsClass = "SchemaController";
   static propTypes = schemaPropTypes;
   static defaultProps = schemaDefaultProps;
 
   routeNodes = [];
-  state = {
-  }
+  state = {};
 
   constructor(props) {
     super(props);
-    this.routesHash = '';
+    this.routesHash = "";
     this.buildRoutes();
   }
 
@@ -67,21 +65,19 @@ export default class SchemaController extends React.Component {
     const routesSchema = JSON.parse(schemaStr);
 
     let routes;
-    if (Array.isArray(routesSchema))
-      routes = routesSchema.map(this.views);
-    else if (typeof routesSchema === 'object' && routesSchema.name)
+    if (Array.isArray(routesSchema)) routes = routesSchema.map(this.views);
+    else if (typeof routesSchema === "object" && routesSchema.name)
       routes = this.views(routesSchema);
-    else if (typeof routesSchema === 'object')
-      routes = Object.keys(routesSchema)
-        .map((name, i) => this.views({ name, ...routesSchema[name] }, i))
+    else if (typeof routesSchema === "object")
+      routes = Object.keys(routesSchema).map((name, i) =>
+        this.views({ name, ...routesSchema[name] }, i)
+      );
 
     //asignación directa
     this.routeNodes = routes;
   }
 
-  componentDidMount() {
-
-  }
+  componentDidMount() {}
 
   componentDidUpdate(prevProps, prevState) {
     // comprobar si ha cambiado el schema
@@ -98,17 +94,22 @@ export default class SchemaController extends React.Component {
    * permite que el schema tenga un arreglo de paths
    **/
   views = (route, i) => {
-    const Controller = controllers[route.component] || this.props.defaultController || controllers.Controller;
+    const Controller =
+      controllers[route.component] ||
+      this.props.defaultController ||
+      controllers.Controller;
     route.test = route.test || this.props.test;
     const WrappedController = withRouteWrapper(Controller, route);
 
     let subroutes = false;
 
     if (Array.isArray(route.routes)) subroutes = [];
-    else if (typeof route.routes === 'object') {
+    else if (typeof route.routes === "object") {
       subroutes = [];
-      route.routes = Object.keys(route.routes)
-        .map(name => ({ name, ...route.routes[name] }));
+      route.routes = Object.keys(route.routes).map((name) => ({
+        name,
+        ...route.routes[name],
+      }));
     }
 
     if (subroutes) {
@@ -138,20 +139,20 @@ export default class SchemaController extends React.Component {
       shouldRevalidate: route.shouldRevalidate,
 
       element: (
-        <WrappedController  {...route}>
+        <WrappedController {...route}>
           {subroutes.length > 0 ? <Outlet /> : null}
         </WrappedController>
-      )
+      ),
     };
 
-    const key = i || typeof i === 'number' ? (i + '-' + route.name) : route.name;
+    const key = i || typeof i === "number" ? i + "-" + route.name : route.name;
 
     return (
       <Route key={key} {...routeProps}>
         {subroutes.length > 0 && subroutes}
       </Route>
     );
-  }
+  };
 
   render() {
     const { theme } = this.props;
@@ -161,9 +162,7 @@ export default class SchemaController extends React.Component {
     return (
       <>
         {!!theme && <link rel="stylesheet" type="text/css" href={theme} />}
-        <Routes>
-          {this.routeNodes}
-        </Routes>
+        <Routes>{this.routeNodes}</Routes>
       </>
     );
   }
@@ -172,27 +171,27 @@ export default class SchemaController extends React.Component {
 const RouterSchema = (props) => {
   const location = useLocation();
   useEffect(() => {
-    eventHandler.dispatch('location', location);
+    eventHandler.dispatch("location", location);
   }, [location.pathname]);
-  return <SchemaController {...props} />
-}
+  return <SchemaController {...props} />;
+};
 
-export const BrowserRouterSchema = (props) => {
+export const BrowserRouterSchema = (incomingProps) => {
+  const props = { ...schemaDefaultProps, ...incomingProps };
   return (
     <BrowserRouter>
       <RouterSchema {...props} />
     </BrowserRouter>
   );
-}
+};
 BrowserRouterSchema.propTypes = schemaPropTypes;
-BrowserRouterSchema.defaultProps = schemaDefaultProps;
 
-export const HashRouterSchema = (props) => {
+export const HashRouterSchema = (incomingProps) => {
+  const props = { ...schemaDefaultProps, ...incomingProps };
   return (
     <HashRouter>
       <RouterSchema {...props} />
     </HashRouter>
   );
-}
+};
 HashRouterSchema.propTypes = schemaPropTypes;
-HashRouterSchema.defaultProps = schemaDefaultProps;
