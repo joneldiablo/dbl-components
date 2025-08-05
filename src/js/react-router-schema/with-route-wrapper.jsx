@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useLayoutEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { eventHandler } from "dbl-utils";
 
 /**
  * Wrapper component to manage class names and styles in the body element
@@ -15,8 +16,20 @@ const withRouteWrapper = (WrappedComponent, route) => {
     const params = useParams();
     const [, forceUpdate] = React.useReducer((x) => x + 1, 0);
 
-    useEffect(() => {
-      // Manage body class based on route name
+    // 💥 Nos suscribimos a cambios de ruta para forzar re-render
+    useLayoutEffect(() => {
+      const callback = () => {
+        forceUpdate();
+      };
+      eventHandler.subscribe("location", callback, "wrapper-" + props.name);
+
+      return () => {
+        eventHandler.unsubscribe("location", callback, "wrapper-" + props.name);
+      };
+    }, []);
+
+    // 🎨 Actualiza clases y estilos del body cada que cambia el pathname
+    useLayoutEffect(() => {
       const viewClassName = Array.from(document.body.classList).find((cl) =>
         cl.endsWith("-view")
       );
@@ -25,26 +38,19 @@ const withRouteWrapper = (WrappedComponent, route) => {
       }
       document.body.classList.add(`${route.name}-view`);
 
-      // Remove old location-based classes and add new location class
       document.body.classList.forEach((cls) => {
         if (cls.startsWith("location-")) {
           document.body.classList.remove(cls);
         }
       });
+
       document.body.classList.add(
         `location${location.pathname.replace(/\//g, "-")}`
       );
 
-      // Forzar actualización del componente si cambia la ruta
-      forceUpdate();
-
-      // Apply custom styles to route if provided
-      if (!route.style) {
-        route.style = {};
-      }
+      if (!route.style) route.style = {};
       route.style["--component-name"] = `"${route.name}"`;
 
-      // Cleanup function to remove added classes when the component unmounts or route changes
       return () => {
         document.body.classList.remove(`${route.name}-view`);
         document.body.classList.remove(

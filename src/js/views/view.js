@@ -48,13 +48,7 @@ export default class View extends JsonRenderContainer {
   componentDidUpdate(prevProps, prevState) {
     super.componentDidUpdate(prevProps, prevState);
 
-    const { test, location } = this.props;
-
-    // 🚨 Forzar re-render si cambió la ruta (pathname)
-    if (location?.pathname !== prevProps.location?.pathname) {
-      console.log("cambió el path!!!!");
-      this.forceUpdate();
-    }
+    const { test } = this.props;
 
     if (prevProps.test !== test) {
       const { localClasses } = this.state;
