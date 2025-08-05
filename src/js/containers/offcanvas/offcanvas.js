@@ -115,6 +115,8 @@ export default class OffcanvasContainer extends Component {
 
   // Lifecycle method: componentDidMount
   componentDidMount() {
+    const { name } = this.props;
+    eventHandler.subscribe("update." + name, this.onUpdateOffcanvas, this.name);
     this.deleteClasses(
       "offcanvas-start offcanvas-end offcanvas-top offcanvas-bottom"
     );
