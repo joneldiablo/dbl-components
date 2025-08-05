@@ -15,12 +15,14 @@ const withRouteWrapper = (WrappedComponent, route) => {
     const navigate = useNavigate();
     const params = useParams();
     const [, forceUpdate] = React.useReducer((x) => x + 1, 0);
+    console.log("REDIBUJAR", props.name, location.pathname);
 
     // 💥 Nos suscribimos a cambios de ruta para forzar re-render
     useLayoutEffect(() => {
       const callback = (nlocation) => {
         console.log(
           "cambió la ruta?????",
+          props.name,
           nlocation.pathname,
           location.pathname
         );
