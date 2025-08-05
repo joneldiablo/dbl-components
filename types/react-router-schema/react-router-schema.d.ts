@@ -13,7 +13,6 @@ export default class SchemaController {
         theme: any;
         routes: any;
         defaultController: any;
-        forceRebuild: any;
     };
     static defaultProps: {
         routes: never[];
@@ -22,7 +21,7 @@ export default class SchemaController {
     constructor(props: any);
     routeNodes: any[];
     state: {};
-    routesHash: string;
+    routesHash: number;
     /**
      * Builds the route elements from the provided schema and updates the hash used
      * to detect changes between renders.
@@ -30,7 +29,6 @@ export default class SchemaController {
      * @private
      */
     private buildRoutes;
-    componentDidMount(): void;
     componentDidUpdate(prevProps: any, prevState: any): void;
     /**
      * Recursively processes a route definition and returns a React Router `<Route>`
@@ -58,7 +56,6 @@ declare namespace schemaPropTypes {
     import routes = routePropTypes.routes;
     export { routes };
     export let defaultController: any;
-    export let forceRebuild: any;
 }
 declare namespace routePropTypes {
     export let path: any;
