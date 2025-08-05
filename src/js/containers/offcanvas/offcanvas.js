@@ -146,7 +146,7 @@ export default class OffcanvasContainer extends Component {
    */
   onUpdateOffcanvas = ({ open: showOffcanvas }) => {
     if (showOffcanvas !== undefined) {
-      console.log("VIENE open!!!!");
+      console.log("VIENE open!!!!", showOffcanvas);
       if (!showOffcanvas) {
         if (!this.offcanvas) {
           this.offcanvas = Offcanvas.getInstance(this.ref.current);
