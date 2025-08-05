@@ -37,7 +37,6 @@ const schemaPropTypes = {
   theme: PropTypes.string,
   routes: routePropTypes.routes,
   defaultController: PropTypes.func,
-  forceRebuild: PropTypes.bool,
 };
 
 const schemaDefaultProps = {
@@ -63,7 +62,7 @@ export default class SchemaController extends React.Component {
 
   constructor(props) {
     super(props);
-    this.routesHash = "";
+    this.routesHash = hash(JSON.stringify(props.routes));
     this.buildRoutes();
   }
 
@@ -92,13 +91,12 @@ export default class SchemaController extends React.Component {
     this.routesHash = hash(JSON.stringify(this.props.routes));
   }
 
-  componentDidMount() {}
-
   componentDidUpdate(prevProps, prevState) {
     // Check if the schema has changed
     const newHash = hash(JSON.stringify(this.props.routes));
     if (this.routesHash !== newHash) {
       this.buildRoutes();
+      this.forceUpdate();
     }
   }
 
@@ -174,9 +172,6 @@ export default class SchemaController extends React.Component {
 
   render() {
     const { theme } = this.props;
-    if (this.props.forceRebuild) {
-      this.buildRoutes();
-    }
     return (
       <>
         {!!theme && <link rel="stylesheet" type="text/css" href={theme} />}
