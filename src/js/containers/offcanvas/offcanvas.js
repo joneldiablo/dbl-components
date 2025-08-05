@@ -85,7 +85,7 @@ export default class OffcanvasContainer extends Component {
 
     // Initial state
     Object.assign(this.state, {
-      showOffcanvas: false,
+      showOffcanvas: this.props.open,
       localClasses: "offcanvas-" + props.position,
     });
 
@@ -116,6 +116,7 @@ export default class OffcanvasContainer extends Component {
   // Lifecycle method: componentDidMount
   componentDidMount() {
     const { name } = this.props;
+    console.log("SE MONTA componente", this.ref.current);
     eventHandler.subscribe("update." + name, this.onUpdateOffcanvas, this.name);
     this.deleteClasses(
       "offcanvas-start offcanvas-end offcanvas-top offcanvas-bottom"
@@ -169,7 +170,7 @@ export default class OffcanvasContainer extends Component {
    * Destroy the offcanvas instance.
    */
   destroy = () => {
-    console.log('SALIENDO offcanvas, eliminando!!!');
+    console.log("SALIENDO offcanvas, eliminando!!!");
     if (this.offcanvas) {
       this.offcanvas.dispose();
       this.offcanvas = null;
@@ -186,12 +187,12 @@ export default class OffcanvasContainer extends Component {
       this.ref.current = refOriginal;
       const ref = refOriginal;
 
-      this.offcanvas = new Offcanvas(ref, this.props.offcanvas);
+      this.offcanvas = Offcanvas.getOrCreateInstance(ref, this.props.offcanvas);
       this.bsEvents.forEach((event) => {
         ref.addEventListener(event + ".bs.offcanvas", this.onEvent, false);
       });
       ref.addEventListener("hidden.bs.offcanvas", this.destroy, false);
-      this.offcanvas.show();
+      if (this.state.showOffcanvas) this.offcanvas.show();
     }
   };
 
