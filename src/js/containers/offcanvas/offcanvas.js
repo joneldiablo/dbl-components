@@ -154,16 +154,14 @@ export default class OffcanvasContainer extends Component {
         console.log(this.offcanvas);
 
         this.offcanvas.hide();
-        this.state.showOffcanvas = showOffcanvas;
         console.log(
           "ACTUALIZANDO OFFVCANVAS!!!!",
           showOffcanvas,
           this.props.name,
           this.offcanvas
         );
-        return;
       }
-      this.setState({ showOffcanvas });
+      setTimeout(() => this.setState({ showOffcanvas }), 50);
     }
   };
 
@@ -171,6 +169,7 @@ export default class OffcanvasContainer extends Component {
    * Destroy the offcanvas instance.
    */
   destroy = () => {
+    console.log('SALIENDO offcanvas, eliminando!!!');
     if (this.offcanvas) {
       this.offcanvas.dispose();
       this.offcanvas = null;
