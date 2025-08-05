@@ -145,23 +145,15 @@ export default class OffcanvasContainer extends Component {
    * @param {boolean} param.open - Whether to show or hide the offcanvas.
    */
   onUpdateOffcanvas = ({ open: showOffcanvas }) => {
-    console.log("VIENE open??????", showOffcanvas, this.ref.current);
     if (showOffcanvas !== undefined) {
-      if (!showOffcanvas) {
-        if (!this.offcanvas) {
-          this.offcanvas = Offcanvas.getInstance(this.ref.current);
-        }
-        console.log(this.offcanvas);
+      if (showOffcanvas) return this.setState({ showOffcanvas });
 
-        this.offcanvas.hide();
-        console.log(
-          "ACTUALIZANDO OFFVCANVAS!!!!",
-          showOffcanvas,
-          this.props.name,
-          this.offcanvas
-        );
+      if (!this.offcanvas) {
+        this.offcanvas = Offcanvas.getInstance(this.ref.current);
       }
-      setTimeout(() => this.setState({ showOffcanvas }), 50);
+      this.offcanvas.hide();
+      setTimeout(() => this.setState({ showOffcanvas }), 350);
+      return;
     }
   };
 
@@ -169,7 +161,6 @@ export default class OffcanvasContainer extends Component {
    * Destroy the offcanvas instance.
    */
   destroy = () => {
-    console.log("SALIENDO offcanvas, eliminando!!!");
     if (this.offcanvas) {
       this.offcanvas.dispose();
       this.offcanvas = null;
@@ -183,13 +174,6 @@ export default class OffcanvasContainer extends Component {
    */
   onOffcanvasRef = (refOriginal) => {
     if (refOriginal) {
-      const { name } = this.props;
-      eventHandler.subscribe(
-        "update." + name,
-        this.onUpdateOffcanvas,
-        this.name
-      );
-
       this.ref.current = refOriginal;
       const ref = refOriginal;
 
