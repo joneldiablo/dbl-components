@@ -18,7 +18,13 @@ const withRouteWrapper = (WrappedComponent, route) => {
 
     // 💥 Nos suscribimos a cambios de ruta para forzar re-render
     useLayoutEffect(() => {
-      const callback = () => {
+      const callback = (nlocation) => {
+        console.log(
+          "cambió la ruta?????",
+          nlocation.pathname,
+          location.pathname
+        );
+
         forceUpdate();
       };
       eventHandler.subscribe("location", callback, "wrapper-" + props.name);
