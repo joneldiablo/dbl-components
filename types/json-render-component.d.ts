@@ -29,10 +29,10 @@ export default class JsonRenderComponent extends Component {
     get childrenIn(): boolean;
     get theView(): any;
     componentDidMount(): void;
+    evalTemplate(): void;
     templateSolved: any;
     componentWillUnmount(): void;
     mutations(sectionName: any, section: any): any;
-    content(): any;
 }
 import Component from "./component";
 import JsonRender from "./json-render";

@@ -45,6 +45,7 @@ export default class JsonRenderContainer extends Container {
     get fixedProps(): any;
     get childrenIn(): any;
     get theView(): any;
+    evalTemplate(): void;
     templateSolved: any;
     mutations(sectionName: any, section: any): any;
 }

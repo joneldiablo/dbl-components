@@ -30,6 +30,8 @@ export default class Component {
         onChange: (e: any) => void;
         onMouseOver: (e: any) => void;
         onMouseOut: (e: any) => void;
+        onMouseEnter: (e: any) => void;
+        onMouseLeave: (e: any) => void;
         onKeyDown: (e: any) => void;
         onLoad: (e: any) => void;
     };

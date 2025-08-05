@@ -1,14 +1,16 @@
-declare function FloatingContainer({ name, floatAround, children, placement, card, alignment, allowedPlacements, classes, styles }: {
+declare function FloatingContainer({ name, floatAround, children, placement, card, offset, alignment, allowedPlacements, fallbackPlacements, classes, style }: {
     name: any;
     floatAround: any;
     children: any;
     placement: any;
-    card: any;
+    card?: boolean | undefined;
+    offset: any;
     alignment: any;
     allowedPlacements: any;
-    classes: any;
-    styles: any;
-}): JSX.Element;
+    fallbackPlacements: any;
+    classes?: string | undefined;
+    style?: {} | undefined;
+}): any;
 declare namespace FloatingContainer {
     let propTypes: {
         floatAround: any;
@@ -23,12 +25,6 @@ declare namespace FloatingContainer {
         name: any;
         style: any;
         tag: any;
-    };
-    let defaultProps: {
-        card: boolean;
-        classes: string;
-        style: {};
-        active: boolean;
     };
 }
 export default FloatingContainer;

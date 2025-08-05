@@ -14,6 +14,7 @@ export default class BrandNavigation extends Navigation {
         itemTag: string;
         itemClasses: string;
         floatingClasses: string;
+        iconClasses: string;
         classes: string;
         style: {};
         active: boolean;
