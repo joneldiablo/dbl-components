@@ -15,9 +15,8 @@ import schema from "./offcanvas.json";
  * @extends Component
  */
 export default class OffcanvasContainer extends Component {
-
   // Static property to define the class name
-  static jsClass = 'OffcanvasContainer';
+  static jsClass = "OffcanvasContainer";
 
   static propTypes = {
     ...Component.propTypes,
@@ -29,28 +28,23 @@ export default class OffcanvasContainer extends Component {
     label: PropTypes.node,
     labelTag: PropTypes.string,
     offcanvas: PropTypes.object,
-    position: PropTypes.oneOf([
-      'start',
-      'end',
-      'top',
-      'bottom'
-    ]),
+    position: PropTypes.oneOf(["start", "end", "top", "bottom"]),
     showClose: PropTypes.bool,
-  }
+  };
 
   // Default properties for the OffcanvasContainer component
   static defaultProps = {
     ...Component.defaultProps,
-    bodyClasses: '',
-    closeClasses: '',
-    footerClasses: '',
-    headerClasses: '',
-    labelClasses: '',
-    labelTag: 'h5',
+    bodyClasses: "",
+    closeClasses: "",
+    footerClasses: "",
+    headerClasses: "",
+    labelClasses: "",
+    labelTag: "h5",
     offcanvas: {},
-    position: 'start', // Possible values: start, end, bottom, top
+    position: "start", // Possible values: start, end, bottom, top
     showClose: true,
-  }
+  };
 
   /**
    * HTML tagName, This variable is used by the parent Class.
@@ -59,7 +53,7 @@ export default class OffcanvasContainer extends Component {
    * @override
    */
   // NOSONAR
-  tag = 'aside';
+  tag = "aside";
 
   /**
    * CSS classes for the offcanvas container, used by the parent Class.
@@ -68,7 +62,7 @@ export default class OffcanvasContainer extends Component {
    * @override
    */
   // NOSONAR
-  classes = 'offcanvas d-flex flex-column';
+  classes = "offcanvas d-flex flex-column";
 
   // Children elements categorized by type
   children = {
@@ -76,7 +70,7 @@ export default class OffcanvasContainer extends Component {
     body: [],
     footer: [],
     content: [],
-  }
+  };
 
   /**
    * Constructor to initialize the component with given properties.
@@ -87,24 +81,18 @@ export default class OffcanvasContainer extends Component {
     this.onOffcanvasRef = this.onOffcanvasRef.bind(this);
 
     // Bootstrap events to manage offcanvas lifecycle
-    this.bsEvents = [
-      'show',
-      'shown',
-      'hide',
-      'hidden',
-      'hidePrevented'
-    ];
+    this.bsEvents = ["show", "shown", "hide", "hidden", "hidePrevented"];
 
     // Initial state
     Object.assign(this.state, {
       showOffcanvas: false,
-      localClasses: 'offcanvas-' + props.position
+      localClasses: "offcanvas-" + props.position,
     });
 
     // Resolve schema references and initialize JsonRender
     this.schema = resolveRefs(schema.view, {
       definitions: schema.definitions,
-      props
+      props,
     });
     this.jsonRender = new JsonRender(props, this.mutations.bind(this));
   }
@@ -119,25 +107,27 @@ export default class OffcanvasContainer extends Component {
     return {
       tabIndex: -1,
       id: this.name,
-      'aria-labelledby': this.props.name + '-titleOffcanvas',
+      "aria-labelledby": this.props.name + "-titleOffcanvas",
       ref: this.onOffcanvasRef,
-      ...props
+      ...props,
     };
   }
 
   // Lifecycle method: componentDidMount
   componentDidMount() {
     const { name } = this.props;
-    eventHandler.subscribe('update.' + name, this.onUpdateOffcanvas, this.name);
-    this.deleteClasses('offcanvas-start offcanvas-end offcanvas-top offcanvas-bottom');
-    this.addClasses('offcanvas-' + this.props.position);
+    eventHandler.subscribe("update." + name, this.onUpdateOffcanvas, this.name);
+    this.deleteClasses(
+      "offcanvas-start offcanvas-end offcanvas-top offcanvas-bottom"
+    );
+    this.addClasses("offcanvas-" + this.props.position);
   }
 
   // Lifecycle method: componentWillUnmount
   componentWillUnmount() {
     const { name } = this.props;
     this.destroy();
-    eventHandler.unsubscribe('update.' + name, this.name);
+    eventHandler.unsubscribe("update." + name, this.name);
   }
 
   /**
@@ -146,8 +136,8 @@ export default class OffcanvasContainer extends Component {
    */
   onEvent = (e) => {
     const { name } = this.props;
-    eventHandler.dispatch(name, { [name]: e.type.split('.')[0] });
-  }
+    eventHandler.dispatch(name, { [name]: e.type.split(".")[0] });
+  };
 
   /**
    * Event handler for updating the offcanvas visibility.
@@ -155,11 +145,12 @@ export default class OffcanvasContainer extends Component {
    * @param {boolean} param.open - Whether to show or hide the offcanvas.
    */
   onUpdateOffcanvas = ({ open: showOffcanvas }) => {
+    console.log("ACTUALIZANDO OFFVCANVAS!!!!", showOffcanvas, this.offcanvas);
     if (!showOffcanvas) {
       return this.offcanvas?.hide();
     }
     this.setState({ showOffcanvas });
-  }
+  };
 
   /**
    * Destroy the offcanvas instance.
@@ -170,7 +161,7 @@ export default class OffcanvasContainer extends Component {
       this.offcanvas = null;
     }
     this.setState({ showOffcanvas: false });
-  }
+  };
 
   /**
    * Callback to initialize the offcanvas reference.
@@ -182,13 +173,13 @@ export default class OffcanvasContainer extends Component {
       const ref = refOriginal;
 
       this.offcanvas = new Offcanvas(ref, this.props.offcanvas);
-      this.bsEvents.forEach(event => {
-        ref.addEventListener(event + '.bs.offcanvas', this.onEvent, false);
+      this.bsEvents.forEach((event) => {
+        ref.addEventListener(event + ".bs.offcanvas", this.onEvent, false);
       });
-      ref.addEventListener('hidden.bs.offcanvas', this.destroy, false);
+      ref.addEventListener("hidden.bs.offcanvas", this.destroy, false);
       this.offcanvas.show();
     }
-  }
+  };
 
   /**
    * Get the header content.
@@ -230,19 +221,23 @@ export default class OffcanvasContainer extends Component {
    * @returns {JSX.Element} - The rendered content.
    */
   content(children = this.props.children) {
-    this.children = (Array.isArray(children) ? children : [children]).reduce((reducer, child) => {
-      if (!child) return reducer;
-      // Categorize content based on type: header, body, footer, or general content
-      if (['string', 'number', 'boolean'].includes(typeof child)) {
-        reducer.body.push(child);
+    this.children = (Array.isArray(children) ? children : [children]).reduce(
+      (reducer, child) => {
+        if (!child) return reducer;
+        // Categorize content based on type: header, body, footer, or general content
+        if (["string", "number", "boolean"].includes(typeof child)) {
+          reducer.body.push(child);
+          return reducer;
+        }
+        const childCondition = !child.props?.style?.["--component-name"];
+        const childConf = (childCondition ? child : child.props.children).props;
+        const container =
+          (childConf && reducer[childConf.container]) || reducer.content;
+        container.push(child);
         return reducer;
-      }
-      const childCondition = !child.props?.style?.['--component-name'];
-      const childConf = (childCondition ? child : child.props.children).props;
-      const container = (childConf && reducer[childConf.container]) || reducer.content;
-      container.push(child);
-      return reducer;
-    }, { header: [], body: [], footer: [], content: [] });
+      },
+      { header: [], body: [], footer: [], content: [] }
+    );
     return this.jsonRender.buildContent(this.schema);
   }
 
@@ -251,7 +246,9 @@ export default class OffcanvasContainer extends Component {
    * @returns {JSX.Element} - The rendered offcanvas container.
    */
   render() {
-    return this.state.showOffcanvas ? super.render() : React.createElement(React.Fragment);
+    return this.state.showOffcanvas
+      ? super.render()
+      : React.createElement(React.Fragment);
   }
 
   /**
@@ -261,54 +258,55 @@ export default class OffcanvasContainer extends Component {
    * @returns {(boolean|object)} - Returns an object with mutation properties or false if no mutation is applied.
    */
   mutations(name, conf) {
-    const rn = name.replace(this.props.name + '-', '');
+    const rn = name.replace(this.props.name + "-", "");
     switch (rn) {
-      case 'headerOffcanvas': {
+      case "headerOffcanvas": {
         return {
-          active: this.props.showClose || !!this.props.label || !!this.headerContent,
-          classes: [conf.classes, this.props.headerClasses]
+          active:
+            this.props.showClose || !!this.props.label || !!this.headerContent,
+          classes: [conf.classes, this.props.headerClasses],
         };
       }
-      case 'titleOffcanvas': {
+      case "titleOffcanvas": {
         return {
           active: !!this.props.label,
           tag: this.props.labelTag,
           classes: [conf.classes, this.props.labelClasses],
-          content: this.props.label
+          content: this.props.label,
         };
       }
-      case 'closeOffcanvas': {
+      case "closeOffcanvas": {
         return {
           active: this.props.showClose,
-          classes: [conf.classes, this.props.closeClasses]
+          classes: [conf.classes, this.props.closeClasses],
         };
       }
-      case 'contentHO': {
+      case "contentHO": {
         return {
           active: !!this.headerContent,
           tag: React.Fragment,
-          content: this.headerContent
+          content: this.headerContent,
         };
       }
-      case 'bodyOffcanvas': {
+      case "bodyOffcanvas": {
         return {
           active: !!this.bodyContent,
           classes: [conf.classes, this.props.bodyClasses],
-          content: this.bodyContent
+          content: this.bodyContent,
         };
       }
-      case 'footerOffcanvas': {
+      case "footerOffcanvas": {
         return {
           active: !!this.footerContent,
           classes: [conf.classes, this.props.footerClasses],
-          content: this.footerContent
+          content: this.footerContent,
         };
       }
-      case 'contentOffcanvas': {
+      case "contentOffcanvas": {
         return {
           active: !!this.contentOffcanvas,
           tag: React.Fragment,
-          content: this.contentOffcanvas
+          content: this.contentOffcanvas,
         };
       }
       default:
@@ -316,5 +314,4 @@ export default class OffcanvasContainer extends Component {
     }
     return false;
   }
-
 }
