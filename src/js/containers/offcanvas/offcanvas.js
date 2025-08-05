@@ -145,7 +145,12 @@ export default class OffcanvasContainer extends Component {
    * @param {boolean} param.open - Whether to show or hide the offcanvas.
    */
   onUpdateOffcanvas = ({ open: showOffcanvas }) => {
-    console.log("ACTUALIZANDO OFFVCANVAS!!!!", showOffcanvas, this.offcanvas);
+    console.log(
+      "ACTUALIZANDO OFFVCANVAS!!!!",
+      showOffcanvas,
+      this.props.name,
+      this.offcanvas
+    );
     if (!showOffcanvas) {
       return this.offcanvas?.hide();
     }
