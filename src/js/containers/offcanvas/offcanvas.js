@@ -152,6 +152,10 @@ export default class OffcanvasContainer extends Component {
       this.offcanvas
     );
     if (!showOffcanvas) {
+      if (!this.offcanvas && this.ref.current) {
+        this.offcanvas = Offcanvas.getInstance(this.ref.current);
+      }
+      console.log(this.offcanvas);
       return this.offcanvas?.hide();
     }
     this.setState({ showOffcanvas });
