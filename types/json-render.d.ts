@@ -23,9 +23,9 @@ export default class JsonRender {
      * Construye una sección basada en la información proporcionada.
      * @param {Object} sectionRaw - Los datos de la sección.
      * @param {number} i - El índice de la sección.
-     * @returns {React.Component|boolean} - El componente de la sección construido.
+     * @returns {React.ElementType} - El componente construido.
      */
-    sections(sr: any, i: number): React.Component | boolean;
+    sections(sr: any, i: number): React.ElementType;
     /**
      * Construye el contenido basado en la estructura de datos proporcionada.
      * @param {any} content - El contenido a construir.

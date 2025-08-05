@@ -17,24 +17,22 @@ export default class SchemaController {
     routesHash: string;
     buildRoutes(): void;
     componentDidMount(): void;
-    componentDidUpdate(prevProps: any, prevState: any): void;
+    componentDidUpdate(prevProps: any): void;
     /** views
      * Método recursivo que procesa el schema de rutas
      * usar en el mapeo de un arreglo ej. routes.map(this.views)
      * permite que el schema tenga un arreglo de paths
      **/
-    views: (route: any, i: any) => JSX.Element;
-    render(): JSX.Element;
+    views: (route: any, i: any, depth?: number) => any;
+    render(): any;
 }
-export function BrowserRouterSchema(props: any): JSX.Element;
+export function BrowserRouterSchema(incomingProps: any): any;
 export namespace BrowserRouterSchema {
     export { schemaPropTypes as propTypes };
-    export { schemaDefaultProps as defaultProps };
 }
-export function HashRouterSchema(props: any): JSX.Element;
+export function HashRouterSchema(incomingProps: any): any;
 export namespace HashRouterSchema {
     export { schemaPropTypes as propTypes };
-    export { schemaDefaultProps as defaultProps };
 }
 declare namespace schemaPropTypes {
     export let test: any;
@@ -43,12 +41,6 @@ declare namespace schemaPropTypes {
     export { routes };
     export let defaultController: any;
     export let forceRebuild: any;
-}
-declare namespace schemaDefaultProps {
-    let routes_1: never[];
-    export { routes_1 as routes };
-    let defaultController_1: typeof import("..").Controller;
-    export { defaultController_1 as defaultController };
 }
 declare namespace routePropTypes {
     export let path: any;
@@ -59,7 +51,7 @@ declare namespace routePropTypes {
     export let strict: any;
     export let location: any;
     export let sensitive: any;
-    let routes_2: any;
-    export { routes_2 as routes };
+    let routes_1: any;
+    export { routes_1 as routes };
 }
 export {};

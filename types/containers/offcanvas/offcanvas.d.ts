@@ -104,11 +104,6 @@ export default class OffcanvasContainer extends Component {
      */
     override content(children?: any[] | object): JSX.Element;
     /**
-     * Render the offcanvas container.
-     * @returns {JSX.Element} - The rendered offcanvas container.
-     */
-    render(): JSX.Element;
-    /**
      * Function to apply specific mutations based on the name and configuration.
      * @param {string} name - The name to determine which mutation to apply.
      * @param {object} conf - The configuration object for the mutation.

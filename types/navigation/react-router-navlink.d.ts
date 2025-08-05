@@ -7,6 +7,7 @@ export default class NavLink extends Component {
         to: any;
         replace: any;
         ref: any;
+        end: any;
         component: any;
     };
 }

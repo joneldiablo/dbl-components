@@ -56,7 +56,7 @@ declare const COMPONENTS: {
     Component: typeof Component;
     Form: typeof Form;
     Icons: typeof Icons;
-    SvgImports: (props: any) => JSX.Element;
+    SvgImports: (props: any) => any;
     Image: typeof Image;
     Link: typeof Link;
     MenuItem: typeof MenuItem;

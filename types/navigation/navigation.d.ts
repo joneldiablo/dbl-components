@@ -12,12 +12,14 @@ export default class Navigation extends Component {
         itemTag: string;
         itemClasses: string;
         floatingClasses: string;
+        iconClasses: string;
         classes: string;
         style: {};
         active: boolean;
     };
-    events: any[];
+    events: (string | ((location: any) => void))[][];
     activeElements: {};
+    flatItems: {};
     collapses: import("react").RefObject<any>;
     itemsRefs: import("react").RefObject<any>;
     jsonRender: JsonRender;
@@ -36,9 +38,8 @@ export default class Navigation extends Component {
     onToggleFloating(e: any, item: any): void;
     setActive(name: any, isActive: any): boolean;
     hasAnActive(menuItem: any): any;
-    onNavigate(e: any, activeItem: any): void;
+    onChangeLocation(location: any): void;
     activeItem: any;
-    flatItems: any[] | undefined;
 }
 import Action from "../actions/action";
 import Component from "../component";
