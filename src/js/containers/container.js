@@ -9,12 +9,11 @@ import Icons from "../media/icons";
 
 const typeClasses = PropTypes.oneOfType([
   PropTypes.string,
-  PropTypes.arrayOf(PropTypes.string)
+  PropTypes.arrayOf(PropTypes.string),
 ]);
 
 export default class Container extends Component {
-
-  static jsClass = 'Container';
+  static jsClass = "Container";
   static propTypes = {
     ...Component.propTypes,
     fluid: PropTypes.bool,
@@ -25,8 +24,8 @@ export default class Container extends Component {
     mdClasses: typeClasses,
     lgClasses: typeClasses,
     xlClasses: typeClasses,
-    xxlClasses: typeClasses
-  }
+    xxlClasses: typeClasses,
+  };
   static defaultProps = {
     ...Component.defaultProps,
     fluid: true,
@@ -37,13 +36,16 @@ export default class Container extends Component {
       md: 768,
       lg: 992,
       xl: 1200,
-      xxl: 1400
-    }
-  }
+      xxl: 1400,
+    },
+  };
 
   breakpoint = false;
   orientation = false;
-  waitBreakpoint = React.createElement(Icons, { icon: "spinner", classes: "spinner" });
+  waitBreakpoint = React.createElement(Icons, {
+    icon: "spinner",
+    classes: "spinner",
+  });
 
   constructor(props) {
     super(props);
@@ -53,20 +55,28 @@ export default class Container extends Component {
   get componentProps() {
     return {
       id: this.props.name,
-      ...this.props._props
+      ...this.props._props,
     };
   }
 
   updateSize() {
     const { fluid, fullWidth } = this.props;
-    const containerType = (!fullWidth ? (fluid ? 'container-fluid' : 'container') : '');
-    const localClasses = new Set(this.state.localClasses.split(' '));
-    Object.keys(this.props.breakpoints).forEach(br => localClasses.delete(br));
-    [containerType, this.breakpoint, 'animate'].forEach(c => localClasses.add(c));
-    this.state.localClasses = Array.from(localClasses).flat().join(' ');
-    if (!this.addClasses(this.props[this.breakpoint + 'Classes'])) {
+    const containerType = !fullWidth
+      ? fluid
+        ? "container-fluid"
+        : "container"
+      : "";
+    const localClasses = new Set(this.state.localClasses.split(" "));
+    Object.keys(this.props.breakpoints).forEach((br) =>
+      localClasses.delete(br)
+    );
+    [containerType, this.breakpoint, "animate"].forEach((c) =>
+      localClasses.add(c)
+    );
+    this.state.localClasses = Array.from(localClasses).flat().join(" ");
+    if (!this.addClasses(this.props[this.breakpoint + "Classes"])) {
       this.setState({
-        localClasses: this.state.localClasses
+        localClasses: this.state.localClasses,
       });
     }
   }
@@ -76,39 +86,39 @@ export default class Container extends Component {
       if (!this.ref.current) return;
 
       let width, height;
-      if (firstTime === true) ({ offsetWidth: width, offsetHeight: height } = this.ref.current);
+      if (firstTime === true)
+        ({ offsetWidth: width, offsetHeight: height } = this.ref.current);
       else ({ width, height } = firstTime);
 
       // TODO: no se toma en cuenta el ordenamiento de los breakpoints, ordenarlos
       //       y buscar la manera de empatar automagicamente con sass $container-max-widths
       this.breakpoint = Object.keys(this.props.breakpoints)
-        .filter(br => width >= this.props.breakpoints[br])
+        .filter((br) => width >= this.props.breakpoints[br])
         .pop();
-      this.orientation = width >= height ? 'landscape' : 'portrait';
+      this.orientation = width >= height ? "landscape" : "portrait";
       this.width = width;
       this.height = height;
       const resp = {
-        width, height,
+        width,
+        height,
         breakpoint: this.breakpoint,
-        orientation: this.orientation
+        orientation: this.orientation,
       };
 
-      if (typeof this.props.onResize === 'function') {
+      if (typeof this.props.onResize === "function") {
         this.props.onResize(resp);
       }
-      eventHandler.dispatch('resize.' + this.props.name, resp);
+      eventHandler.dispatch("resize." + this.props.name, resp);
       this.updateSize();
-
-    }
+    };
 
     if (firstTime === true) {
       resizingFunc();
-      eventHandler.dispatch('ready.' + this.props.name);
+      eventHandler.dispatch("ready." + this.props.name);
     } else {
       clearTimeout(this.onResizeTimeout);
       this.onResizeTimeout = setTimeout(resizingFunc, 200);
     }
-
   }
 
   componentDidMount() {
@@ -118,19 +128,20 @@ export default class Container extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.fluid != this.props.fluid || prevProps.fullWidth != this.props.fullWidth) {
+    if (
+      prevProps.fluid != this.props.fluid ||
+      prevProps.fullWidth != this.props.fullWidth
+    ) {
       this.updateSize();
     }
   }
 
   componentWillUnmount() {
     clearTimeout(this.onResizeTimeout);
-    if (this.resizeSensor)
-      this.resizeSensor.detach();
+    if (this.resizeSensor) this.resizeSensor.detach();
   }
 
   content(children = this.props.children) {
     return !!this.breakpoint ? children : this.waitBreakpoint;
   }
-
 }

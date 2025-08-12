@@ -7,12 +7,21 @@ import { hash, t, formatValue, deepMerge } from "dbl-utils";
 import Icons from "./media/icons";
 import COMPONENTS from "./components";
 
-const excludeSectionWrapper = ['NavLink', 'Image', 'Link', 'Icons', 'SvgImports', 'Action',
-  'DropdownButtonContainer', 'ModalButtonContainer', 'DropdownItem'];
+const excludeSectionWrapper = [
+  "NavLink",
+  "Image",
+  "Link",
+  "Icons",
+  "SvgImports",
+  "Action",
+  "DropdownButtonContainer",
+  "ModalButtonContainer",
+  "DropdownItem",
+];
 
 export function addExclusions(exclusion) {
   excludeSectionWrapper.push(...[exclusion].flat());
-};
+}
 
 /**
  * Clase utilizada para generar contenido dinámico en React a partir de una estructura de datos JSON.
@@ -20,28 +29,28 @@ export function addExclusions(exclusion) {
  * @class JsonRender
  */
 export default class JsonRender {
-
   /**
    * Opciones para el análisis del contenido HTML.
    * @type {Object}
    */
   parseOpts = {
-    replace: domNode => {
+    replace: (domNode) => {
       let C7tReplace;
       switch (domNode.name) {
-        case 'navlink':
+        case "navlink":
           C7tReplace = NavLink;
           break;
-        case 'a':
+        case "a":
           if (!domNode.attribs.to && domNode.attribs.href) return;
           C7tReplace = Link;
           break;
-        case 'icons':
+        case "icons":
           C7tReplace = Icons;
-          domNode.attribs.inline = domNode.attribs.inline === 'false' ? false : true;
+          domNode.attribs.inline =
+            domNode.attribs.inline === "false" ? false : true;
           break;
-        case 'textarea':
-        case 'input':
+        case "textarea":
+        case "input":
           domNode.defaultValue = domNode.value;
           domNode.defaultChecked = domNode.checked;
           delete domNode.value;
@@ -49,17 +58,18 @@ export default class JsonRender {
         default:
           return;
       }
-      Object.keys(domNode).forEach(k => {
+      Object.keys(domNode).forEach((k) => {
         if (k.match(/^on[A-Z]/)) {
           domNode[k] = this.props[k];
         }
       });
-      return React.createElement(C7tReplace,
+      return React.createElement(
+        C7tReplace,
         { ...attributesToProps(domNode.attribs) },
         domToReact(domNode.children, this.parseOpts)
       );
-    }
-  }
+    },
+  };
 
   actualSections = [];
 
@@ -83,32 +93,40 @@ export default class JsonRender {
    */
   buildContent(content, index) {
     if (!content) return false;
-    if (typeof content !== 'object') {
+    if (typeof content !== "object") {
       const translate = t(content, this.props.context);
       const section = this.actualSections[this.actualSections.length - 1];
-      if (typeof translate === 'number' || typeof translate === 'boolean') {
+      if (typeof translate === "number" || typeof translate === "boolean") {
         return formatValue(translate, section);
-      } else if (typeof translate === 'string') {
+      } else if (typeof translate === "string") {
         let parsed = parseReact(translate, this.parseOpts);
-        if (typeof parsed === 'string') parsed = formatValue(parsed, section);
-        return React.createElement(React.Fragment,
-          { key: hash(translate) },
+        if (typeof parsed === "string") parsed = formatValue(parsed, section);
+        return React.createElement(
+          React.Fragment,
+          {
+            key: [index || "0", section?.name, hash(translate)]
+              .filter(Boolean)
+              .join("-"),
+          },
           parsed
         );
       }
     } else if (React.isValidElement(content)) {
       try {
         content.key = content.key || content.props.name || index;
-      } catch (error) {
-      }
+      } catch (error) {}
       return content;
     } else if (Array.isArray(content)) return content.map(this.buildContent);
-    if (Array.isArray(content.name)) content.name = content.name.join('-');
-    if (typeof content === 'object' && typeof content.name !== 'string')
-      return Object.keys(content)
-        .map((name, i) => this.buildContent(typeof content[name] !== 'object'
-          ? content[name] : { name, ...content[name] }, i)
-        );
+    if (Array.isArray(content.name)) content.name = content.name.join("-");
+    if (typeof content === "object" && typeof content.name !== "string")
+      return Object.keys(content).map((name, i) =>
+        this.buildContent(
+          typeof content[name] !== "object"
+            ? content[name]
+            : { name, ...content[name] },
+          i
+        )
+      );
     this.actualSections.push(content);
     const builded = this.sections(content, index);
     this.actualSections.pop();
@@ -122,23 +140,44 @@ export default class JsonRender {
    * @returns {React.ElementType} - El componente construido.
    */
   sections(sr, i) {
-    const m = (typeof this.mutations === 'function' && this.mutations(sr.name, sr)) || {};
+    const m =
+      (typeof this.mutations === "function" && this.mutations(sr.name, sr)) ||
+      {};
     if (m.style && sr.style) m.style = deepMerge({}, sr.style, m.style);
     if (m._props && sr._props) m._props = deepMerge({}, sr._props, m._props);
     const sectionRaw = Object.assign({}, sr, m || {});
     if (sectionRaw.active === false) return false;
 
-    const { component: componentName, content, placeholder,
-      label, message, errorMessage, managerName, wrapperClasses, wrapperStyle = {}, ...section } = sectionRaw;
-    const { navigate, location, match, childrenIn = this.childrenIn, children } = this.props;
-    const Component = COMPONENTS[componentName] || (COMPONENTS.Component);
-    const extraBuilded = [Component.slots].flat().filter(Boolean).reduce((eb, key) => {
-      const tmp = section[key];
-      section[key] = null;
-      delete section[key];
-      eb[key] = this.buildContent(tmp);
-      return eb;
-    }, {});
+    const {
+      component: componentName,
+      content,
+      placeholder,
+      label,
+      message,
+      errorMessage,
+      managerName,
+      wrapperClasses,
+      wrapperStyle = {},
+      ...section
+    } = sectionRaw;
+    const {
+      navigate,
+      location,
+      match,
+      childrenIn = this.childrenIn,
+      children,
+    } = this.props;
+    const Component = COMPONENTS[componentName] || COMPONENTS.Component;
+    const extraBuilded = [Component.slots]
+      .flat()
+      .filter(Boolean)
+      .reduce((eb, key) => {
+        const tmp = section[key];
+        section[key] = null;
+        delete section[key];
+        eb[key] = this.buildContent(tmp);
+        return eb;
+      }, {});
     const componentProps = {
       ...section,
       managerName: managerName || this.props.name,
@@ -149,16 +188,17 @@ export default class JsonRender {
       ...extraBuilded,
       location,
       match,
-      navigate
-    }
+      navigate,
+    };
 
     if (Component.dontBuildContent) componentProps.content = content;
-    const childrenHere = (
-      (Array.isArray(childrenIn) ? childrenIn.join('-') : childrenIn)
-      === (Array.isArray(section.name) ? section.name.join('-') : section.name)
-    );
+    const childrenHere =
+      (Array.isArray(childrenIn) ? childrenIn.join("-") : childrenIn) ===
+      (Array.isArray(section.name) ? section.name.join("-") : section.name);
     if (!Component.dontBuildContent && content && childrenHere) {
-      componentProps.children = React.createElement(React.Fragment, {},
+      componentProps.children = React.createElement(
+        React.Fragment,
+        {},
         this.buildContent(content),
         children
       );
@@ -168,35 +208,40 @@ export default class JsonRender {
       componentProps.children = children;
     }
 
-    const cnSection = [componentProps.name + '-section'];
-    if (this.props.test) cnSection.push('test-section-wrapper');
+    const cnSection = [componentProps.name + "-section"];
+    if (this.props.test) cnSection.push("test-section-wrapper");
     if (this.props.wrapperClasses) cnSection.push(this.props.wrapperClasses);
     if (wrapperClasses) cnSection.push(wrapperClasses);
 
     const exclusionSec = excludeSectionWrapper.includes(componentName);
 
-    const Wrapper = (componentProps.wrapper === false || Component.wrapper === false)
-      ? false : componentProps.wrapper || Component.wrapper || 'section';
+    const Wrapper =
+      componentProps.wrapper === false || Component.wrapper === false
+        ? false
+        : componentProps.wrapper || Component.wrapper || "section";
 
     if (!Wrapper || exclusionSec || componentProps.tag) {
       if (this.props.test) {
         if (!componentProps.style) componentProps.style = {};
-        componentProps.style.border = '1px solid yellow';
+        componentProps.style.border = "1px solid yellow";
       }
-      return React.createElement(Component, { key: componentProps.name || i, ...componentProps })
+      return React.createElement(Component, {
+        key: componentProps.name || i,
+        ...componentProps,
+      });
     }
 
-    return (React.createElement(Wrapper,
+    return React.createElement(
+      Wrapper,
       {
         key: componentProps.name || i,
-        className: cnSection.flat().join(' '),
+        className: cnSection.flat().join(" "),
         style: {
           "--component-name": `"${componentProps.name}"`,
-          ...wrapperStyle
-        }
+          ...wrapperStyle,
+        },
       },
       React.createElement(Component, { ...componentProps })
-    ));
+    );
   }
-
 }
