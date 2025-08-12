@@ -29,6 +29,7 @@ const GLOBAL_STATE = {};
 */
 export class AppController {
 
+  eventHandler = eventHandler;
   fetchList = {};
   globalDefinitions = [];
   routes = {};

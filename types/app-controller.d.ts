@@ -9,6 +9,7 @@
 */
 export class AppController {
     constructor(props?: boolean);
+    eventHandler: import("dbl-utils").EventHandler;
     fetchList: {};
     globalDefinitions: any[];
     routes: {};
