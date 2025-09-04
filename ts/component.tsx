@@ -53,7 +53,9 @@ export default class Component<
   constructor(props: P) {
     super(props);
     this.ref = createRef<HTMLElement>();
-    this.name = `${props.name}-${(this.constructor as typeof Component).jsClass}`;
+    this.name = `${props.name}-${
+      (this.constructor as typeof Component).jsClass
+    }`;
     this.onEvent = this.onEvent.bind(this);
     this.eventHandlers = {
       onClick: this.onEvent,
@@ -68,9 +70,11 @@ export default class Component<
   }
 
   private setClasses(classes?: string | string[]): [Set<string>, Set<string>] {
-    const local = this.state.localClasses && (Array.isArray(this.state.localClasses)
-      ? this.state.localClasses
-      : this.state.localClasses.split(" "));
+    const local =
+      this.state.localClasses &&
+      (Array.isArray(this.state.localClasses)
+        ? this.state.localClasses
+        : this.state.localClasses.split(" "));
     const setLocalClasses = new Set(local);
     if (!classes) return [setLocalClasses, new Set()];
     const setClasses = new Set(
@@ -148,21 +152,24 @@ export default class Component<
     ];
     if (classes) {
       if (typeof classes === "string") cn.push(classes);
-      else if (Array.isArray(classes)) cn.push(classes.flat().filter(Boolean).join(" "));
+      else if (Array.isArray(classes))
+        cn.push(classes.flat().filter(Boolean).join(" "));
       else if ((classes as any)["."]) cn.push((classes as any)["."]);
     }
     const s = Object.assign({}, this.style, localStyles, style);
-    const props = Tag === React.Fragment ? {} : {
-      className: cn.flat().filter(Boolean).join(" "),
-      style: s,
-      ref: this.ref,
-      ...this.eventHandlers,
-      ...this.componentProps,
-    };
+    const props =
+      Tag === React.Fragment
+        ? {}
+        : {
+            className: cn.flat().filter(Boolean).join(" "),
+            style: s,
+            ref: this.ref,
+            ...this.eventHandlers,
+            ...this.componentProps,
+          };
 
     return active
       ? React.createElement(Tag as any, props, content)
       : React.createElement(React.Fragment);
   }
 }
-
