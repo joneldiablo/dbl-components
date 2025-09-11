@@ -21,8 +21,9 @@ Estructura JSON básica.
   * name:
 
 
-TODO: 
+TODO:
 
+* Order container breakpoints and align with Sass `$container-max-widths`.
 * Crear componente panel, que tenga swipe events, que haga el switch de ocultar textos y sólo mostrar íconos a mostrar u ocultar completamente el panel en mobile, además en mobile se muestra por encima de todo, agregar animaciones y dirección.
   * Modificar componente menú para que los elementos funcionen igual que el resto de componentes el toggle se le debe pasar el nombre del evento que ejecuta el toggle text para colapsar el texto dejando únicamente el ícono
 * Crear nuevo componente tabla a la cual se le pasen las columnas como contenido
