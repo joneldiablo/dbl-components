@@ -3,6 +3,7 @@ import Component from "./component";
 import Icons from "./media/icons";
 import Action from "./actions/action";
 import Container from "./containers/container";
+<<<<<<< HEAD
 import FloatingContainer from "./containers/floating-container";
 import Image from "./media/image";
 import Video from "./media/video";
@@ -31,6 +32,10 @@ import Group from "./forms/groups/group";
 import CardGroup from "./forms/groups/card-group";
 import GridGroup from "./forms/groups/grid-group";
 import SelectLanguage from "./i18n/select-language";
+=======
+import Image from "./media/image";
+import Video from "./media/video";
+>>>>>>> 7dc4682 (feat: add typed image and video components)
 
 const COMPONENTS: Record<string, any> = {
   ...jsComponents,
@@ -38,6 +43,7 @@ const COMPONENTS: Record<string, any> = {
   Icons,
   Action,
   Container,
+<<<<<<< HEAD
   FloatingContainer,
   Image,
   Video,
@@ -68,6 +74,10 @@ const COMPONENTS: Record<string, any> = {
   CardGroup,
   GridGroup,
   SelectLanguage,
+=======
+  Image,
+  Video,
+>>>>>>> 7dc4682 (feat: add typed image and video components)
 };
 
 export const addComponents = (newComponents: Record<string, unknown>): void => {
