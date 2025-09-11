@@ -122,3 +122,5 @@ export {
   src,
 } from "./i18n";
 export type { SelectLanguageProps } from "./i18n/select-language";
+export { default as Action } from "./actions/action";
+export type { ActionProps } from "./actions/action";
