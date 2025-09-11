@@ -3,6 +3,8 @@ import Component from "./component";
 import Icons from "./media/icons";
 import Action from "./actions/action";
 import Container from "./containers/container";
+import Image from "./media/image";
+import Video from "./media/video";
 
 const COMPONENTS: Record<string, any> = {
   ...jsComponents,
@@ -10,6 +12,8 @@ const COMPONENTS: Record<string, any> = {
   Icons,
   Action,
   Container,
+  Image,
+  Video,
 };
 
 export const addComponents = (newComponents: Record<string, unknown>): void => {
