@@ -195,6 +195,9 @@ declare module 'dbl-components/lib/js/tables/table' {
   }
 }
 
+declare module 'dbl-utils/extract-react-node-text';
+declare module 'url-join';
+
 declare module "css-element-queries/src/ResizeSensor" {
   export default class ResizeSensor {
     constructor(

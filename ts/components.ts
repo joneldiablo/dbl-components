@@ -13,6 +13,8 @@ import NavLink from "./navigation/react-router-navlink";
 import Route from "./react-router-schema/route";
 import TabsContainer from "./containers/tabs-container";
 import MenuItem from "./navigation/menu-item/menu-item";
+import Navbar from "./navigation/navbar";
+import ServiceListNavigation from "./navigation/service-list-navigation";
 
 const COMPONENTS: Record<string, any> = {
   ...jsComponents,
@@ -31,6 +33,8 @@ const COMPONENTS: Record<string, any> = {
   Route,
   TabsContainer,
   MenuItem,
+  Navbar,
+  ServiceListNavigation,
 };
 
 export const addComponents = (newComponents: Record<string, unknown>): void => {

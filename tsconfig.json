@@ -18,7 +18,8 @@
   "include": [
     "src/js/**/*",
     "src/app-icons-v1.0/**/*.json",
-    "ts/**/*"
+    "ts/**/*",
+    "types-fix.d.ts"
   ],
   "exclude": [
     "node_modules",
