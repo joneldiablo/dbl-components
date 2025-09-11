@@ -11,3 +11,6 @@ export {
   searchIcon,
   setIconSet,
 } from "./media/icons";
+
+export { default as Container } from "./containers/container";
+export { default as containers, addContainers } from "./containers";
