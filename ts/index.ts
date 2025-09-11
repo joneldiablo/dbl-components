@@ -50,6 +50,17 @@ export { default as NavLink } from "./navigation/react-router-navlink";
 export type { NavLinkProps } from "./navigation/react-router-navlink";
 export { default as Route } from "./react-router-schema/route";
 export type { RouteProps } from "./react-router-schema/route";
+export {
+  default as SchemaController,
+  BrowserRouterSchema,
+  HashRouterSchema,
+} from "./react-router-schema/react-router-schema";
+export type {
+  SchemaProps,
+  RouteSchema,
+} from "./react-router-schema/react-router-schema";
+export { default as withRouteWrapper } from "./react-router-schema/with-route-wrapper";
+export type { RouteWrapperData } from "./react-router-schema/with-route-wrapper";
 
 export { default as Controller } from "./controller";
 export { default as controllers, addControllers } from "./controllers";
