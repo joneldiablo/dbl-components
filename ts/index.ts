@@ -14,3 +14,5 @@ export {
 
 export { default as Container } from "./containers/container";
 export { default as containers, addContainers } from "./containers";
+export { default as Action } from "./actions/action";
+export type { ActionProps } from "./actions/action";
