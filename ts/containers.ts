@@ -5,6 +5,7 @@ import JsonRenderContainer from "./containers/json-render-container";
 import FlexContainer from "./containers/flex-container";
 import GridContainer from "./containers/grid-container";
 import ListContainer from "./containers/list-container";
+import TabsContainer from "./containers/tabs-container";
 
 const CONTAINERS: Record<string, any> = {
   ...jsContainers,
@@ -15,6 +16,7 @@ const CONTAINERS: Record<string, any> = {
   FlexContainer,
   GridContainer,
   ListContainer,
+  TabsContainer,
 };
 
 export const addContainers = (newContainers: Record<string, unknown>): void => {

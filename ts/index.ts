@@ -24,6 +24,8 @@ export { default as GridContainer } from "./containers/grid-container";
 export type { GridContainerProps } from "./containers/grid-container";
 export { default as ListContainer } from "./containers/list-container";
 export type { ListContainerProps } from "./containers/list-container";
+export { default as TabsContainer } from "./containers/tabs-container";
+export type { TabsContainerProps } from "./containers/tabs-container";
 export { default as Action } from "./actions/action";
 export type { ActionProps } from "./actions/action";
 export { default as Image } from "./media/image";

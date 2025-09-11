@@ -11,6 +11,7 @@ import YoutubeVideoComponent from "./media/youtube-video";
 import Link from "./navigation/react-router-link";
 import NavLink from "./navigation/react-router-navlink";
 import Route from "./react-router-schema/route";
+import TabsContainer from "./containers/tabs-container";
 
 const COMPONENTS: Record<string, any> = {
   ...jsComponents,
@@ -27,6 +28,7 @@ const COMPONENTS: Record<string, any> = {
   Link,
   NavLink,
   Route,
+  TabsContainer,
 };
 
 export const addComponents = (newComponents: Record<string, unknown>): void => {
