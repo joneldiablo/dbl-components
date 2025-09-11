@@ -1,5 +1,6 @@
 # Reconstrucción total
 
+* Sort container breakpoints and match them with Sass `$container-max-widths`.
 * quitar react!!!!
 * las clases(css) deberán poder ser un arreglo o una string, en el Component deberá cargarse como un Set
 * las clases(css) igual pudieran ser un objeto para poder definir clases de diferentes sub nodos no accesibles

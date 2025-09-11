@@ -194,3 +194,13 @@ declare module 'dbl-components/lib/js/tables/table' {
     headerCustom: any;
   }
 }
+
+declare module "css-element-queries/src/ResizeSensor" {
+  export default class ResizeSensor {
+    constructor(
+      element: HTMLElement,
+      callback: (size: { width: number; height: number }) => void
+    );
+    detach(): void;
+  }
+}
