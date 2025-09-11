@@ -1,3 +1,7 @@
+declare module "*.svg" {
+  const src: string;
+  export default src;
+}
 
 declare module 'dbl-components/lib/js/app-controller' {
   interface InitProps {

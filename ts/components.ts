@@ -15,6 +15,9 @@ import TabsContainer from "./containers/tabs-container";
 import MenuItem from "./navigation/menu-item/menu-item";
 import Navbar from "./navigation/navbar";
 import ServiceListNavigation from "./navigation/service-list-navigation";
+import Field from "./forms/fields/field";
+import SelectField from "./forms/fields/select-field";
+import SelectLanguage from "./i18n/select-language";
 
 const COMPONENTS: Record<string, any> = {
   ...jsComponents,
@@ -35,6 +38,9 @@ const COMPONENTS: Record<string, any> = {
   MenuItem,
   Navbar,
   ServiceListNavigation,
+  Field,
+  SelectField,
+  SelectLanguage,
 };
 
 export const addComponents = (newComponents: Record<string, unknown>): void => {
