@@ -19,6 +19,10 @@ import Navbar from "./navigation/navbar";
 import ServiceListNavigation from "./navigation/service-list-navigation";
 import Field from "./forms/fields/field";
 import SelectField from "./forms/fields/select-field";
+import Form from "./forms/form";
+import Group from "./forms/groups/group";
+import CardGroup from "./forms/groups/card-group";
+import GridGroup from "./forms/groups/grid-group";
 import SelectLanguage from "./i18n/select-language";
 
 const COMPONENTS: Record<string, any> = {
@@ -44,6 +48,10 @@ const COMPONENTS: Record<string, any> = {
   ServiceListNavigation,
   Field,
   SelectField,
+  Form,
+  Group,
+  CardGroup,
+  GridGroup,
   SelectLanguage,
 };
 

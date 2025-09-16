@@ -16,7 +16,20 @@ export interface ComponentState {
   localStyles: React.CSSProperties;
 }
 
-export default class Component<P extends ComponentProps = ComponentProps> extends React.Component<P, ComponentState> {
+/**
+ * Base component that wires DBL utilities and class helpers for inheriting widgets.
+ *
+ * @example
+ * class MyComponent extends Component<{ name: string }> {
+ *   content() {
+ *     return "Hello";
+ *   }
+ * }
+ */
+export default class Component<
+  P extends ComponentProps = ComponentProps,
+  S extends ComponentState = ComponentState
+> extends React.Component<P, S> {
   static jsClass = "Component";
   static defaultProps: Partial<ComponentProps> = {
     classes: "",
@@ -32,10 +45,10 @@ export default class Component<P extends ComponentProps = ComponentProps> extend
   ref: RefObject<HTMLElement | null>;
   eventHandlers: Record<string, (e: React.SyntheticEvent<any>) => void>;
 
-  state: ComponentState = {
+  state: S = {
     localClasses: "",
     localStyles: {},
-  };
+  } as S;
 
   constructor(props: P) {
     super(props);
