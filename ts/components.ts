@@ -3,6 +3,7 @@ import Component from "./component";
 import Icons from "./media/icons";
 import Action from "./actions/action";
 import Container from "./containers/container";
+import FloatingContainer from "./containers/floating-container";
 import Image from "./media/image";
 import Video from "./media/video";
 import ProportionalContainer from "./containers/proportional-container";
@@ -31,6 +32,7 @@ const COMPONENTS: Record<string, any> = {
   Icons,
   Action,
   Container,
+  FloatingContainer,
   Image,
   Video,
   ProportionalContainer,

@@ -15,6 +15,8 @@ export {
 
 export { default as Container } from "./containers/container";
 export { default as containers, addContainers } from "./containers";
+export { default as FloatingContainer } from "./containers/floating-container";
+export type { FloatingContainerProps } from "./containers/floating-container";
 export { default as ProportionalContainer } from "./containers/proportional-container";
 export { default as JsonRenderContainer } from "./containers/json-render-container";
 export type { JsonRenderContainerProps } from "./containers/json-render-container";

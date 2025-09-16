@@ -3,6 +3,7 @@ import Container from "./containers/container";
 import ProportionalContainer from "./containers/proportional-container";
 import JsonRenderContainer from "./containers/json-render-container";
 import FlexContainer from "./containers/flex-container";
+import FloatingContainer from "./containers/floating-container";
 import GridContainer from "./containers/grid-container";
 import ListContainer from "./containers/list-container";
 import TabsContainer from "./containers/tabs-container";
@@ -17,6 +18,7 @@ const CONTAINERS: Record<string, any> = {
   GridContainer,
   ListContainer,
   TabsContainer,
+  FloatingContainer,
 };
 
 export const addContainers = (newContainers: Record<string, unknown>): void => {
