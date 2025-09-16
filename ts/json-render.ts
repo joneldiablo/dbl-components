@@ -26,6 +26,7 @@ export default class JsonRender {
   actualSections: any[] = [];
   props: any;
   mutations: any;
+  childrenIn?: boolean | string;
 
   constructor(props: any, mutations: any) {
     this.props = props;

@@ -13,6 +13,7 @@ export interface IconsProps {
   height?: number | string;
   icon?: string;
   inline?: boolean;
+  id?: string;
   size?: number | string;
   style?: React.CSSProperties;
   title?: string;

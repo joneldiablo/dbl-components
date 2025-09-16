@@ -44,6 +44,8 @@ export { default as Svg } from "./media/svg";
 export type { SvgProps } from "./media/svg";
 export { default as YoutubeVideoComponent } from "./media/youtube-video";
 export type { YoutubeVideoProps } from "./media/youtube-video";
+export { default as SvgImports, addSvgs } from "./media/svg-imports";
+export type { SvgImportsProps } from "./media/svg-imports";
 export { default as Link } from "./navigation/react-router-link";
 export type { LinkProps } from "./navigation/react-router-link";
 export { default as NavLink } from "./navigation/react-router-navlink";
@@ -74,6 +76,8 @@ export { default as Field } from "./forms/fields/field";
 export type { FieldProps, FieldState, FieldOption } from "./forms/fields/field";
 export { default as SelectField } from "./forms/fields/select-field";
 export type { SelectFieldProps } from "./forms/fields/select-field";
+export { default as JsonRenderComponent } from "./json-render-component";
+export type { JsonRenderComponentProps } from "./json-render-component";
 export {
   SelectLanguage,
   setDictionary,

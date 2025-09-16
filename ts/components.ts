@@ -8,6 +8,8 @@ import Video from "./media/video";
 import ProportionalContainer from "./containers/proportional-container";
 import Svg from "./media/svg";
 import YoutubeVideoComponent from "./media/youtube-video";
+import SvgImports from "./media/svg-imports";
+import JsonRenderComponent from "./json-render-component";
 import Link from "./navigation/react-router-link";
 import NavLink from "./navigation/react-router-navlink";
 import Route from "./react-router-schema/route";
@@ -31,6 +33,8 @@ const COMPONENTS: Record<string, any> = {
   AspectRatioContainer: ProportionalContainer,
   Svg,
   YoutubeVideo: YoutubeVideoComponent,
+  SvgImports,
+  JsonRenderComponent,
   Link,
   NavLink,
   Route,
