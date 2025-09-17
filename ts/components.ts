@@ -17,7 +17,13 @@ import Route from "./react-router-schema/route";
 import TabsContainer from "./containers/tabs-container";
 import MenuItem from "./navigation/menu-item/menu-item";
 import Navbar from "./navigation/navbar";
+import Navigation, { ToggleTextNavigation } from "./navigation/navigation";
+import BrandNavigation from "./navigation/brand-navigation";
+import CardListNavigation from "./navigation/card-list-navigation";
+import CardsNavigation from "./navigation/cards-navigation";
+import HeaderNavigation from "./navigation/header-navigation";
 import ServiceListNavigation from "./navigation/service-list-navigation";
+import SideNavigation from "./navigation/side-navigation";
 import Field from "./forms/fields/field";
 import SelectField from "./forms/fields/select-field";
 import Form from "./forms/form";
@@ -47,7 +53,14 @@ const COMPONENTS: Record<string, any> = {
   TabsContainer,
   MenuItem,
   Navbar,
+  Navigation,
+  ToggleTextNavigation,
+  BrandNavigation,
+  CardListNavigation,
+  CardsNavigation,
+  HeaderNavigation,
   ServiceListNavigation,
+  SideNavigation,
   Field,
   SelectField,
   Form,

@@ -21,7 +21,7 @@ Estructura JSON básica.
   * name:
 
 
-TODO:
+## TODO
 
 * Order container breakpoints and align with Sass `$container-max-widths`.
 * Crear componente panel, que tenga swipe events, que haga el switch de ocultar textos y sólo mostrar íconos a mostrar u ocultar completamente el panel en mobile, además en mobile se muestra por encima de todo, agregar animaciones y dirección.
@@ -33,6 +33,7 @@ TODO:
 * permitir indicar un arreglo de ubicaciones dónde colocar las rutas hijas, actualmente funciona con `{"routesIn":"string"}` modificarlo de tal forma que se pueda indicar nombe del componente que habrá de mostrar cada sección, por ejemplo, `{"routesIn":componentNames[]}` || `{"routesIn":{"componentWhereToPut1":"routeNameWhichMove"}}`
 * Separar el algoritmo recursivo de view y meterlo en functions para poder usarlo en cualquier cosa. La primisa sería ciclar todo su contenido para saber qué hay de forma lineal. se podría hacer que resolverefs dependa de este.
 * separar functions en una librería aparte para poder usarla, por ejemplo, en proyectos backend.
+* Add dropdown and collapsible submenu support to Navigation.
 
 
 

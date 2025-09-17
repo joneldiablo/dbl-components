@@ -3,6 +3,34 @@ declare module "*.svg" {
   export default src;
 }
 
+declare module "bootstrap/js/dist/collapse" {
+  interface CollapseOptions {
+    toggle?: boolean;
+    parent?: Element | string;
+    autoClose?: boolean | string;
+  }
+
+  export default class Collapse {
+    constructor(element: Element | null, options?: CollapseOptions);
+    toggle(): void;
+    show(): void;
+    hide(): void;
+    dispose(): void;
+    static getInstance(element: Element | null): Collapse | null;
+    static getOrCreateInstance(element: Element | null, options?: CollapseOptions): Collapse;
+  }
+}
+
+declare module "bootstrap/js/dist/dropdown" {
+  export default class Dropdown {
+    constructor(element: Element | null, options?: Record<string, unknown>);
+    toggle(): void;
+    show(): void;
+    hide(): void;
+    dispose(): void;
+  }
+}
+
 declare module 'dbl-components/lib/js/app-controller' {
   interface InitProps {
     definitions?: any[];

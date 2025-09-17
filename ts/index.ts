@@ -32,8 +32,23 @@ export { default as MenuItem } from "./navigation/menu-item/menu-item";
 export type { MenuItemProps } from "./navigation/menu-item/menu-item";
 export { default as Navbar } from "./navigation/navbar";
 export type { NavbarProps } from "./navigation/navbar";
+export {
+  default as Navigation,
+  ToggleTextNavigation,
+} from "./navigation/navigation";
+export type { NavigationProps, NavigationMenuItem } from "./navigation/navigation";
+export { default as BrandNavigation } from "./navigation/brand-navigation";
+export type { BrandNavigationProps } from "./navigation/brand-navigation";
+export { default as CardListNavigation } from "./navigation/card-list-navigation";
+export type { CardListNavigationProps, CardListNavigationItem } from "./navigation/card-list-navigation";
+export { default as CardsNavigation } from "./navigation/cards-navigation";
+export type { CardsNavigationProps, CardsNavigationItem } from "./navigation/cards-navigation";
+export { default as HeaderNavigation } from "./navigation/header-navigation";
+export type { HeaderNavigationProps, HeaderNavigationMenuItem } from "./navigation/header-navigation";
 export { default as ServiceListNavigation } from "./navigation/service-list-navigation";
 export type { ServiceListNavigationProps } from "./navigation/service-list-navigation";
+export { default as SideNavigation } from "./navigation/side-navigation";
+export type { SideNavigationProps, SideNavigationItem } from "./navigation/side-navigation";
 export { default as ComplexComponent, nameSuffixes } from "./complex-component";
 export type { ComplexComponentProps, ComplexComponentState } from "./complex-component";
 export { default as Action } from "./actions/action";
