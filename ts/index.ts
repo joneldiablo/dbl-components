@@ -63,6 +63,12 @@ export { default as YoutubeVideoComponent } from "./media/youtube-video";
 export type { YoutubeVideoProps } from "./media/youtube-video";
 export { default as SvgImports, addSvgs } from "./media/svg-imports";
 export type { SvgImportsProps } from "./media/svg-imports";
+export { default as konvaComponents } from "./konva";
+export type {
+  KonvaComponentRegistry,
+  KonvaForwardComponent,
+  WrappedKonvaProps,
+} from "./konva";
 export { default as Link } from "./navigation/react-router-link";
 export type { LinkProps } from "./navigation/react-router-link";
 export { default as NavLink } from "./navigation/react-router-navlink";
