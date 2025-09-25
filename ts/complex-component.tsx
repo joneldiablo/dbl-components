@@ -39,7 +39,7 @@ export default class ComplexComponent<P extends ComplexComponentProps = ComplexC
     rules: {},
   } as ComplexComponentProps;
 
-  events: Array<[string, (...args: any[]) => void, string?]> = [];
+  events: Array<[string, ...unknown[]]> = [];
 
   jsonRender: JsonRender;
 
@@ -56,11 +56,15 @@ export default class ComplexComponent<P extends ComplexComponentProps = ComplexC
   }
 
   componentDidMount(): void {
-    this.events.forEach((e) => eventHandler.subscribe(e[0], e[1], e[2] as string));
+    this.events.forEach(([eventName, ...rest]) => {
+      eventHandler.subscribe(eventName, ...(rest as unknown[]));
+    });
   }
 
   componentWillUnmount(): void {
-    this.events.forEach(([eName, , owner]) => eventHandler.unsubscribe(eName, owner as string));
+    this.events.forEach(([eventName]) => {
+      eventHandler.unsubscribe(eventName);
+    });
   }
 
   buildView(): any {
@@ -85,4 +89,3 @@ export default class ComplexComponent<P extends ComplexComponentProps = ComplexC
     );
   }
 }
-
