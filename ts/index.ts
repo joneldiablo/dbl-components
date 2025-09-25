@@ -6,6 +6,9 @@ export { default as JsonRender, addExclusions } from "./json-render";
 export { default as useEventHandler } from "./hooks/use-event-handler";
 export { default as useClasses } from "./hooks/use-classes";
 
+export { default as AppController } from "./app-controller";
+export { AppController as AppControllerClass } from "./app-controller";
+
 export {
   default as Icons,
   addIcons,
@@ -51,6 +54,11 @@ export { default as SideNavigation } from "./navigation/side-navigation";
 export type { SideNavigationProps, SideNavigationItem } from "./navigation/side-navigation";
 export { default as ComplexComponent, nameSuffixes } from "./complex-component";
 export type { ComplexComponentProps, ComplexComponentState } from "./complex-component";
+export { default as ComplexResponsiveComponent } from "./complex-responsive-component";
+export type {
+  ComplexResponsiveComponentProps,
+  ComplexResponsiveComponentState,
+} from "./complex-responsive-component";
 export { default as Action } from "./actions/action";
 export type { ActionProps } from "./actions/action";
 export { default as Image } from "./media/image";

@@ -4,7 +4,9 @@
 
 ### Raíz
 
+- `src/js/app-controller.js` → `ts/app-controller.ts`
 - `src/js/complex-component.js` → `ts/complex-component.tsx`
+- `src/js/complex-responsive-component.js` → `ts/complex-responsive-component.tsx`
 - `src/js/component.js` → `ts/component.tsx`
 - `src/js/components-server.js` → `ts/components-server.ts`
 - `src/js/components.js` → `ts/components.ts`
@@ -93,13 +95,10 @@
 
 ## Pendientes de traducción
 
-### Raíz
-
-- `src/js/app-controller.js`
-- `src/js/complex-responsive-component.js`
-
 ### bootstrap
 
+- *Omitido según acuerdo: no se migrará esta carpeta.*
+-
 - `src/js/bootstrap/components/accordion/accordion.js`
 - `src/js/bootstrap/components/alert/alert.js`
 - `src/js/bootstrap/components/badge/badge.js`
@@ -209,3 +208,4 @@
 ## Observaciones de revisión
 
 - `ts/components.ts`, `ts/containers.ts`, `ts/controllers.ts`, `ts/forms/fields/index.ts`: aún dependen de módulos en `src/js`; habrá que migrar esas dependencias antes de poder eliminar el árbol JavaScript.
+- Carpeta `src/js/bootstrap`: se omite su migración porque los componentes generados no se utilizan (automatización fallida).
