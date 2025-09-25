@@ -68,8 +68,6 @@ const COMPONENTS: Record<string, any> = {
   CardGroup,
   GridGroup,
   SelectLanguage,
-  Image,
-  Video,
 };
 
 export const addComponents = (newComponents: Record<string, unknown>): void => {
