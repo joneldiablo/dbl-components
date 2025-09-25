@@ -1,3 +1,35 @@
+declare module "*.svg" {
+  const src: string;
+  export default src;
+}
+
+declare module "bootstrap/js/dist/collapse" {
+  interface CollapseOptions {
+    toggle?: boolean;
+    parent?: Element | string;
+    autoClose?: boolean | string;
+  }
+
+  export default class Collapse {
+    constructor(element: Element | null, options?: CollapseOptions);
+    toggle(): void;
+    show(): void;
+    hide(): void;
+    dispose(): void;
+    static getInstance(element: Element | null): Collapse | null;
+    static getOrCreateInstance(element: Element | null, options?: CollapseOptions): Collapse;
+  }
+}
+
+declare module "bootstrap/js/dist/dropdown" {
+  export default class Dropdown {
+    constructor(element: Element | null, options?: Record<string, unknown>);
+    toggle(): void;
+    show(): void;
+    hide(): void;
+    dispose(): void;
+  }
+}
 
 declare module 'dbl-components/lib/js/app-controller' {
   interface InitProps {
@@ -192,5 +224,18 @@ declare module 'dbl-components/lib/js/tables/table' {
   export interface IPropsTable extends ComponentProps {
     columns: IColumn[] | Record<string, IColumn>;
     headerCustom: any;
+  }
+}
+
+declare module 'dbl-utils/extract-react-node-text';
+declare module 'url-join';
+
+declare module "css-element-queries/src/ResizeSensor" {
+  export default class ResizeSensor {
+    constructor(
+      element: HTMLElement,
+      callback: (size: { width: number; height: number }) => void
+    );
+    detach(): void;
   }
 }

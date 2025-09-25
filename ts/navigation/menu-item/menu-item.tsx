@@ -1,0 +1,121 @@
+import ComplexComponent, { nameSuffixes, type ComplexComponentProps } from "../../complex-component";
+
+import schema from "./menu-item-schema.json";
+
+export interface MenuItemProps extends ComplexComponentProps {
+  exact?: boolean;
+  activeClassName?: string;
+  icon?: string | Record<string, unknown>;
+  iconSize?: number;
+  activeLabel?: boolean;
+  definitions?: Record<string, unknown>;
+  iconInline?: boolean;
+  classes?: Record<string, string>;
+  rules?: Record<string, unknown>;
+  badge?: unknown;
+  label?: string;
+  name: string;
+  to?: string;
+  href?: string;
+  [key: string]: any;
+}
+
+export default class MenuItem extends ComplexComponent<MenuItemProps> {
+  static jsClass = "MenuItem";
+  static defaultProps: MenuItemProps = {
+    ...ComplexComponent.defaultProps,
+    schema,
+    exact: false,
+    activeClassName: "active",
+    icon: "circle",
+    iconSize: 40,
+    activeLabel: true,
+    definitions: {},
+    iconInline: true,
+    classes: {
+      ".": "",
+      link: "d-block p-2",
+      badge: "bg-danger border-light",
+      icon: "align-middle",
+      label: "",
+    },
+    rules: {
+      ...nameSuffixes(["Link", "Icon", "Label", "Badge"]),
+      "$classesLink": ["join", ["im-link", "$data/classes/link"], " "],
+      "$classesIcon": ["join", ["me-2", "$data/classes/icon"], " "],
+      "$classesLabel": ["join", ["im-label", "$data/classes/label"], " "],
+      "$classesBadge": [
+        "join",
+        [
+          "position-absolute translate-middle-y rounded-pill badge border d-flex justify-content-center align-items-center",
+          "$data/classes/badge",
+        ],
+        " ",
+      ],
+      "$dataLabel": ["ignore", "$data/label"],
+    },
+  };
+
+  classes = "position-relative";
+
+  mutations(sn: string, _s?: any): any {
+    const { name } = this.props;
+    switch (sn) {
+      case name + "Badge": {
+        const classes = [
+          (this.props.rules as any).$classesBadge[1][0],
+          this.props.classes?.badge,
+          this.props.activeLabel ? " top-0 end-0" : " top-0 start-0",
+        ]
+          .flat()
+          .join(" ");
+        const badgeSize = !this.props.activeLabel ? 0.6 * (this.props.iconSize as number) : 22;
+        return {
+          active: !!this.props.badge,
+          content: this.props.badge,
+          classes,
+          style: {
+            zIndex: 1,
+            height: badgeSize,
+            width: badgeSize,
+            marginLeft: !this.props.activeLabel ? (this.props.iconSize as number) * 0.75 : 0,
+            marginTop: !this.props.activeLabel
+              ? (this.props.iconSize as number)
+              : ((this.props.iconSize as number) + badgeSize) * 0.41,
+          },
+        };
+      }
+      case name + "Icon":
+        return typeof this.props.icon === "string"
+          ? {
+              icon: this.props.icon,
+              inline: this.props.iconInline,
+              style: {
+                pointerEvents: "none",
+                width: this.props.iconSize,
+                height: this.props.iconSize,
+              },
+            }
+          : typeof this.props.icon === "object"
+          ? (this.props.icon as object)
+          : { active: false };
+      case name + "Label":
+        return { active: this.props.activeLabel, content: this.props.label };
+      case name + "Link":
+        return {
+          component: !this.props.to ? "Component" : "NavLink",
+          tag: !this.props.to ? "span" : this.props.href ? "a" : undefined,
+          _props: this.props.href
+            ? {
+                target: "_blank",
+                href: this.props.href,
+              }
+            : undefined,
+        };
+      default:
+        break;
+    }
+    return (this.state as any)[sn];
+  }
+}
+
