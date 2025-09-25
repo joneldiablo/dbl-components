@@ -68,6 +68,14 @@
 - `src/js/media/video.js` → `ts/media/video.tsx`
 - `src/js/media/youtube-video.js` → `ts/media/youtube-video.tsx`
 
+### chartjs
+
+- `src/js/chartjs/_chartjs.jsx` → `ts/chartjs/_chartjs.tsx`
+- `src/js/chartjs/bar-chartjs.jsx` → `ts/chartjs/bar-chartjs.tsx`
+- `src/js/chartjs/doughnut-chartjs.jsx` → `ts/chartjs/doughnut-chartjs.tsx`
+- `src/js/chartjs/line-chartjs.jsx` → `ts/chartjs/line-chartjs.tsx`
+- `src/js/chartjs/scatter-chartjs.jsx` → `ts/chartjs/scatter-chartjs.tsx`
+
 ### navigation
 
 - `src/js/navigation/brand-navigation.js` → `ts/navigation/brand-navigation.tsx`
@@ -134,14 +142,6 @@
 - `src/js/bootstrap/forms/range/range.js`
 - `src/js/bootstrap/forms/select/select.js`
 - `src/js/bootstrap/index.js`
-
-### chartjs
-
-- `src/js/chartjs/_chartjs.jsx`
-- `src/js/chartjs/bar-chartjs.jsx`
-- `src/js/chartjs/doughnut-chartjs.jsx`
-- `src/js/chartjs/line-chartjs.jsx`
-- `src/js/chartjs/scatter-chartjs.jsx`
 
 ### containers
 

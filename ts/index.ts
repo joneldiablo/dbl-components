@@ -8,6 +8,12 @@ export { default as useClasses } from "./hooks/use-classes";
 
 export { default as AppController } from "./app-controller";
 export { AppController as AppControllerClass } from "./app-controller";
+export { default as Chartjs, addGraphs } from "./chartjs/_chartjs";
+export type { ChartjsProps } from "./chartjs/_chartjs";
+export { default as BarChartjs } from "./chartjs/bar-chartjs";
+export { default as DoughnutChartjs } from "./chartjs/doughnut-chartjs";
+export { default as LineChartjs } from "./chartjs/line-chartjs";
+export { default as ScatterChartjs } from "./chartjs/scatter-chartjs";
 
 export {
   default as Icons,
