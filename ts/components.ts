@@ -31,8 +31,6 @@ import Group from "./forms/groups/group";
 import CardGroup from "./forms/groups/card-group";
 import GridGroup from "./forms/groups/grid-group";
 import SelectLanguage from "./i18n/select-language";
-import Image from "./media/image";
-import Video from "./media/video";
 
 const COMPONENTS: Record<string, any> = {
   ...jsComponents,
