@@ -33,6 +33,13 @@
 - `src/js/containers/list-container.js` → `ts/containers/list-container.tsx`
 - `src/js/containers/proportional-container.js` → `ts/containers/proportional-container.tsx`
 - `src/js/containers/tabs-container.js` → `ts/containers/tabs-container.tsx`
+- `src/js/containers/alert-container/alert-container.js` → `ts/containers/alert-container/alert-container.tsx`
+- `src/js/containers/auto-responsive-container.js` → `ts/containers/auto-responsive-container.tsx`
+- `src/js/containers/card-container.js` → `ts/containers/card-container.tsx`
+- `src/js/containers/details-container.js` → `ts/containers/details-container.tsx`
+- `src/js/containers/dnd-list-container.js` → `ts/containers/dnd-list-container.tsx`
+- `src/js/containers/dropdown-button-container.js` → `ts/containers/dropdown-button-container.tsx`
+- `src/js/containers/dropdown-container.js` → `ts/containers/dropdown-container.tsx`
 
 ### forms
 
@@ -106,7 +113,6 @@
 ### bootstrap
 
 - *Omitido según acuerdo: no se migrará esta carpeta.*
--
 - `src/js/bootstrap/components/accordion/accordion.js`
 - `src/js/bootstrap/components/alert/alert.js`
 - `src/js/bootstrap/components/badge/badge.js`
@@ -145,13 +151,6 @@
 
 ### containers
 
-- `src/js/containers/alert-container/alert-container.js`
-- `src/js/containers/auto-responsive-container.js`
-- `src/js/containers/card-container.js`
-- `src/js/containers/details-container.js`
-- `src/js/containers/dnd-list-container.js`
-- `src/js/containers/dropdown-button-container.js`
-- `src/js/containers/dropdown-container.js`
 - `src/js/containers/fetch-container.js`
 - `src/js/containers/footer-container.js`
 - `src/js/containers/form-container.js`

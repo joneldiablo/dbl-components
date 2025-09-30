@@ -31,6 +31,13 @@ import Group from "./forms/groups/group";
 import CardGroup from "./forms/groups/card-group";
 import GridGroup from "./forms/groups/grid-group";
 import SelectLanguage from "./i18n/select-language";
+import AlertContainer from "./containers/alert-container/alert-container";
+import AutoResponsiveContainer from "./containers/auto-responsive-container";
+import CardContainer from "./containers/card-container";
+import DetailsContainer from "./containers/details-container";
+import DropdownButtonContainer, { DropdownItem } from "./containers/dropdown-button-container";
+import DropdownContainer from "./containers/dropdown-container";
+import DndListContainer from "./containers/dnd-list-container";
 
 const COMPONENTS: Record<string, any> = {
   ...jsComponents,
@@ -68,6 +75,14 @@ const COMPONENTS: Record<string, any> = {
   CardGroup,
   GridGroup,
   SelectLanguage,
+  AlertContainer,
+  AutoResponsiveContainer,
+  CardContainer,
+  DetailsContainer,
+  DropdownButtonContainer,
+  DropdownContainer,
+  DropdownItem,
+  DndListContainer,
 };
 
 export const addComponents = (newComponents: Record<string, unknown>): void => {

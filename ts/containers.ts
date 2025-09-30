@@ -7,6 +7,13 @@ import FloatingContainer from "./containers/floating-container";
 import GridContainer from "./containers/grid-container";
 import ListContainer from "./containers/list-container";
 import TabsContainer from "./containers/tabs-container";
+import AlertContainer from "./containers/alert-container/alert-container";
+import AutoResponsiveContainer from "./containers/auto-responsive-container";
+import CardContainer from "./containers/card-container";
+import DetailsContainer from "./containers/details-container";
+import DropdownButtonContainer from "./containers/dropdown-button-container";
+import DropdownContainer from "./containers/dropdown-container";
+import DndListContainer from "./containers/dnd-list-container";
 
 const CONTAINERS: Record<string, any> = {
   ...jsContainers,
@@ -19,6 +26,13 @@ const CONTAINERS: Record<string, any> = {
   ListContainer,
   TabsContainer,
   FloatingContainer,
+  AlertContainer,
+  AutoResponsiveContainer,
+  CardContainer,
+  DetailsContainer,
+  DropdownButtonContainer,
+  DropdownContainer,
+  DndListContainer,
 };
 
 export const addContainers = (newContainers: Record<string, unknown>): void => {
