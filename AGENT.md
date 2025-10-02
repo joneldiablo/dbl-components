@@ -40,6 +40,11 @@
 - `src/js/containers/dnd-list-container.js` → `ts/containers/dnd-list-container.tsx`
 - `src/js/containers/dropdown-button-container.js` → `ts/containers/dropdown-button-container.tsx`
 - `src/js/containers/dropdown-container.js` → `ts/containers/dropdown-container.tsx`
+- `src/js/containers/fetch-container.js` → `ts/containers/fetch-container.tsx`
+- `src/js/containers/footer-container.js` → `ts/containers/footer-container.tsx`
+- `src/js/containers/form-container.js` → `ts/containers/form-container.tsx`
+- `src/js/containers/fullscreen-container.js` → `ts/containers/fullscreen-container.tsx`
+- `src/js/containers/grid-switch-container.js` → `ts/containers/grid-switch-container.tsx`
 
 ### forms
 
@@ -151,11 +156,6 @@
 
 ### containers
 
-- `src/js/containers/fetch-container.js`
-- `src/js/containers/footer-container.js`
-- `src/js/containers/form-container.js`
-- `src/js/containers/fullscreen-container.js`
-- `src/js/containers/grid-switch-container.js`
 - `src/js/containers/hero-container.js`
 - `src/js/containers/modal-button-container.js`
 - `src/js/containers/modal-container.js`

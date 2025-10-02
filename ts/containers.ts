@@ -14,6 +14,11 @@ import DetailsContainer from "./containers/details-container";
 import DropdownButtonContainer from "./containers/dropdown-button-container";
 import DropdownContainer from "./containers/dropdown-container";
 import DndListContainer from "./containers/dnd-list-container";
+import FetchContainer from "./containers/fetch-container";
+import FooterContainer from "./containers/footer-container";
+import FormContainer from "./containers/form-container";
+import FullscreenContainer from "./containers/fullscreen-container";
+import GridSwitchContainer from "./containers/grid-switch-container";
 
 const CONTAINERS: Record<string, any> = {
   ...jsContainers,
@@ -33,6 +38,11 @@ const CONTAINERS: Record<string, any> = {
   DropdownButtonContainer,
   DropdownContainer,
   DndListContainer,
+  FetchContainer,
+  FooterContainer,
+  FormContainer,
+  FullscreenContainer,
+  GridSwitchContainer,
 };
 
 export const addContainers = (newContainers: Record<string, unknown>): void => {
