@@ -1,0 +1,143 @@
+{
+  "view": {
+    "wrapper": {
+      "name": [
+        "$props/name",
+        "Wrapper"
+      ],
+      "classes": [
+        "panel-wrapper"
+      ],
+      "content": {
+        "panel": {
+          "name": [
+            "$props/name",
+            "Panel"
+          ],
+          "tag": "aside",
+          "classes": [
+            "panel"
+          ],
+          "content": {
+            "logo": {
+              "name": [
+                "$props/name",
+                "Logo"
+              ],
+              "tag": "div",
+              "classes": [
+                "panel-logo"
+              ],
+              "content": {
+                "logoLink": {
+                  "name": "$nameLogoLink",
+                  "component": "NavLink",
+                  "classes": [
+                    "d-flex align-items-center justify-content-center pt-4 pb-3"
+                  ],
+                  "_props": {
+                    "end": true
+                  },
+                  "content": {
+                    "logoImg": {
+                      "name": "$nameLogoImg",
+                      "tag": "img",
+                      "classes": [
+                        "logo"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "contentTop": {
+              "name": "$nameContentTop"
+            },
+            "panelMenu": {
+              "name": "$namePanelMenu",
+              "component": "Menu",
+              "classes": [
+                "menu panel-menu pb-5",
+                "$props/classes/items"
+              ],
+              "_props": {
+                "childMenuName": "$nameSubmenu",
+                "menu": "$props/menu",
+                "managerName": "$props/name"
+              }
+            }
+          }
+        },
+        "toggleFixed": {
+          "name": "$nameToggleFixed",
+          "component": "MenuItem",
+          "classes": [
+            "panel-toggle-fixed p-2 menu-item"
+          ],
+          "_props": {
+            "to": false,
+            "managerName": "$props/name",
+            "name": [
+              "$props/name",
+              "toggleFixed"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "items": {
+      "link": {
+        "tag": "a",
+        "classes": [
+          "d-flex align-items-center py-3 ps-3 pe-2"
+        ],
+        "_props": {
+          "href": "$item/path",
+          "title": "$item/label"
+        }
+      },
+      "label": {
+        "tag": "span",
+        "classes": [
+          "ms-3"
+        ],
+        "content": "$item/label"
+      },
+      "badge": {
+        "tag": "div",
+        "component": "Badge",
+        "classes": [
+          "ms-auto"
+        ],
+        "_props": {
+          "label": "$item/badge/label",
+          "type": "$item/badge/type"
+        }
+      },
+      "submenu": {
+        "name": "$nameSubmenu",
+        "component": "Menu",
+        "classes": [
+          "submenu"
+        ],
+        "_props": {
+          "menu": "$item/menu",
+          "managerName": "$props/name"
+        }
+      }
+    },
+    "submenu": {
+      "name": "$nameSubmenu",
+      "component": "Menu",
+      "classes": [
+        "submenu"
+      ],
+      "_props": {
+        "menu": "$item/menu",
+        "managerName": "$props/name"
+      }
+    }
+  }
+}

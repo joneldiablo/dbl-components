@@ -7,6 +7,7 @@ import FloatingContainer from "./containers/floating-container";
 import GridContainer from "./containers/grid-container";
 import ListContainer from "./containers/list-container";
 import TabsContainer from "./containers/tabs-container";
+import HeroContainer from "./containers/hero-container";
 import AlertContainer from "./containers/alert-container/alert-container";
 import AutoResponsiveContainer from "./containers/auto-responsive-container";
 import CardContainer from "./containers/card-container";
@@ -19,6 +20,13 @@ import FooterContainer from "./containers/footer-container";
 import FormContainer from "./containers/form-container";
 import FullscreenContainer from "./containers/fullscreen-container";
 import GridSwitchContainer from "./containers/grid-switch-container";
+import ModalButtonContainer from "./containers/modal-button-container";
+import ModalContainer from "./containers/modal-container";
+import OffcanvasContainer from "./containers/offcanvas/offcanvas";
+import PanelContainer from "./containers/panel-container/panel-container";
+import ScrollContainer from "./containers/scroll-container";
+import SlideContainer from "./containers/slide-container";
+import TableContainer from "./containers/table-container";
 
 const CONTAINERS: Record<string, any> = {
   ...jsContainers,
@@ -31,6 +39,7 @@ const CONTAINERS: Record<string, any> = {
   ListContainer,
   TabsContainer,
   FloatingContainer,
+  HeroContainer,
   AlertContainer,
   AutoResponsiveContainer,
   CardContainer,
@@ -43,6 +52,13 @@ const CONTAINERS: Record<string, any> = {
   FormContainer,
   FullscreenContainer,
   GridSwitchContainer,
+  ModalButtonContainer,
+  ModalContainer,
+  OffcanvasContainer,
+  PanelContainer,
+  ScrollContainer,
+  SlideContainer,
+  TableContainer,
 };
 
 export const addContainers = (newContainers: Record<string, unknown>): void => {

@@ -45,6 +45,14 @@
 - `src/js/containers/form-container.js` → `ts/containers/form-container.tsx`
 - `src/js/containers/fullscreen-container.js` → `ts/containers/fullscreen-container.tsx`
 - `src/js/containers/grid-switch-container.js` → `ts/containers/grid-switch-container.tsx`
+- `src/js/containers/hero-container.js` → `ts/containers/hero-container.tsx`
+- `src/js/containers/modal-button-container.js` → `ts/containers/modal-button-container.tsx`
+- `src/js/containers/modal-container.js` → `ts/containers/modal-container.tsx`
+- `src/js/containers/offcanvas/offcanvas.js` → `ts/containers/offcanvas/offcanvas.tsx`
+- `src/js/containers/panel-container/panel-container.js` → `ts/containers/panel-container/panel-container.tsx`
+- `src/js/containers/scroll-container.jsx` → `ts/containers/scroll-container.tsx`
+- `src/js/containers/slide-container.js` → `ts/containers/slide-container.tsx`
+- `src/js/containers/table-container.js` → `ts/containers/table-container.tsx`
 
 ### forms
 
@@ -156,14 +164,7 @@
 
 ### containers
 
-- `src/js/containers/hero-container.js`
-- `src/js/containers/modal-button-container.js`
-- `src/js/containers/modal-container.js`
-- `src/js/containers/offcanvas/offcanvas.js`
-- `src/js/containers/panel-container/panel-container.js`
-- `src/js/containers/scroll-container.jsx`
-- `src/js/containers/slide-container.js`
-- `src/js/containers/table-container.js`
+- *Completado*
 
 ### draw
 

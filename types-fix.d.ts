@@ -31,6 +31,52 @@ declare module "bootstrap/js/dist/dropdown" {
   }
 }
 
+declare module "bootstrap/js/dist/modal" {
+  export interface ModalOptions {
+    backdrop?: boolean | "static";
+    focus?: boolean;
+    keyboard?: boolean;
+  }
+
+  export default class Modal {
+    constructor(element: Element | null, options?: ModalOptions);
+    show(): void;
+    hide(): void;
+    dispose(): void;
+    static getInstance(element: Element | null): Modal | null;
+    static getOrCreateInstance(element: Element | null, options?: ModalOptions): Modal;
+  }
+}
+
+declare module "bootstrap/js/dist/offcanvas" {
+  export interface OffcanvasOptions {
+    backdrop?: boolean | "static";
+    keyboard?: boolean;
+    scroll?: boolean;
+  }
+
+  export default class Offcanvas {
+    constructor(element: Element | null, options?: OffcanvasOptions);
+    show(): void;
+    hide(): void;
+    dispose(): void;
+    static getInstance(element: Element | null): Offcanvas | null;
+    static getOrCreateInstance(element: Element | null, options?: OffcanvasOptions): Offcanvas;
+  }
+}
+
+declare module "@splidejs/react-splide" {
+  import type * as React from "react";
+
+  export interface SplideProps {
+    options?: Record<string, unknown>;
+    [key: string]: unknown;
+  }
+
+  export const Splide: React.ComponentType<SplideProps>;
+  export const SplideSlide: React.ComponentType<Record<string, unknown>>;
+}
+
 declare module 'dbl-components/lib/js/app-controller' {
   interface InitProps {
     definitions?: any[];
