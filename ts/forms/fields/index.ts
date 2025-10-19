@@ -4,6 +4,15 @@ import jsFieldComponents from "../../../src/js/forms/fields.js";
 
 import Field from "./field";
 import SelectField from "./select-field";
+import RadioField from "./radio-field";
+import CheckboxField from "./checkbox-field";
+import SwitchField from "./switch-field";
+import GroupField from "./group-field";
+import HiddenField from "./hidden-field";
+import NoWrapField from "./no-wrap-field";
+import TextareaField from "./textarea-field";
+import RangeField from "./range-field";
+import DateRangeField from "./date-range-field";
 
 /**
  * React component type enhanced with the optional legacy `jsClass` identifier.
@@ -33,6 +42,18 @@ const fieldComponents: FieldComponentRegistry = {
   ...jsFieldComponents,
   Field,
   SelectField,
+  radio: RadioField,
+  RadioField,
+  CheckboxField,
+  checkbox: CheckboxField,
+  SwitchField,
+  GroupField,
+  HiddenField,
+  hidden: HiddenField,
+  NoWrapField,
+  TextareaField,
+  RangeField,
+  DateRangeField,
 };
 
 /**
