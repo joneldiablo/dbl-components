@@ -46,17 +46,42 @@ const schemaInput = {
   definitions: {},
 };
 
+/**
+ * Props accepted by {@link RangeField}.
+ *
+ * @example
+ * ```tsx
+ * <RangeField name="price" label="Price" type="number" />
+ * ```
+ */
 export interface RangeFieldProps extends FieldProps {
   from?: Record<string, unknown>;
   to?: Record<string, unknown>;
   divisor?: React.ReactNode;
 }
 
+/**
+ * Local state maintained by {@link RangeField}.
+ */
 interface RangeFieldState {
   min?: number | string | null;
   max?: number | string | null;
 }
 
+/**
+ * Field that orchestrates a pair of inputs to capture numeric or temporal ranges while
+ * synchronising their validations.
+ *
+ * @example
+ * ```tsx
+ * <RangeField
+ *   name="duration"
+ *   label="Duration"
+ *   type="time"
+ *   divisor="to"
+ * />
+ * ```
+ */
 export default class RangeField extends Field<RangeFieldProps> {
   declare props: RangeFieldProps;
   declare state: Field["state"] & RangeFieldState;
@@ -72,7 +97,11 @@ export default class RangeField extends Field<RangeFieldProps> {
     controlClasses: [],
   };
 
-  private events: Array<[string, (...args: any[]) => void]> = [];
+  private events: Array<{
+    name: string;
+    handler: (...args: any[]) => void;
+    id: string;
+  }> = [];
   private jsonRender: JsonRender;
   private schemaInput: any;
 
@@ -95,32 +124,55 @@ export default class RangeField extends Field<RangeFieldProps> {
       min: currentValue[0] ?? null,
       max: currentValue[1] ?? null,
     };
+    const valueEvents = [
+      `${props.name}-fromControl`,
+      `${props.name}-toControl`,
+      `update.${props.name}-fromControl`,
+      `update.${props.name}-toControl`,
+    ];
+    const invalidEvents = [
+      `invalid.${props.name}-fromControl`,
+      `invalid.${props.name}-toControl`,
+    ];
+    const focusEvents = [
+      `focus.${props.name}-fromControl`,
+      `focus.${props.name}-toControl`,
+    ];
     this.events = [
-      [`update.${props.name}-fromControl`, this.onValuesChange],
-      [`update.${props.name}-toControl`, this.onValuesChange],
-      [`invalid.${props.name}-fromControl`, this.onAnyInvalid],
-      [`invalid.${props.name}-toControl`, this.onAnyInvalid],
-      [`focus.${props.name}-fromControl`, this.onAnyFocus],
-      [`focus.${props.name}-toControl`, this.onAnyFocus],
+      ...valueEvents.map((name) => ({
+        name,
+        handler: this.onValuesChange as (...args: any[]) => void,
+        id: `${this.unique}-${name}`,
+      })),
+      ...invalidEvents.map((name) => ({
+        name,
+        handler: this.onAnyInvalid as (...args: any[]) => void,
+        id: `${this.unique}-${name}`,
+      })),
+      ...focusEvents.map((name) => ({
+        name,
+        handler: this.onAnyFocus as (...args: any[]) => void,
+        id: `${this.unique}-${name}`,
+      })),
     ];
   }
 
   override componentDidMount(): void {
     super.componentDidMount();
-    this.events.forEach(([evt, handler]) => eventHandler.subscribe(evt, handler));
+    this.events.forEach(({ name, handler, id }) => eventHandler.subscribe(name, handler, id));
   }
 
   override componentWillUnmount(): void {
     super.componentWillUnmount();
-    this.events.forEach(([evt]) => eventHandler.unsubscribe(evt));
+    this.events.forEach(({ name, id }) => eventHandler.unsubscribe(name, id));
   }
 
   override onUpdate(update: any): void {
     super.onUpdate(update);
-    const { value } = update as { value?: [any, any] | null };
+    const { value } = update as { value?: [any, any] | null | string };
     if (value === undefined) return;
-    const [from, to] = value === null || value === "" ? [null, null] : value;
-    this.setState({ min: from, max: to } as Partial<RangeFieldState>);
+    const [from, to] = value === null || value === "" ? [null, null] : (value as [any, any]);
+    this.setState((prev) => ({ ...prev, min: from, max: to }));
     eventHandler.dispatch(`update.${this.props.name}-fromControl`, { value: from });
     eventHandler.dispatch(`update.${this.props.name}-toControl`, { value: to });
   }
@@ -130,7 +182,7 @@ export default class RangeField extends Field<RangeFieldProps> {
   }
 
   private onValuesChange = (data: Record<string, any>): void => {
-    const newState: RangeFieldState = {};
+    const newState: Partial<RangeFieldState> = {};
     const fromKey = `${this.props.name}-fromControl`;
     const toKey = `${this.props.name}-toControl`;
     if (fromKey in data) {
@@ -145,12 +197,14 @@ export default class RangeField extends Field<RangeFieldProps> {
       if ((this.props.type || this.type) === "number") max = Number(raw);
       newState.max = max;
     }
-    this.setState(newState as Partial<RangeFieldState>, () =>
-      super.onChange({
-        target: {
-          value: [this.state.min, this.state.max],
-        },
-      } as any)
+    this.setState(
+      (prev) => ({ ...prev, ...newState }),
+      () =>
+        super.onChange({
+          target: {
+            value: [this.state.min, this.state.max],
+          },
+        } as any)
     );
   };
 
@@ -189,7 +243,7 @@ export default class RangeField extends Field<RangeFieldProps> {
           list,
           pattern,
           required,
-          type,
+          type: baseType,
           disabled,
           min,
           max,
@@ -204,12 +258,11 @@ export default class RangeField extends Field<RangeFieldProps> {
         } = baseProps;
         const index = name.endsWith("fromControl") ? 0 : 1;
         const minMaxKey = name.endsWith("fromControl") ? "max" : "min";
-        const controlClasses = new Set(
-          [baseProps.controlClasses]
-            .flat()
-            .filter(Boolean as any)
-            .flatMap((cls: string) => String(cls).split(" "))
-        );
+        const controlClassesSource = [baseProps.controlClasses]
+          .flat()
+          .filter((cls): cls is string => typeof cls === "string")
+          .flatMap((cls) => cls.split(" ").filter(Boolean));
+        const controlClasses = new Set(controlClassesSource);
         if (readOnly) controlClasses.add("form-control-plaintext");
         else controlClasses.delete("form-control-plaintext");
 
@@ -218,7 +271,7 @@ export default class RangeField extends Field<RangeFieldProps> {
           list,
           pattern,
           required,
-          type,
+          type: baseType,
           disabled,
           min,
           max,
@@ -232,9 +285,8 @@ export default class RangeField extends Field<RangeFieldProps> {
           minLength,
           value: Array.isArray(v) ? v[index] : undefined,
           ...((name.endsWith("fromControl") ? baseProps.from : baseProps.to) || {}),
-          type: baseProps.type,
-          [minMaxKey]: (this.state as any)[minMaxKey],
-          controlClasses: Array.from(controlClasses).flat().join(" "),
+          [minMaxKey]: (this.state as RangeFieldState)[minMaxKey],
+          controlClasses: Array.from(controlClasses).join(" "),
         };
       }
       case `${baseProps.name}-divisor`:

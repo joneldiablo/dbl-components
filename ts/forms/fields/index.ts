@@ -3,6 +3,7 @@ import React from "react";
 import jsFieldComponents from "../../../src/js/forms/fields.js";
 
 import Field from "./field";
+import AutocompleteField from "./autocomplete-field";
 import SelectField from "./select-field";
 import RadioField from "./radio-field";
 import CheckboxField from "./checkbox-field";
@@ -40,6 +41,7 @@ export type FieldComponentRegistry = Record<string, FieldComponentType>;
  */
 const fieldComponents: FieldComponentRegistry = {
   ...jsFieldComponents,
+  AutocompleteField,
   Field,
   SelectField,
   radio: RadioField,

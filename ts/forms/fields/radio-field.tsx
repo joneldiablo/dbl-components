@@ -3,6 +3,14 @@ import React from "react";
 import JsonRender from "../../json-render";
 import Field, { type FieldOption, type FieldProps } from "./field";
 
+/**
+ * Option definition accepted by {@link RadioField} and its derivatives.
+ *
+ * @example
+ * ```tsx
+ * const option: RadioFieldOption = { label: "Active", value: true };
+ * ```
+ */
 export interface RadioFieldOption extends FieldOption {
   active?: boolean;
   classes?: string | string[];
@@ -13,6 +21,21 @@ export interface RadioFieldOption extends FieldOption {
   readOnly?: boolean;
 }
 
+/**
+ * Props accepted by {@link RadioField}.
+ *
+ * @example
+ * ```tsx
+ * <RadioField
+ *   name="status"
+ *   label="Status"
+ *   options={[
+ *     { label: "Active", value: "active" },
+ *     { label: "Inactive", value: "inactive" },
+ *   ]}
+ * />
+ * ```
+ */
 export interface RadioFieldProps extends FieldProps {
   inline?: boolean;
   labelInline?: boolean;
@@ -25,6 +48,22 @@ export interface RadioFieldProps extends FieldProps {
 
 type RadioFieldValue = string | number | boolean | (string | number | boolean)[];
 
+/**
+ * Field that renders a list of mutually exclusive options (or multi-select when paired
+ * with {@link CheckboxField}) while delegating its layout to JSON schemas.
+ *
+ * @example
+ * ```tsx
+ * <RadioField
+ *   name="plan"
+ *   label="Select a plan"
+ *   options={[
+ *     { label: "Basic", value: "basic" },
+ *     { label: "Pro", value: "pro" },
+ *   ]}
+ * />
+ * ```
+ */
 export default class RadioField extends Field<RadioFieldProps> {
   declare props: RadioFieldProps;
 
@@ -84,7 +123,7 @@ export default class RadioField extends Field<RadioFieldProps> {
     };
   }
 
-  nodeOption = (itemRaw: RadioFieldOption, i: number): React.ReactNode => {
+  nodeOption = (itemRaw: RadioFieldOption, i = 0): React.ReactNode => {
     if (!itemRaw) return false;
 
     const { inline, name, labels: labelsFromProps, optionClasses, format, labelClasses } =
@@ -108,14 +147,16 @@ export default class RadioField extends Field<RadioFieldProps> {
     const readOnly =
       typeof item.readOnly !== "undefined" ? item.readOnly : this.inputProps.readOnly;
 
-    const optionClassNames: Array<string | string[]> = [optionClasses, item.classes];
+    const optionClassNames: Array<string | string[]> = [];
+    if (format === "switch") optionClassNames.push("form-switch");
+    else if (format === "button") {
+      optionClassNames.push("");
+      first = "control";
+    } else optionClassNames.push("form-check");
     if (inline) optionClassNames.push("form-check-inline");
     if (item.hidden && !checked) optionClassNames.push("visually-hidden-focusable");
-    if (format === "switch") optionClassNames.unshift("form-switch");
-    else if (format === "button") {
-      optionClassNames.unshift("");
-      first = "control";
-    } else optionClassNames.unshift("form-check");
+    if (optionClasses) optionClassNames.push(optionClasses);
+    if (item.classes) optionClassNames.push(item.classes);
 
     const inputProps: Record<string, any> = {
       ...this.inputProps,

@@ -3,6 +3,11 @@ declare module "*.svg" {
   export default src;
 }
 
+declare module "moment" {
+  const moment: any;
+  export default moment;
+}
+
 declare module "bootstrap/js/dist/collapse" {
   interface CollapseOptions {
     toggle?: boolean;

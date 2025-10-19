@@ -3,10 +3,35 @@ import moment from "moment";
 
 import Field, { type FieldProps } from "./field";
 
+/**
+ * Props accepted by {@link DateRangeField}.
+ *
+ * @example
+ * ```tsx
+ * <DateRangeField
+ *   name="booking"
+ *   label="Booking range"
+ *   errorMessage="End date must be after start"
+ * />
+ * ```
+ */
 export interface DateRangeFieldProps extends FieldProps {
   errorMessage?: string;
 }
 
+/**
+ * Field that renders two native date inputs and validates that the start comes before
+ * the end of the range.
+ *
+ * @example
+ * ```tsx
+ * <DateRangeField
+ *   name="attendance"
+ *   label="Attendance"
+ *   default={["2023-01-01", "2023-01-07"]}
+ * />
+ * ```
+ */
 export default class DateRangeField extends Field<DateRangeFieldProps> {
   declare props: DateRangeFieldProps;
 
@@ -14,7 +39,7 @@ export default class DateRangeField extends Field<DateRangeFieldProps> {
   static override defaultProps: Partial<DateRangeFieldProps> = {
     ...Field.defaultProps,
     default: ["", ""],
-  };
+  } as Partial<DateRangeFieldProps>;
 
   private inputEnd = createRef<HTMLInputElement>();
 
@@ -38,13 +63,16 @@ export default class DateRangeField extends Field<DateRangeFieldProps> {
     return "date";
   }
 
-  override onChange({ target }: { target: HTMLInputElement }): void {
+  override onChange({
+    target,
+  }: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>): void {
+    const input = target as HTMLInputElement;
     const { name } = this.props;
     const current = Array.isArray(this.state.value)
       ? [...this.state.value]
       : ["", ""];
-    const index = target.name === name ? 0 : 1;
-    current[index] = target.value;
+    const index = input.name === name ? 0 : 1;
+    current[index] = input.value;
     const error = this.isInvalid(current);
     this.setState(
       {

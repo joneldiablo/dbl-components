@@ -7,10 +7,41 @@ import RadioField, {
 
 type CheckboxValue = boolean | Array<string | number | boolean>;
 
+/**
+ * Props accepted by {@link CheckboxField}.
+ *
+ * @example
+ * ```tsx
+ * <CheckboxField
+ *   name="acceptTerms"
+ *   label="Accept the terms"
+ *   options={[
+ *     { label: "Yes", value: true },
+ *   ]}
+ * />
+ * ```
+ */
 export interface CheckboxFieldProps extends RadioFieldProps {
-  options?: RadioFieldOption;
+  options?: RadioFieldOption[];
 }
 
+/**
+ * Checkbox implementation built on top of {@link RadioField} to support boolean and
+ * multi-select lists of values.
+ *
+ * @example
+ * ```tsx
+ * <CheckboxField
+ *   name="colorFilters"
+ *   label="Pick colors"
+ *   options={[
+ *     { label: "Red", value: "red" },
+ *     { label: "Green", value: "green" },
+ *   ]}
+ *   required
+ * />
+ * ```
+ */
 export default class CheckboxField extends RadioField {
   declare props: CheckboxFieldProps;
 
@@ -52,8 +83,12 @@ export default class CheckboxField extends RadioField {
 
   override get inputProps(): Record<string, any> {
     const props = { ...super.inputProps };
-    props.required =
-      this.props.required && Array.isArray(this.state.value) && !this.state.value.length;
+    const currentValue = this.state.value as CheckboxValue;
+    props.required = this.props.required
+      ? Array.isArray(currentValue)
+        ? currentValue.length === 0
+        : currentValue !== true
+      : false;
     return props;
   }
 

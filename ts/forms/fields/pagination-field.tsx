@@ -2,6 +2,14 @@ import React from "react";
 
 import Field, { type FieldProps } from "./field";
 
+/**
+ * Text overrides for the pagination navigation controls.
+ *
+ * @example
+ * ```tsx
+ * const texts: PaginationTexts = { next: "Next page" };
+ * ```
+ */
 export interface PaginationTexts {
   first?: string;
   previus?: string;
@@ -11,6 +19,14 @@ export interface PaginationTexts {
   goto?: string;
 }
 
+/**
+ * Props accepted by {@link PaginationField}.
+ *
+ * @example
+ * ```tsx
+ * <PaginationField name="page" total={5} />
+ * ```
+ */
 export interface PaginationFieldProps extends FieldProps {
   total: number;
   paginationClasses?: string | string[];
@@ -21,10 +37,27 @@ export interface PaginationFieldProps extends FieldProps {
   lastBtn?: boolean;
 }
 
+/**
+ * Local state maintained by {@link PaginationField}.
+ */
 interface PaginationFieldState {
   total: number;
 }
 
+/**
+ * Field that renders Bootstrap-like pagination controls and keeps the current page in
+ * sync with the parent form.
+ *
+ * @example
+ * ```tsx
+ * <PaginationField
+ *   name="page"
+ *   label="Navigate"
+ *   total={12}
+ *   texts={{ next: "Next", previus: "Prev" }}
+ * />
+ * ```
+ */
 export default class PaginationField extends Field<PaginationFieldProps> {
   declare props: PaginationFieldProps;
   declare state: Field["state"] & PaginationFieldState;
@@ -60,7 +93,7 @@ export default class PaginationField extends Field<PaginationFieldProps> {
 
   override onUpdate(update: { total?: number } & Record<string, any>): void {
     const { total, ...rest } = update;
-    if (total) this.setState({ total });
+    if (typeof total === "number") this.setState((prev) => ({ ...prev, total }));
     super.onUpdate(rest);
   }
 
