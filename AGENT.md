@@ -58,7 +58,20 @@
 
 - `src/js/forms/fields.js` → `ts/forms/fields/index.ts`
 - `src/js/forms/fields/field.js` → `ts/forms/fields/field.tsx`
+- `src/js/forms/fields/autocomplete-field.js` → `ts/forms/fields/autocomplete-field.tsx`
+- `src/js/forms/fields/checkbox-field.js` → `ts/forms/fields/checkbox-field.tsx`
+- `src/js/forms/fields/date-range-field.js` → `ts/forms/fields/date-range-field.tsx`
+- `src/js/forms/fields/drop-file-field.js` → `ts/forms/fields/drop-file-field.tsx`
+- `src/js/forms/fields/file-field.js` → `ts/forms/fields/file-field.tsx`
+- `src/js/forms/fields/group-field.js` → `ts/forms/fields/group-field.tsx`
+- `src/js/forms/fields/hidden-field.js` → `ts/forms/fields/hidden-field.tsx`
+- `src/js/forms/fields/no-wrap-field.js` → `ts/forms/fields/no-wrap-field.tsx`
+- `src/js/forms/fields/pagination-field.js` → `ts/forms/fields/pagination-field.tsx`
+- `src/js/forms/fields/radio-field.js` → `ts/forms/fields/radio-field.tsx`
+- `src/js/forms/fields/range-field.js` → `ts/forms/fields/range-field.tsx`
 - `src/js/forms/fields/select-field.js` → `ts/forms/fields/select-field.tsx`
+- `src/js/forms/fields/switch-field.js` → `ts/forms/fields/switch-field.tsx`
+- `src/js/forms/fields/textarea-field.js` → `ts/forms/fields/textarea-field.tsx`
 - `src/js/forms/form.js` → `ts/forms/form.tsx`
 - `src/js/forms/groups.js` → `ts/forms/groups/index.ts`
 - `src/js/forms/groups/card-group.js` → `ts/forms/groups/card-group.tsx`
@@ -172,26 +185,13 @@
 
 ### forms
 
-- `src/js/forms/fields/autocomplete-field.js`
-- `src/js/forms/fields/checkbox-field.js`
-- `src/js/forms/fields/date-range-field.js`
-- `src/js/forms/fields/drop-file-field.js`
 - `src/js/forms/fields/file-button-field.js`
-- `src/js/forms/fields/file-field.js`
-- `src/js/forms/fields/group-field.js`
-- `src/js/forms/fields/hidden-field.js`
 - `src/js/forms/fields/json-editor-field.js`
 - `src/js/forms/fields/material/field.js`
 - `src/js/forms/fields/material/info.js`
 - `src/js/forms/fields/material/select-badges-field.js`
 - `src/js/forms/fields/material/select-field.js`
 - `src/js/forms/fields/new-password-field.jsx`
-- `src/js/forms/fields/no-wrap-field.js`
-- `src/js/forms/fields/pagination-field.js`
-- `src/js/forms/fields/radio-field.js`
-- `src/js/forms/fields/range-field.js`
-- `src/js/forms/fields/switch-field.js`
-- `src/js/forms/fields/textarea-field.js`
 
 ### sliders
 

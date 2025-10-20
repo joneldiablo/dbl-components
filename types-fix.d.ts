@@ -8,6 +8,32 @@ declare module "moment" {
   export default moment;
 }
 
+declare module "lzma/src/lzma_worker" {
+  export const LZMA: {
+    compress(
+      input: Uint8Array | number[] | string,
+      mode: number,
+      onFinish: (result: Uint8Array | number[] | null, error?: unknown) => void,
+      onProgress?: (percentage: number | string) => void
+    ): void;
+  };
+}
+
+declare module "bytes" {
+  interface BytesOptions {
+    unit?: string;
+  }
+
+  function bytes(value: string | number, options?: BytesOptions): number;
+
+  namespace bytes {
+    function parse(value: string | number): number;
+    function format(value: number, options?: BytesOptions): string;
+  }
+
+  export default bytes;
+}
+
 declare module "bootstrap/js/dist/collapse" {
   interface CollapseOptions {
     toggle?: boolean;

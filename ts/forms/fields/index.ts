@@ -2,18 +2,21 @@ import React from "react";
 
 import jsFieldComponents from "../../../src/js/forms/fields.js";
 
-import Field from "./field";
 import AutocompleteField from "./autocomplete-field";
-import SelectField from "./select-field";
-import RadioField from "./radio-field";
-import CheckboxField from "./checkbox-field";
-import SwitchField from "./switch-field";
+import DateRangeField from "./date-range-field";
+import DropFileField from "./drop-file-field";
+import Field from "./field";
+import FileField from "./file-field";
 import GroupField from "./group-field";
 import HiddenField from "./hidden-field";
 import NoWrapField from "./no-wrap-field";
-import TextareaField from "./textarea-field";
+import PaginationField from "./pagination-field";
+import RadioField from "./radio-field";
 import RangeField from "./range-field";
-import DateRangeField from "./date-range-field";
+import SelectField from "./select-field";
+import SwitchField from "./switch-field";
+import TextareaField from "./textarea-field";
+import CheckboxField from "./checkbox-field";
 
 /**
  * React component type enhanced with the optional legacy `jsClass` identifier.
@@ -48,7 +51,9 @@ const fieldComponents: FieldComponentRegistry = {
   RadioField,
   CheckboxField,
   checkbox: CheckboxField,
+  DropFileField,
   SwitchField,
+  FileField,
   GroupField,
   HiddenField,
   hidden: HiddenField,
@@ -56,6 +61,7 @@ const fieldComponents: FieldComponentRegistry = {
   TextareaField,
   RangeField,
   DateRangeField,
+  PaginationField,
 };
 
 /**
