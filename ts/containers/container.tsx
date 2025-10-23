@@ -1,9 +1,22 @@
 import React from "react";
-import ResizeSensor from "css-element-queries/src/ResizeSensor";
 import { eventHandler } from "dbl-utils";
 
 import Component, { ComponentProps } from "../component";
 import Icons from "../media/icons";
+import {
+  ensureDependency,
+  formatDependencyError,
+  logDependencyError,
+} from "../utils/dependency-loader";
+
+type ResizeSensorInstance = {
+  detach(): void;
+};
+
+type ResizeSensorConstructor = new (
+  element: HTMLElement,
+  callback: (size: { width: number; height: number }) => void
+) => ResizeSensorInstance;
 
 export interface ContainerProps extends ComponentProps {
   fluid?: boolean;
@@ -45,10 +58,12 @@ export default class Container extends Component<ContainerProps> {
     icon: "spinner",
     classes: "spinner",
   });
-  resizeSensor?: ResizeSensor;
+  resizeSensor?: ResizeSensorInstance;
+  private ResizeSensorCtor?: ResizeSensorConstructor;
   onResizeTimeout?: ReturnType<typeof setTimeout>;
   width?: number;
   height?: number;
+  private isComponentMounted = false;
 
   constructor(props: ContainerProps) {
     super(props);
@@ -126,10 +141,9 @@ export default class Container extends Component<ContainerProps> {
     }
   }
 
-  componentDidMount(): void {
-    if (this.ref.current)
-      this.resizeSensor = new ResizeSensor(this.ref.current, this.onResize);
-    this.onResize(true);
+  override componentDidMount(): void {
+    this.isComponentMounted = true;
+    void this.initializeResizeSensor();
   }
 
   componentDidUpdate(prevProps: ContainerProps): void {
@@ -141,13 +155,36 @@ export default class Container extends Component<ContainerProps> {
     }
   }
 
-  componentWillUnmount(): void {
+  override componentWillUnmount(): void {
+    this.isComponentMounted = false;
     clearTimeout(this.onResizeTimeout);
     if (this.resizeSensor) this.resizeSensor.detach();
+  }
+
+  private async initializeResizeSensor(): Promise<void> {
+    try {
+      const module = await ensureDependency<typeof import("css-element-queries/src/ResizeSensor")>(
+        "css-element-queries/src/ResizeSensor"
+      );
+      if (!this.isComponentMounted) return;
+      const ResizeSensorCtor = (module as any)?.default ?? (module as any);
+      this.ResizeSensorCtor = ResizeSensorCtor as ResizeSensorConstructor;
+      const ref = this.ref.current;
+      if (ref && this.ResizeSensorCtor) {
+        this.resizeSensor = new this.ResizeSensorCtor(ref, this.onResize);
+      }
+      this.clearDependencyError();
+      this.onResize(true);
+    } catch (error) {
+      const err = error instanceof Error ? error : new Error(String(error));
+      logDependencyError("css-element-queries", err);
+      if (this.isComponentMounted) {
+        this.setDependencyError(formatDependencyError("css-element-queries"));
+      }
+    }
   }
 
   content(children = this.props.children): React.ReactNode {
     return this.breakpoint ? children : this.waitBreakpoint;
   }
 }
-

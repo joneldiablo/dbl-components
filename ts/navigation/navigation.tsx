@@ -1,6 +1,5 @@
 import React from "react";
 import { NavLink, type NavLinkProps } from "react-router-dom";
-import Collapse from "bootstrap/js/dist/collapse";
 import type { Location } from "react-router";
 import { eventHandler, deepMerge, splitAndFlat } from "dbl-utils";
 import { extractNodeString } from "dbl-utils/extract-react-node-text";
@@ -11,6 +10,15 @@ import JsonRender from "../json-render";
 import Component, { type ComponentProps, type ComponentState } from "../component";
 import FloatingContainer from "../containers/floating-container";
 import type { Classes } from "../prop-types";
+import {
+  bootstrapDependencyError,
+  loadBootstrapCollapse,
+} from "../utils/bootstrap";
+
+type BootstrapCollapseConstructor = Awaited<ReturnType<typeof loadBootstrapCollapse>>;
+type BootstrapCollapseInstance = BootstrapCollapseConstructor extends new (...args: any[]) => infer R
+  ? R
+  : any;
 
 export interface NavigationMenuItem {
   name: string;
@@ -79,7 +87,7 @@ interface NavigationCollapseControl {
   ref: HTMLElement;
   item: NavigationMenuItem;
   submenuOpen: boolean;
-  collapse?: Collapse;
+  collapse?: BootstrapCollapseInstance;
 }
 
 const CLASSNAME_SEPARATOR = " ";
@@ -158,6 +166,8 @@ export default class Navigation<
   jsonRender: JsonRender;
   pathname = "";
   activeItem?: NavigationMenuItem;
+  private CollapseCtor?: BootstrapCollapseConstructor | null;
+  private isComponentMounted = false;
 
   constructor(props: P) {
     super(props);
@@ -187,8 +197,10 @@ export default class Navigation<
   }
 
   override componentDidMount(): void {
+    this.isComponentMounted = true;
     this.findFirstActive(this.props.menu ?? []);
     this.events.forEach((evt) => eventHandler.subscribe(...evt, this.name));
+    void this.ensureCollapse();
   }
 
   override componentDidUpdate(prevProps: P): void {
@@ -211,7 +223,24 @@ export default class Navigation<
   }
 
   override componentWillUnmount(): void {
+    this.isComponentMounted = false;
     this.events.forEach(([evt]) => eventHandler.unsubscribe(evt, this.name));
+  }
+
+  private async ensureCollapse(): Promise<BootstrapCollapseConstructor | null> {
+    if (this.CollapseCtor) return this.CollapseCtor;
+    try {
+      const ctor = await loadBootstrapCollapse();
+      if (!this.isComponentMounted) return null;
+      this.CollapseCtor = ctor;
+      this.clearDependencyError();
+      return ctor;
+    } catch (error) {
+      if (this.isComponentMounted) {
+        this.setDependencyError(bootstrapDependencyError("collapse"));
+      }
+      return null;
+    }
   }
 
   findFirstActive(menu: NavigationMenuItem[], parent?: NavigationMenuItem): NavigationMenuItem | undefined {
@@ -275,6 +304,13 @@ export default class Navigation<
   }
 
   onToggleSubmenu(event: React.MouseEvent<HTMLElement>, item: NavigationMenuItem): void {
+    void this.handleToggleSubmenu(event, item);
+  }
+
+  private async handleToggleSubmenu(
+    event: React.MouseEvent<HTMLElement>,
+    item: NavigationMenuItem
+  ): Promise<void> {
     if (!item.menu?.length || !this.state.open) return;
     event.stopPropagation();
     event.nativeEvent.stopPropagation();
@@ -283,23 +319,39 @@ export default class Navigation<
     const itemControl = this.collapses.current[item.name];
     if (!itemControl) return;
 
+    const CollapseCtor = await this.ensureCollapse();
+    if (!CollapseCtor || !this.isComponentMounted) return;
+    const collapseApi = CollapseCtor as any;
+
     if (!itemControl.collapse) {
       itemControl.ref.removeEventListener("hidden.bs.collapse", this.hide);
-      itemControl.collapse = Collapse.getOrCreateInstance(itemControl.ref, {
-        autoClose: false,
-        toggle: false,
-      });
+      itemControl.collapse =
+        typeof collapseApi.getOrCreateInstance === "function"
+          ? collapseApi.getOrCreateInstance(itemControl.ref, {
+              autoClose: false,
+              toggle: false,
+            })
+          : new CollapseCtor(itemControl.ref, {
+              autoClose: false,
+              toggle: false,
+            });
       itemControl.ref.addEventListener("hidden.bs.collapse", this.hide);
     }
 
     if (!itemControl.submenuOpen) {
       this.state.carets[item.name] = this.props.caretIcons?.[0] ?? "angle-up";
-      this.setState({ carets: this.state.carets }, () => itemControl.collapse?.show());
+      this.setState({ carets: this.state.carets }, () => itemControl.collapse?.show?.());
     } else {
       Array.from(itemControl.ref.querySelectorAll(".collapse"))
         .reverse()
-        .forEach((collapseEl) => Collapse.getInstance(collapseEl as Element)?.hide());
-      itemControl.collapse?.hide();
+        .forEach((collapseEl) => {
+          const instance =
+            typeof collapseApi.getInstance === "function"
+              ? collapseApi.getInstance(collapseEl as Element)
+              : undefined;
+          instance?.hide?.();
+        });
+      itemControl.collapse?.hide?.();
     }
     itemControl.submenuOpen = !itemControl.submenuOpen;
   }

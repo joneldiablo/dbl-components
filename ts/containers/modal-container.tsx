@@ -1,5 +1,4 @@
 import React from "react";
-import Modal from "bootstrap/js/dist/modal";
 
 import { eventHandler, splitAndFlat } from "dbl-utils";
 
@@ -7,6 +6,15 @@ import Component, {
   type ComponentProps,
   type ComponentState,
 } from "../component";
+import {
+  bootstrapDependencyError,
+  loadBootstrapModal,
+} from "../utils/bootstrap";
+
+type BootstrapModalConstructor = Awaited<ReturnType<typeof loadBootstrapModal>>;
+type BootstrapModalInstance = BootstrapModalConstructor extends new (...args: any[]) => infer R
+  ? R
+  : never;
 
 type ModalLifecycleEvent =
   | "show"
@@ -64,9 +72,11 @@ export default class ModalContainer extends Component<
     "hidePrevented",
   ];
 
-  private modal?: Modal;
+  private modal?: BootstrapModalInstance;
   private modalElement?: HTMLDivElement | null;
   private originalElement?: HTMLDivElement | null;
+  private ModalCtor?: BootstrapModalConstructor | null;
+  private isComponentMounted = false;
 
   constructor(props: ModalContainerProps) {
     super(props);
@@ -77,12 +87,31 @@ export default class ModalContainer extends Component<
   }
 
   override componentDidMount(): void {
+    this.isComponentMounted = true;
     eventHandler.subscribe(`update.${this.props.name}`, this.onUpdateModal);
+    void this.ensureModal();
   }
 
   override componentWillUnmount(): void {
+    this.isComponentMounted = false;
     eventHandler.unsubscribe(`update.${this.props.name}`);
     this.disposeModal();
+  }
+
+  private async ensureModal(): Promise<BootstrapModalConstructor | null> {
+    if (this.ModalCtor) return this.ModalCtor;
+    try {
+      const ctor = await loadBootstrapModal();
+      if (!this.isComponentMounted) return null;
+      this.ModalCtor = ctor;
+      this.clearDependencyError();
+      return ctor;
+    } catch (error) {
+      if (this.isComponentMounted) {
+        this.setDependencyError(bootstrapDependencyError("modal"));
+      }
+      return null;
+    }
   }
 
   private onEvent = (e: Event): void => {
@@ -131,23 +160,43 @@ export default class ModalContainer extends Component<
 
   private onModalRef = (refOriginal: HTMLDivElement | null): void => {
     if (!refOriginal) return;
-    let ref: HTMLDivElement = refOriginal;
+    void this.attachModal(refOriginal);
+  };
+
+  private async attachModal(refOriginal: HTMLDivElement): Promise<void> {
+    if (!this.isComponentMounted) return;
+    const existingElement = this.modalElement ?? undefined;
+    if (existingElement && existingElement === refOriginal && this.modal) {
+      return;
+    }
+
+    const ModalCtor = await this.ensureModal();
+    if (!ModalCtor || !this.isComponentMounted) return;
+
+    let ref = refOriginal;
     if (this.props.moveElement) {
-      const clone = refOriginal.cloneNode(true) as HTMLDivElement;
+      if (!this.originalElement) {
+        this.originalElement = refOriginal;
+      }
+      const clone =
+        this.modalElement && this.modalElement !== refOriginal
+          ? this.modalElement
+          : (refOriginal.cloneNode(true) as HTMLDivElement);
       refOriginal.style.display = "none";
-      document.body.appendChild(clone);
+      if (!clone.isConnected) {
+        document.body.appendChild(clone);
+      }
       ref = clone;
-      this.originalElement = refOriginal;
     }
 
     this.modalElement = ref;
-    this.modal = new Modal(ref, this.props.modal);
+    this.modal = new ModalCtor(ref, this.props.modal);
     this.bsEvents.forEach((eventName) => {
       ref.addEventListener(`${eventName}.bs.modal`, this.onEvent, false);
     });
     ref.addEventListener("hidden.bs.modal", this.destroy, false);
     this.modal.show();
-  };
+  }
 
   override content(children: React.ReactNode = this.props.children): React.ReactNode {
     const {

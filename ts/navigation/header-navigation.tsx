@@ -1,12 +1,20 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import Dropdown from "bootstrap/js/dist/dropdown";
 
 import Navigation, { type NavigationMenuItem, type NavigationProps } from "./navigation";
 import Icons from "../media/icons";
 import Svg from "../media/svg";
 import ProportionalContainer from "../containers/proportional-container";
 import components from "../components";
+import {
+  bootstrapDependencyError,
+  loadBootstrapDropdown,
+} from "../utils/bootstrap";
+
+type BootstrapDropdownConstructor = Awaited<ReturnType<typeof loadBootstrapDropdown>>;
+type BootstrapDropdownInstance = BootstrapDropdownConstructor extends new (...args: any[]) => infer R
+  ? R
+  : any;
 
 export interface HeaderNavigationMenuItem extends NavigationMenuItem {
   attributes?: Record<string, unknown>;
@@ -49,16 +57,55 @@ export default class HeaderNavigation extends Navigation<HeaderNavigationProps> 
   declare props: HeaderNavigationProps;
   static override jsClass = "HeaderNavigation";
 
-  dropdowns: Dropdown[] = [];
+  dropdowns: BootstrapDropdownInstance[] = [];
+  private DropdownCtor?: BootstrapDropdownConstructor | null;
+  private isComponentMounted = false;
+
+  override componentDidMount(): void {
+    super.componentDidMount();
+    this.isComponentMounted = true;
+    void this.ensureDropdown();
+  }
 
   override componentWillUnmount(): void {
+    this.isComponentMounted = false;
     super.componentWillUnmount();
     this.dropdowns.forEach((dropdown) => dropdown.dispose());
+    this.dropdowns = [];
+  }
+
+  private async ensureDropdown(): Promise<BootstrapDropdownConstructor | null> {
+    if (this.DropdownCtor) return this.DropdownCtor;
+    try {
+      const ctor = await loadBootstrapDropdown();
+      if (!this.isComponentMounted) return null;
+      this.DropdownCtor = ctor;
+      this.clearDependencyError();
+      return ctor;
+    } catch (error) {
+      if (this.isComponentMounted) {
+        this.setDependencyError(bootstrapDependencyError("dropdown"));
+      }
+      return null;
+    }
   }
 
   dropdownInit = (ref: HTMLElement | null): void => {
-    if (ref) this.dropdowns.push(new Dropdown(ref));
+    if (!ref) return;
+    void this.createDropdown(ref);
   };
+
+  private async createDropdown(ref: HTMLElement): Promise<void> {
+    if (!this.isComponentMounted) return;
+    const DropdownCtor = await this.ensureDropdown();
+    if (!DropdownCtor || !this.isComponentMounted) return;
+    const ctorAsAny = DropdownCtor as any;
+    const instance =
+      typeof ctorAsAny.getOrCreateInstance === "function"
+        ? ctorAsAny.getOrCreateInstance(ref)
+        : new DropdownCtor(ref);
+    this.dropdowns.push(instance);
+  }
 
   menuItem = ([key, item]: [string, HeaderNavigationMenuItem]): React.ReactNode => {
     if (item.divider) {

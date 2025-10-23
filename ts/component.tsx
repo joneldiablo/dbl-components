@@ -14,6 +14,7 @@ export interface ComponentProps {
 export interface ComponentState {
   localClasses: string | string[];
   localStyles: React.CSSProperties;
+  dependencyError?: string | null;
 }
 
 /**
@@ -134,13 +135,35 @@ export default class Component<
     });
   }
 
+  protected setDependencyError(message: string): void {
+    this.setState({ dependencyError: message } as Partial<S>);
+  }
+
+  protected clearDependencyError(): void {
+    if (this.state.dependencyError) {
+      this.setState({ dependencyError: null } as Partial<S>);
+    }
+  }
+
+  protected renderDependencyError(): React.ReactElement {
+    return React.createElement(
+      "div",
+      {
+        className: "dbl-components__dependency-error",
+        role: "alert",
+      },
+      this.state.dependencyError
+    );
+  }
+
   render(): React.ReactElement | null {
     const { classes, style, name, tag, active = true } = this.props;
     const { localClasses, localStyles } = this.state;
     if (!this.ready) {
       this.ready = setTimeout(() => eventHandler.dispatch(`ready.${name}`), 50);
     }
-    const content = this.content();
+    const dependencyError = this.state.dependencyError ?? null;
+    const content = dependencyError ? this.renderDependencyError() : this.content();
     const Tag = tag === undefined ? this.tag : tag;
     if (Tag === false) return content as any;
     const cn = [

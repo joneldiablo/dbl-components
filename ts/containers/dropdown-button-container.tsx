@@ -1,5 +1,4 @@
 import React, { createRef } from "react";
-import Dropdown from "bootstrap/js/dist/dropdown";
 import {
   NavLink as ReactRouterNavLink,
   type NavLinkProps as RRNavLinkProps,
@@ -13,6 +12,15 @@ import Component, {
   type ComponentProps,
   type ComponentState,
 } from "../component";
+import {
+  bootstrapDependencyError,
+  loadBootstrapDropdown,
+} from "../utils/bootstrap";
+
+type BootstrapDropdownConstructor = Awaited<ReturnType<typeof loadBootstrapDropdown>>;
+type BootstrapDropdownInstance = BootstrapDropdownConstructor extends new (...args: any[]) => infer R
+  ? R
+  : any;
 
 export interface DropdownItemProps
   extends ComponentProps,
@@ -161,7 +169,9 @@ export default class DropdownButtonContainer extends Component<
   protected btn = createRef<HTMLElement>();
   protected trigger: string;
   protected jsonRender: JsonRender;
-  protected bsDropdown?: Dropdown;
+  protected bsDropdown?: BootstrapDropdownInstance;
+  private DropdownCtor?: BootstrapDropdownConstructor | null;
+  private isComponentMounted = false;
   protected events: Array<[string, (payload: any) => void]> = [];
 
   constructor(props: DropdownButtonContainerProps) {
@@ -179,12 +189,31 @@ export default class DropdownButtonContainer extends Component<
   }
 
   override componentDidMount(): void {
+    this.isComponentMounted = true;
     this.events.forEach(([evt, cb]) => eventHandler.subscribe(evt, cb));
+    void this.ensureDropdown();
   }
 
   override componentWillUnmount(): void {
+    this.isComponentMounted = false;
     this.events.forEach(([evt]) => eventHandler.unsubscribe(evt));
     this.disposeDropdown();
+  }
+
+  private async ensureDropdown(): Promise<BootstrapDropdownConstructor | null> {
+    if (this.DropdownCtor) return this.DropdownCtor;
+    try {
+      const ctor = await loadBootstrapDropdown();
+      if (!this.isComponentMounted) return null;
+      this.DropdownCtor = ctor;
+      this.clearDependencyError();
+      return ctor;
+    } catch (error) {
+      if (this.isComponentMounted) {
+        this.setDependencyError(bootstrapDependencyError("dropdown"));
+      }
+      return null;
+    }
   }
 
   private disposeDropdown(): void {
@@ -202,21 +231,39 @@ export default class DropdownButtonContainer extends Component<
   }
 
   protected refBtn = (ref: HTMLElement | null): void => {
-    if (!ref) return;
-    this.disposeDropdown();
+    if (!ref) {
+      this.disposeDropdown();
+      this.btn.current = null;
+      return;
+    }
     this.btn.current = ref;
-    this.bsDropdown = Dropdown.getOrCreateInstance(ref, {
+    void this.createDropdown(ref);
+  };
+
+  private async createDropdown(ref: HTMLElement): Promise<void> {
+    if (!this.isComponentMounted) return;
+    this.disposeDropdown();
+    const DropdownCtor = await this.ensureDropdown();
+    if (!DropdownCtor || !this.isComponentMounted) return;
+
+    const options = {
       autoClose: true,
       reference: "parent",
       display: "dynamic",
       ...this.props.dropdown,
-    });
+    };
+
+    const ctorAsAny = DropdownCtor as any;
+    this.bsDropdown =
+      typeof ctorAsAny.getOrCreateInstance === "function"
+        ? ctorAsAny.getOrCreateInstance(ref, options)
+        : new DropdownCtor(ref, options);
 
     ref.addEventListener("hide.bs.dropdown", this.onBsEvents as EventListener);
     ref.addEventListener("hidden.bs.dropdown", this.onBsEvents as EventListener);
     ref.addEventListener("show.bs.dropdown", this.onBsEvents as EventListener);
     ref.addEventListener("shown.bs.dropdown", this.onBsEvents as EventListener);
-  };
+  }
 
   private onUpdate({ open }: { open?: boolean }): void {
     if (!this.bsDropdown || open === undefined) return;

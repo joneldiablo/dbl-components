@@ -1,15 +1,4 @@
 import React, { createRef, RefObject, Ref } from "react";
-import {
-  Doughnut,
-  Bar,
-  Bubble,
-  Chart as ChartComponent,
-  Line,
-  Pie,
-  PolarArea,
-  Radar,
-  Scatter,
-} from "react-chartjs-2";
 import type { Plugin } from "chart.js";
 
 import { eventHandler } from "dbl-utils";
@@ -18,18 +7,51 @@ import ProportionalContainer, {
   type ProportionalContainerProps,
 } from "../containers/proportional-container";
 import Icons from "../media/icons";
+import type { ComponentState } from "../component";
+import {
+  ensureDependency,
+  formatDependencyError,
+  logDependencyError,
+} from "../utils/dependency-loader";
 
-const graphs: Record<string, React.ComponentType<any>> = {
-  Doughnut,
-  Bar,
-  Bubble,
-  Chart: ChartComponent,
-  Line,
-  Pie,
-  PolarArea,
-  Radar,
-  Scatter,
-};
+type ReactChartjsModule = typeof import("react-chartjs-2");
+
+const graphs: Record<string, React.ComponentType<any>> = {};
+let graphsLoaded = false;
+let chartsLoadPromise: Promise<void> | null = null;
+let chartsLoadError: Error | null = null;
+
+async function ensureChartsLoaded(): Promise<void> {
+  if (graphsLoaded) return;
+  if (chartsLoadError) throw chartsLoadError;
+  if (!chartsLoadPromise) {
+    chartsLoadPromise = ensureDependency<ReactChartjsModule>("react-chartjs-2")
+      .then((module) => {
+        const chartExports: Partial<Record<string, React.ComponentType<any>>> = {
+          Doughnut: (module as any).Doughnut,
+          Bar: (module as any).Bar,
+          Bubble: (module as any).Bubble,
+          Chart: (module as any).Chart,
+          Line: (module as any).Line,
+          Pie: (module as any).Pie,
+          PolarArea: (module as any).PolarArea,
+          Radar: (module as any).Radar,
+          Scatter: (module as any).Scatter,
+        };
+        Object.entries(chartExports).forEach(([key, component]) => {
+          if (typeof component === "function") {
+            graphs[key] = component;
+          }
+        });
+        graphsLoaded = true;
+      })
+      .catch((error) => {
+        chartsLoadError = error instanceof Error ? error : new Error(String(error));
+        throw chartsLoadError;
+      });
+  }
+  return chartsLoadPromise;
+}
 
 export const addGraphs = (moreGraphs: Record<string, React.ComponentType<any>>): void => {
   Object.assign(graphs, moreGraphs);
@@ -55,8 +77,13 @@ export interface ChartjsProps extends ProportionalContainerProps {
   chartRef?: Ref<any>;
 }
 
+interface ChartjsState extends ComponentState {
+  chartsReady: boolean;
+}
+
 export default class Chartjs extends ProportionalContainer {
   declare props: ChartjsProps;
+  declare state: ChartjsState;
   static override jsClass = "Chartjs";
   static override defaultProps: Partial<ChartjsProps> = {
     ...ProportionalContainer.defaultProps,
@@ -71,6 +98,7 @@ export default class Chartjs extends ProportionalContainer {
   events: Array<[string, (...args: unknown[]) => void]> = [];
   refChart: RefObject<any> = createRef();
   timeoutUpdate?: ReturnType<typeof setTimeout>;
+  private isComponentMounted = false;
 
   constructor(props: ChartjsProps) {
     super(props);
@@ -78,19 +106,42 @@ export default class Chartjs extends ProportionalContainer {
       [`ready.${props.name}`, this.onReadyElement.bind(this)],
       [`resize.${props.name}`, this.onResizeElement.bind(this)]
     );
+    this.state = {
+      ...this.state,
+      chartsReady: false,
+    };
   }
 
   override componentDidMount(): void {
+    this.isComponentMounted = true;
     this.events.forEach(([event, callback]) =>
       eventHandler.subscribe(event, callback, this.name)
     );
     super.componentDidMount();
+    void this.loadCharts();
   }
 
   override componentWillUnmount(): void {
+    this.isComponentMounted = false;
     super.componentWillUnmount();
     this.events.forEach(([event]) => eventHandler.unsubscribe(event, this.name));
     if (this.timeoutUpdate) clearTimeout(this.timeoutUpdate);
+  }
+
+  private async loadCharts(): Promise<void> {
+    try {
+      await ensureChartsLoaded();
+      if (this.isComponentMounted && !this.state.chartsReady) {
+        this.setState({ chartsReady: true });
+      }
+      this.clearDependencyError();
+    } catch (error) {
+      const err = error instanceof Error ? error : new Error(String(error));
+      logDependencyError("react-chartjs-2", err);
+      if (this.isComponentMounted) {
+        this.setDependencyError(formatDependencyError("react-chartjs-2"));
+      }
+    }
   }
 
   protected onReadyElement(): void {
@@ -115,6 +166,7 @@ export default class Chartjs extends ProportionalContainer {
       graph = "Bar",
       loading,
     } = this.props;
+    const { chartsReady } = this.state;
 
     const optionsClone = { ...options };
     const ratioValue =
@@ -141,9 +193,10 @@ export default class Chartjs extends ProportionalContainer {
       },
     };
 
-    const GraphComponent = graphs[graph as string] || graphs.Bar;
+    const GraphComponent = chartsReady ? graphs[graph as string] || graphs.Bar : undefined;
+    const effectiveLoading = loading || !chartsReady || !GraphComponent;
 
-    const chartContent = !loading ? (
+    const chartContent = !effectiveLoading && GraphComponent ? (
       <GraphComponent {...attribs} />
     ) : (
       <Icons icon="spinner" classes="spinner" />

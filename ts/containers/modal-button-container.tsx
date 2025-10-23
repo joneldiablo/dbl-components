@@ -1,5 +1,4 @@
 import React from "react";
-import Modal from "bootstrap/js/dist/modal";
 
 import { eventHandler } from "dbl-utils";
 
@@ -7,6 +6,15 @@ import Component, {
   type ComponentProps,
   type ComponentState,
 } from "../component";
+import {
+  bootstrapDependencyError,
+  loadBootstrapModal,
+} from "../utils/bootstrap";
+
+type BootstrapModalConstructor = Awaited<ReturnType<typeof loadBootstrapModal>>;
+type BootstrapModalInstance = BootstrapModalConstructor extends new (...args: any[]) => infer R
+  ? R
+  : never;
 
 type ModalLifecycleEvent =
   | "show"
@@ -55,8 +63,10 @@ export default class ModalButtonContainer extends Component<
     "hidePrevented",
   ];
 
-  private modal?: Modal;
+  private modal?: BootstrapModalInstance;
   private modalElement?: HTMLDivElement | null;
+  private ModalCtor?: BootstrapModalConstructor | null;
+  private isComponentMounted = false;
 
   constructor(props: ModalButtonContainerProps) {
     super(props);
@@ -66,8 +76,30 @@ export default class ModalButtonContainer extends Component<
     };
   }
 
+  override componentDidMount(): void {
+    this.isComponentMounted = true;
+    void this.ensureModal();
+  }
+
   override componentWillUnmount(): void {
+    this.isComponentMounted = false;
     this.teardownModal();
+  }
+
+  private async ensureModal(): Promise<BootstrapModalConstructor | null> {
+    if (this.ModalCtor) return this.ModalCtor;
+    try {
+      const ctor = await loadBootstrapModal();
+      if (!this.isComponentMounted) return null;
+      this.ModalCtor = ctor;
+      this.clearDependencyError();
+      return ctor;
+    } catch (error) {
+      if (this.isComponentMounted) {
+        this.setDependencyError(bootstrapDependencyError("modal"));
+      }
+      return null;
+    }
   }
 
   private toggleModal = (): void => {
@@ -93,9 +125,16 @@ export default class ModalButtonContainer extends Component<
     if (ref === this.modalElement) return;
     this.teardownModal();
     if (!ref) return;
+    void this.attachModal(ref);
+  };
+
+  private async attachModal(ref: HTMLDivElement): Promise<void> {
+    if (!this.isComponentMounted) return;
+    const ModalCtor = await this.ensureModal();
+    if (!ModalCtor || !this.isComponentMounted) return;
 
     this.modalElement = ref;
-    this.modal = new Modal(ref, {
+    this.modal = new ModalCtor(ref, {
       backdrop: false,
     });
     this.events.forEach((eventName) => {
@@ -103,7 +142,7 @@ export default class ModalButtonContainer extends Component<
     });
     ref.addEventListener("hidden.bs.modal", this.onToggleModal, false);
     this.modal.show();
-  };
+  }
 
   private teardownModal(): void {
     if (this.modalElement) {

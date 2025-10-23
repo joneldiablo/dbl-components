@@ -1,5 +1,4 @@
 import React from "react";
-import Offcanvas from "bootstrap/js/dist/offcanvas";
 
 import { eventHandler, resolveRefs } from "dbl-utils";
 
@@ -8,8 +7,17 @@ import Component, {
   type ComponentProps,
   type ComponentState,
 } from "../../component";
+import {
+  bootstrapDependencyError,
+  loadBootstrapOffcanvas,
+} from "../../utils/bootstrap";
 
 import schema from "./offcanvas.json";
+
+type BootstrapOffcanvasConstructor = Awaited<ReturnType<typeof loadBootstrapOffcanvas>>;
+type BootstrapOffcanvasInstance = BootstrapOffcanvasConstructor extends new (...args: any[]) => infer R
+  ? R
+  : any;
 
 type OffcanvasSection = "header" | "body" | "footer" | "content";
 type OffcanvasPosition = "start" | "end" | "top" | "bottom";
@@ -80,7 +88,9 @@ export default class OffcanvasContainer extends Component<
   });
 
   private jsonRender: JsonRender;
-  private offcanvasInstance: Offcanvas | null = null;
+  private offcanvasInstance: BootstrapOffcanvasInstance | null = null;
+  private OffcanvasCtor?: BootstrapOffcanvasConstructor | null;
+  private isComponentMounted = false;
 
   constructor(props: OffcanvasContainerProps) {
     super(props);
@@ -107,16 +117,35 @@ export default class OffcanvasContainer extends Component<
   }
 
   override componentDidMount(): void {
+    this.isComponentMounted = true;
     const { name } = this.props;
     eventHandler.subscribe(`update.${name}`, this.onUpdateOffcanvas, this.name);
     this.deleteClasses("offcanvas-start offcanvas-end offcanvas-top offcanvas-bottom");
     this.addClasses(`offcanvas-${this.props.position ?? "start"}`);
+    void this.ensureOffcanvas();
   }
 
   override componentWillUnmount(): void {
+    this.isComponentMounted = false;
     const { name } = this.props;
     this.destroy();
     eventHandler.unsubscribe(`update.${name}`, this.name);
+  }
+
+  private async ensureOffcanvas(): Promise<BootstrapOffcanvasConstructor | null> {
+    if (this.OffcanvasCtor) return this.OffcanvasCtor;
+    try {
+      const ctor = await loadBootstrapOffcanvas();
+      if (!this.isComponentMounted) return null;
+      this.OffcanvasCtor = ctor;
+      this.clearDependencyError();
+      return ctor;
+    } catch (error) {
+      if (this.isComponentMounted) {
+        this.setDependencyError(bootstrapDependencyError("offcanvas"));
+      }
+      return null;
+    }
   }
 
   private onEvent = (e: Event): void => {
@@ -124,7 +153,7 @@ export default class OffcanvasContainer extends Component<
     eventHandler.dispatch(name, { [name]: e.type.split(".")[0] });
   };
 
-  private onUpdateOffcanvas = ({ open }: { open?: boolean }): void => {
+  private onUpdateOffcanvas = async ({ open }: { open?: boolean }): Promise<void> => {
     if (typeof open === "undefined") return;
     if (open) {
       this.setState({ showOffcanvas: true });
@@ -132,15 +161,21 @@ export default class OffcanvasContainer extends Component<
     }
 
     if (!this.offcanvasInstance && this.ref.current) {
-      this.offcanvasInstance = Offcanvas.getInstance(this.ref.current);
+      const OffcanvasCtor = await this.ensureOffcanvas();
+      if (!OffcanvasCtor) return;
+      const offcanvasApi = OffcanvasCtor as any;
+      this.offcanvasInstance =
+        typeof offcanvasApi.getInstance === "function"
+          ? offcanvasApi.getInstance(this.ref.current)
+          : null;
     }
-    this.offcanvasInstance?.hide();
+    this.offcanvasInstance?.hide?.();
     setTimeout(() => this.setState({ showOffcanvas: false }), 350);
   };
 
   private destroy = (): void => {
     if (this.offcanvasInstance) {
-      this.offcanvasInstance.dispose();
+      this.offcanvasInstance.dispose?.();
       this.offcanvasInstance = null;
     }
     this.setState({ showOffcanvas: false });
@@ -149,16 +184,30 @@ export default class OffcanvasContainer extends Component<
   private onOffcanvasRef = (refOriginal: HTMLElement | null): void => {
     if (!refOriginal) return;
     this.ref.current = refOriginal;
-    this.offcanvasInstance = Offcanvas.getOrCreateInstance(
-      refOriginal,
-      this.props.offcanvas
-    );
+    void this.attachOffcanvas(refOriginal);
+  };
+
+  private async attachOffcanvas(refOriginal: HTMLElement): Promise<void> {
+    if (!this.isComponentMounted) return;
+    if (this.offcanvasInstance && this.ref.current === refOriginal) {
+      if (this.state.showOffcanvas) this.offcanvasInstance.show?.();
+      return;
+    }
+    const OffcanvasCtor = await this.ensureOffcanvas();
+    if (!OffcanvasCtor || !this.isComponentMounted) return;
+
+    const offcanvasApi = OffcanvasCtor as any;
+    this.offcanvasInstance =
+      typeof offcanvasApi.getOrCreateInstance === "function"
+        ? offcanvasApi.getOrCreateInstance(refOriginal, this.props.offcanvas)
+        : new OffcanvasCtor(refOriginal, this.props.offcanvas);
+
     this.bsEvents.forEach((event) =>
       refOriginal.addEventListener(`${event}.bs.offcanvas`, this.onEvent, false)
     );
     refOriginal.addEventListener("hidden.bs.offcanvas", this.destroy, false);
-    if (this.state.showOffcanvas) this.offcanvasInstance.show();
-  };
+    if (this.state.showOffcanvas) this.offcanvasInstance?.show?.();
+  }
 
   private get headerContent(): React.ReactNode[] | false {
     return this.sections.header.length ? this.sections.header : false;
