@@ -62,7 +62,14 @@
 - `src/js/forms/fields/checkbox-field.js` → `ts/forms/fields/checkbox-field.tsx`
 - `src/js/forms/fields/date-range-field.js` → `ts/forms/fields/date-range-field.tsx`
 - `src/js/forms/fields/drop-file-field.js` → `ts/forms/fields/drop-file-field.tsx`
+- `src/js/forms/fields/file-button-field.js` → `ts/forms/fields/file-button-field.tsx`
 - `src/js/forms/fields/file-field.js` → `ts/forms/fields/file-field.tsx`
+- `src/js/forms/fields/json-editor-field.js` → `ts/forms/fields/json-editor-field.tsx`
+- `src/js/forms/fields/new-password-field.jsx` → `ts/forms/fields/new-password-field.tsx`
+- `src/js/forms/fields/material/field.js` → `ts/forms/fields/material/field.tsx`
+- `src/js/forms/fields/material/info.js` → `ts/forms/fields/material/info.tsx`
+- `src/js/forms/fields/material/select-badges-field.js` → `ts/forms/fields/material/select-badges-field.tsx`
+- `src/js/forms/fields/material/select-field.js` → `ts/forms/fields/material/select-field.tsx`
 - `src/js/forms/fields/group-field.js` → `ts/forms/fields/group-field.tsx`
 - `src/js/forms/fields/hidden-field.js` → `ts/forms/fields/hidden-field.tsx`
 - `src/js/forms/fields/no-wrap-field.js` → `ts/forms/fields/no-wrap-field.tsx`
@@ -134,6 +141,18 @@
 - `src/js/views/title-view.js` → `ts/views/title-view.tsx`
 - `src/js/views/view.js` → `ts/views/view.tsx`
 
+### tables
+
+- `src/js/tables/table.jsx` → `ts/tables/table.tsx`
+
+### sliders
+
+- `src/js/sliders/hero.js` → `ts/sliders/hero.tsx`
+
+### draw
+
+- `src/js/draw/trapezoid.js` → `ts/draw/trapezoid.tsx`
+
 ## Pendientes de traducción
 
 ### bootstrap
@@ -179,27 +198,7 @@
 
 - *Completado*
 
-### draw
 
-- `src/js/draw/trapezoid.js`
-
-### forms
-
-- `src/js/forms/fields/file-button-field.js`
-- `src/js/forms/fields/json-editor-field.js`
-- `src/js/forms/fields/material/field.js`
-- `src/js/forms/fields/material/info.js`
-- `src/js/forms/fields/material/select-badges-field.js`
-- `src/js/forms/fields/material/select-field.js`
-- `src/js/forms/fields/new-password-field.jsx`
-
-### sliders
-
-- `src/js/sliders/hero.js`
-
-### tables
-
-- `src/js/tables/table.jsx`
 
 ### tools
 

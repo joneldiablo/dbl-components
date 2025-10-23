@@ -19,7 +19,7 @@ export interface DropFileFieldProps extends FieldProps {
 /**
  * Local state maintained by {@link DropFileField}.
  */
-interface DropFileFieldState extends FieldState {
+export interface DropFileFieldState extends FieldState {
   files: File[];
   valueInput: string;
 }

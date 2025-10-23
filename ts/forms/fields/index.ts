@@ -7,8 +7,10 @@ import DateRangeField from "./date-range-field";
 import DropFileField from "./drop-file-field";
 import Field from "./field";
 import FileField from "./file-field";
+import FileButtonField from "./file-button-field";
 import GroupField from "./group-field";
 import HiddenField from "./hidden-field";
+import JsonEditorField from "./json-editor-field";
 import NoWrapField from "./no-wrap-field";
 import PaginationField from "./pagination-field";
 import RadioField from "./radio-field";
@@ -17,6 +19,7 @@ import SelectField from "./select-field";
 import SwitchField from "./switch-field";
 import TextareaField from "./textarea-field";
 import CheckboxField from "./checkbox-field";
+import NewPasswordField from "./new-password-field";
 
 /**
  * React component type enhanced with the optional legacy `jsClass` identifier.
@@ -52,8 +55,11 @@ const fieldComponents: FieldComponentRegistry = {
   CheckboxField,
   checkbox: CheckboxField,
   DropFileField,
+  FileButtonField,
   SwitchField,
   FileField,
+  JsonEditorField,
+  NewPasswordField,
   GroupField,
   HiddenField,
   hidden: HiddenField,
