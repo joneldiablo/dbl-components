@@ -32,6 +32,7 @@ export class AppController {
   eventHandler = eventHandler;
   fetchList = {};
   globalDefinitions = [];
+  globalRules = [];
   routes = {};
   tmpRoutesFound = 0;
   rootSchema;
@@ -100,6 +101,7 @@ export class AppController {
     if (icons) addIcons(icons);
 
     this.globalDefinitions.push(...(Array.isArray(definitions) ? definitions : [definitions]));
+    this.globalRules.push(...(Array.isArray(rules) ? rules : [rules]));
     this.routes = routes.reduce((rdx, route) => {
       if (rdx[route.view.name]) console.warn(`Route was ${route.view.name} overwrited`);
       rdx[route.view.name] = route;
@@ -138,7 +140,8 @@ export class AppController {
   findingRoutesRecursive(schema) {
     this.tmpRoutesFound++;
     const newDefs = deepMerge({}, ...this.globalDefinitions, schema.definitions || {});
-    const view = resolveRefs(schema.view, { definitions: newDefs, data: schema.data || {} });
+    const newRules = deepMerge({}, ...this.globalRules, schema.rules || {});
+    const view = resolveRefs(schema.view, { definitions: newDefs, data: schema.data || {} }, newRules);
     if (schema.routes?.length)
       view.routes = Object.entries(resolveRefs(schema.routes, { routes: this.routes })).map(([key, route]) => {
         if (!(route && route.view)) {
