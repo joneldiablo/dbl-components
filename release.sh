@@ -9,6 +9,8 @@ usage() {
   exit 1
 }
 
+. ~/.bashrc
+
 # Argument parsing
 while getopts ":-:" opt; do
   case ${opt} in
