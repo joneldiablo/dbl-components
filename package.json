@@ -24,7 +24,8 @@
     "build": "yarn types && yarn scss && yarn babel",
     "build-components-doc": "npx babel-node --presets @babel/preset-env --experimental-modules ./tools/build-docs.mjs",
     "build-info": "react-docgen -o tmp/components-info.json ./src/js/**/*.js ./src/js/*.js --resolver utils/doc-resolver.mjs --pretty && npx babel-node --presets @babel/preset-env --experimental-modules tools/join-data.mjs",
-    "types": "tsc"
+    "types": "tsc",
+    "release":"./release.sh --otp $OTP"
   },
   "keywords": [
     "bs",
