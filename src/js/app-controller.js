@@ -47,6 +47,7 @@ export class AppController {
   init(props = {}) {
     const {
       definitions = [],
+      rules = [],
       routes = [],
       fields = {},
       components = {},
@@ -77,6 +78,7 @@ export class AppController {
 
     this.props = {
       definitions,
+      rules,
       routes,
       fields,
       components,
