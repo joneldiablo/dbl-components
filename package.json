@@ -1,6 +1,6 @@
 {
   "name": "dbl-components",
-  "version": "2.3.36",
+  "version": "2.3.37",
   "description": "Framework based on bootstrap 5",
   "main": "src/js/index.js",
   "types": "types/index.d.ts",
@@ -25,7 +25,7 @@
     "build-components-doc": "npx babel-node --presets @babel/preset-env --experimental-modules ./tools/build-docs.mjs",
     "build-info": "react-docgen -o tmp/components-info.json ./src/js/**/*.js ./src/js/*.js --resolver utils/doc-resolver.mjs --pretty && npx babel-node --presets @babel/preset-env --experimental-modules tools/join-data.mjs",
     "types": "tsc",
-    "release":"./release.sh"
+    "release": "./release.sh"
   },
   "keywords": [
     "bs",
