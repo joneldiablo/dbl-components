@@ -1,0 +1,72 @@
+{
+  "view": {
+    "headerOffcanvas": {
+      "name": [
+        "$props/name",
+        "headerOffcanvas"
+      ],
+      "tag": "header",
+      "classes": "offcanvas-header",
+      "content": {
+        "titleOffcanvas": {
+          "name": [
+            "$props/name",
+            "titleOffcanvas"
+          ],
+          "tag": "$mutations/tagTitleOffcanvas",
+          "classes": "offcanvas-title",
+          "_props": {
+            "id": [
+              "$props/name",
+              "titleOffcanvas"
+            ]
+          }
+        },
+        "closeOffcanvas": {
+          "name": [
+            "$props/name",
+            "closeOffcanvas"
+          ],
+          "component": "Action",
+          "classButton": false,
+          "classes": "btn-close",
+          "_props": {
+            "data-bs-dismiss": "offcanvas",
+            "aria-label": "Close"
+          }
+        },
+        "contentHO": {
+          "name": [
+            "$props/name",
+            "contentHO"
+          ],
+          "tag": "div"
+        }
+      }
+    },
+    "bodyOffcanvas": {
+      "name": [
+        "$props/name",
+        "bodyOffcanvas"
+      ],
+      "tag": "div",
+      "classes": "flex-grow-1 offcanvas-body"
+    },
+    "footerOffcanvas": {
+      "name": [
+        "$props/name",
+        "footerOffcanvas"
+      ],
+      "tag": "footer",
+      "classes": "flex-shrink-1 offcanvas-footer offcanvas-body"
+    },
+    "contentOffcanvas": {
+      "name": [
+        "$props/name",
+        "contentOffcanvas"
+      ],
+      "tag": "div"
+    }
+  },
+  "definitions": {}
+}

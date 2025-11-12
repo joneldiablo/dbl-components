@@ -1,0 +1,23 @@
+{
+  "view": [
+    {
+      "name": "$nameLabel",
+      "component": "MenuItem",
+      "tag": "h6",
+      "iconSize": "1rem"
+    },
+    {
+      "name": "$nameDescription",
+      "tag": "div"
+    },
+    {
+      "name": "$nameClose",
+      "tag": "button",
+      "_props": {
+        "data-bs-dismiss": "alert",
+        "aria-label": "Close"
+      }
+    }
+  ],
+  "definitions": {}
+}

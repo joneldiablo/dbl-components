@@ -8,10 +8,18 @@
     "jsx": "react",
     "strict": true,
     "skipLibCheck": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "target": "es2019",
+    "lib": ["dom", "es2019"]
   },
   "include": [
-    "src/js/**/*"
+    "src/js/**/*",
+    "src/app-icons-v1.0/**/*.json",
+    "ts/**/*",
+    "types-fix.d.ts"
   ],
   "exclude": [
     "node_modules",

@@ -1,3 +1,112 @@
+declare module "*.svg" {
+  const src: string;
+  export default src;
+}
+
+declare module "moment" {
+  const moment: any;
+  export default moment;
+}
+
+declare module "lzma/src/lzma_worker" {
+  export const LZMA: {
+    compress(
+      input: Uint8Array | number[] | string,
+      mode: number,
+      onFinish: (result: Uint8Array | number[] | null, error?: unknown) => void,
+      onProgress?: (percentage: number | string) => void
+    ): void;
+  };
+}
+
+declare module "bytes" {
+  interface BytesOptions {
+    unit?: string;
+  }
+
+  function bytes(value: string | number, options?: BytesOptions): number;
+
+  namespace bytes {
+    function parse(value: string | number): number;
+    function format(value: number, options?: BytesOptions): string;
+  }
+
+  export default bytes;
+}
+
+declare module "bootstrap/js/dist/collapse" {
+  interface CollapseOptions {
+    toggle?: boolean;
+    parent?: Element | string;
+    autoClose?: boolean | string;
+  }
+
+  export default class Collapse {
+    constructor(element: Element | null, options?: CollapseOptions);
+    toggle(): void;
+    show(): void;
+    hide(): void;
+    dispose(): void;
+    static getInstance(element: Element | null): Collapse | null;
+    static getOrCreateInstance(element: Element | null, options?: CollapseOptions): Collapse;
+  }
+}
+
+declare module "bootstrap/js/dist/dropdown" {
+  export default class Dropdown {
+    constructor(element: Element | null, options?: Record<string, unknown>);
+    toggle(): void;
+    show(): void;
+    hide(): void;
+    dispose(): void;
+  }
+}
+
+declare module "bootstrap/js/dist/modal" {
+  export interface ModalOptions {
+    backdrop?: boolean | "static";
+    focus?: boolean;
+    keyboard?: boolean;
+  }
+
+  export default class Modal {
+    constructor(element: Element | null, options?: ModalOptions);
+    show(): void;
+    hide(): void;
+    dispose(): void;
+    static getInstance(element: Element | null): Modal | null;
+    static getOrCreateInstance(element: Element | null, options?: ModalOptions): Modal;
+  }
+}
+
+declare module "bootstrap/js/dist/offcanvas" {
+  export interface OffcanvasOptions {
+    backdrop?: boolean | "static";
+    keyboard?: boolean;
+    scroll?: boolean;
+  }
+
+  export default class Offcanvas {
+    constructor(element: Element | null, options?: OffcanvasOptions);
+    show(): void;
+    hide(): void;
+    dispose(): void;
+    static getInstance(element: Element | null): Offcanvas | null;
+    static getOrCreateInstance(element: Element | null, options?: OffcanvasOptions): Offcanvas;
+  }
+}
+
+declare module "@splidejs/react-splide" {
+  import type * as React from "react";
+
+  export interface SplideProps {
+    options?: Record<string, unknown>;
+    [key: string]: unknown;
+  }
+
+  export const Splide: React.ComponentType<SplideProps>;
+  export const SplideSlide: React.ComponentType<Record<string, unknown>>;
+}
 
 declare module 'dbl-components/lib/js/app-controller' {
   interface InitProps {
@@ -192,5 +301,18 @@ declare module 'dbl-components/lib/js/tables/table' {
   export interface IPropsTable extends ComponentProps {
     columns: IColumn[] | Record<string, IColumn>;
     headerCustom: any;
+  }
+}
+
+declare module 'dbl-utils/extract-react-node-text';
+declare module 'url-join';
+
+declare module "css-element-queries/src/ResizeSensor" {
+  export default class ResizeSensor {
+    constructor(
+      element: HTMLElement,
+      callback: (size: { width: number; height: number }) => void
+    );
+    detach(): void;
   }
 }
