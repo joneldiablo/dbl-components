@@ -68,7 +68,15 @@ export const addIcons = (newSet: IconSet): void => {
 export const searchIcon = (icon?: string): string | undefined => {
   if (!icon) return undefined;
   const list = iconList(is);
-  return list.find((iconName) =>
+  return list.reverse().find((iconName) =>
     iconName.split(/[, ]+/).some((i) => i === icon)
   );
+};
+
+/**
+ * Obtiene la lista de nombres de los iconos disponibles
+ * @returns {string[]} Array con los nombres de todos los iconos
+ */
+export const getList = (): string[] => {
+  return iconList(is);
 };
