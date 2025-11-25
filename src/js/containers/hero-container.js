@@ -28,7 +28,7 @@ export default class HeroContainer extends Container {
 
   content(children = this.props.children) {
     if (!this.breakpoint) return this.waitBreakpoint;
-    const { spaceBetween, slidesPerView, autoplayDelay, swiperpros } = this.props;
+    const { spaceBetween, slidesPerView, autoplayDelay, swiperprops } = this.props;
     let propsSwiper = {
       spaceBetween,
       slidesPerView,
@@ -46,8 +46,8 @@ export default class HeroContainer extends Container {
         resistanceRatio: 0
       });
     }
-    if (typeof swiperpros === 'object') {
-      deepMerge(propsSwiper, swiperpros);
+    if (typeof swiperprops === 'object') {
+      deepMerge(propsSwiper, swiperprops);
     }
     return (React.createElement(Swiper, { ...propsSwiper },
       children.map((slide, i) => {

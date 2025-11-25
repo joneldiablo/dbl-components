@@ -12,7 +12,7 @@ export interface HeroContainerProps extends ContainerProps {
   spaceBetween?: number;
   slidesPerView?: number;
   autoplayDelay?: number;
-  swiperpros?: Record<string, unknown>;
+  swiperprops?: Record<string, unknown>;
   children?: React.ReactNode;
 }
 
@@ -58,7 +58,7 @@ export default class HeroContainer extends Container {
       spaceBetween = 0,
       slidesPerView = 1,
       autoplayDelay,
-      swiperpros,
+      swiperprops,
     } = this.props;
 
     const slides = React.Children.toArray(children).filter(React.isValidElement) as React.ReactElement[];
@@ -82,8 +82,8 @@ export default class HeroContainer extends Container {
       });
     }
 
-    if (swiperpros && typeof swiperpros === "object") {
-      deepMerge(swiperConfig, swiperpros as Record<string, unknown>);
+    if (swiperprops && typeof swiperprops === "object") {
+      deepMerge(swiperConfig, swiperprops as Record<string, unknown>);
     }
 
     const renderedSlides = slides
