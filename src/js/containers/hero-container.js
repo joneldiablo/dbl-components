@@ -40,7 +40,8 @@ export default class HeroContainer extends Container {
       onSlideChange: this.onSlideChange,
       onSwiper: this.onSwiper,
     }
-    if (children.length < 2) {
+    const slides = React.Children.toArray(children);
+    if (slides.length < 2) {
       Object.assign(propsSwiper, {
         resistance: true,
         resistanceRatio: 0
@@ -50,7 +51,7 @@ export default class HeroContainer extends Container {
       deepMerge(propsSwiper, swiperprops);
     }
     return (React.createElement(Swiper, { ...propsSwiper },
-      children.map((slide, i) => {
+      slides.map((slide, i) => {
         if (!slide) return false;
 
         const props = (!(slide.props.style && slide.props.style['--component-name'])
